@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../layouts/Header.astro";
 
 const pageTitle = "About Me";
 
@@ -10,17 +11,16 @@ const identity = {
   hobbies: ["photography", "birdwatching", "baseball"],
 };
 ---
+
 <BaseLayout>
-  <a href="/">Home</a>
-  <a href="/about/">About</a>
-  <h1>My Astro Site</h1>
+  <Header />
   <h1>{pageTitle}</h1>
   <h2>... and my new Astro site!</h2>
+  Here is some text:
   {
     identity.hobbies.length >= 2 && (
       <li>
-        Two of my hobbies are: {identity.hobbies[0]} and
-        {identity.hobbies[1]}
+        Two of my hobbies are: {identity.hobbies[0]} and {identity.hobbies[1]}
       </li>
     )
   }
