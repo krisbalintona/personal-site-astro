@@ -3,6 +3,8 @@ import "../styles/root.css";
 import "../styles/vars.css";
 import "../styles/typography.css";
 import "../styles/code.css";
+
+const { pageTitle } = Astro.props;
 ---
 
 <html lang="en">
@@ -12,10 +14,11 @@ import "../styles/code.css";
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro</title>
+    <title>{pageTitle}</title>
   </head>
 
   <body>
+    <h1>{pageTitle}</h1>
     <slot />
   </body>
 </html>
