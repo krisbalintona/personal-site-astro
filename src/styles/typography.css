@@ -1,0 +1,15 @@
+h1,
+h2,
+h3 {
+  line-height: 1.3;
+}
+
+a {
+  border-bottom: 1px solid var(--ink);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+a:hover {
+  border-bottom: 0;
+}

@@ -1,0 +1,15 @@
+:root {
+  background: var(--paper);
+}
+
+body {
+  margin: 40px auto;
+  width: 100%;
+  max-width: 650px;
+  min-height: 100vh;
+  padding: 0 10px;
+  line-height: 1.7;
+  font-size: 18px;
+  font-family: var(--primaryFont);
+  color: var(--ink);
+}
