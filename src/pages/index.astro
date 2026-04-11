@@ -1,7 +1,19 @@
 ---
+import { getPosts } from "@lib/posts";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const pageTitle = "Home page";
+const posts = getPosts();
 ---
 
-<BaseLayout pageTitle={pageTitle}> This is home! </BaseLayout>
+<BaseLayout pageTitle={pageTitle}>
+  This is home!
+
+  {
+    posts.map((post) => (
+      <li>
+        <a href={`posts/${post.slug}`}>{post.title}</a>, posted on {post.date}
+      </li>
+    ))
+  }
+</BaseLayout>
