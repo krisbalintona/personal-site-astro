@@ -1,0 +1,80 @@
+<div id="content" class="content">
+  <header>
+    <i class="date">January 1, 1970</i>
+    <h1 class="title">Customized LaTeX exports for humanities papers</h1>
+  </header>
+  <div id="outline-container-1" class="outline-2">
+    <h2 id="1"><span class="section-number-2">1.</span> 1</h2>
+    <div class="outline-text-2" id="text-1"></div>
+    <div id="outline-container-the-pain-point" class="outline-3">
+      <h3 id="the-pain-point">
+        <span class="section-number-3">1.1.</span> The pain-point
+      </h3>
+      <div class="outline-text-3" id="text-1-1"></div>
+    </div>
+    <div id="outline-container-approach-1" class="outline-3">
+      <h3 id="approach-1">
+        <span class="section-number-3">1.2.</span> Approach 1
+      </h3>
+      <div class="outline-text-3" id="text-1-2">
+        <p>
+          initially redefined latex exporter; but that created a long section in
+          my config with majority redundancy with upstream code and brittle to
+          future upstream changes
+        </p>
+
+        <p>
+          lots of boilerplate to register new derived backend, and a bit hacky
+          to repalce the old latex backend entry in the org export menu with the
+          replacement version
+        </p>
+
+        <p>
+          also overkill when you just want "default latex exporter but
+          recognizing a few more keywords"
+        </p>
+
+        <p>which is why we have approach 2 and 3</p>
+      </div>
+    </div>
+    <div id="outline-container-approach-2" class="outline-3">
+      <h3 id="approach-2">
+        <span class="section-number-3">1.3.</span> Approach 2
+      </h3>
+      <div class="outline-text-3" id="text-1-3">
+        <p>
+          first tried <code>org-export-filter-keyword-functions</code>; didn't
+          work because unknown keywords are ignored, not making it to the stage
+          when filter functions are run
+        </p>
+
+        <p>
+          I found a solution with
+          <code>org-export-before-parsing-functions</code>: convert those
+          keyword lines into #+LATEX<sub>HEADER</sub> lines (which ox-latex does
+          convert)
+        </p>
+      </div>
+    </div>
+    <div id="outline-container-approach-3" class="outline-3">
+      <h3 id="approach-3">
+        <span class="section-number-3">1.4.</span> Approach 3
+      </h3>
+      <div class="outline-text-3" id="text-1-4">
+        <p>
+          but, in the end, if you just want latex export, you can use the
+          #+LATEX<sub>HEADER</sub> and #+LATEX<sub>HEADER</sub
+          ><sub>EXTRA</sub> keywords
+        </p>
+
+        <p>merit: explicit declaration, not depending on your config</p>
+
+        <p>
+          but: as a consequence, if aspects involving in exporting the file are
+          declared outside of the file (e.g., .sty file), the explicit file
+          declaration might be end up brittle
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

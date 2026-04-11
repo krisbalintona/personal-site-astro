@@ -1,0 +1,687 @@
+<div id="content" class="content">
+  <header>
+    <i class="date">May 29, 2025</i>
+    <h1 class="title">Surprisingly, Emacs on Android is pretty good</h1>
+  </header>
+  <nav id="table-of-contents" role="doc-toc">
+    <h2>Table of Contents</h2>
+    <div id="text-table-of-contents" role="doc-toc">
+      <ul>
+        <li>
+          <a href="#11">1. 1.1</a>
+          <ul>
+            <li><a href="#introduction">1.1. Introduction</a></li>
+            <li>
+              <a href="#the-good-and-bad-what-to-expect-on-android"
+                >1.2. The good and bad: what to expect on Android</a
+              >
+            </li>
+            <li>
+              <a href="#installation">1.3. Installation</a>
+              <ul>
+                <li><a href="#option-1">1.3.1. Option 1</a></li>
+                <li>
+                  <a href="#recommended-installation"
+                    >1.3.2. Option 2 (recommended)</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#configuring-an-android-specific-emacs"
+                >1.4. Configuring an Android-specific Emacs</a
+              >
+              <ul>
+                <li>
+                  <a href="#necessary-reading-the-manual"
+                    >1.4.1. Necessary reading: the manual</a
+                  >
+                </li>
+                <li>
+                  <a href="#how-to-configure-your-initel-on-a-mobile-device"
+                    >1.4.2. How to configure your <code>init.el</code> on a
+                    mobile device?</a
+                  >
+                </li>
+                <li>
+                  <a href="#first-step-a-better-ui-for-touchscreens"
+                    >1.4.3. First step: A Better UI for touchscreens</a
+                  >
+                </li>
+                <li>
+                  <a href="#android-specific-commands"
+                    >1.4.4. Android-specific Commands and Options</a
+                  >
+                </li>
+                <li>
+                  <a href="#virtual-keyboards"
+                    >1.4.5. Use a Special virtual keyboard</a
+                  >
+                </li>
+                <li><a href="#fonts">1.4.6. Fonts</a></li>
+                <li>
+                  <a href="#tip-you-can-remap-the-volume-buttons"
+                    >1.4.7. Tip: You can remap the volume buttons</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#conclusion">1.5. Conclusion</a>
+              <ul>
+                <li>
+                  <a href="#bonus-my-wish-list">1.5.1. Bonus: My wish list</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div id="outline-container-11" class="outline-2">
+    <h2 id="11"><span class="section-number-2">1.</span> 1.1</h2>
+    <div class="outline-text-2" id="text-1"></div>
+    <div id="outline-container-introduction" class="outline-3">
+      <h3 id="introduction">
+        <span class="section-number-3">1.1.</span> Introduction
+      </h3>
+      <div class="outline-text-3" id="text-1-1">
+        <p>
+          Recently I got around to making steps toward a better mobile-PC
+          workflow. Until now, I've pretty much exclusively been using the
+          community-developed
+          <a href="https://github.com/orgzly-revived/orgzly-android-revived"
+            >orgzly-revived</a
+          >
+          app on Android. My intention was to use orgzly-revived for simple todo
+          management and another app for more note-taking purposes&mdash;but I
+          could never find another app I was happy with on Android. But I
+          happened to remember reading good things about the <i>native</i> Emacs
+          app on Android a few months ago. So I tried it out&hellip; and was
+          immediately sold!
+        </p>
+      </div>
+    </div>
+    <div
+      id="outline-container-the-good-and-bad-what-to-expect-on-android"
+      class="outline-3"
+    >
+      <h3 id="the-good-and-bad-what-to-expect-on-android">
+        <span class="section-number-3">1.2.</span> The good and bad: what to
+        expect on Android
+      </h3>
+      <div class="outline-text-3" id="text-1-2">
+        <p>
+          First, let's make sure our expectations are tempered: Emacs on Android
+          won't be as pleasant as the full desktop experience.<sup
+            ><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink"
+              >1</a
+            ></sup
+          >
+          Of course. A phone's screen is tiny, and unless you have a physical
+          keyboard connected, you'll have to manage with a virtual one (see
+          <a href="#virtual-keyboards">Use a Special virtual keyboard</a>). On
+          top of that:
+        </p>
+        <dl class="org-dl">
+          <dt>Tooling</dt>
+          <dd>
+            To have non-Emacs programs available, you have to install Emacs in a
+            particular way with Termux to expose Termux’s binaries to Emacs.
+            (See
+            <a href="#recommended-installation"
+              >the recommended way to install Emacs</a
+            >.) The initial set up is longer, but it's worth it.
+          </dd>
+          <dt>File paths</dt>
+          <dd>
+            Android "sandboxes" each app. You can think of each app having their
+            own "section" of the file system that they can read or write to
+            (unless they are given explicit access to that outside directory;
+            see <code>info "(emacs) Android Document Providers"</code>). As
+            such, one finds themselves fiddling with the obnoxiously long
+            Android file paths if they want to, for instance, access their notes
+            directory that is outside the Emacs app sandbox.<sup
+              ><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink"
+                >2</a
+              ></sup
+            >
+            This is a minor inconvenience though.
+          </dd>
+          <dt>Writing to the file system</dt>
+          <dd>
+            Relatively speaking, writing to the file system can be long
+            sometimes. Not too long, but long nonetheless, As far as I've
+            experienced, this has only been the case when saving files that are
+            outside the Emacs sandbox.
+          </dd>
+        </dl>
+
+        <p>So, really, the situation is pretty good!</p>
+
+        <p>
+          And finally: YMMV on other Android devices. My current phone is the
+          OnePlus 7 Pro running Android version 12.
+        </p>
+      </div>
+    </div>
+    <div id="outline-container-installation" class="outline-3">
+      <h3 id="installation">
+        <span class="section-number-3">1.3.</span> Installation
+      </h3>
+      <div class="outline-text-3" id="text-1-3"></div>
+      <div id="outline-container-option-1" class="outline-4">
+        <h4 id="option-1">
+          <span class="section-number-4">1.3.1.</span> Option 1
+        </h4>
+        <div class="outline-text-4" id="text-1-3-1">
+          <p>
+            The first option is as easy as it can get, but you won’t have a way
+            to access other CLI tools:
+          </p>
+          <ol class="org-ol">
+            <li>
+              Download the <a href="https://f-droid.org/">F-droid</a> app store.
+              For the layperson who doesn't know what it is: it's basically an
+              alternative to the Play Store. Some apps that can't be on the Play
+              Store (fact check, maybe link tk) are there.
+            </li>
+            <li>
+              Download the
+              <a href="https://f-droid.org/en/packages/org.gnu.emacs/">Emacs</a>
+              app.
+            </li>
+            <li>
+              Open Emacs! The version of Emacs as I write this that is available
+              is Emacs 30.1.
+            </li>
+          </ol>
+          <p>
+            Using Emacs this way is totally possible if all you need is elisp.
+            But if you need other tools, like git, I recommend the second way to
+            install Emacs.
+          </p>
+        </div>
+      </div>
+      <div id="outline-container-recommended-installation" class="outline-4">
+        <h4 id="recommended-installation">
+          <span class="section-number-4">1.3.2.</span> Option 2 (recommended)
+        </h4>
+        <div class="outline-text-4" id="text-recommended-installation">
+          <p>
+            This option makes other CLI tools accessible to the Emacs Android
+            application container. It is a little bit more of a hassle.
+          </p>
+
+          <p>
+            The method is
+            <a
+              href="https://sourceforge.net/projects/android-ports-for-gnu-emacs/files/termux/"
+              >outlined in this SourceForge repository</a
+            >. In essence, inside the <code>termux/</code> directory of this
+            SourceForge repository are modified Emacs .apk files. These .apk
+            files allow the Emacs app container to access the Termux (explain
+            what Termux is tk) app container, meaning the CLI tools installed
+            with Termux will become accessible to Emacs. But the installation is
+            specific; read the instructions detailed inside that repository. I
+            will outline them briefly below, but be careful if you are reading
+            this in the future, for the instructions could have changed
+            relevantly.
+          </p>
+
+          <p>In short,</p>
+          <ol class="org-ol">
+            <li>Delete any existing Emacs or Termux apps.</li>
+            <li>
+              Ensure you have enabled the setting that allows you to install
+              third-party apps (i.e., non-Play Store apps) on your phone.
+            </li>
+            <li>Install Termux. Don’t open Termux yet.</li>
+            <li>
+              Select the .apk file appropriate to your phone. There are various
+              .apk files for different versions of Emacs and devices.
+            </li>
+            <li>
+              Install Emacs through this .apk. (If your phone refuses to install
+              the .apk, you might have selected the wrong type of .apk file for
+              your device. So try different .apk files for the same Emacs
+              version.)
+            </li>
+            <li>
+              In Termux, run <code>pkg update &amp;&amp; pkg upgrade</code>. Say
+              “yes” to each of the prompts.
+            </li>
+            <li>Open Emacs.</li>
+            <li>
+              <p>
+                Create a <code>~/.emacs.d/early-init.el</code> and place the
+                following inside of it:
+              </p>
+              <div class="org-src-container">
+                <pre
+                  class="src src-emacs-lisp"
+                ><code>(setenv "PATH" (format "%s:%s" "/data/data/com.termux/files/usr/bin"
+                       (getenv "PATH")))
+(push "/data/data/com.termux/files/usr/bin" exec-path)
+</code></pre>
+              </div>
+            </li>
+            <li>
+              And you’re done! Programs installed through Termux will be made
+              accessible to Emacs.
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div
+      id="outline-container-configuring-an-android-specific-emacs"
+      class="outline-3"
+    >
+      <h3 id="configuring-an-android-specific-emacs">
+        <span class="section-number-3">1.4.</span> Configuring an
+        Android-specific Emacs
+      </h3>
+      <div class="outline-text-3" id="text-1-4"></div>
+      <div
+        id="outline-container-necessary-reading-the-manual"
+        class="outline-4"
+      >
+        <h4 id="necessary-reading-the-manual">
+          <span class="section-number-4">1.4.1.</span> Necessary reading: the
+          manual
+        </h4>
+        <div class="outline-text-4" id="text-1-4-1">
+          <p>
+            Chances are that you don't know that the Emacs manual has its own
+            section for the Android system:
+            <code>(info "(emacs) Android")</code>. Before anything, I highly
+            recommend you peruse this section, returning to and reading more
+            deeply specific parts as you see fit. In particular, I found the
+            following Info nodes essential:
+          </p>
+          <ul class="org-ul">
+            <li>
+              <code>(info "(emacs) Android File System")</code> (This one is
+              particularly important if you wan to understand what the
+              <code>~/</code> path means for Emacs.)
+            </li>
+            <li><code>(info "(emacs) Android Document Providers")</code></li>
+            <li><code>(info "(emacs) Android Fonts")</code></li>
+            <li><code>(info "(emacs) Android Windowing")</code></li>
+          </ul>
+          <p>
+            A lot of the information here is found directly inside these Info
+            pages.
+          </p>
+
+          <p>
+            Additionally, I also think reading about Emacs' facilities for
+            touchscreens and virtual keyboards (bet you didn't know this was in
+            the manual either!) is essential:
+            <code>(info "(emacs) Other Input")</code>.
+          </p>
+
+          <p>
+            Moments like these are truly a testament to Emacs' dedication to an
+            accessible editor.
+          </p>
+        </div>
+      </div>
+      <div
+        id="outline-container-how-to-configure-your-initel-on-a-mobile-device"
+        class="outline-4"
+      >
+        <h4 id="how-to-configure-your-initel-on-a-mobile-device">
+          <span class="section-number-4">1.4.2.</span> How to configure your
+          <code>init.el</code> on a mobile device?
+        </h4>
+        <div class="outline-text-4" id="text-1-4-2">
+          <p>
+            Later I’ll explain how you make typing code on a touchscreen device
+            easier by installing
+            <a href="#virtual-keyboards">a handy virtual keyboard</a>. But I
+            highly recommend that until you’ve settled on a configuration you’re
+            willing to type out that you
+            <b>heavily utilize the customize interface</b>. This means accessing
+            the Customize interfaces via the tool-bar<sup
+              ><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink"
+                >3</a
+              ></sup
+            >
+            buttons then using your touchscreen to tap the buttons available in
+            <code>customize-mode</code> buffers. (Then, if you prefer, after
+            setting many options with Customize, you can refactor the options
+            Customize put in your <code>init.el</code> into e.g. use-package
+            forms.)
+          </p>
+
+          <p>
+            If you haven’t used Customize much before, you can check out the
+            available Customize commands via
+            <code>C-h a</code> (<code>apropos-command</code>), search for
+            “customize.” The most useful commands are:
+          </p>
+          <ul class="org-ul">
+            <li><code>customize-group</code>,</li>
+            <li><code>customize-option</code>,</li>
+            <li><code>customize-face</code>,</li>
+          </ul>
+        </div>
+      </div>
+      <div
+        id="outline-container-first-step-a-better-ui-for-touchscreens"
+        class="outline-4"
+      >
+        <h4 id="first-step-a-better-ui-for-touchscreens">
+          <span class="section-number-4">1.4.3.</span> First step: A Better UI
+          for touchscreens
+        </h4>
+        <div class="outline-text-4" id="text-1-4-3">
+          <p>
+            The very first thing I did when I opened Emacs was enable these
+            minor modes:
+          </p>
+          <ul class="org-ul">
+            <li><code>modifier-bar-mode</code></li>
+            <li><code>tool-bar-mode</code></li>
+          </ul>
+          <p>
+            and set <code>tool-bar-position</code> to <code>‘bottom</code>,
+            placing it closer to where my fingers and the virtual keyboard are.
+          </p>
+
+          <p>
+            Desktop users might have disabled these years ago in favor of
+            keyboard-centric workflow, but they are awesome for touchscreens in
+            my opinion.
+          </p>
+        </div>
+      </div>
+      <div id="outline-container-android-specific-commands" class="outline-4">
+        <h4 id="android-specific-commands">
+          <span class="section-number-4">1.4.4.</span> Android-specific Commands
+          and Options
+        </h4>
+        <div class="outline-text-4" id="text-android-specific-commands">
+          <p>
+            There are a few built-in Android commands and options you should be
+            aware of. (Pro tip: one can <code>M-x Info-index</code> or press
+            <code>i</code> in the Emacs Info manual, itself accessible via
+            <code>C-h r</code>, or <code>M-x info-emacs-manual</code>, then
+            search for the string “android” to find all the specific mentions
+            off “Android.”)
+          </p>
+          <ul class="org-ul">
+            <li>
+              Commands:
+              <ul class="org-ul">
+                <li>
+                  <code>android-request-directory-access</code> to request
+                  access to file paths of other apps<sup
+                    ><a
+                      id="fnr.4"
+                      class="footref"
+                      href="#fn.4"
+                      role="doc-backlink"
+                      >4</a
+                    ></sup
+                  >
+                </li>
+                <li>
+                  and its inverse,
+                  <code>android-relinquish-directory-access</code>.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Options:
+              <ul class="org-ul">
+                <li><code>android-pass-multimedia-buttons-to-system</code>,</li>
+                <li><code>android-intercept-control-space</code>,</li>
+                <li><code>touch-screen-display-keyboard</code>,</li>
+                <li>(and more not useful to me).</li>
+              </ul>
+            </li>
+          </ul>
+
+          <p>
+            Also, don’t forget to let Emacs display over other apps. This is a
+            device setting, not an Emacs one.
+          </p>
+        </div>
+      </div>
+      <div id="outline-container-virtual-keyboards" class="outline-4">
+        <h4 id="virtual-keyboards">
+          <span class="section-number-4">1.4.5.</span> Use a Special virtual
+          keyboard
+        </h4>
+        <div class="outline-text-4" id="text-virtual-keyboards">
+          <p>
+            Unless you have a physical keyboard connected to your mobile device,
+            typing will be a pain. For that, we install a virtual keyword that
+            gives us easier access to modifier keys, function keys, arrow keys,
+            and symbols. As far as I know, there are currently two main options:
+          </p>
+          <ul class="org-ul">
+            <li>
+              <a
+                href="https://f-droid.org/packages/org.pocketworkstation.pckeyboard/"
+                >Hacker’s Keyboard</a
+              >, available in F-Droid.
+            </li>
+            <li>
+              <a
+                href="https://play.google.com/store/apps/details?id=juloo.keyboard2&amp;hl=en-US&amp;pli=1"
+                >Unexpected Keyboard</a
+              >, available in the Play Store.
+            </li>
+          </ul>
+          <p>
+            Having briefly tried both, I personally prefer the latter. Though
+            the former works just fine if you like it.
+          </p>
+        </div>
+      </div>
+      <div id="outline-container-fonts" class="outline-4">
+        <h4 id="fonts"><span class="section-number-4">1.4.6.</span> Fonts</h4>
+        <div class="outline-text-4" id="text-1-4-6">
+          <p>
+            You might want a set of fonts not already installed on your Android
+            system. If that’s the case, you should read the
+            <code>(info "(emacs) Android Fonts")</code> manual page.
+          </p>
+
+          <p>
+            That page explains that if you want to install fonts for your user
+            (in the Emacs app container), you should place them in
+            <code>~/fonts/</code>.<sup
+              ><a id="fnr.5" class="footref" href="#fn.5" role="doc-backlink"
+                >5</a
+              ></sup
+            >
+            Getting those fonts was somewhat cumbersome for me: I had to
+            manually download them, unzip them with Termux, place them inside a
+            directory Emacs had access to (see
+            <a href="#android-specific-commands"
+              >Android-specific Commands and Options</a
+            >), then copy them to <code>~/fonts/</code>.
+          </p>
+
+          <p>
+            Note: in my experience,
+            <i>fonts are not recursively checked inside this directory</i>. That
+            is, you should place your e.g. .ttf files inside that folder, not
+            any subdirectories.
+          </p>
+        </div>
+      </div>
+      <div
+        id="outline-container-tip-you-can-remap-the-volume-buttons"
+        class="outline-4"
+      >
+        <h4 id="tip-you-can-remap-the-volume-buttons">
+          <span class="section-number-4">1.4.7.</span> Tip: You can remap the
+          volume buttons
+        </h4>
+        <div class="outline-text-4" id="text-1-4-7">
+          <p>
+            Volume buttons are un-mapped by default (see
+            <code>android-pass-multimedia-buttons-to-system</code>). That’s find
+            with me, but if you feel inclined, you can rebind them to something
+            else after setting
+            <code>android-pass-multimedia-buttons-to-system</code>
+            appropriately. Some possibilities would be for navigation between
+            headings, tk list more.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div id="outline-container-conclusion" class="outline-3">
+      <h3 id="conclusion">
+        <span class="section-number-3">1.5.</span> Conclusion
+      </h3>
+      <div class="outline-text-3" id="text-1-5">
+        <p>In conclusion,</p>
+        <ul class="org-ul">
+          <li>
+            Make heavy use of the Customize interface. (At least
+            initially&mdash;after you’re comfy in Emacs, you can refactor it
+            into a form more familiar to a desktop <code>init.el</code>.)
+          </li>
+          <li>
+            Enable minor modes and options specific to touchscreen-driven usage.
+          </li>
+          <li>
+            Install a virtual keyboard to get access to modifiers, function
+            keys, and more.
+          </li>
+        </ul>
+
+        <p>
+          Right now I’ve achieved a set up I’m happy with. I migrated the
+          portions of my configuration relevant to org, org-capture, and
+          org-node, but in the future if I need more from Emacs-on-mobile, I’ll
+          look to expand my config as necessary. (This includes
+          version-controlling my <code>init.el</code>.)
+        </p>
+
+        <p>
+          And finally: YMMV on other Android devices. My current phone is the
+          OnePlus 7 Pro running Android version 12.
+        </p>
+      </div>
+      <div id="outline-container-bonus-my-wish-list" class="outline-4">
+        <h4 id="bonus-my-wish-list">
+          <span class="section-number-4">1.5.1.</span> Bonus: My wish list
+        </h4>
+        <div class="outline-text-4" id="text-1-5-1">
+          <dl class="org-dl">
+            <dt>Touchscreen gestures</dt>
+            <dd>
+              There is the built-in strokes.el, but strokes.el, as far as I can
+              tell, does not work for touchscreens. Additionally, significant
+              changes would be required to its code base to make it compatible
+              for touchscreens. So, for now, we have to settle with virtual
+              keyboards&hellip;
+            </dd>
+            <dt>Automatic keyboard/IME switching</dt>
+            <dd>
+              Ideally, I’d have my special virtual keyboard be automatically
+              selected using Emacs and deselected when not using Emacs. Right
+              now, I have to manually switch to it. As far as I know, there is
+              no easy way to accomplish this.
+            </dd>
+            <dt>Larger tool bar and menu bar</dt>
+            <dd>
+              The tool bar and menu bar are useful, but they’re also small. I
+              wish they were larger and easier to tap.
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="footnotes">
+    <h2 class="footnotes">Footnotes:</h2>
+    <div id="text-footnotes">
+      <div class="footdef">
+        <sup
+          ><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink"
+            >1</a
+          ></sup
+        >
+        <div class="footpara" role="doc-footnote">
+          <p class="footpara">
+            Although, some users might find benefits from “typing” via voice
+            input&hellip;
+          </p>
+        </div>
+      </div>
+
+      <div class="footdef">
+        <sup
+          ><a id="fn.2" class="footnum" href="#fnr.2" role="doc-backlink"
+            >2</a
+          ></sup
+        >
+        <div class="footpara" role="doc-footnote">
+          <p class="footpara">
+            This is what I do: I use Syncthing to share my notes across devices.
+            On my phone, they are located in
+            <code
+              >"/content/storage/com.android.externalstorage.documents/primary:Org
+              files/</code
+            >&hellip; quite a long file path.
+          </p>
+        </div>
+      </div>
+
+      <div class="footdef">
+        <sup
+          ><a id="fn.3" class="footnum" href="#fnr.3" role="doc-backlink"
+            >3</a
+          ></sup
+        >
+        <div class="footpara" role="doc-footnote">
+          <p class="footpara">
+            See
+            <a href="#android-specific-commands"
+              >Android-specific Commands and Options</a
+            >
+            for why to use the tool-bar tk.
+          </p>
+        </div>
+      </div>
+
+      <div class="footdef">
+        <sup
+          ><a id="fn.4" class="footnum" href="#fnr.4" role="doc-backlink"
+            >4</a
+          ></sup
+        >
+        <div class="footpara" role="doc-footnote">
+          <p class="footpara">
+            I use this to access my files shared through Syncthing.
+          </p>
+        </div>
+      </div>
+
+      <div class="footdef">
+        <sup
+          ><a id="fn.5" class="footnum" href="#fnr.5" role="doc-backlink"
+            >5</a
+          ></sup
+        >
+        <div class="footpara" role="doc-footnote">
+          <p class="footpara">
+            Recall what
+            <code>(info "(emacs) Android File System")</code> explains the
+            “home” for the Emacs app container is.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

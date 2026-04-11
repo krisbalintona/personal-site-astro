@@ -1,0 +1,611 @@
+<div id="content" class="content">
+  <header>
+    <i class="date">January 1, 1970</i>
+    <h1 class="title">Org and LaTeX integration</h1>
+  </header>
+  <div id="outline-container-my-desired-workflow" class="outline-2">
+    <h2 id="my-desired-workflow">
+      <span class="section-number-2">1.</span> My desired workflow
+    </h2>
+    <div class="outline-text-2" id="text-1">
+      <p>
+        Org-export is a means to convert org files into LaTeX files. The
+        question this article explores is how I answer the following question:
+        <b
+          >How can I write my university essays in org and export them directly
+          into a LaTeX PDF file without any further adjustments?</b
+        >
+        This means the following:
+      </p>
+      <dl class="org-dl">
+        <dt>Basic formatting</dt>
+        <dd>
+          Elements such as line spacing, margins, font should be set
+          automatically.
+        </dd>
+        <dt>Citations</dt>
+        <dd>
+          In-text citations and bibliographies should be formatted
+          automatically.
+        </dd>
+        <dt>Flexibility with styles</dt>
+        <dd>
+          I should be able to switch between, e.g., MLA, APA, and Chicago Manual
+          Style without any fuss.
+        </dd>
+        <dt>Boilerplate text</dt>
+        <dd>
+          I want to do all of the above with very little to no boilerplate text
+          in my org files (e.g. I shouldn't rely on many
+          <code>#+LaTeX_header:</code> lines).
+        </dd>
+      </dl>
+      <p>
+        In short, I simply want to produce my final paper's PDF by calling a
+        single org-export command. Here, I visit the portions of my
+        configuration where I make accomplish such a workflow.
+      </p>
+
+      <p>
+        A note for STEM (Science, Technology, Engineering, and Mathematics)
+        students: As a philosophy undergraduate, this article primarily centers
+        on a subset of concerns STEM students would face in formatting their
+        papers, since mathematics, tables, and other LaTeX features will be much
+        more common. This is beyond my use case, but I hope that this article
+        still has a use for those students. Additionally, there are many other
+        resources available that cover similar use cases (link such sources
+        later tk).
+      </p>
+    </div>
+  </div>
+  <div
+    id="outline-container-basic-formatting-org-latex-classes"
+    class="outline-2"
+  >
+    <h2 id="basic-formatting-org-latex-classes">
+      <span class="section-number-2">2.</span> Basic Formatting:
+      <code>org-latex-classes</code>
+    </h2>
+  </div>
+
+  <div
+    id="outline-container-title-pages-creating-an-org-export-backend"
+    class="outline-2"
+  >
+    <h2 id="title-pages-creating-an-org-export-backend">
+      <span class="section-number-2">3.</span> Title pages: Creating an
+      Org-export backend
+    </h2>
+    <div class="outline-text-2" id="text-3">
+      <p>
+        The most challenging hurdle is conveniently producing a formatted title
+        page<sup
+          ><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink"
+            >1</a
+          ></sup
+        >.
+      </p>
+
+      <p>
+        The most convenient method would be setting
+        <code>org-latex-title-command</code>. With this, we can manually insert
+        a formatted title page. However, this method is inflexible: different
+        styles require different values for this variable.
+      </p>
+
+      <p>
+        A nearby alternative would be redefining the default
+        <code>\maketitle</code> command that org already uses for every file.
+        However, doing so would require additional
+        <code>#+LaTeX_HEADER:</code> text.
+      </p>
+
+      <p>
+        Conveniently, we can leverage the already exist .sty file and redefine
+        the <code>\maketitle</code> command there, instead.
+      </p>
+
+      <p>
+        The challenge, however, lies in how to get the requisite metadata from
+        our org file. For instance, MLA requires four pieces of information in
+        its title page:
+      </p>
+      <ol class="org-ol">
+        <li>Author name</li>
+        <li>Professor's name</li>
+        <li>Course code and/or title</li>
+        <li>Current date</li>
+      </ol>
+      <p>
+        Items (1) and (4) can be done simply. However, (2) and (3) are
+        contingent on the exported essay. We can try making use of built-in org
+        options such as <code>#+AUTHOR:</code> and <code>#+CREATOR:</code>, but
+        this alone cannot provide a robust solution.
+        <b
+          >So, instead of trying to abuse existing options, I opt to create my
+          own.</b
+        >
+      </p>
+
+      <p>
+        Take a look at the docstring for <code>org-export-define-backend</code>:
+      </p>
+
+      <details id="special-block-2">
+        <summary id="special-block-1">
+          <p>Docstring for <code>org-export-define-backend</code></p>
+        </summary>
+        <p class="verse">
+          (org-export-define-backend BACKEND TRANSCODERS &amp;rest BODY)<br />
+          <br />
+          Define a new backend BACKEND.<br />
+          <br />
+          TRANSCODERS is an alist between object or element types and<br />
+          functions handling them.<br />
+          <br />
+          These functions should return a string without any trailing<br />
+          space, or nil. They must accept three arguments: the object or<br />
+          element itself, its contents or nil when it isn’t recursive and<br />
+          the property list used as a communication channel.<br />
+          <br />
+          Contents, when not nil, are stripped from any global indentation<br />
+          (although the relative one is preserved). They also always end<br />
+          with a single newline character.<br />
+          <br />
+          If, for a given type, no function is found, that element or<br />
+          object type will simply be ignored, along with any blank line or<br />
+          white space at its end. The same will happen if the function<br />
+          returns the nil value. If that function returns the empty<br />
+          string, the type will be ignored, but the blank lines or white<br />
+          spaces will be kept.<br />
+          <br />
+          In addition to element and object types, one function can be<br />
+          associated to the ‘template’ (or ‘inner-template’) symbol and<br />
+          another one to the ‘plain-text’ symbol.<br />
+          <br />
+          The former returns the final transcoded string, and can be used<br />
+          to add a preamble and a postamble to document’s body. It must<br />
+          accept two arguments: the transcoded string and the property list<br />
+          containing export options. A function associated to ‘template’<br />
+          will not be applied if export has option "body-only".<br />
+          A function associated to ‘inner-template’ is always applied.<br />
+          <br />
+          The latter, when defined, is to be called on every text not<br />
+          recognized as an element or an object. It must accept two<br />
+          arguments: the text string and the information channel. It is an<br />
+          appropriate place to protect special chars relative to the<br />
+          backend.<br />
+          <br />
+          BODY can start with pre-defined keyword arguments. The following<br />
+          keywords are understood:<br />
+          <br />
+          &nbsp;&nbsp;:filters-alist<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;Alist between filters and function, or list of
+          functions,<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;specific to the backend. See
+          org-export-filters-alist for<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;a list of all allowed filters. Filters defined
+          here<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;shouldn’t make a backend test, as it may
+          prevent backends<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;derived from this one to behave properly.<br />
+          <br />
+          &nbsp;&nbsp;:menu-entry<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;Menu entry for the export dispatcher. It
+          should be a list<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;like:<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(KEY DESCRIPTION-OR-ORDINAL
+          ACTION-OR-MENU)<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;where :<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KEY is a free character selecting
+          the backend.<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DESCRIPTION-OR-ORDINAL is either a
+          string or a number.<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If it is a string, is will be used
+          to name the backend in<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;its menu entry. If it is a number,
+          the following menu will<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;be displayed as a sub-menu of the
+          backend with the same<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KEY. Also, the number will be used
+          to determine in which<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;order such sub-menus will appear
+          (lowest first).<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ACTION-OR-MENU is either a
+          function or an alist.<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If it is an action, it will be
+          called with four<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arguments (booleans): ASYNC,
+          SUBTREEP, VISIBLE-ONLY and<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BODY-ONLY. See org-export-as for
+          further explanations on<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;some of them.<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If it is an alist, associations
+          should follow the<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pattern:<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(KEY DESCRIPTION
+          ACTION)<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;where KEY, DESCRIPTION and ACTION
+          are described above.<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;Valid values include:<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(?m "My Special Backend"
+          my-special-export-function)<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(?l "Export to LaTeX"<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((?p
+          "As PDF file" org-latex-export-to-pdf)<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(?o
+          "As PDF file and open"<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda
+          (a s v b)<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if
+          a (org-latex-export-to-pdf t s v b)<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(org-open-file<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(org-latex-export-to-pdf
+          nil s v b)))))))<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or the following, which will be
+          added to the previous<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sub-menu,<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(?l 1<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((?B "As
+          TEX buffer (Beamer)" org-beamer-export-as-latex)<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(?P
+          "As PDF file (Beamer)" org-beamer-export-to-pdf)))<br />
+          <br />
+          &nbsp;&nbsp;:options-alist<br />
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;Alist between backend specific properties
+          introduced in<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;communication channel and how their value are
+          acquired. See<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;org-export-options-alist for more information
+          about<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;structure of the values.<br />
+        </p>
+      </details>
+
+      <p>You have a few options.</p>
+    </div>
+    <div
+      id="outline-container-customize-the-org-export-latex-backend"
+      class="outline-3"
+    >
+      <h3 id="customize-the-org-export-latex-backend">
+        <span class="section-number-3">3.1.</span> Customize the
+        <code>org-export</code> LaTeX backend
+      </h3>
+      <div class="outline-text-3" id="text-3-1">
+        <p>File properties</p>
+      </div>
+      <div id="outline-container-backend" class="outline-4">
+        <h4 id="backend">
+          <span class="section-number-4">3.1.1.</span> Backend
+        </h4>
+        <div class="outline-text-4" id="text-3-1-1">
+          <p>
+            There is <code>org-export-define-backend</code> and
+            <code>org-export-define-derived-backend</code>. Defining a backend…
+          </p>
+
+          <p>
+            The latter is identical, only in that it inherits the definition of
+            a parent backend. For instance, <code>beamer</code> is a derived
+            backend from latex. I won't go in depth into this because you can
+            read the docstrings for them.
+          </p>
+        </div>
+      </div>
+      <div id="outline-container-template" class="outline-4">
+        <h4 id="template">
+          <span class="section-number-4">3.1.2.</span> Template
+        </h4>
+      </div>
+    </div>
+    <div id="outline-container-final-title-command" class="outline-3">
+      <h3 id="final-title-command">
+        <span class="section-number-3">3.2.</span> Final title command
+      </h3>
+      <div class="outline-text-3" id="text-3-2">
+        <div class="org-src-container">
+          <pre class="src src-latex"><code>\renewcommand{\maketitle}{
+  \begin{flushleft}
+    \theauthor \\
+    \professor \\
+    \course    \\
+    \thedate
+  \end{flushleft}
+
+  \centerline{\thetitle}
+}
+</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    id="outline-container-citations-and-bibliographies-org-cite"
+    class="outline-2"
+  >
+    <h2 id="citations-and-bibliographies-org-cite">
+      <span class="section-number-2">4.</span> Citations and bibliographies:
+      Org-cite
+    </h2>
+    <div class="outline-text-2" id="text-4">
+      <p>
+        Nowadays, with the comparatively new <code>org-cite</code>, citations
+        and bibliography is the easiest step of this process. Readers should
+        refer to
+        <a
+          href="20221021T170551--citations-in-org-mode-org-cite-and-citar__guides.html#ID-20221021T170551"
+          >Citations in org-mode: Org-cite and Citar</a
+        >
+        for more information, but once <code>org-cite</code> is set up,
+        potentially with <code>citar</code>, org-export will seamlessly export
+        citations and bibliographies.
+      </p>
+
+      <p>
+        For reference, the following is my <code>org-cite</code> configuration
+        (this doesn't include <code>citar</code>):
+      </p>
+      <details id="special-block-4">
+        <summary id="special-block-3">
+          <p><code>org-cite</code> configuration</p>
+        </summary>
+
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp"><code>(use-package oc
+  :elpaca nil                           ; I use the `elpaca' package manager
+  :general (:keymaps 'org-mode-map [remap citar-insert-citation] 'org-cite-insert)
+  :custom
+  (org-cite-global-bibliography kb/bib-files)
+  (org-cite-csl-locales-dir (file-name-concat user-emacs-directory "locales/"))
+  (org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
+  (org-cite-export-processors
+   '((md . (csl "chicago-fullnote-bibliography.csl"))   ; Footnote reliant
+     (latex biblatex)                                   ; For humanities
+     (odt . (csl "chicago-fullnote-bibliography.csl"))  ; Footnote reliant
+     (docx . (csl "chicago-fullnote-bibliography.csl")) ; Footnote reliant
+     (t . (csl "modern-language-association.csl"))))    ; Fallback
+  :custom-face
+  ;; Have citation link faces look closer to as they were for `org-ref'
+  (org-cite ((t (:foreground "DarkSeaGreen4"))))
+  (org-cite-key ((t (:foreground "forest green" :slant italic))))
+  :config
+  ;; NOTE 2023-07-14: Require all `oc-*' packages so that I don't run into the
+  ;; issue where the package associated with a style (e.g. `oc-biblatex' for the
+  ;; biblatex style) in `org-cite-export-processors' is used prior to its
+  ;; loading
+  (require 'oc-natbib)
+  (require 'oc-csl)
+  (require 'oc-basic)
+  (require 'oc-bibtex)
+  (require 'oc-biblatex))
+</code></pre>
+        </div>
+      </details>
+    </div>
+    <div
+      id="outline-container-one-way-to-specify-citation-style"
+      class="outline-3"
+    >
+      <h3 id="one-way-to-specify-citation-style">
+        <span class="section-number-3">4.1.</span> One way to specify citation
+        style
+      </h3>
+      <div class="outline-text-3" id="text-4-1">
+        <p>
+          The value of <code>org-cite-export-processors</code> is most notable.
+          The configuration above instructs org-export to use the
+          <code>biblatex</code> export processor to process citations and
+          bibliographies when exporting to LaTeX. This can be overridden, for
+          example, at the file-level with the <code>#CITE_EXPORT</code> keyword.
+          See the docstring for <code>org-cite-export-processors</code> for more
+          information about valid values.
+        </p>
+
+        <p>
+          Notably, for LaTeX exports,
+          <b
+            >we can specify the style (citation style and bibliography style) of
+            citations in this way.</b
+          >
+          For instance, taking a look at the commentary for the
+          <code>oc-biblatex</code> library, we read:
+        </p>
+        <p class="verse">
+          ;; In any case, the library will override style-related options with
+          those<br />
+          ;; specified with the citation processor, in
+          `org-cite-export-processors' or<br />
+          ;; "cite<sub>export</sub>" keyword. If you need to use different
+          styles for bibliography<br />
+          ;; and citations, you can separate them with "bibstyle/citestyle"
+          syntax. E.g.,<br />
+          ;;<br />
+          ;; #+cite<sub>export</sub>: biblatex authortitle/authortitle-ibid<br />
+        </p>
+        <p>This means that, for instance,</p>
+        <div class="org-center">
+          <p>
+            <code>#+cite_export: biblatex mla-new/authoryear</code>
+          </p>
+        </div>
+        <p>
+          results in <code>"bibstyle=mla-new,citestyle=authoryear"</code> being
+          passed as an option to biblatex. Or we can set this in
+          <code>org-cite-export-processors</code>:
+        </p>
+        <div class="org-src-container">
+          <pre
+            class="src src-emacs-lisp"
+          ><code>(setq org-cite-export-processors '((latex . (biblatex "mla-new/authoryear"))))
+</code></pre>
+        </div>
+        <p>
+          Valid styles include those provided by the built-in with biblatex,
+          found in section 3.3.2 of the biblatex CTAN manual (link tk), and
+          those provided by numerous other packages.
+        </p>
+      </div>
+    </div>
+    <div
+      id="outline-container-my-method-to-specify-citation-style"
+      class="outline-3"
+    >
+      <h3 id="my-method-to-specify-citation-style">
+        <span class="section-number-3">4.2.</span> My method to specify citation
+        style
+      </h3>
+      <div class="outline-text-3" id="text-4-2">
+        <p>
+          Though the above works, since I'm already using a .sty file to set all
+          the options for the relevant LaTeX packages, I also do so there. For
+          instance, with the MLA citation style:
+        </p>
+        <div class="org-src-container">
+          <pre class="src src-latex"><code>% * Bibliographic source management
+% Declares MLA internal cite and bibliography styles
+\RequirePackage[style=mla-new]{biblatex}
+\addbibresource{../../master-lib.bib}
+</code></pre>
+        </div>
+        <p>
+          In this way, I avoid adding a line in my org files to specify the
+          citation style:
+        </p>
+        <div class="org-center">
+          <p>
+            <code>#+cite_export: biblatex mla-new</code>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="outline-container-final-result-and-screenshots" class="outline-2">
+    <h2 id="final-result-and-screenshots">
+      <span class="section-number-2">5.</span> Final result and screenshots
+    </h2>
+    <div class="outline-text-2" id="text-5">
+      <p>The following org file produces this:</p>
+
+      <p>which, compiled into a PDF, looks like this:</p>
+    </div>
+  </div>
+  <div id="outline-container-extras" class="outline-2">
+    <h2 id="extras"><span class="section-number-2">6.</span> Extras</h2>
+    <div class="outline-text-2" id="text-6"></div>
+    <div id="outline-container-section-numbers" class="outline-3">
+      <h3 id="section-numbers">
+        <span class="section-number-3">6.1.</span> Section numbers
+      </h3>
+      <div class="outline-text-3" id="text-6-1">
+        <div class="org-src-container">
+          <pre
+            class="src src-elisp"
+          ><code>(setq org-export-with-section-numbers nil)
+</code></pre>
+        </div>
+      </div>
+    </div>
+    <div id="outline-container-hyperref" class="outline-3">
+      <h3 id="hyperref"><span class="section-number-3">6.2.</span> Hyperref</h3>
+      <div class="outline-text-3" id="text-6-2">
+        <div class="org-src-container">
+          <pre
+            class="src src-emacs-lisp"
+          ><code>(setq org-latex-hyperref-template
+      "\\hypersetup{
+pdfauthor={%a},
+pdftitle={%t},
+pdfkeywords={%k},
+pdfsubject={%d},
+pdfcreator={%c},
+pdflang={%L}
+colorlinks={true},
+hidelinks={true}}\n")
+</code></pre>
+        </div>
+      </div>
+    </div>
+    <div id="outline-container-table-of-contents" class="outline-3">
+      <h3 id="table-of-contents">
+        <span class="section-number-3">6.3.</span> Table of contents
+      </h3>
+      <div class="outline-text-3" id="text-6-3">
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp"><code>(setq org-latex-toc-command
+      "\\renewcommand{\\contentsname}{
+  \\begin{center}
+    Table of Contents
+  \\end{center}
+}
+\\tableofcontents
+\\newpage")
+</code></pre>
+        </div>
+      </div>
+    </div>
+    <div id="outline-container-org-links" class="outline-3">
+      <h3 id="org-links">
+        <span class="section-number-3">6.4.</span> Org links
+      </h3>
+      <div class="outline-text-3" id="text-6-4">
+        <ol class="org-ol">
+          <li>
+            Custom <code>org-mode</code> links
+            (<code>org-link-set-parameters</code>)
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <div id="outline-container-full-configuration" class="outline-2">
+    <h2 id="full-configuration">
+      <span class="section-number-2">7.</span> Full configuration
+    </h2>
+    <div class="outline-text-2" id="text-7">
+      <p>
+        (Make a note about that there are other stuff in the configuration not
+        referenced or described tk.)
+      </p>
+    </div>
+  </div>
+  <div id="footnotes">
+    <h2 class="footnotes">Footnotes:</h2>
+    <div id="text-footnotes">
+      <div class="footdef">
+        <sup
+          ><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink"
+            >1</a
+          ></sup
+        >
+        <div class="footpara" role="doc-footnote">
+          <p class="footpara">
+            I use the term “title page” to reference what a stylesheet specifies
+            as the format of a title, even if it does not create an entirely new
+            page, e.g., MLA (rephrase tk).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

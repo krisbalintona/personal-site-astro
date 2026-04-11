@@ -1,0 +1,283 @@
+<div id="content" class="content">
+  <header>
+    <i class="date">June 7, 2022</i>
+    <h1 class="title">True Emacs Transparency</h1>
+  </header>
+  <div id="outline-container-writing" class="outline-2">
+    <h2 id="writing"><span class="section-number-2">1.</span> Writing</h2>
+    <div class="outline-text-2" id="text-1">
+      <p>
+        Transparency in Emacs isn't that great. Every source I find regarding
+        transparency of Emacs (as of writing this) points to setting the
+        <code>alpha</code> frame parameter. For instance:
+      </p>
+      <ol class="org-ol">
+        <li>
+          <a href="https://www.emacswiki.org/emacs/TransparentEmacs"
+            >EmacsWiki: Transparent Emacs</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://emacs.stackexchange.com/questions/22663/how-can-transparency-be-toggled"
+            >How can transparency be toggled? - Emacs Stack Exchange</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://stackoverflow.com/questions/2935520/how-to-set-a-key-binding-to-make-emacs-as-transparent-opaque-as-i-want"
+            >How to set a key binding to make Emacs as transparent/opaque</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://www.reddit.com/r/emacs/comments/ljev64/any_advice_on_getting_transparency_to_work_in/"
+            >Any Advice On Getting Transparency To Work In Emacs Window
+            Manager</a
+          >
+        </li>
+      </ol>
+      <p>
+        The issue with <code>alpha</code> is that it sets the transparency of
+        the <i>entire window</i>; what this means is that
+        <i>text and background</i> become transparent together. Clearly this is
+        undesirable for some: the <code>alpha</code> parameter needs to be near
+        100, otherwise the text becomes illegible. Ideally, the text remains
+        opaque while the background becomes transparent.<sup
+          ><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink"
+            >1</a
+          ></sup
+        >
+      </p>
+
+      <p>
+        The solution came from a
+        <a href="https://github.com/TheVaffel/emacs"
+          >patched version of Emacs made by Håkon Flatval</a
+        >
+        back in November 2021—his announcement that month
+        <a
+          href="https://www.reddit.com/r/emacs/comments/qm3tsv/i_implemented_partial_support_for_background/"
+          >on Reddit</a
+        >
+        received some attention. The patch adds the
+        <code>alpha-background</code> frame parameter which makes
+        <b>only the background</b> of a frame transparent:
+      </p>
+
+      <figure id="figure-1">
+        <img
+          src="2022-06-05_20-57-01_screenshot.png"
+          alt="2022-06-05_20-57-01_screenshot.png"
+        />
+
+        <figcaption>
+          <span class="figure-number">Figure 1: </span
+          ><code>alpha-background</code> set to 75.
+        </figcaption>
+      </figure>
+
+      <p>
+        You can set the <code>alpha-background</code> of a particular frame with
+        the <code>set-frame-parameter</code> function, and the default value for
+        frames by adding to <code>default-frame-alist</code>.<sup
+          ><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink"
+            >2</a
+          ></sup
+        >
+        For example:
+      </p>
+      <div class="org-src-container">
+        <pre
+          class="src src-emacs-lisp"
+        ><code>(set-frame-parameter nil 'alpha-background 100) ; For current frame
+(add-to-list 'default-frame-alist '(alpha-background . 100)) ; For all new frames henceforth
+</code></pre>
+      </div>
+      <p>
+        I've also defined my own command for toggling between a frame having
+        <code>alpha-background</code> values of 100 and 72:<sup
+          ><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink"
+            >3</a
+          ></sup
+        >
+      </p>
+      <div class="org-src-container">
+        <pre
+          class="src src-emacs-lisp"
+        ><code>(defun kb/toggle-window-transparency ()
+  "Toggle the value of `alpha-background'.
+
+Toggles between 100 and 72 by default.  Can choose which value to change
+to if called with ARG, or any prefix argument."
+  (interactive "P")
+  (let ((transparency (pcase arg
+                        ((pred numberp) arg)
+                        ((pred car) (read-number "Change the transparency to which value (0-100)? "))
+                        (_
+                         (pcase (frame-parameter nil 'alpha-background)
+                           (72 100)
+                           (100 72)
+                           (t 100))))))
+    (set-frame-parameter nil 'alpha-background transparency)))
+</code></pre>
+      </div>
+      <div class="alert" id="special-block-1">
+        <p>
+          <span class="timestamp-wrapper"
+            ><time class="timestamp" datetime="2025-03-08"
+              >[2025-03-08 Sat]</time
+            ></span
+          >
+          Readers should be aware that the above code snippet may have potential
+          incompatibilities with other versions of Emacs. Small modifications
+          may be necessary in such cases.
+        </p>
+      </div>
+      <p>In practice, this is what toggling transparency looks like:</p>
+
+      <figure id="figure-2">
+        <img src="emacs-transparency.gif" alt="emacs-transparency.gif" />
+
+        <figcaption>
+          <span class="figure-number">Figure 2: </span>Live-toggling of the
+          <code>alpha-background</code> parameter.
+        </figcaption>
+      </figure>
+
+      <p>
+        I had been using Håkon's patched version since becoming aware of it, and
+        it's been perfect for me. My only gripe was that without the expertise
+        of patching future releases of Emacs (Håkon wasn't updating his
+        repository), I would inevitably be using an increasingly out-of-date
+        version of Emacs.
+      </p>
+
+      <p>
+        However, I recently returned to check if there had been any updates to
+        the repo. Though there were no new commits to the repository, I decided
+        to check if there was work on mainline Emacs yet. I searched the repo
+        for matches of <code>alpha-background</code>, and sure enough, I found a
+        hit!
+        <b
+          >On January 30, 2022,
+          <a
+            href="https://github.com/emacs-mirror/emacs/commit/5c87d826201a5cae242ce5887a0aa7e24ad6f5ee"
+            >Po Lu silently announced the merging of the patch</a
+          ></b
+        >. Accordingly, this means that
+        <i
+          >the <code>alpha-background</code> frame parameter is available to all
+          builds after January 30, 2022</i
+        >. I'll also note that do not know what went on behind-the-scenes to get
+        this merged, so I'll make it clear that I am not attributing the
+        development of this feature to only Håkon and Po Lu.
+      </p>
+
+      <p>
+        Of course, transparency in Emacs (alongside any other application on
+        your system) is only possible if you are using a compositor (e.g.
+        Picom). Regarding build flags, Håkon's patch supported transparency only
+        with Emacs compiled with GTK3 and cairo support. I do not know for
+        certain if this is still the case. If it is, then an Emacs built with
+        the <code>--with-cairo</code> and
+        <code>--with-x-toolkit=gtk3</code> flags is necessary (meaning this
+        feature is only available on machines using <code>X Window</code>).
+        However,
+        <a
+          href="https://www.reddit.com/r/emacs/comments/v72tu6/comment/ibioym9/?utm_source=share&amp;utm_medium=web2x&amp;context=3"
+          >according to this Reddit comment thread</a
+        >, it seems like only cairo is necessary, while GTK3 is not necessary.
+        That is, <code>--with-x-toolkit=no</code> works as well.
+      </p>
+    </div>
+    <div id="outline-container-changelog" class="outline-3">
+      <h3 id="changelog">
+        <span class="section-number-3">1.1.</span> Changelog
+      </h3>
+      <div class="outline-text-3" id="text-1-1">
+        <ul class="org-ul">
+          <li>
+            <span class="timestamp-wrapper"
+              ><time class="timestamp" datetime="2022-06-08"
+                >[2022-06-08 Wed]</time
+              ></span
+            >
+            <ul class="org-ul">
+              <li>Note that a compositor is necessary for transparency.</li>
+              <li>
+                Added statement about GTK3 perhaps not being necessary that
+                links to a corresponding Reddit comment thread.
+              </li>
+            </ul>
+          </li>
+          <li>
+            <span class="timestamp-wrapper"
+              ><time class="timestamp" datetime="2025-03-08"
+                >[2025-03-08 Sat]</time
+              ></span
+            >
+            <ul class="org-ul">
+              <li>
+                Update code snippet for
+                <code>kb/toggle-window-transparency</code>. Also add note about
+                potential incompatibilities between this code snippet and other
+                versions of Emacs.
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div id="footnotes">
+    <h2 class="footnotes">Footnotes:</h2>
+    <div id="text-footnotes">
+      <div class="footdef">
+        <sup
+          ><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink"
+            >1</a
+          ></sup
+        >
+        <div class="footpara" role="doc-footnote">
+          <p class="footpara">
+            I work exclusively on a 14-inch laptop, so screen real-estate is
+            valuable. I often use transparency to watch videos (e.g. YouTube,
+            Netflix, lecture) while working on something in Emacs—I benefit from
+            having the space of my entire screen.
+          </p>
+        </div>
+      </div>
+
+      <div class="footdef">
+        <sup
+          ><a id="fn.2" class="footnum" href="#fnr.2" role="doc-backlink"
+            >2</a
+          ></sup
+        >
+        <div class="footpara" role="doc-footnote">
+          <p class="footpara">
+            The behavior of <code>alpha-background</code> matches that of
+            <code>alpha</code>; that is, 100 is fully opaque while 0 is fully
+            transparent.
+          </p>
+        </div>
+      </div>
+
+      <div class="footdef">
+        <sup
+          ><a id="fn.3" class="footnum" href="#fnr.3" role="doc-backlink"
+            >3</a
+          ></sup
+        >
+        <div class="footpara" role="doc-footnote">
+          <p class="footpara">
+            The reason why my frame is not <i>fully</i> opaque when
+            <code>alpha-background</code> is 100 is because I've additionally
+            set <code>alpha</code> to 98.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

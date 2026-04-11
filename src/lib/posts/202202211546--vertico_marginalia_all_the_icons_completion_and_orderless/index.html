@@ -1,0 +1,1083 @@
+<div id="content" class="content">
+  <header>
+    <i class="date">February 21, 2022</i>
+    <h1 class="title">
+      Vertico, Marginalia, All-the-icons-completion, and Orderless
+    </h1>
+  </header>
+  <nav id="table-of-contents" role="doc-toc">
+    <h2>Table of Contents</h2>
+    <div id="text-table-of-contents" role="doc-toc">
+      <ul>
+        <li><a href="#synopsis">1. Synopsis</a></li>
+        <li><a href="#marginalia">2. Marginalia</a></li>
+        <li>
+          <a href="#all-the-icons-completion">3. All-the-icons-completion</a>
+        </li>
+        <li>
+          <a href="#vertico">4. Vertico</a>
+          <ul>
+            <li><a href="#basic">4.1. Basic</a></li>
+            <li>
+              <a href="#extensions">4.2. Extensions</a>
+              <ul>
+                <li>
+                  <a href="#vertico-extension-commands"
+                    >4.2.1. Vertico extension commands</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li><a href="#niceties">4.3. Niceties</a></li>
+            <li><a href="#end-product">4.4. End product</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#orderless">5. Orderless</a>
+          <ul>
+            <li><a href="#basic-1">5.1. Basic</a></li>
+            <li><a href="#style-dispatchers">5.2. Style dispatchers</a></li>
+            <li><a href="#end-product-1">5.3. End product</a></li>
+          </ul>
+        </li>
+        <li><a href="#changelog">6. Changelog</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div id="outline-container-synopsis" class="outline-2">
+    <h2 id="synopsis"><span class="section-number-2">1.</span> Synopsis</h2>
+    <div class="outline-text-2" id="text-1">
+      <div class="alert" id="special-block-1">
+        <p>
+          <span class="timestamp-wrapper"
+            ><time class="timestamp" datetime="2025-04-05"
+              >[2025-04-05 Sat]</time
+            ></span
+          >
+          Readers should be aware that some of the package-specific information
+          in this article, including configuration options and lines of code,
+          may be outdated. Since publication, those packages have developed
+          significantly. Additionally, my tastes and recommendations as an Emacs
+          user have changed&ndash;if I were to rewrite this package today, I
+          would do so different. For those curious about my current in-line and
+          minibuffer completion configuration, you can the relevant sections in
+          <a href="https://github.com/krisbalintona/emacs-config"
+            >my Emacs configuration</a
+          >.
+        </p>
+      </div>
+
+      <p>
+        I will be walking through my personal Emacs' minibuffer UI (which means
+        packages like <code>Selectrum</code>, <code>Ido</code>,
+        <code>Helm</code>, <code>Vertico</code>, and <code>Ivy</code>)
+        configuration, which includes the following packages:
+      </p>
+      <ul class="org-ul">
+        <li>
+          <a href="https://github.com/minad/marginalia">Marginalia</a> —
+          minibuffer annotations, i.e., auxiliary candidate information
+        </li>
+        <li>
+          <a
+            href="https://github.com/iyefrat/all-the-icons-completion/tree/9e7d456b0934ecb568b6f05a8445e3f4ce32261f"
+            >All-the-icons-completion</a
+          >
+          — <code>all-the-icons</code> icons for minibuffer candidates
+        </li>
+        <li>
+          <a href="https://github.com/minad/vertico">Vertico</a> — vertical
+          minibuffer interface
+        </li>
+        <li>
+          <a href="https://github.com/oantolin/orderless">Orderless</a> — a
+          flexible <code>completion-style</code> with multi-component matching
+        </li>
+      </ul>
+
+      <p>
+        <i>Note</i>: I use <code>straight.el</code> for package management and
+        <code>general.el</code> to set my keybindings. Both of these packages
+        have integration with <code>use-package</code> which come in the form of
+        the <code>:straight</code> and <code>:general</code> keywords,
+        respectively.
+      </p>
+    </div>
+  </div>
+  <div id="outline-container-marginalia" class="outline-2">
+    <h2 id="marginalia"><span class="section-number-2">2.</span> Marginalia</h2>
+    <div class="outline-text-2" id="text-2">
+      <p>
+        The following is <code>vertico</code> with
+        <code>marginalia</code> annotations right-aligned in the minibuffer.
+      </p>
+
+      <figure id="figure-1">
+        <img
+          src="2022-02-22_14-52-49_screenshot.png"
+          alt="2022-02-22_14-52-49_screenshot.png"
+        />
+
+        <figcaption>
+          <span class="figure-number">Figure 1: </span>Using
+          <code>helpful-variable</code>
+        </figcaption>
+      </figure>
+
+      <figure id="figure-2">
+        <img
+          src="2022-02-22_15-03-29_screenshot.png"
+          alt="2022-02-22_15-03-29_screenshot.png"
+        />
+
+        <figcaption>
+          <span class="figure-number">Figure 2: </span>Using
+          <code>find-file</code>
+        </figcaption>
+      </figure>
+
+      <p>
+        Marginalia is painless to set up. Remember, I use
+        <code>general.el</code> to set keybindings:
+      </p>
+      <div class="org-src-container">
+        <pre class="src src-emacs-lisp"><code>(use-package marginalia
+  :general
+  (:keymaps 'minibuffer-local-map
+            "M-A" 'marginalia-cycle)
+  :custom
+  (marginalia-max-relative-age 0)
+  (marginalia-align 'right)
+  :init
+  (marginalia-mode))
+</code></pre>
+      </div>
+    </div>
+  </div>
+  <div id="outline-container-all-the-icons-completion" class="outline-2">
+    <h2 id="all-the-icons-completion">
+      <span class="section-number-2">3.</span> All-the-icons-completion
+    </h2>
+    <div class="outline-text-2" id="text-3">
+      <p>
+        <code>Marginalia</code>, <code>Vertico</code>, and
+        <code>Orderless</code> have already received considerable exposure, but
+        <code>all-the-icons-completion</code> has not.
+      </p>
+
+      <figure id="figure-3">
+        <img
+          src="2022-02-22_15-13-22_screenshot.png"
+          alt="2022-02-22_15-13-22_screenshot.png"
+        />
+
+        <figcaption>
+          <span class="figure-number">Figure 3: </span>Using
+          <code>find-file</code> in a directory with subdirectories, python
+          files, a .txt file, and an org file. You can see the icons in the far
+          left.
+        </figcaption>
+      </figure>
+
+      <p>
+        <code>All-the-icons-completion</code> is also dead-simple to set up:
+      </p>
+      <div class="org-src-container">
+        <pre
+          class="src src-emacs-lisp"
+        ><code>(use-package all-the-icons-completion
+  :after (marginalia all-the-icons)
+  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init
+  (all-the-icons-completion-mode))
+</code></pre>
+      </div>
+      <p>
+        <i>Note</i>: <code>All-the-icons-completion</code> depends on an already
+        installed <code>all-the-icons</code>.
+      </p>
+    </div>
+  </div>
+  <div id="outline-container-vertico" class="outline-2">
+    <h2 id="vertico"><span class="section-number-2">4.</span> Vertico</h2>
+    <div class="outline-text-2" id="text-4">
+      <p>
+        Vertico is a minibuffer interface, that is, it changes the minibuffer
+        looks and how you interact with it.
+      </p>
+    </div>
+    <div id="outline-container-basic" class="outline-3">
+      <h3 id="basic"><span class="section-number-3">4.1.</span> Basic</h3>
+      <div class="outline-text-3" id="text-4-1">
+        <p>This is a very basic Vertico configuration.</p>
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp"><code>(use-package vertico
+  :custom
+  (vertico-count 13)                    ; Number of candidates to display
+  (vertico-resize t)
+  (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
+  :config
+  (vertico-mode))
+</code></pre>
+        </div>
+
+        <p>
+          Now we can add a few changes to the default keybindings (again, I use
+          <code>general.el</code> to set keybindings):
+        </p>
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp"><code>(use-package vertico
+  :custom
+  (vertico-count 13)                    ; Number of candidates to display
+  (vertico-resize t)
+  (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
+  :general
+  (:keymaps 'vertico-map
+            "&lt;tab&gt;" #'vertico-insert  ; Insert selected candidate into text area
+            "&lt;escape&gt;" #'minibuffer-keyboard-quit ; Close minibuffer
+            ;; NOTE 2022-02-05: Cycle through candidate groups
+            "C-M-n" #'vertico-next-group
+            "C-M-p" #'vertico-previous-group)
+  :config
+  (vertico-mode))
+</code></pre>
+        </div>
+      </div>
+    </div>
+    <div id="outline-container-extensions" class="outline-3">
+      <h3 id="extensions">
+        <span class="section-number-3">4.2.</span> Extensions
+      </h3>
+      <div class="outline-text-3" id="text-4-2">
+        <p>
+          Vertico becomes much more interesting with its extensions. These
+          extensions have to manually be cloned from the repo with a
+          corresponding <code>require</code> invocation. However, with
+          <code>straight.el</code>, we can do something like this to install and
+          load them:
+        </p>
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp"><code>(use-package vertico
+  ;; Special recipe to load extensions conveniently
+  :straight (vertico :files (:defaults "extensions/*")
+                     :includes (vertico-indexed
+                                vertico-flat
+                                vertico-grid
+                                vertico-mouse
+                                vertico-quick
+                                vertico-buffer
+                                vertico-repeat
+                                vertico-reverse
+                                vertico-directory
+                                vertico-multiform
+                                vertico-unobtrusive
+                                ))
+  :general
+  (:keymaps 'vertico-map
+            "&lt;tab&gt;" #'vertico-insert    ; Choose selected candidate
+            "&lt;escape&gt;" #'minibuffer-keyboard-quit ; Close minibuffer
+            ;; NOTE 2022-02-05: Cycle through candidate groups
+            "C-M-n" #'vertico-next-group
+            "C-M-p" #'vertico-previous-group)
+  :custom
+  (vertico-count 13)                    ; Number of candidates to display
+  (vertico-resize t)
+  (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
+  :config
+  (vertico-mode))
+</code></pre>
+        </div>
+
+        <p>
+          With the extensions installed, we have a lot of room to set their
+          variables to our liking. In particular,
+          <code>vertico-multiform</code> is the most interesting and, in my
+          opinion, useful. You can choose how the minibuffer appears, which is
+          provided by Vertico's extensions (see more
+          <a href="https://github.com/minad/vertico#extensions">here</a>). The
+          current options are
+        </p>
+        <ol class="org-ol">
+          <li>
+            <p>
+              <code>buffer</code> — minibuffer treated as a normal, separate
+              buffer,
+            </p>
+
+            <figure id="figure-4">
+              <img
+                src="2022-02-22_15-25-29_screenshot.png"
+                alt="2022-02-22_15-25-29_screenshot.png"
+              />
+
+              <figcaption>
+                <span class="figure-number">Figure 4: </span
+                ><code>Vertico-buffer</code> UI (minibuffer now a separate
+                window)
+              </figcaption>
+            </figure>
+          </li>
+          <li>
+            <p><code>flat</code> — a flat format (like <code>ido</code>),</p>
+
+            <figure id="figure-5">
+              <img
+                src="2022-02-22_15-23-05_screenshot.png"
+                alt="2022-02-22_15-23-05_screenshot.png"
+              />
+
+              <figcaption>
+                <span class="figure-number">Figure 5: </span
+                ><code>Vertico-flat</code> minibuffer UI
+              </figcaption>
+            </figure>
+          </li>
+          <li>
+            <p><code>grid</code> — a grid format,</p>
+
+            <figure id="figure-6">
+              <img
+                src="2022-02-22_15-27-16_screenshot.png"
+                alt="2022-02-22_15-27-16_screenshot.png"
+              />
+
+              <figcaption>
+                <span class="figure-number">Figure 6: </span
+                ><code>Vertico-grid</code> UI
+              </figcaption>
+            </figure>
+          </li>
+          <li>
+            <p>
+              <code>reverse</code> — moves the area in which you type above the
+              candidates, like <code>selectrum</code>,
+            </p>
+
+            <figure id="figure-7">
+              <img
+                src="2022-02-22_15-28-46_screenshot.png"
+                alt="2022-02-22_15-28-46_screenshot.png"
+              />
+
+              <figcaption>
+                <span class="figure-number">Figure 7: </span
+                ><code>Vertico-reverse</code> UI. Notice the text area is below
+                the candidates. Moreover, the candidates are in reverse order.
+              </figcaption>
+            </figure>
+          </li>
+          <li>
+            <p>
+              <code>unobtrusive</code> — like the
+              <code>vertico-flat</code> format, but only showing the selected
+              candidate,
+            </p>
+
+            <figure id="figure-8">
+              <img
+                src="2022-02-22_15-30-27_screenshot.png"
+                alt="2022-02-22_15-30-27_screenshot.png"
+              />
+
+              <figcaption>
+                <span class="figure-number">Figure 8: </span
+                ><code>Vertico-unobtrusive</code> UI (there are multiple files
+                in this directory, only the current candidate is shown)
+              </figcaption>
+            </figure>
+          </li>
+          <li>
+            <p>
+              <code>indexed</code> — allows you “<a
+                href="https://github.com/minad/vertico#extensions"
+                >to select indexed candidates with prefix arguments</a
+              >”
+            </p>
+
+            <figure id="figure-9">
+              <img
+                src="2022-02-22_15-31-45_screenshot.png"
+                alt="2022-02-22_15-31-45_screenshot.png"
+              />
+
+              <figcaption>
+                <span class="figure-number">Figure 9: </span
+                ><code>Vertico-indexed</code> UI
+              </figcaption>
+            </figure>
+          </li>
+        </ol>
+
+        <p>
+          These formats each have a separate minor-mode which can be activated
+          if you want to use that format singly. However, with
+          <code>vertico-multiform-mode</code> as well as configuration of
+          <code>vertico-multiform-categories</code>,
+          <code>vertico-multiform-commands</code>, and keybinds, you can
+          enable/disable multiple of these formats simultaneously:
+        </p>
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp"><code>(vertico-multiform-mode)
+</code></pre>
+        </div>
+
+        <p>
+          Here are the extension variables I set in the
+          <code>:custom</code> block of my <code>use-package</code>:
+        </p>
+        <div class="org-src-container">
+          <pre
+            class="src src-emacs-lisp"
+          ><code>(vertico-grid-separator "       ")
+(vertico-grid-lookahead 50)
+(vertico-buffer-display-action '(display-buffer-reuse-window)) ; Default
+(vertico-multiform-categories                                  ; Choose a multiform
+ '((file reverse)
+   (consult-grep buffer)
+   (consult-location)
+   (imenu buffer)
+   (library reverse indexed)
+   (org-roam-node reverse indexed)
+   (t reverse)))
+(vertico-multiform-commands
+ '(("flyspell-correct-*" grid reverse)
+   (org-refile grid reverse indexed)
+   (consult-yank-pop indexed)
+   (consult-flycheck)
+   (consult-lsp-diagnostics)))
+</code></pre>
+        </div>
+        <p>
+          Here are the <code>vertico-multiform</code> related keybinds I have in
+          my <code>:general</code> block:
+        </p>
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp"><code>(:keymaps 'vertico-map
+          ;; Toggle Vertico multiforms in active minibuffer
+          "C-i" #'vertico-quick-insert
+          "C-o" #'vertico-quick-exit
+          "M-G" #'vertico-multiform-grid
+          "M-F" #'vertico-multiform-flat
+          "M-R" #'vertico-multiform-reverse
+          "M-U" #'vertico-multiform-unobtrusive)
+</code></pre>
+        </div>
+        <p>These are rarely used, but can be handy.</p>
+
+        <p>
+          Finally, the other Vertico extensions I configure are
+          <code>vertico-repeat</code> and <code>vertico-directory</code>. I add
+          the following keybinds:
+        </p>
+        <div class="org-src-container">
+          <pre
+            class="src src-emacs-lisp"
+          ><code>(:keymaps '(normal insert visual motion)
+          "M-." #'vertico-repeat) ; Perfectly return to the state of the last Vertico minibuffer usage
+(:keymaps 'vertico-map
+          ;; Vertico-directory which makes typing file paths in the minibuffer
+          ;; more convenient. Use it to get a sense of what these do
+          "&lt;backspace&gt;" #'vertico-directory-delete-char
+          "C-w" #'vertico-directory-delete-word
+          "C-&lt;backspace&gt;" #'vertico-directory-delete-word
+          "RET" #'vertico-directory-enter)
+</code></pre>
+        </div>
+        <p>
+          Additionally, we need to add the following hook for
+          <code>vertico-repeat</code>:
+        </p>
+        <div class="org-src-container">
+          <pre
+            class="src src-emacs-lisp"
+          ><code>:hook (minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved for `vertico-repeat'
+</code></pre>
+        </div>
+      </div>
+      <div id="outline-container-vertico-extension-commands" class="outline-4">
+        <h4 id="vertico-extension-commands">
+          <span class="section-number-4">4.2.1.</span> Vertico extension
+          commands
+        </h4>
+        <div class="outline-text-4" id="text-4-2-1">
+          <p>
+            If you'd like, you can set up a toggle between two multiforms in the
+            minibuffer. For instance, the following function definition with a
+            corresponding keybind in <code>vertico-map</code> toggles between
+            <code>vertico-flat-mode</code> and
+            <code>vertico-reverse-mode</code>:
+          </p>
+          <div class="org-src-container">
+            <pre
+              class="src src-emacs-lisp"
+            ><code>(defun kb/vertico-multiform-flat-toggle ()
+  "Toggle between flat and reverse."
+  (interactive)
+  (vertico-multiform--display-toggle 'vertico-flat-mode)
+  (if vertico-flat-mode
+      (vertico-multiform--temporary-mode 'vertico-reverse-mode -1)
+    (vertico-multiform--temporary-mode 'vertico-reverse-mode 1)))
+</code></pre>
+          </div>
+
+          <p>
+            The following function uses <code>vertico-quick-jump</code> (like
+            <code>avy</code> but for minibuffer candidates) to
+            <code>embark-act</code> on a candidate without having to first hover
+            over the candidate:
+          </p>
+          <div class="org-src-container">
+            <pre
+              class="src src-emacs-lisp"
+            ><code>(defun kb/vertico-quick-embark (&amp;optional arg)
+  "Embark on candidate using quick keys."
+  (interactive)
+  (when (vertico-quick-jump)
+    (embark-act arg)))
+</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="outline-container-niceties" class="outline-3">
+      <h3 id="niceties"><span class="section-number-3">4.3.</span> Niceties</h3>
+      <div class="outline-text-3" id="text-4-3">
+        <p>Finally, I add a few niceties.</p>
+
+        <p>
+          The following prefixes (i.e. in the left fringe) and arrow character
+          on the currently selected candidate<sup
+            ><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink"
+              >1</a
+            ></sup
+          >:
+        </p>
+        <div class="org-src-container">
+          <pre
+            class="src src-emacs-lisp"
+          ><code>;; Prefix the current candidate with “» ”. From
+;; https://github.com/minad/vertico/wiki#prefix-current-candidate-with-arrow
+(advice-add #'vertico--format-candidate :around
+            (lambda (orig cand prefix suffix index _start)
+              (setq cand (funcall orig cand prefix suffix index _start))
+              (concat
+               (if (= vertico--index index)
+                   (propertize "» " 'face 'vertico-current)
+                 "  ")
+               cand)))
+</code></pre>
+        </div>
+
+        <p>
+          When using a command for selecting a file in the minibuffer, the
+          following fixes the path so the path you select doesn't have prepended
+          junk left behind<sup
+            ><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink"
+              >2</a
+            ></sup
+          >:
+        </p>
+        <div class="org-src-container">
+          <pre
+            class="src src-emacs-lisp"
+          ><code>:hook (rfn-eshadow-update-overlay . vertico-directory-tidy) ; Correct file path when changed
+</code></pre>
+        </div>
+
+        <figure id="figure-10">
+          <img
+            src="2022-02-22_15-40-59_demonstrating-rfn-eshadow-update-overlay.gif"
+            alt="2022-02-22_15-40-59_demonstrating-rfn-eshadow-update-overlay.gif"
+          />
+
+          <figcaption>
+            <span class="figure-number">Figure 10: </span>Using
+            <code>find-file</code> and going from a subdirectory in
+            <code>$HOME</code> to the distant <code>/tmp/</code> directory.
+            Notice that the file-path is “cleaned up.”
+          </figcaption>
+        </figure>
+
+        <p>
+          Finally, the following makes working with remote files via
+          <code>tramp</code> easier.
+        </p>
+        <div class="org-src-container">
+          <pre
+            class="src src-emacs-lisp"
+          ><code>;; Workaround for problem with `tramp' hostname completions. This overrides
+;; the completion style specifically for remote files! See
+;; https://github.com/minad/vertico#tramp-hostname-completion
+(defun kb/basic-remote-try-completion (string table pred point)
+  (and (vertico--remote-p string)
+       (completion-basic-try-completion string table pred point)))
+(defun kb/basic-remote-all-completions (string table pred point)
+  (and (vertico--remote-p string)
+       (completion-basic-all-completions string table pred point)))
+(add-to-list 'completion-styles-alist
+             '(basic-remote           ; Name of `completion-style'
+               kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
+</code></pre>
+        </div>
+      </div>
+    </div>
+    <div id="outline-container-end-product" class="outline-3">
+      <h3 id="end-product">
+        <span class="section-number-3">4.4.</span> End product
+      </h3>
+      <div class="outline-text-3" id="text-4-4">
+        <p>
+          In the end, we have this<sup
+            ><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink"
+              >3</a
+            ></sup
+          >:
+        </p>
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp"><code>(use-package vertico
+  :demand t                             ; Otherwise won't get loaded immediately
+  :straight (vertico :files (:defaults "extensions/*") ; Special recipe to load extensions conveniently
+                     :includes (vertico-indexed
+                                vertico-flat
+                                vertico-grid
+                                vertico-mouse
+                                vertico-quick
+                                vertico-buffer
+                                vertico-repeat
+                                vertico-reverse
+                                vertico-directory
+                                vertico-multiform
+                                vertico-unobtrusive))
+  :general
+  (:keymaps '(normal insert visual motion)
+            "M-." #'vertico-repeat)
+  (:keymaps 'vertico-map
+            "&lt;tab&gt;" #'vertico-insert ; Set manually otherwise setting `vertico-quick-insert' overrides this
+            "&lt;escape&gt;" #'minibuffer-keyboard-quit
+            "?" #'minibuffer-completion-help
+            "C-M-n" #'vertico-next-group
+            "C-M-p" #'vertico-previous-group
+            ;; Multiform toggles
+            "&lt;backspace&gt;" #'vertico-directory-delete-char
+            "C-w" #'vertico-directory-delete-word
+            "C-&lt;backspace&gt;" #'vertico-directory-delete-word
+            "RET" #'vertico-directory-enter
+            "C-i" #'vertico-quick-insert
+            "C-o" #'vertico-quick-exit
+            "M-o" #'kb/vertico-quick-embark
+            "M-G" #'vertico-multiform-grid
+            "M-F" #'vertico-multiform-flat
+            "M-R" #'vertico-multiform-reverse
+            "M-U" #'vertico-multiform-unobtrusive
+            "C-l" #'kb/vertico-multiform-flat-toggle)
+  :hook ((rfn-eshadow-update-overlay . vertico-directory-tidy) ; Clean up file path when typing
+         (minibuffer-setup . vertico-repeat-save)) ; Make sure vertico state is saved
+  :custom
+  (vertico-count 13)
+  (vertico-resize t)
+  (vertico-cycle nil)
+  ;; Extensions
+  (vertico-grid-separator "       ")
+  (vertico-grid-lookahead 50)
+  (vertico-buffer-display-action '(display-buffer-reuse-window))
+  (vertico-multiform-categories
+   '((file reverse)
+     (consult-grep buffer)
+     (consult-location)
+     (imenu buffer)
+     (library reverse indexed)
+     (org-roam-node reverse indexed)
+     (t reverse)))
+  (vertico-multiform-commands
+   '(("flyspell-correct-*" grid reverse)
+     (org-refile grid reverse indexed)
+     (consult-yank-pop indexed)
+     (consult-flycheck)
+     (consult-lsp-diagnostics)))
+  :init
+  (defun kb/vertico-multiform-flat-toggle ()
+    "Toggle between flat and reverse."
+    (interactive)
+    (vertico-multiform--display-toggle 'vertico-flat-mode)
+    (if vertico-flat-mode
+        (vertico-multiform--temporary-mode 'vertico-reverse-mode -1)
+      (vertico-multiform--temporary-mode 'vertico-reverse-mode 1)))
+  (defun kb/vertico-quick-embark (&amp;optional arg)
+    "Embark on candidate using quick keys."
+    (interactive)
+    (when (vertico-quick-jump)
+      (embark-act arg)))
+
+  ;; Workaround for problem with `tramp' hostname completions. This overrides
+  ;; the completion style specifically for remote files! See
+  ;; https://github.com/minad/vertico#tramp-hostname-completion
+  (defun kb/basic-remote-try-completion (string table pred point)
+    (and (vertico--remote-p string)
+         (completion-basic-try-completion string table pred point)))
+  (defun kb/basic-remote-all-completions (string table pred point)
+    (and (vertico--remote-p string)
+         (completion-basic-all-completions string table pred point)))
+  (add-to-list 'completion-styles-alist
+               '(basic-remote           ; Name of `completion-style'
+                 kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
+  :config
+  (vertico-mode)
+  ;; Extensions
+  (vertico-multiform-mode)
+
+  ;; Prefix the current candidate with “» ”. From
+  ;; https://github.com/minad/vertico/wiki#prefix-current-candidate-with-arrow
+  (advice-add #'vertico--format-candidate :around
+              (lambda (orig cand prefix suffix index _start)
+                (setq cand (funcall orig cand prefix suffix index _start))
+                (concat
+                 (if (= vertico--index index)
+                     (propertize "» " 'face 'vertico-current)
+                   "  ")
+                 cand))))
+</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="outline-container-orderless" class="outline-2">
+    <h2 id="orderless"><span class="section-number-2">5.</span> Orderless</h2>
+    <div class="outline-text-2" id="text-5">
+      <p>
+        <code>Orderless</code> is an alternative and powerful completion style,
+        that is, it is an alternative to Emacs's basic candidate-filtering
+        capacities.
+      </p>
+    </div>
+    <div id="outline-container-basic-1" class="outline-3">
+      <h3 id="basic-1"><span class="section-number-3">5.1.</span> Basic</h3>
+      <div class="outline-text-3" id="text-5-1">
+        <p>To use <code>orderless</code> you simply need the following.</p>
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp"><code>(use-package orderless
+  :custom
+  (completion-styles '(orderless))      ; Use orderless
+  (completion-category-defaults nil)    ; I want to be in control!
+  (completion-category-overrides
+   '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
+                   orderless)))))
+</code></pre>
+        </div>
+
+        <p>
+          However, we want to be more interesting! The following configures the
+          matching styles that <code>orderless</code> uses. A matching style is
+          a criterion for what is a valid candidate (a description of what each
+          matching style does can be found in
+          <a
+            href="https://github.com/oantolin/orderless#component-matching-styles"
+            >Orderless's readme</a
+          >):
+        </p>
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp"><code>:custom
+(orderless-matching-styles
+ '(orderless-literal
+   orderless-prefixes
+   orderless-initialism
+   orderless-regexp
+   ;; orderless-flex                       ; Basically fuzzy finding
+   ;; orderless-strict-leading-initialism
+   ;; orderless-strict-initialism
+   ;; orderless-strict-full-initialism
+   ;; orderless-without-literal          ; Recommended for dispatches instead
+   ))
+</code></pre>
+        </div>
+      </div>
+    </div>
+    <div id="outline-container-style-dispatchers" class="outline-3">
+      <h3 id="style-dispatchers">
+        <span class="section-number-3">5.2.</span> Style dispatchers
+      </h3>
+      <div class="outline-text-3" id="text-5-2">
+        <figure id="figure-11">
+          <img
+            src="2022-02-22_15-18-54_screenshot.png"
+            alt="2022-02-22_15-18-54_screenshot.png"
+          />
+
+          <figcaption>
+            <span class="figure-number">Figure 11: </span>A first component of
+            “lm” using the
+            <code>prot-orderless-strict-initialism-dispatcher</code> style
+            dispatcher, and a second component of “map” using the
+            <code>prot-orderless-literal-dispatcher</code>.
+          </figcaption>
+        </figure>
+
+        <p>
+          Orderless becomes much more powerful when using its style dispatchers.
+          A description of style dispatches can be found
+          <a href="https://github.com/oantolin/orderless#style-dispatchers"
+            >here</a
+          >. Essentially, you can choose which matching style is used for a
+          particular <code>orderless</code> component. Thus, one component can
+          use the <code>orderless-initialism</code> matching style while the
+          next can use the <code>orderless-literal</code> matching style, and
+          the result will be candidates which match both styles:
+        </p>
+        <div class="org-src-container">
+          <pre
+            class="src src-emacs-lisp"
+          ><code>;; The following is taken directly from Protesilaos's Emacs configuration, with
+;; very minor changes. See
+;; https://gitlab.com/protesilaos/dotfiles/-/blob/master/emacs/.emacs.d/prot-emacs.el
+:custom
+(orderless-style-dispatchers
+ '(prot-orderless-literal-dispatcher           ; = suffix for literal
+   prot-orderless-strict-initialism-dispatcher ; , suffix for initialism
+   prot-orderless-flex-dispatcher              ; . suffix for flex
+   ))
+:init
+(defun orderless--strict-*-initialism (component &amp;optional anchored)
+  "Match a COMPONENT as a strict initialism, optionally ANCHORED.
+The characters in COMPONENT must occur in the candidate in that
+order at the beginning of subsequent words comprised of letters.
+Only non-letters can be in between the words that start with the
+initials.
+
+If ANCHORED is `start' require that the first initial appear in
+the first word of the candidate.  If ANCHORED is `both' require
+that the first and last initials appear in the first and last
+words of the candidate, respectively."
+  (orderless--separated-by
+      '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)))
+    (cl-loop for char across component collect `(seq word-start ,char))
+    (when anchored '(seq (group buffer-start) (zero-or-more (not alpha))))
+    (when (eq anchored 'both)
+      '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)) eol))))
+
+(defun orderless-strict-initialism (component)
+  "Match a COMPONENT as a strict initialism.
+This means the characters in COMPONENT must occur in the
+candidate in that order at the beginning of subsequent words
+comprised of letters.  Only non-letters can be in between the
+words that start with the initials."
+  (orderless--strict-*-initialism component))
+
+(defun prot-orderless-literal-dispatcher (pattern _index _total)
+  "Literal style dispatcher using the equals sign as a suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+  (when (string-suffix-p "=" pattern)
+    `(orderless-literal . ,(substring pattern 0 -1))))
+
+(defun prot-orderless-strict-initialism-dispatcher (pattern _index _total)
+  "Leading initialism  dispatcher using the comma suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+  (when (string-suffix-p "," pattern)
+    `(orderless-strict-initialism . ,(substring pattern 0 -1))))
+
+(defun prot-orderless-flex-dispatcher (pattern _index _total)
+  "Flex  dispatcher using the tilde suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+  (when (string-suffix-p "." pattern)
+    `(orderless-flex . ,(substring pattern 0 -1))))
+</code></pre>
+        </div>
+
+        <p>
+          Finally, rather than using the default “+ “ to separate components, I
+          use a space instead:
+        </p>
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp"><code>:custom
+(orderless-component-separator 'orderless-escapable-split-on-space) ; Use backslash for literal space
+</code></pre>
+        </div>
+      </div>
+    </div>
+    <div id="outline-container-end-product-1" class="outline-3">
+      <h3 id="end-product-1">
+        <span class="section-number-3">5.3.</span> End product
+      </h3>
+      <div class="outline-text-3" id="text-5-3">
+        <p>
+          The end result is this<sup
+            ><a id="fnr.4" class="footref" href="#fn.4" role="doc-backlink"
+              >4</a
+            ></sup
+          >:
+        </p>
+        <div class="org-src-container">
+          <pre class="src src-emacs-lisp"><code>(use-package orderless
+  :custom
+  (completion-styles '(orderless))
+  (completion-category-defaults nil)    ; I want to be in control!
+  (completion-category-overrides
+   '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
+                   orderless
+                   ))
+     ))
+
+  (orderless-component-separator 'orderless-escapable-split-on-space)
+  (orderless-matching-styles
+   '(orderless-literal
+     orderless-prefixes
+     orderless-initialism
+     orderless-regexp
+     ;; orderless-flex
+     ;; orderless-strict-leading-initialism
+     ;; orderless-strict-initialism
+     ;; orderless-strict-full-initialism
+     ;; orderless-without-literal          ; Recommended for dispatches instead
+     ))
+  (orderless-style-dispatchers
+   '(prot-orderless-literal-dispatcher
+     prot-orderless-strict-initialism-dispatcher
+     prot-orderless-flex-dispatcher))
+  :init
+  (defun orderless--strict-*-initialism (component &amp;optional anchored)
+    "Match a COMPONENT as a strict initialism, optionally ANCHORED.
+The characters in COMPONENT must occur in the candidate in that
+order at the beginning of subsequent words comprised of letters.
+Only non-letters can be in between the words that start with the
+initials.
+
+If ANCHORED is `start' require that the first initial appear in
+the first word of the candidate.  If ANCHORED is `both' require
+that the first and last initials appear in the first and last
+words of the candidate, respectively."
+    (orderless--separated-by
+        '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)))
+      (cl-loop for char across component collect `(seq word-start ,char))
+      (when anchored '(seq (group buffer-start) (zero-or-more (not alpha))))
+      (when (eq anchored 'both)
+        '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)) eol))))
+
+  (defun orderless-strict-initialism (component)
+    "Match a COMPONENT as a strict initialism.
+This means the characters in COMPONENT must occur in the
+candidate in that order at the beginning of subsequent words
+comprised of letters.  Only non-letters can be in between the
+words that start with the initials."
+    (orderless--strict-*-initialism component))
+
+  (defun prot-orderless-literal-dispatcher (pattern _index _total)
+    "Literal style dispatcher using the equals sign as a suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "=" pattern)
+      `(orderless-literal . ,(substring pattern 0 -1))))
+
+  (defun prot-orderless-strict-initialism-dispatcher (pattern _index _total)
+    "Leading initialism  dispatcher using the comma suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "," pattern)
+      `(orderless-strict-initialism . ,(substring pattern 0 -1))))
+
+  (defun prot-orderless-flex-dispatcher (pattern _index _total)
+    "Flex  dispatcher using the tilde suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "." pattern)
+      `(orderless-flex . ,(substring pattern 0 -1)))))
+</code></pre>
+        </div>
+
+        <hr />
+      </div>
+    </div>
+  </div>
+  <div id="outline-container-changelog" class="outline-2">
+    <h2 id="changelog"><span class="section-number-2">6.</span> Changelog</h2>
+    <div class="outline-text-2" id="text-6">
+      <ul class="org-ul">
+        <li>
+          <span class="timestamp-wrapper"
+            ><time class="timestamp" datetime="2025-04-05"
+              >[2025-04-05 Sat]</time
+            ></span
+          >
+          <ul class="org-ul">
+            <li>
+              Add a note at the beginning of the post alerting users of
+              potentially outdated information as well as referencing my
+              personal Emacs configuration.
+            </li>
+            <li>Minor updates to code formatting.</li>
+          </ul>
+        </li>
+        <li>
+          <span class="timestamp-wrapper"
+            ><time class="timestamp" datetime="2022-02-22"
+              >[2022-02-22 Tue]</time
+            ></span
+          >
+          Added demonstrative images and a GIF. Added section on
+          <code>all-the-icons-completion</code>.
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div id="footnotes">
+    <h2 class="footnotes">Footnotes:</h2>
+    <div id="text-footnotes">
+      <div class="footdef">
+        <sup
+          ><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink"
+            >1</a
+          ></sup
+        >
+        <div class="footpara" role="doc-footnote">
+          <p class="footpara">
+            This does add width to the left side of the minibuffer, which may
+            interfere with your aesthetic-related configurations of other
+            packages.
+          </p>
+        </div>
+      </div>
+
+      <div class="footdef">
+        <sup
+          ><a id="fn.2" class="footnum" href="#fnr.2" role="doc-backlink"
+            >2</a
+          ></sup
+        >
+        <div class="footpara" role="doc-footnote">
+          <p class="footpara">
+            This relies on the <code>vertico-directory</code> extension.
+          </p>
+        </div>
+      </div>
+
+      <div class="footdef">
+        <sup
+          ><a id="fn.3" class="footnum" href="#fnr.3" role="doc-backlink"
+            >3</a
+          ></sup
+        >
+        <div class="footpara" role="doc-footnote">
+          <p class="footpara">
+            This is a direct copy and paste from my configuration file. There
+            are slight differences in comments compared to the code snippets
+            above.
+          </p>
+        </div>
+      </div>
+
+      <div class="footdef">
+        <sup
+          ><a id="fn.4" class="footnum" href="#fnr.4" role="doc-backlink"
+            >4</a
+          ></sup
+        >
+        <div class="footpara" role="doc-footnote">
+          <p class="footpara">
+            Again, taken verbatim from my Emacs configuration, with fewer useful
+            comments.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
