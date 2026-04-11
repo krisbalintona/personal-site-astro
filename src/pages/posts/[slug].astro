@@ -1,24 +1,17 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-
-// Posts directory structure:
-//
-// 1. Posts are located in subdirectories under src/lib/posts/.
-// 2. Subdirectory names are of the form POSTID--POSTSLUG.
-// 3. Each post subdirectory has an index.html that is the HTML body of the post.
-// 4. Assets are contained in the assets subdirectory of each post subdirectory.
+import { getPosts } from "@lib/posts";
+import BaseLayout from "@layouts/BaseLayout.astro";
 
 export function getStaticPaths() {
-  return [
-    { params: { slug: "clifford" }},
-    { params: { slug: "rover" }},
-    { params: { slug: "spot" }},
-  ];
+  return getPosts().map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
 }
 
-const { slug } = Astro.params;
+const { post } = Astro.props;
 ---
 
-<BaseLayout pageTitle={slug}>
-  This is a post regarding... stuff?
+<BaseLayout pageTitle={post.title}>
+  <div set:html={post.content} />
 </BaseLayout>
