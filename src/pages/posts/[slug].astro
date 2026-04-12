@@ -1,6 +1,6 @@
 ---
-import { getPosts } from "@lib/posts";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { getPosts } from "@lib/posts";
 
 export function getStaticPaths() {
   return getPosts().map((post) => ({

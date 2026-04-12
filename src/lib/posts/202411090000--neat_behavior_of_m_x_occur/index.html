@@ -14,43 +14,43 @@
     portions preserved:
   </p>
   <p class="verse">
-    occur is an interactive native-comp-function in replace.el.<br />
-    <br />
-    It is bound to M-s o.<br />
-    <br />
-    (occur REGEXP &amp;optional <b>NLINES REGION</b>)<br />
-    <br />
-    Inferred type: (function (t &amp;optional t t) t)<br />
-    <br />
-    Show all lines in the current buffer containing a match for REGEXP.<br />
-    If a match spreads across multiple lines, all those lines are shown.<br />
-    <br />
-    [&hellip;]<br />
-    <br />
-    Each line is displayed with NLINES lines before and after, or -NLINES<br />
-    before if NLINES is negative.<br />
-    NLINES defaults to list-matching-lines-default-context-lines.<br />
-    Interactively it is the prefix arg.<br />
-    <br />
-    Optional arg REGION, if non-nil, mean restrict search to the<br />
-    specified region. Otherwise search the entire buffer.*<br />
-    *REGION must be a list of (START . END) positions as returned by<br />
-    region-bounds.<br />
-    <br />
-    [&hellip;]<br />
-    <br />
-    When NLINES is a string or when the function is called<br />
-    interactively with prefix argument without a number (C-u alone<br />
-    as prefix) the matching strings are collected into the ‘*Occur*’<br />
-    buffer by using NLINES as a replacement regexp. NLINES may<br />
-    contain \&amp; and \N which convention follows replace-match.<br />
-    For example, providing "defun\s +\(\S +\)" for REGEXP and<br />
-    "\1" for NLINES collects all the function names in a lisp<br />
-    program. When there is no parenthesized subexpressions in REGEXP<br />
-    the entire match is collected. In any case the searched buffer<br />
-    is not modified.<br />
-    <br />
-    [&hellip;]<br />
+    occur is an interactive native-comp-function in replace.el.<br>
+    <br>
+    It is bound to M-s o.<br>
+    <br>
+    (occur REGEXP &amp;optional <b>NLINES REGION</b>)<br>
+    <br>
+    Inferred type: (function (t &amp;optional t t) t)<br>
+    <br>
+    Show all lines in the current buffer containing a match for REGEXP.<br>
+    If a match spreads across multiple lines, all those lines are shown.<br>
+    <br>
+    [&hellip;]<br>
+    <br>
+    Each line is displayed with NLINES lines before and after, or -NLINES<br>
+    before if NLINES is negative.<br>
+    NLINES defaults to list-matching-lines-default-context-lines.<br>
+    Interactively it is the prefix arg.<br>
+    <br>
+    Optional arg REGION, if non-nil, mean restrict search to the<br>
+    specified region. Otherwise search the entire buffer.*<br>
+    *REGION must be a list of (START . END) positions as returned by<br>
+    region-bounds.<br>
+    <br>
+    [&hellip;]<br>
+    <br>
+    When NLINES is a string or when the function is called<br>
+    interactively with prefix argument without a number (C-u alone<br>
+    as prefix) the matching strings are collected into the ‘*Occur*’<br>
+    buffer by using NLINES as a replacement regexp. NLINES may<br>
+    contain \&amp; and \N which convention follows replace-match.<br>
+    For example, providing "defun\s +\(\S +\)" for REGEXP and<br>
+    "\1" for NLINES collects all the function names in a lisp<br>
+    program. When there is no parenthesized subexpressions in REGEXP<br>
+    the entire match is collected. In any case the searched buffer<br>
+    is not modified.<br>
+    <br>
+    [&hellip;]<br>
   </p>
 
   <p>So:</p>
@@ -77,7 +77,8 @@
       If called from elisp and <code>NLINES</code> is provided (as a regexp
       string), then the behavior is like <code>C-u</code> but matches can be
       modified like <code>replace-match</code>. (See
-      <code>(elisp) Replacing Match</code> for more information.)
+      <code>(elisp) Replacing Match</code>
+      for more information.)
     </li>
   </ol>
   <p>
@@ -91,15 +92,15 @@
   <p>Pretty neat!</p>
   <div id="outline-container-further-reading" class="outline-2">
     <h2 id="further-reading">
-      <span class="section-number-2">1.</span> Further Reading
+      <span class="section-number-2">1.</span>
+      Further Reading
     </h2>
     <div class="outline-text-2" id="text-1">
       <ul class="org-ul">
         <li>
           <a
             href="https://www.masteringemacs.org/article/searching-buffers-occur-mode"
-            >Searching and Editing in Buffers with Occur Mode - Mastering
-            Emacs</a
+            >Searching and Editing in Buffers with Occur Mode - Mastering Emacs</a
           >
         </li>
         <li>
@@ -133,9 +134,9 @@
         <div class="footpara" role="doc-footnote">
           <p class="footpara">
             I sometimes use <code>occur-edit-mode</code> (bound to
-            <code>e</code> in <code>occur-mode</code> buffers), and the added
-            context lines can be relevant to the edits I want to make to the
-            matched text.
+            <code>e</code>
+            in <code>occur-mode</code> buffers), and the added context lines can
+            be relevant to the edits I want to make to the matched text.
           </p>
         </div>
       </div>

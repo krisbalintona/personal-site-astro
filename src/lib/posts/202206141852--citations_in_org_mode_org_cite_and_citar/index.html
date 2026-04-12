@@ -36,7 +36,8 @@
             <li>
               <a href="#h:20241106T044538.716623"
                 >5.2. Advising
-                <code>citar-org-update-pre-suffix</code> (Outdated)</a
+                <code>citar-org-update-pre-suffix</code>
+                (Outdated)</a
               >
             </li>
             <li><a href="#aesthetics">5.3. Aesthetics</a></li>
@@ -79,12 +80,15 @@
 
       <p>
         First, I'll outline the broadest components to producing files in
-        <code>org-mode</code> with a citation system (e.g.
+        <code>org-mode</code>
+        with a citation system (e.g.
         <code>org-cite</code>, <code>org-ref</code>). Then I'll introduce
-        <code>org-cite</code> and the differences between its
+        <code>org-cite</code>
+        and the differences between its
         <code>bibtex</code>, <code>csl</code>, and <code>basic</code> export
         processors. Then, I will walk through my configuration for
-        <code>org-cite</code> and <code>citar</code> (formerly
+        <code>org-cite</code>
+        and <code>citar</code> (formerly
         <code>bibtex-actions</code>). You can see a
         <a
           href="https://gitlab.com/PreciousPudding/main-emacs/-/snippets/2351789"
@@ -102,12 +106,14 @@
   </div>
   <div id="outline-container-helpful-sources" class="outline-2">
     <h2 id="helpful-sources">
-      <span class="section-number-2">2.</span> Helpful sources
+      <span class="section-number-2">2.</span>
+      Helpful sources
     </h2>
     <div class="outline-text-2" id="text-2">
       <p>
         I recommend the following reading for more information regarding how
-        <code>org-cite</code> works:
+        <code>org-cite</code>
+        works:
       </p>
       <dl class="org-dl">
         <dt>
@@ -134,13 +140,14 @@
   </div>
   <div id="outline-container-what-are-citation-systems" class="outline-2">
     <h2 id="what-are-citation-systems">
-      <span class="section-number-2">3.</span> What are citation systems?
+      <span class="section-number-2">3.</span>
+      What are citation systems?
     </h2>
     <div class="outline-text-2" id="text-3">
       <p>There are roughly three moving parts to citation management.</p>
       <ol class="org-ol">
         <li>
-          <b>The tool that produces the bibliography file.</b><br />
+          <b>The tool that produces the bibliography file.</b><br>
           A bibliography file is where information regarding sources are stored.
           This almost always comes in the form of a
           <a href="https://file.org/extension/bib">.bib file</a>; usually one is
@@ -149,12 +156,12 @@
           way is exporting a Zotero library (see <a href="#zotero">Zotero</a>).
         </li>
         <li>
-          <b>The text processor.</b><br />
+          <b>The text processor.</b><br>
           This is the software the user (you) directly writes in. In our case,
           it's Emacs!
         </li>
         <li>
-          <b>The “layer” from text to product.</b><br />
+          <b>The “layer” from text to product.</b><br>
           This is the code that lies in between your plain text writing and an
           output file (e.g. PDF). Sometimes this is identical to the text
           processor—in our case it isn't. For instance, Microsoft Word is both a
@@ -164,10 +171,11 @@
       </ol>
 
       <p>
-        <code>org-cite</code> lies closer to (3) because it is responsible for
-        exporting citations, whereas <code>citar</code> is closer to (2) because
-        it is an interface for inserting citations into the buffer. A software
-        like Zotero is responsible for (1).
+        <code>org-cite</code>
+        lies closer to (3) because it is responsible for exporting citations,
+        whereas <code>citar</code> is closer to (2) because it is an interface
+        for inserting citations into the buffer. A software like Zotero is
+        responsible for (1).
       </p>
     </div>
   </div>
@@ -176,16 +184,21 @@
     <div class="outline-text-2" id="text-4">
       <p>
         In around July of 2021, <code>org-cite</code> was publicly released.
-        <code>org-cite</code> a library packaged with <code>org-mode</code> that
-        processes <code>org</code> citations (e.g.
+        <code>org-cite</code>
+        a library packaged with <code>org-mode</code> that processes
+        <code>org</code>
+        citations (e.g.
         <code>[cite:@wittgensteinTractatusLogicoPhilosophicus2021]</code>). To
         those not familiar with another citation workflow (e.g.
-        <code>biblatex</code> in LaTeX), it is quite daunting to leap into
-        citations in Emacs. This was certainly the case for me: I leapt into
-        <code>org-mode</code> citation integration with Zotero and LaTeX with no
-        experience in <code>org</code>, Zotero, or LaTeX! Nonetheless,
-        <code>org-cite</code> is quite simple once laid out. After reading this
-        post or section, I recommend taking a look at tecosaur's
+        <code>biblatex</code>
+        in LaTeX), it is quite daunting to leap into citations in Emacs. This
+        was certainly the case for me: I leapt into
+        <code>org-mode</code>
+        citation integration with Zotero and LaTeX with no experience in
+        <code>org</code>, Zotero, or LaTeX! Nonetheless,
+        <code>org-cite</code>
+        is quite simple once laid out. After reading this post or section, I
+        recommend taking a look at tecosaur's
         <a href="https://blog.tecosaur.com/tmio/2021-07-31-citations.html"
           >fabulous guide</a
         >
@@ -202,8 +215,8 @@
       class="outline-3"
     >
       <h3 id="understanding-org-cite-export-processors">
-        <span class="section-number-3">4.1.</span> Understanding
-        <code>org-cite</code> export processors
+        <span class="section-number-3">4.1.</span>
+        Understanding <code>org-cite</code> export processors
       </h3>
       <div class="outline-text-3" id="text-4-1">
         <p>
@@ -214,26 +227,25 @@
         </p>
         <p class="verse">
           When non-nil, the value is an association list between export
-          back-ends and<br />
-          citation export processors:<br />
-          <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;(BACK-END . PROCESSOR)<br />
-          <br />
+          back-ends and<br>
+          citation export processors:<br>
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;(BACK-END . PROCESSOR)<br>
+          <br>
           where BACK-END is the name of an export back-end or t, and PROCESSOR
-          is a<br />
-          triplet following the pattern<br />
-          <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;(NAME BIBLIOGRAPHY-STYLE CITATION-STYLE)<br />
-          <br />
+          is a<br>
+          triplet following the pattern<br>
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;(NAME BIBLIOGRAPHY-STYLE CITATION-STYLE)<br>
+          <br>
           There, NAME is the name of a registered citation processor providing
-          export<br />
+          export<br>
           functionality, as a symbol. BIBLIOGRAPHY-STYLE (respectively
-          CITATION-STYLE)<br />
+          CITATION-STYLE)<br>
           is the desired default style to use when printing a bibliography
-          (respectively<br />
-          exporting a citation), as a string or nil. Both BIBLIOGRAPHY-STYLE
-          and<br />
-          CITATION-STYLE are optional. NAME is mandatory.<br />
+          (respectively<br>
+          exporting a citation), as a string or nil. Both BIBLIOGRAPHY-STYLE and<br>
+          CITATION-STYLE are optional. NAME is mandatory.<br>
         </p>
         <p>
           What this suggests is that different combinations of “processors,”
@@ -241,12 +253,14 @@
           with different <code>org-export</code> backends. Presently, there are
           three processors available: <code>basic</code>, <code>csl</code>,
           <code>natbib</code>, and <code>bibtex</code>. Though
-          <code>org-cite</code> citations will always follow the same format,
+          <code>org-cite</code>
+          citations will always follow the same format,
           <b
             >the output text that is exported will change depending on the
             processor used</b
           >. I will go over these differences now, focusing primarily on the
-          <code>bibtex</code> and <code>csl</code> backends<sup
+          <code>bibtex</code>
+          and <code>csl</code> backends<sup
             ><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink"
               >1</a
             ></sup
@@ -256,10 +270,12 @@
         <p>
           <b
             >The <code>bibtex</code> processor can only be used with the
-            <code>latex</code> backend.</b
+            <code>latex</code>
+            backend.</b
           >
           Using this processor exports citations using the
-          <a href="https://www.ctan.org/pkg/biblatex">BibLaTex LaTeX package</a
+          <a href="https://www.ctan.org/pkg/biblatex"
+            >BibLaTex LaTeX package</a
           >. That means that
           <code>[cite:@bradleyAppearanceRealityMetaphysical2011 82–5;]</code>
           will export into a LaTeX command like
@@ -275,10 +291,11 @@
 
         <p>
           The <code>natbib</code> processor unsurprisingly uses the
-          <code>natbib</code> LaTeX package. <code>biblatex</code> is slowly
-          growing to replace the older <code>natbib</code> package, though some
-          users may circumstantially be limited to <code>natbib</code>​—you can
-          read more about the differences between <code>natbib</code> and
+          <code>natbib</code>
+          LaTeX package. <code>biblatex</code> is slowly growing to replace the
+          older <code>natbib</code> package, though some users may
+          circumstantially be limited to <code>natbib</code>​—you can read more
+          about the differences between <code>natbib</code> and
           <code>biblatex</code>
           <a href="https://tex.stackexchange.com/a/25702">here</a>. I have not
           personally used the <code>natbib</code>, but I suspect its usage is
@@ -292,7 +309,8 @@
           >
           (CSL) is a language used to instruct the formatting of citations and
           bibliographies; citation styles are provided by
-          <code>.csl</code> files.
+          <code>.csl</code>
+          files.
           <b
             >Most importantly, CSL is intended to be a universal standard for
             citation formatting.</b
@@ -304,13 +322,14 @@
         <p>In sum:</p>
         <div class="mermaid" id="special-block-2">
           <p>
-            flowchart LR A((Plain-text)) &mdash; B{Org-export} B ===&gt; C B
+            flowchart LR A((Plain-text)) &mdash; B { Org-export} B ===&gt; C B
             ===&gt;D B ===&gt; E
           </p>
 
           <p>
-            subgraph CSL Processor C{{HTML, MD, ODT, plain-text, etc.}} D[LaTeX]
-            D -.-&gt;|Compile with citations as rendered text| F(PDF) end
+            subgraph CSL Processor C{{HTML, MD, ODT, plain-text, etc.}}
+            D[LaTeX] D -.-&gt;|Compile with citations as rendered text| F(PDF)
+            end
           </p>
 
           <p>
@@ -322,7 +341,8 @@
     </div>
     <div id="outline-container-which-processor-should-i-use" class="outline-3">
       <h3 id="which-processor-should-i-use">
-        <span class="section-number-3">4.2.</span> Which processor should I use?
+        <span class="section-number-3">4.2.</span>
+        Which processor should I use?
       </h3>
       <div class="outline-text-3" id="text-4-2">
         <p>
@@ -330,10 +350,12 @@
           export to LaTeX. So, when exporting to LaTeX:
           <i
             >should you use the <code>csl</code> or
-            <code>bibtex/natbib</code> processor?</i
+            <code>bibtex/natbib</code>
+            processor?</i
           >
           The difference lies in whether or not you want to rely on the
-          <code>biblatex</code> package to manage exports.
+          <code>biblatex</code>
+          package to manage exports.
         </p>
 
         <p>
@@ -360,22 +382,27 @@
           in my documents is enough,” then CSL will always cover you. However,
           if you want access to the more complex or nuanced facilities of
           <code>biblatex</code>, use the <code>bibtex</code> processor instead.
-          <code>biblatex</code> use cases include (i) using obscure or uncommon
-          field and entry types and (ii) wanting “automation” in the citation
-          variant. By (ii) I mean that <code>biblatex</code> handles the variant
-          whereas you must manually list the variant in the
-          <code>org-cite</code> citation when using CSL (see the above link to
-          tecosaur's guide).
+          <code>biblatex</code>
+          use cases include (i) using obscure or uncommon field and entry types
+          and (ii) wanting “automation” in the citation variant. By (ii) I mean
+          that <code>biblatex</code> handles the variant whereas you must
+          manually list the variant in the
+          <code>org-cite</code>
+          citation when using CSL (see the above link to tecosaur's guide).
         </p>
 
         <p>
           I will give an example. Basic MLA in-text citations following a
-          <code>(AUTHOR PAGE)</code> format. However, closely following MLA
-          means that subsequent in-text citations from the same source should
-          have a <code>(PAGE)</code> format. Using the
-          <code>csl</code> processor, without specifying a style or variant in
-          the <code>org-cite</code> citation, will <i>always</i> output the
-          former formatting as rendered text; as
+          <code>(AUTHOR PAGE)</code>
+          format. However, closely following MLA means that subsequent in-text
+          citations from the same source should have a
+          <code>(PAGE)</code>
+          format. Using the
+          <code>csl</code>
+          processor, without specifying a style or variant in the
+          <code>org-cite</code>
+          citation, will <i>always</i> output the former formatting as rendered
+          text; as
           <a
             href="https://www.reddit.com/r/orgmode/comments/vchefn/comment/icgt0ql/?utm_source=share&amp;utm_medium=web2x&amp;context=3"
             >r/bdarcus explains in his comment</a
@@ -383,23 +410,28 @@
           output format. On the other hand, <code>org-cite</code> will, by
           default, leverage the <code>\autocite</code> command (see
           <code>org-cite-biblatex-styles</code>). This tells
-          <code>biblatex</code> to <b>change the variant when appropriate</b>.
-          This is an immensely powerful upside to using the
-          <code>bibtex</code> processor—though it is minor in this particular
-          case, this demonstrates the advantages of the
-          <code>biblatex</code> package. You can read more about the differences
-          between CSL and <code>biblatex</code> in this
+          <code>biblatex</code>
+          to <b>change the variant when appropriate</b>. This is an immensely
+          powerful upside to using the
+          <code>bibtex</code>
+          processor—though it is minor in this particular case, this
+          demonstrates the advantages of the
+          <code>biblatex</code>
+          package. You can read more about the differences between CSL and
+          <code>biblatex</code>
+          in this
           <a href="https://tex.stackexchange.com/a/435004"
             >thorough StackExchange explanation</a
           >. Of course, however, <code>biblatex</code> is only available when
           exporting to LaTeX, whereas
-          <b>CSL can be used to export into any format</b> (e.g. HTML, Markdown,
-          ODT, plain-text).
+          <b>CSL can be used to export into any format</b>
+          (e.g. HTML, Markdown, ODT, plain-text).
         </p>
 
         <p>
           <i>In sum</i>, use the <code>bibtex</code> processor
-          <b>when you are exporting to LaTeX and only LaTeX</b> and
+          <b>when you are exporting to LaTeX and only LaTeX</b>
+          and
         </p>
         <ul class="org-ul">
           <li>want automatic selection of citation variants</li>
@@ -427,7 +459,8 @@
             href="https://blog.tecosaur.com/tmio/2021-07-31-citations.html#cite-syntax"
             >tecosaur's guide</a
           >, the <code>csl</code> processor uses locators like
-          <code>bk.</code> and <code>vol.</code>, so citations may look like
+          <code>bk.</code>
+          and <code>vol.</code>, so citations may look like
           <code
             >[cite/noauthor:See@mollisonNietzscheContraStoicism2018 pp.
             28–9;@priestWhyItIrrational2001 pp. 14;]</code
@@ -443,7 +476,8 @@
     </div>
     <div id="outline-container-configuration" class="outline-3">
       <h3 id="configuration">
-        <span class="section-number-3">4.3.</span> Configuration
+        <span class="section-number-3">4.3.</span>
+        Configuration
       </h3>
       <div class="outline-text-3" id="text-4-3">
         <p>
@@ -458,10 +492,11 @@
         </ol>
 
         <p>
-          <code>org-cite-global-bibliography</code> is the bare minimum to
-          getting <code>org-cite</code> ready to work. This should be a list of
-          bibliography file (<code>.bib</code>) paths. I have mine set to a list
-          whose single element is a file that Zotero exports:
+          <code>org-cite-global-bibliography</code>
+          is the bare minimum to getting <code>org-cite</code> ready to work.
+          This should be a list of bibliography file (<code>.bib</code>) paths.
+          I have mine set to a list whose single element is a file that Zotero
+          exports:
         </p>
         <div class="org-src-container">
           <pre class="src src-emacs-lisp"><code>:custom
@@ -474,15 +509,16 @@
         </div>
         <p>
           Alternatively, you can use the org-mode
-          <code>#+BIBLIOGRAPHY:</code> keyword to set this value per-file; it's
-          value should be a file path.
+          <code>#+BIBLIOGRAPHY:</code>
+          keyword to set this value per-file; it's value should be a file path.
         </p>
 
         <p>
-          <code>org-cite-export-processors</code> is useful as a means to tweak
-          how you'd like <code>org-cite</code> to export citations. You can also
-          set a file-local value using the <code>#+CITE_EXPORT</code> file
-          keyword (e.g.
+          <code>org-cite-export-processors</code>
+          is useful as a means to tweak how you'd like <code>org-cite</code> to
+          export citations. You can also set a file-local value using the
+          <code>#+CITE_EXPORT</code>
+          file keyword (e.g.
           <code>#+CITE_EXPORT: csl chicago-author-date.csl</code>); see
           <a
             href="https://blog.tecosaur.com/tmio/2021-07-31-citations.html#more-exporting"
@@ -509,7 +545,8 @@
           As you can see, I have CSL be the default in every case aside from
           LaTeX. The styles can either be a file path or a file name in
           <code>org-cite-csl-styles-dir</code>​—see
-          <a href="#zotero">Zotero</a> for how to easily acquire CSL files.<sup
+          <a href="#zotero">Zotero</a>
+          for how to easily acquire CSL files.<sup
             ><a id="fnr.4" class="footref" href="#fn.4" role="doc-backlink"
               >4</a
             ></sup
@@ -520,7 +557,8 @@
 
         <p>
           I also choose to customize faces—I prefer the green faces that
-          <code>org-ref</code> uses:<sup
+          <code>org-ref</code>
+          uses:<sup
             ><a id="fnr.5" class="footref" href="#fn.5" role="doc-backlink"
               >5</a
             ></sup
@@ -541,12 +579,13 @@
         <p>Using <code>org-cite</code> is incredibly simple:</p>
         <ol class="org-ol">
           <li>
-            <code>org-cite-insert</code> to insert citations in
-            <code>org</code> files, and
+            <code>org-cite-insert</code>
+            to insert citations in <code>org</code> files, and
           </li>
           <li>
-            <code>#+PRINT_BIBLIOGRAPHY:</code> within a document to mark where
-            the bibliography/references/works cited should be.<sup
+            <code>#+PRINT_BIBLIOGRAPHY:</code>
+            within a document to mark where the bibliography/references/works
+            cited should be.<sup
               ><a id="fnr.6" class="footref" href="#fn.6" role="doc-backlink"
                 >6</a
               ></sup
@@ -562,8 +601,8 @@
       <p>
         Using <code>org-cite</code> is really simple. But many users will find
         the interface… too bare.
-        <a href="https://github.com/emacs-citar/citar">Citar</a> is, roughly,
-        the foremost attempt to provide a pleasing frontend to
+        <a href="https://github.com/emacs-citar/citar">Citar</a>
+        is, roughly, the foremost attempt to provide a pleasing frontend to
         <code>org-cite</code>. It adds the <code>citar</code> citation-insert
         processor. The following is the <b>minimum</b> to start using
         <code>citar</code>:
@@ -624,7 +663,8 @@
     </div>
     <div id="outline-container-capturing-outdated" class="outline-3">
       <h3 id="capturing-outdated">
-        <span class="section-number-3">5.1.</span> Capturing (Outdated)
+        <span class="section-number-3">5.1.</span>
+        Capturing (Outdated)
       </h3>
       <div class="outline-text-3" id="text-5-1">
         <div class="alert" id="special-block-3">
@@ -697,8 +737,8 @@
     </div>
     <div id="outline-container-h:20241106T044538.716623" class="outline-3">
       <h3 id="h:20241106T044538.716623">
-        <span class="section-number-3">5.2.</span> Advising
-        <code>citar-org-update-pre-suffix</code> (Outdated)
+        <span class="section-number-3">5.2.</span>
+        Advising <code>citar-org-update-pre-suffix</code> (Outdated)
       </h3>
       <div class="outline-text-3" id="text-h:20241106T044538.716623">
         <div class="alert" id="special-block-4">
@@ -713,9 +753,9 @@
               >Upstream has recently merged</a
             >
             changes to <code>citar-org-update-pre-suffix</code>, renaming it to
-            <code>citar-org-update-prefix-suffix</code> and ensuring that a
-            single space is left between citekeys and their suffixes. Therefore,
-            the code directly below is now unnecessary.
+            <code>citar-org-update-prefix-suffix</code>
+            and ensuring that a single space is left between citekeys and their
+            suffixes. Therefore, the code directly below is now unnecessary.
           </p>
         </div>
 
@@ -731,8 +771,8 @@
         <p>
           Before advising <code>citar-org-update-pre-suffix</code>, I first
           advise <code>org-cite-insert</code> such that
-          <code>citar-org-update-pre-suffix</code> is run immediately after
-          inserting a citation:
+          <code>citar-org-update-pre-suffix</code>
+          is run immediately after inserting a citation:
         </p>
         <div class="org-src-container">
           <pre
@@ -747,11 +787,11 @@
         </div>
         <p>
           A limitation with this code is that this only calls
-          <code>citar-org-update-pre-suffix</code> on the last citation key,
-          which is fine when only one key is inserted at once, and not when
-          multiple are inserted. (Though,
-          <code>citar-org-update-pre-suffix</code> can still be called manually
-          on the other citation keys afterward.)
+          <code>citar-org-update-pre-suffix</code>
+          on the last citation key, which is fine when only one key is inserted
+          at once, and not when multiple are inserted. (Though,
+          <code>citar-org-update-pre-suffix</code>
+          can still be called manually on the other citation keys afterward.)
         </p>
 
         <p>
@@ -761,7 +801,8 @@
         <ol class="org-ol">
           <li>
             Temporarily enable
-            <a href="https://github.com/jorgenschaefer/typoel">typo-mode</a
+            <a href="https://github.com/jorgenschaefer/typoel"
+              >typo-mode</a
             >.<sup
               ><a id="fnr.10" class="footref" href="#fn.10" role="doc-backlink"
                 >10</a
@@ -824,17 +865,21 @@ to manually add one myself."
     </div>
     <div id="outline-container-aesthetics" class="outline-3">
       <h3 id="aesthetics">
-        <span class="section-number-3">5.3.</span> Aesthetics
+        <span class="section-number-3">5.3.</span>
+        Aesthetics
       </h3>
       <div class="outline-text-3" id="text-5-3">
         <p>
           Finally, we can change the way the <code>citar</code> interface
           appears. The most relevant variables are
-          <code>citar-templates</code> and <code>citar-symbols</code>. Below is
-          my configuration for these variables. Notably, my definition for
-          <code>citar-symbols</code> utilizes <code>all-the-icons</code> icons
-          to fancify the candidates (<code>all-the-icons</code> must be
-          installed in order to have the faces below available):
+          <code>citar-templates</code>
+          and <code>citar-symbols</code>. Below is my configuration for these
+          variables. Notably, my definition for
+          <code>citar-symbols</code>
+          utilizes <code>all-the-icons</code> icons to fancify the candidates (<code
+            >all-the-icons</code
+          >
+          must be installed in order to have the faces below available):
         </p>
         <div class="org-src-container">
           <pre class="src src-emacs-lisp"><code>:custom
@@ -873,7 +918,7 @@ to manually add one myself."
           <img
             src="2022-06-15_12-52-26_screenshot.png"
             alt="2022-06-15_12-52-26_screenshot.png"
-          />
+          >
 
           <figcaption>
             <span class="figure-number">Figure 1: </span>Visual improvements to
@@ -885,16 +930,17 @@ to manually add one myself."
   </div>
   <div id="outline-container-other-interesting-packages" class="outline-2">
     <h2 id="other-interesting-packages">
-      <span class="section-number-2">6.</span> Other interesting packages
+      <span class="section-number-2">6.</span>
+      Other interesting packages
     </h2>
     <div class="outline-text-2" id="text-6"></div>
     <div id="outline-container-zotero" class="outline-3">
       <h3 id="zotero"><span class="section-number-3">6.1.</span> Zotero</h3>
       <div class="outline-text-3" id="text-6-1">
         <p>
-          <a href="https://www.zotero.org/support/">Zotero</a> isn't an Emacs
-          package, but it is crucial to most users' workflow, so it deserves
-          attention. Zotero makes gathering, storing, and exporting
+          <a href="https://www.zotero.org/support/">Zotero</a>
+          isn't an Emacs package, but it is crucial to most users' workflow, so
+          it deserves attention. Zotero makes gathering, storing, and exporting
           bibliographic data infinitely easier. For instance, an ISBN or DOI of
           a source is all that is necessary for an entry's fields to be
           populated. There are two things to note about my setup:
@@ -914,9 +960,12 @@ to manually add one myself."
           <li>
             and export my library using the BetterBibLaTeX format. I also tick
             the “Keep Updated” option; this continually updates the
-            <code>.bib</code> file as I make changes to my library. I then point
-            <code>org-cite-global-bibliography</code> and
-            <code>citar-bibliography</code> to this file.
+            <code>.bib</code>
+            file as I make changes to my library. I then point
+            <code>org-cite-global-bibliography</code>
+            and
+            <code>citar-bibliography</code>
+            to this file.
           </li>
         </ol>
 
@@ -932,13 +981,15 @@ to manually add one myself."
 
         <p>
           Finally, a <i>very handy</i> tip is to
-          <b>use the CSL files that Zotero already provides</b> (credit to
+          <b>use the CSL files that Zotero already provides</b>
+          (credit to
           <a
             href="https://blog.tecosaur.com/tmio/2021-07-31-citations.html#working-with-zotero"
             >this section of tecosaur's guide</a
           >). The CSL files (which provide citation styles) are located in
           <code>ZOTERO_DIR/styles/</code>. You can set
-          <code>org-cite-csl-styles-dir</code> to this path:
+          <code>org-cite-csl-styles-dir</code>
+          to this path:
         </p>
         <div class="org-src-container">
           <pre class="src src-emacs-lisp"><code>:custom
@@ -952,18 +1003,20 @@ to manually add one myself."
       <h3 id="embark"><span class="section-number-3">6.2.</span> Embark</h3>
       <div class="outline-text-3" id="text-6-2">
         <p>
-          <a href="https://github.com/oantolin/embark/">Embark</a> provides
-          menus (essentially keymaps) based on “context,” that is, the type of
-          thing the point is on. As a result, <code>embark</code> has immense
-          potential. <code>Citar</code> is built to exploit
-          <code>embark</code> without requiring it—for instance, see
+          <a href="https://github.com/oantolin/embark/">Embark</a>
+          provides menus (essentially keymaps) based on “context,” that is, the
+          type of thing the point is on. As a result, <code>embark</code> has
+          immense potential. <code>Citar</code> is built to exploit
+          <code>embark</code>
+          without requiring it—for instance, see
           <code>citar-citation-map</code>.
         </p>
       </div>
     </div>
     <div id="outline-container-org-roam-bibtex" class="outline-3">
       <h3 id="org-roam-bibtex">
-        <span class="section-number-3">6.3.</span> Org-roam-bibtex
+        <span class="section-number-3">6.3.</span>
+        Org-roam-bibtex
       </h3>
       <div class="outline-text-3" id="text-6-3">
         <p>
@@ -971,10 +1024,12 @@ to manually add one myself."
             >Org-roam-bibtex</a
           >
           integrates
-          <a href="https://github.com/org-roam/org-roam">org-roam</a> with
-          citation systems, such as <code>org-cite</code>. This packages allows
-          <code>org-roam</code> to recognize particular nodes as bibliographic
-          (i.e. associated with a particular <code>.bib</code> entry).
+          <a href="https://github.com/org-roam/org-roam">org-roam</a>
+          with citation systems, such as <code>org-cite</code>. This packages
+          allows
+          <code>org-roam</code>
+          to recognize particular nodes as bibliographic (i.e. associated with a
+          particular <code>.bib</code> entry).
         </p>
 
         <p>
@@ -990,7 +1045,8 @@ to manually add one myself."
     </div>
     <div id="outline-container-citar-capf" class="outline-3">
       <h3 id="citar-capf">
-        <span class="section-number-3">6.4.</span> Citar-capf
+        <span class="section-number-3">6.4.</span>
+        Citar-capf
       </h3>
       <div class="outline-text-3" id="text-6-4">
         <p>
@@ -1016,15 +1072,16 @@ to manually add one myself."
       <h3 id="org-ref"><span class="section-number-3">6.5.</span> Org-ref</h3>
       <div class="outline-text-3" id="text-6-5">
         <p>
-          <a href="https://github.com/jkitchin/org-ref">Org-ref</a> has
-          historically been the dominant citation system for
+          <a href="https://github.com/jkitchin/org-ref">Org-ref</a>
+          has historically been the dominant citation system for
           <code>org-mode</code>. I elect to use <code>org-cite</code> instead
           because (i) it comes with <code>org-mode</code>, meaning there is one
           less conceptual- and configuration-layer to navigate, (ii) Moreover,
-          <code>org-ref</code> uses a format that follows
-          <code>org</code> conventions less closely, and (iii) I have read that
-          is arguably more robust and future-proof. Nevertheless, some users
-          still prefer it.
+          <code>org-ref</code>
+          uses a format that follows
+          <code>org</code>
+          conventions less closely, and (iii) I have read that is arguably more
+          robust and future-proof. Nevertheless, some users still prefer it.
         </p>
       </div>
     </div>
@@ -1048,7 +1105,8 @@ to manually add one myself."
             </li>
             <li>
               Mention the merging of <code>citar-capf</code> into
-              <code>citar</code> (see <a href="#citar-capf">Citar-capf</a>).
+              <code>citar</code>
+              (see <a href="#citar-capf">Citar-capf</a>).
             </li>
             <li>Added <a href="#embark">Embark</a>.</li>
             <li>
@@ -1058,7 +1116,8 @@ to manually add one myself."
             <li>Made comments clarifying <code>kb/bib-files</code>.</li>
             <li>
               Add screenshot that showcases visually improved
-              <code>citar</code> interface (see
+              <code>citar</code>
+              interface (see
               <a href="#aesthetics">Aesthetics</a>).
             </li>
           </ul>
@@ -1073,7 +1132,8 @@ to manually add one myself."
             <li>Added <a href="#helpful-sources">Helpful sources</a>.</li>
             <li>
               Change processor explanations to include the
-              <code>natbib</code> processor.
+              <code>natbib</code>
+              processor.
             </li>
             <li>
               Change processor explanations to recognize the difference between
@@ -1161,8 +1221,9 @@ to manually add one myself."
           <p class="footpara">
             This is an <code>org-export</code> backend. This means that, for
             instance, <code>md</code> refers to the <code>org-export</code>
-            <code>md</code> backend as well as any other derived backends. Read
-            the documentation for
+            <code>md</code>
+            backend as well as any other derived backends. Read the
+            documentation for
             <code>org-export-define-derived-backend</code>.
           </p>
         </div>
@@ -1177,8 +1238,10 @@ to manually add one myself."
         <div class="footpara" role="doc-footnote">
           <p class="footpara">
             Notice that a citation style is required for the
-            <code>csl</code> processor, and not for the
-            <code>bibtex</code> processor.
+            <code>csl</code>
+            processor, and not for the
+            <code>bibtex</code>
+            processor.
           </p>
         </div>
       </div>
@@ -1192,8 +1255,9 @@ to manually add one myself."
         <div class="footpara" role="doc-footnote">
           <p class="footpara">
             Be aware that I use <code>use-package</code>'s
-            <code>:custom-face</code> keyword to redefine these two faces. One
-            can just as easily use the built-in <code>defface</code> of
+            <code>:custom-face</code>
+            keyword to redefine these two faces. One can just as easily use the
+            built-in <code>defface</code> of
             <code>set-face-attribute</code>.
           </p>
         </div>
@@ -1251,8 +1315,9 @@ to manually add one myself."
         >
         <div class="footpara" role="doc-footnote">
           <p class="footpara">
-            <code>kb/note-keys</code> is my own <code>general.el</code> leader
-            key. I've mapped its prefix to <code>C-c n</code>.
+            <code>kb/note-keys</code>
+            is my own <code>general.el</code> leader key. I've mapped its prefix
+            to <code>C-c n</code>.
           </p>
         </div>
       </div>

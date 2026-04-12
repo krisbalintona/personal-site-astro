@@ -75,8 +75,8 @@
       </p>
       <ul class="org-ul">
         <li>
-          <a href="https://github.com/minad/marginalia">Marginalia</a> —
-          minibuffer annotations, i.e., auxiliary candidate information
+          <a href="https://github.com/minad/marginalia">Marginalia</a>
+          — minibuffer annotations, i.e., auxiliary candidate information
         </li>
         <li>
           <a
@@ -86,21 +86,24 @@
           — <code>all-the-icons</code> icons for minibuffer candidates
         </li>
         <li>
-          <a href="https://github.com/minad/vertico">Vertico</a> — vertical
-          minibuffer interface
+          <a href="https://github.com/minad/vertico">Vertico</a>
+          — vertical minibuffer interface
         </li>
         <li>
-          <a href="https://github.com/oantolin/orderless">Orderless</a> — a
-          flexible <code>completion-style</code> with multi-component matching
+          <a href="https://github.com/oantolin/orderless">Orderless</a>
+          — a flexible <code>completion-style</code> with multi-component
+          matching
         </li>
       </ul>
 
       <p>
         <i>Note</i>: I use <code>straight.el</code> for package management and
-        <code>general.el</code> to set my keybindings. Both of these packages
-        have integration with <code>use-package</code> which come in the form of
-        the <code>:straight</code> and <code>:general</code> keywords,
-        respectively.
+        <code>general.el</code>
+        to set my keybindings. Both of these packages have integration with
+        <code>use-package</code>
+        which come in the form of the
+        <code>:straight</code>
+        and <code>:general</code> keywords, respectively.
       </p>
     </div>
   </div>
@@ -109,14 +112,15 @@
     <div class="outline-text-2" id="text-2">
       <p>
         The following is <code>vertico</code> with
-        <code>marginalia</code> annotations right-aligned in the minibuffer.
+        <code>marginalia</code>
+        annotations right-aligned in the minibuffer.
       </p>
 
       <figure id="figure-1">
         <img
           src="2022-02-22_14-52-49_screenshot.png"
           alt="2022-02-22_14-52-49_screenshot.png"
-        />
+        >
 
         <figcaption>
           <span class="figure-number">Figure 1: </span>Using
@@ -128,7 +132,7 @@
         <img
           src="2022-02-22_15-03-29_screenshot.png"
           alt="2022-02-22_15-03-29_screenshot.png"
-        />
+        >
 
         <figcaption>
           <span class="figure-number">Figure 2: </span>Using
@@ -138,7 +142,8 @@
 
       <p>
         Marginalia is painless to set up. Remember, I use
-        <code>general.el</code> to set keybindings:
+        <code>general.el</code>
+        to set keybindings:
       </p>
       <div class="org-src-container">
         <pre class="src src-emacs-lisp"><code>(use-package marginalia
@@ -156,31 +161,35 @@
   </div>
   <div id="outline-container-all-the-icons-completion" class="outline-2">
     <h2 id="all-the-icons-completion">
-      <span class="section-number-2">3.</span> All-the-icons-completion
+      <span class="section-number-2">3.</span>
+      All-the-icons-completion
     </h2>
     <div class="outline-text-2" id="text-3">
       <p>
         <code>Marginalia</code>, <code>Vertico</code>, and
-        <code>Orderless</code> have already received considerable exposure, but
-        <code>all-the-icons-completion</code> has not.
+        <code>Orderless</code>
+        have already received considerable exposure, but
+        <code>all-the-icons-completion</code>
+        has not.
       </p>
 
       <figure id="figure-3">
         <img
           src="2022-02-22_15-13-22_screenshot.png"
           alt="2022-02-22_15-13-22_screenshot.png"
-        />
+        >
 
         <figcaption>
           <span class="figure-number">Figure 3: </span>Using
-          <code>find-file</code> in a directory with subdirectories, python
-          files, a .txt file, and an org file. You can see the icons in the far
-          left.
+          <code>find-file</code>
+          in a directory with subdirectories, python files, a .txt file, and an
+          org file. You can see the icons in the far left.
         </figcaption>
       </figure>
 
       <p>
-        <code>All-the-icons-completion</code> is also dead-simple to set up:
+        <code>All-the-icons-completion</code>
+        is also dead-simple to set up:
       </p>
       <div class="org-src-container">
         <pre
@@ -223,7 +232,8 @@
 
         <p>
           Now we can add a few changes to the default keybindings (again, I use
-          <code>general.el</code> to set keybindings):
+          <code>general.el</code>
+          to set keybindings):
         </p>
         <div class="org-src-container">
           <pre class="src src-emacs-lisp"><code>(use-package vertico
@@ -246,7 +256,8 @@
     </div>
     <div id="outline-container-extensions" class="outline-3">
       <h3 id="extensions">
-        <span class="section-number-3">4.2.</span> Extensions
+        <span class="section-number-3">4.2.</span>
+        Extensions
       </h3>
       <div class="outline-text-3" id="text-4-2">
         <p>
@@ -291,29 +302,30 @@
         <p>
           With the extensions installed, we have a lot of room to set their
           variables to our liking. In particular,
-          <code>vertico-multiform</code> is the most interesting and, in my
-          opinion, useful. You can choose how the minibuffer appears, which is
-          provided by Vertico's extensions (see more
+          <code>vertico-multiform</code>
+          is the most interesting and, in my opinion, useful. You can choose how
+          the minibuffer appears, which is provided by Vertico's extensions (see
+          more
           <a href="https://github.com/minad/vertico#extensions">here</a>). The
           current options are
         </p>
         <ol class="org-ol">
           <li>
             <p>
-              <code>buffer</code> — minibuffer treated as a normal, separate
-              buffer,
+              <code>buffer</code>
+              — minibuffer treated as a normal, separate buffer,
             </p>
 
             <figure id="figure-4">
               <img
                 src="2022-02-22_15-25-29_screenshot.png"
                 alt="2022-02-22_15-25-29_screenshot.png"
-              />
+              >
 
               <figcaption>
                 <span class="figure-number">Figure 4: </span
-                ><code>Vertico-buffer</code> UI (minibuffer now a separate
-                window)
+                ><code>Vertico-buffer</code>
+                UI (minibuffer now a separate window)
               </figcaption>
             </figure>
           </li>
@@ -324,11 +336,12 @@
               <img
                 src="2022-02-22_15-23-05_screenshot.png"
                 alt="2022-02-22_15-23-05_screenshot.png"
-              />
+              >
 
               <figcaption>
                 <span class="figure-number">Figure 5: </span
-                ><code>Vertico-flat</code> minibuffer UI
+                ><code>Vertico-flat</code>
+                minibuffer UI
               </figcaption>
             </figure>
           </li>
@@ -339,56 +352,61 @@
               <img
                 src="2022-02-22_15-27-16_screenshot.png"
                 alt="2022-02-22_15-27-16_screenshot.png"
-              />
+              >
 
               <figcaption>
                 <span class="figure-number">Figure 6: </span
-                ><code>Vertico-grid</code> UI
+                ><code>Vertico-grid</code>
+                UI
               </figcaption>
             </figure>
           </li>
           <li>
             <p>
-              <code>reverse</code> — moves the area in which you type above the
-              candidates, like <code>selectrum</code>,
+              <code>reverse</code>
+              — moves the area in which you type above the candidates, like
+              <code>selectrum</code>,
             </p>
 
             <figure id="figure-7">
               <img
                 src="2022-02-22_15-28-46_screenshot.png"
                 alt="2022-02-22_15-28-46_screenshot.png"
-              />
+              >
 
               <figcaption>
                 <span class="figure-number">Figure 7: </span
-                ><code>Vertico-reverse</code> UI. Notice the text area is below
-                the candidates. Moreover, the candidates are in reverse order.
+                ><code>Vertico-reverse</code>
+                UI. Notice the text area is below the candidates. Moreover, the
+                candidates are in reverse order.
               </figcaption>
             </figure>
           </li>
           <li>
             <p>
-              <code>unobtrusive</code> — like the
-              <code>vertico-flat</code> format, but only showing the selected
-              candidate,
+              <code>unobtrusive</code>
+              — like the <code>vertico-flat</code> format, but only showing the
+              selected candidate,
             </p>
 
             <figure id="figure-8">
               <img
                 src="2022-02-22_15-30-27_screenshot.png"
                 alt="2022-02-22_15-30-27_screenshot.png"
-              />
+              >
 
               <figcaption>
                 <span class="figure-number">Figure 8: </span
-                ><code>Vertico-unobtrusive</code> UI (there are multiple files
-                in this directory, only the current candidate is shown)
+                ><code>Vertico-unobtrusive</code>
+                UI (there are multiple files in this directory, only the current
+                candidate is shown)
               </figcaption>
             </figure>
           </li>
           <li>
             <p>
-              <code>indexed</code> — allows you “<a
+              <code>indexed</code>
+              — allows you “<a
                 href="https://github.com/minad/vertico#extensions"
                 >to select indexed candidates with prefix arguments</a
               >”
@@ -398,11 +416,12 @@
               <img
                 src="2022-02-22_15-31-45_screenshot.png"
                 alt="2022-02-22_15-31-45_screenshot.png"
-              />
+              >
 
               <figcaption>
                 <span class="figure-number">Figure 9: </span
-                ><code>Vertico-indexed</code> UI
+                ><code>Vertico-indexed</code>
+                UI
               </figcaption>
             </figure>
           </li>
@@ -411,7 +430,8 @@
         <p>
           These formats each have a separate minor-mode which can be activated
           if you want to use that format singly. However, with
-          <code>vertico-multiform-mode</code> as well as configuration of
+          <code>vertico-multiform-mode</code>
+          as well as configuration of
           <code>vertico-multiform-categories</code>,
           <code>vertico-multiform-commands</code>, and keybinds, you can
           enable/disable multiple of these formats simultaneously:
@@ -423,7 +443,8 @@
 
         <p>
           Here are the extension variables I set in the
-          <code>:custom</code> block of my <code>use-package</code>:
+          <code>:custom</code>
+          block of my <code>use-package</code>:
         </p>
         <div class="org-src-container">
           <pre
@@ -466,8 +487,8 @@
 
         <p>
           Finally, the other Vertico extensions I configure are
-          <code>vertico-repeat</code> and <code>vertico-directory</code>. I add
-          the following keybinds:
+          <code>vertico-repeat</code>
+          and <code>vertico-directory</code>. I add the following keybinds:
         </p>
         <div class="org-src-container">
           <pre
@@ -496,15 +517,16 @@
       </div>
       <div id="outline-container-vertico-extension-commands" class="outline-4">
         <h4 id="vertico-extension-commands">
-          <span class="section-number-4">4.2.1.</span> Vertico extension
-          commands
+          <span class="section-number-4">4.2.1.</span>
+          Vertico extension commands
         </h4>
         <div class="outline-text-4" id="text-4-2-1">
           <p>
             If you'd like, you can set up a toggle between two multiforms in the
             minibuffer. For instance, the following function definition with a
             corresponding keybind in <code>vertico-map</code> toggles between
-            <code>vertico-flat-mode</code> and
+            <code>vertico-flat-mode</code>
+            and
             <code>vertico-reverse-mode</code>:
           </p>
           <div class="org-src-container">
@@ -522,9 +544,10 @@
 
           <p>
             The following function uses <code>vertico-quick-jump</code> (like
-            <code>avy</code> but for minibuffer candidates) to
-            <code>embark-act</code> on a candidate without having to first hover
-            over the candidate:
+            <code>avy</code>
+            but for minibuffer candidates) to
+            <code>embark-act</code>
+            on a candidate without having to first hover over the candidate:
           </p>
           <div class="org-src-container">
             <pre
@@ -588,19 +611,22 @@
           <img
             src="2022-02-22_15-40-59_demonstrating-rfn-eshadow-update-overlay.gif"
             alt="2022-02-22_15-40-59_demonstrating-rfn-eshadow-update-overlay.gif"
-          />
+          >
 
           <figcaption>
             <span class="figure-number">Figure 10: </span>Using
-            <code>find-file</code> and going from a subdirectory in
-            <code>$HOME</code> to the distant <code>/tmp/</code> directory.
-            Notice that the file-path is “cleaned up.”
+            <code>find-file</code>
+            and going from a subdirectory in
+            <code>$HOME</code>
+            to the distant <code>/tmp/</code> directory. Notice that the
+            file-path is “cleaned up.”
           </figcaption>
         </figure>
 
         <p>
           Finally, the following makes working with remote files via
-          <code>tramp</code> easier.
+          <code>tramp</code>
+          easier.
         </p>
         <div class="org-src-container">
           <pre
@@ -623,7 +649,8 @@
     </div>
     <div id="outline-container-end-product" class="outline-3">
       <h3 id="end-product">
-        <span class="section-number-3">4.4.</span> End product
+        <span class="section-number-3">4.4.</span>
+        End product
       </h3>
       <div class="outline-text-3" id="text-4-4">
         <p>
@@ -744,9 +771,9 @@
     <h2 id="orderless"><span class="section-number-2">5.</span> Orderless</h2>
     <div class="outline-text-2" id="text-5">
       <p>
-        <code>Orderless</code> is an alternative and powerful completion style,
-        that is, it is an alternative to Emacs's basic candidate-filtering
-        capacities.
+        <code>Orderless</code>
+        is an alternative and powerful completion style, that is, it is an
+        alternative to Emacs's basic candidate-filtering capacities.
       </p>
     </div>
     <div id="outline-container-basic-1" class="outline-3">
@@ -793,20 +820,21 @@
     </div>
     <div id="outline-container-style-dispatchers" class="outline-3">
       <h3 id="style-dispatchers">
-        <span class="section-number-3">5.2.</span> Style dispatchers
+        <span class="section-number-3">5.2.</span>
+        Style dispatchers
       </h3>
       <div class="outline-text-3" id="text-5-2">
         <figure id="figure-11">
           <img
             src="2022-02-22_15-18-54_screenshot.png"
             alt="2022-02-22_15-18-54_screenshot.png"
-          />
+          >
 
           <figcaption>
             <span class="figure-number">Figure 11: </span>A first component of
             “lm” using the
-            <code>prot-orderless-strict-initialism-dispatcher</code> style
-            dispatcher, and a second component of “map” using the
+            <code>prot-orderless-strict-initialism-dispatcher</code>
+            style dispatcher, and a second component of “map” using the
             <code>prot-orderless-literal-dispatcher</code>.
           </figcaption>
         </figure>
@@ -897,7 +925,8 @@ parses its input."
     </div>
     <div id="outline-container-end-product-1" class="outline-3">
       <h3 id="end-product-1">
-        <span class="section-number-3">5.3.</span> End product
+        <span class="section-number-3">5.3.</span>
+        End product
       </h3>
       <div class="outline-text-3" id="text-5-3">
         <p>
@@ -984,7 +1013,7 @@ parses its input."
 </code></pre>
         </div>
 
-        <hr />
+        <hr>
       </div>
     </div>
   </div>

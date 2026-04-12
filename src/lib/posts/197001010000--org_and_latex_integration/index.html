@@ -5,7 +5,8 @@
   </header>
   <div id="outline-container-my-desired-workflow" class="outline-2">
     <h2 id="my-desired-workflow">
-      <span class="section-number-2">1.</span> My desired workflow
+      <span class="section-number-2">1.</span>
+      My desired workflow
     </h2>
     <div class="outline-text-2" id="text-1">
       <p>
@@ -37,7 +38,8 @@
         <dd>
           I want to do all of the above with very little to no boilerplate text
           in my org files (e.g. I shouldn't rely on many
-          <code>#+LaTeX_header:</code> lines).
+          <code>#+LaTeX_header:</code>
+          lines).
         </dd>
       </dl>
       <p>
@@ -63,8 +65,8 @@
     class="outline-2"
   >
     <h2 id="basic-formatting-org-latex-classes">
-      <span class="section-number-2">2.</span> Basic Formatting:
-      <code>org-latex-classes</code>
+      <span class="section-number-2">2.</span>
+      Basic Formatting: <code>org-latex-classes</code>
     </h2>
   </div>
 
@@ -73,8 +75,8 @@
     class="outline-2"
   >
     <h2 id="title-pages-creating-an-org-export-backend">
-      <span class="section-number-2">3.</span> Title pages: Creating an
-      Org-export backend
+      <span class="section-number-2">3.</span>
+      Title pages: Creating an Org-export backend
     </h2>
     <div class="outline-text-2" id="text-3">
       <p>
@@ -95,9 +97,11 @@
 
       <p>
         A nearby alternative would be redefining the default
-        <code>\maketitle</code> command that org already uses for every file.
-        However, doing so would require additional
-        <code>#+LaTeX_HEADER:</code> text.
+        <code>\maketitle</code>
+        command that org already uses for every file. However, doing so would
+        require additional
+        <code>#+LaTeX_HEADER:</code>
+        text.
       </p>
 
       <p>
@@ -136,149 +140,149 @@
           <p>Docstring for <code>org-export-define-backend</code></p>
         </summary>
         <p class="verse">
-          (org-export-define-backend BACKEND TRANSCODERS &amp;rest BODY)<br />
-          <br />
-          Define a new backend BACKEND.<br />
-          <br />
-          TRANSCODERS is an alist between object or element types and<br />
-          functions handling them.<br />
-          <br />
-          These functions should return a string without any trailing<br />
-          space, or nil. They must accept three arguments: the object or<br />
-          element itself, its contents or nil when it isn’t recursive and<br />
-          the property list used as a communication channel.<br />
-          <br />
-          Contents, when not nil, are stripped from any global indentation<br />
-          (although the relative one is preserved). They also always end<br />
-          with a single newline character.<br />
-          <br />
-          If, for a given type, no function is found, that element or<br />
-          object type will simply be ignored, along with any blank line or<br />
-          white space at its end. The same will happen if the function<br />
-          returns the nil value. If that function returns the empty<br />
-          string, the type will be ignored, but the blank lines or white<br />
-          spaces will be kept.<br />
-          <br />
-          In addition to element and object types, one function can be<br />
-          associated to the ‘template’ (or ‘inner-template’) symbol and<br />
-          another one to the ‘plain-text’ symbol.<br />
-          <br />
-          The former returns the final transcoded string, and can be used<br />
-          to add a preamble and a postamble to document’s body. It must<br />
-          accept two arguments: the transcoded string and the property list<br />
-          containing export options. A function associated to ‘template’<br />
-          will not be applied if export has option "body-only".<br />
-          A function associated to ‘inner-template’ is always applied.<br />
-          <br />
-          The latter, when defined, is to be called on every text not<br />
-          recognized as an element or an object. It must accept two<br />
-          arguments: the text string and the information channel. It is an<br />
-          appropriate place to protect special chars relative to the<br />
-          backend.<br />
-          <br />
-          BODY can start with pre-defined keyword arguments. The following<br />
-          keywords are understood:<br />
-          <br />
-          &nbsp;&nbsp;:filters-alist<br />
-          <br />
+          (org-export-define-backend BACKEND TRANSCODERS &amp;rest BODY)<br>
+          <br>
+          Define a new backend BACKEND.<br>
+          <br>
+          TRANSCODERS is an alist between object or element types and<br>
+          functions handling them.<br>
+          <br>
+          These functions should return a string without any trailing<br>
+          space, or nil. They must accept three arguments: the object or<br>
+          element itself, its contents or nil when it isn’t recursive and<br>
+          the property list used as a communication channel.<br>
+          <br>
+          Contents, when not nil, are stripped from any global indentation<br>
+          (although the relative one is preserved). They also always end<br>
+          with a single newline character.<br>
+          <br>
+          If, for a given type, no function is found, that element or<br>
+          object type will simply be ignored, along with any blank line or<br>
+          white space at its end. The same will happen if the function<br>
+          returns the nil value. If that function returns the empty<br>
+          string, the type will be ignored, but the blank lines or white<br>
+          spaces will be kept.<br>
+          <br>
+          In addition to element and object types, one function can be<br>
+          associated to the ‘template’ (or ‘inner-template’) symbol and<br>
+          another one to the ‘plain-text’ symbol.<br>
+          <br>
+          The former returns the final transcoded string, and can be used<br>
+          to add a preamble and a postamble to document’s body. It must<br>
+          accept two arguments: the transcoded string and the property list<br>
+          containing export options. A function associated to ‘template’<br>
+          will not be applied if export has option "body-only".<br>
+          A function associated to ‘inner-template’ is always applied.<br>
+          <br>
+          The latter, when defined, is to be called on every text not<br>
+          recognized as an element or an object. It must accept two<br>
+          arguments: the text string and the information channel. It is an<br>
+          appropriate place to protect special chars relative to the<br>
+          backend.<br>
+          <br>
+          BODY can start with pre-defined keyword arguments. The following<br>
+          keywords are understood:<br>
+          <br>
+          &nbsp;&nbsp;:filters-alist<br>
+          <br>
           &nbsp;&nbsp;&nbsp;&nbsp;Alist between filters and function, or list of
-          functions,<br />
+          functions,<br>
           &nbsp;&nbsp;&nbsp;&nbsp;specific to the backend. See
-          org-export-filters-alist for<br />
+          org-export-filters-alist for<br>
           &nbsp;&nbsp;&nbsp;&nbsp;a list of all allowed filters. Filters defined
-          here<br />
+          here<br>
           &nbsp;&nbsp;&nbsp;&nbsp;shouldn’t make a backend test, as it may
-          prevent backends<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;derived from this one to behave properly.<br />
-          <br />
-          &nbsp;&nbsp;:menu-entry<br />
-          <br />
+          prevent backends<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;derived from this one to behave properly.<br>
+          <br>
+          &nbsp;&nbsp;:menu-entry<br>
+          <br>
           &nbsp;&nbsp;&nbsp;&nbsp;Menu entry for the export dispatcher. It
-          should be a list<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;like:<br />
-          <br />
+          should be a list<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;like:<br>
+          <br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(KEY DESCRIPTION-OR-ORDINAL
-          ACTION-OR-MENU)<br />
-          <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;where :<br />
-          <br />
+          ACTION-OR-MENU)<br>
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;where :<br>
+          <br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KEY is a free character selecting
-          the backend.<br />
-          <br />
+          the backend.<br>
+          <br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DESCRIPTION-OR-ORDINAL is either a
-          string or a number.<br />
-          <br />
+          string or a number.<br>
+          <br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If it is a string, is will be used
-          to name the backend in<br />
+          to name the backend in<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;its menu entry. If it is a number,
-          the following menu will<br />
+          the following menu will<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;be displayed as a sub-menu of the
-          backend with the same<br />
+          backend with the same<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KEY. Also, the number will be used
-          to determine in which<br />
+          to determine in which<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;order such sub-menus will appear
-          (lowest first).<br />
-          <br />
+          (lowest first).<br>
+          <br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ACTION-OR-MENU is either a
-          function or an alist.<br />
-          <br />
+          function or an alist.<br>
+          <br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If it is an action, it will be
-          called with four<br />
+          called with four<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arguments (booleans): ASYNC,
-          SUBTREEP, VISIBLE-ONLY and<br />
+          SUBTREEP, VISIBLE-ONLY and<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BODY-ONLY. See org-export-as for
-          further explanations on<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;some of them.<br />
-          <br />
+          further explanations on<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;some of them.<br>
+          <br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If it is an alist, associations
-          should follow the<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pattern:<br />
-          <br />
+          should follow the<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pattern:<br>
+          <br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(KEY DESCRIPTION
-          ACTION)<br />
-          <br />
+          ACTION)<br>
+          <br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;where KEY, DESCRIPTION and ACTION
-          are described above.<br />
-          <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;Valid values include:<br />
-          <br />
+          are described above.<br>
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;Valid values include:<br>
+          <br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(?m "My Special Backend"
-          my-special-export-function)<br />
-          <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or<br />
-          <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(?l "Export to LaTeX"<br />
+          my-special-export-function)<br>
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or<br>
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(?l "Export to LaTeX"<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((?p
-          "As PDF file" org-latex-export-to-pdf)<br />
+          "As PDF file" org-latex-export-to-pdf)<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(?o
-          "As PDF file and open"<br />
+          "As PDF file and open"<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda
-          (a s v b)<br />
+          (a s v b)<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if
-          a (org-latex-export-to-pdf t s v b)<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(org-open-file<br />
+          a (org-latex-export-to-pdf t s v b)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(org-open-file<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(org-latex-export-to-pdf
-          nil s v b)))))))<br />
-          <br />
+          nil s v b)))))))<br>
+          <br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or the following, which will be
-          added to the previous<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sub-menu,<br />
-          <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(?l 1<br />
+          added to the previous<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sub-menu,<br>
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(?l 1<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((?B "As
-          TEX buffer (Beamer)" org-beamer-export-as-latex)<br />
+          TEX buffer (Beamer)" org-beamer-export-as-latex)<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(?P
-          "As PDF file (Beamer)" org-beamer-export-to-pdf)))<br />
-          <br />
-          &nbsp;&nbsp;:options-alist<br />
-          <br />
+          "As PDF file (Beamer)" org-beamer-export-to-pdf)))<br>
+          <br>
+          &nbsp;&nbsp;:options-alist<br>
+          <br>
           &nbsp;&nbsp;&nbsp;&nbsp;Alist between backend specific properties
-          introduced in<br />
+          introduced in<br>
           &nbsp;&nbsp;&nbsp;&nbsp;communication channel and how their value are
-          acquired. See<br />
+          acquired. See<br>
           &nbsp;&nbsp;&nbsp;&nbsp;org-export-options-alist for more information
-          about<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;structure of the values.<br />
+          about<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;structure of the values.<br>
         </p>
       </details>
 
@@ -289,15 +293,16 @@
       class="outline-3"
     >
       <h3 id="customize-the-org-export-latex-backend">
-        <span class="section-number-3">3.1.</span> Customize the
-        <code>org-export</code> LaTeX backend
+        <span class="section-number-3">3.1.</span>
+        Customize the <code>org-export</code> LaTeX backend
       </h3>
       <div class="outline-text-3" id="text-3-1">
         <p>File properties</p>
       </div>
       <div id="outline-container-backend" class="outline-4">
         <h4 id="backend">
-          <span class="section-number-4">3.1.1.</span> Backend
+          <span class="section-number-4">3.1.1.</span>
+          Backend
         </h4>
         <div class="outline-text-4" id="text-3-1-1">
           <p>
@@ -315,13 +320,15 @@
       </div>
       <div id="outline-container-template" class="outline-4">
         <h4 id="template">
-          <span class="section-number-4">3.1.2.</span> Template
+          <span class="section-number-4">3.1.2.</span>
+          Template
         </h4>
       </div>
     </div>
     <div id="outline-container-final-title-command" class="outline-3">
       <h3 id="final-title-command">
-        <span class="section-number-3">3.2.</span> Final title command
+        <span class="section-number-3">3.2.</span>
+        Final title command
       </h3>
       <div class="outline-text-3" id="text-3-2">
         <div class="org-src-container">
@@ -345,8 +352,8 @@
     class="outline-2"
   >
     <h2 id="citations-and-bibliographies-org-cite">
-      <span class="section-number-2">4.</span> Citations and bibliographies:
-      Org-cite
+      <span class="section-number-2">4.</span>
+      Citations and bibliographies: Org-cite
     </h2>
     <div class="outline-text-2" id="text-4">
       <p>
@@ -408,17 +415,18 @@
       class="outline-3"
     >
       <h3 id="one-way-to-specify-citation-style">
-        <span class="section-number-3">4.1.</span> One way to specify citation
-        style
+        <span class="section-number-3">4.1.</span>
+        One way to specify citation style
       </h3>
       <div class="outline-text-3" id="text-4-1">
         <p>
           The value of <code>org-cite-export-processors</code> is most notable.
           The configuration above instructs org-export to use the
-          <code>biblatex</code> export processor to process citations and
-          bibliographies when exporting to LaTeX. This can be overridden, for
-          example, at the file-level with the <code>#CITE_EXPORT</code> keyword.
-          See the docstring for <code>org-cite-export-processors</code> for more
+          <code>biblatex</code>
+          export processor to process citations and bibliographies when
+          exporting to LaTeX. This can be overridden, for example, at the
+          file-level with the <code>#CITE_EXPORT</code> keyword. See the
+          docstring for <code>org-cite-export-processors</code> for more
           information about valid values.
         </p>
 
@@ -429,25 +437,24 @@
             citations in this way.</b
           >
           For instance, taking a look at the commentary for the
-          <code>oc-biblatex</code> library, we read:
+          <code>oc-biblatex</code>
+          library, we read:
         </p>
         <p class="verse">
           ;; In any case, the library will override style-related options with
-          those<br />
+          those<br>
           ;; specified with the citation processor, in
-          `org-cite-export-processors' or<br />
+          `org-cite-export-processors' or<br>
           ;; "cite<sub>export</sub>" keyword. If you need to use different
-          styles for bibliography<br />
+          styles for bibliography<br>
           ;; and citations, you can separate them with "bibstyle/citestyle"
-          syntax. E.g.,<br />
-          ;;<br />
-          ;; #+cite<sub>export</sub>: biblatex authortitle/authortitle-ibid<br />
+          syntax. E.g.,<br>
+          ;;<br>
+          ;; #+cite<sub>export</sub>: biblatex authortitle/authortitle-ibid<br>
         </p>
         <p>This means that, for instance,</p>
         <div class="org-center">
-          <p>
-            <code>#+cite_export: biblatex mla-new/authoryear</code>
-          </p>
+          <p><code>#+cite_export: biblatex mla-new/authoryear</code></p>
         </div>
         <p>
           results in <code>"bibstyle=mla-new,citestyle=authoryear"</code> being
@@ -472,8 +479,8 @@
       class="outline-3"
     >
       <h3 id="my-method-to-specify-citation-style">
-        <span class="section-number-3">4.2.</span> My method to specify citation
-        style
+        <span class="section-number-3">4.2.</span>
+        My method to specify citation style
       </h3>
       <div class="outline-text-3" id="text-4-2">
         <p>
@@ -493,16 +500,15 @@
           citation style:
         </p>
         <div class="org-center">
-          <p>
-            <code>#+cite_export: biblatex mla-new</code>
-          </p>
+          <p><code>#+cite_export: biblatex mla-new</code></p>
         </div>
       </div>
     </div>
   </div>
   <div id="outline-container-final-result-and-screenshots" class="outline-2">
     <h2 id="final-result-and-screenshots">
-      <span class="section-number-2">5.</span> Final result and screenshots
+      <span class="section-number-2">5.</span>
+      Final result and screenshots
     </h2>
     <div class="outline-text-2" id="text-5">
       <p>The following org file produces this:</p>
@@ -515,7 +521,8 @@
     <div class="outline-text-2" id="text-6"></div>
     <div id="outline-container-section-numbers" class="outline-3">
       <h3 id="section-numbers">
-        <span class="section-number-3">6.1.</span> Section numbers
+        <span class="section-number-3">6.1.</span>
+        Section numbers
       </h3>
       <div class="outline-text-3" id="text-6-1">
         <div class="org-src-container">
@@ -548,7 +555,8 @@ hidelinks={true}}\n")
     </div>
     <div id="outline-container-table-of-contents" class="outline-3">
       <h3 id="table-of-contents">
-        <span class="section-number-3">6.3.</span> Table of contents
+        <span class="section-number-3">6.3.</span>
+        Table of contents
       </h3>
       <div class="outline-text-3" id="text-6-3">
         <div class="org-src-container">
@@ -566,13 +574,15 @@ hidelinks={true}}\n")
     </div>
     <div id="outline-container-org-links" class="outline-3">
       <h3 id="org-links">
-        <span class="section-number-3">6.4.</span> Org links
+        <span class="section-number-3">6.4.</span>
+        Org links
       </h3>
       <div class="outline-text-3" id="text-6-4">
         <ol class="org-ol">
           <li>
-            Custom <code>org-mode</code> links
-            (<code>org-link-set-parameters</code>)
+            Custom <code>org-mode</code> links (<code
+              >org-link-set-parameters</code
+            >)
           </li>
         </ol>
       </div>
@@ -580,7 +590,8 @@ hidelinks={true}}\n")
   </div>
   <div id="outline-container-full-configuration" class="outline-2">
     <h2 id="full-configuration">
-      <span class="section-number-2">7.</span> Full configuration
+      <span class="section-number-2">7.</span>
+      Full configuration
     </h2>
     <div class="outline-text-2" id="text-7">
       <p>

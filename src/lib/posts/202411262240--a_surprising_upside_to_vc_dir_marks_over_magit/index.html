@@ -26,12 +26,13 @@
 
   <p>
     On such insight has been the surprising benefits of calling
-    <code>vc-dir</code> instead of <code>magit-status</code>.
+    <code>vc-dir</code>
+    instead of <code>magit-status</code>.
   </p>
   <div id="outline-container-the-nicety-of-vc-dir-marks" class="outline-2">
     <h2 id="the-nicety-of-vc-dir-marks">
-      <span class="section-number-2">1.</span> The nicety of
-      <code>vc-dir</code> marks
+      <span class="section-number-2">1.</span>
+      The nicety of <code>vc-dir</code> marks
     </h2>
     <div class="outline-text-2" id="text-1">
       <p>
@@ -39,7 +40,8 @@
         hunks and commit them when ready. <code>vc</code> does not use Git's
         "staging" concept (because not all version control systems use such a
         concept). So instead, to achieve something analogous, a user might call
-        <code>vc-dir</code> (or, much more commonly for me,
+        <code>vc-dir</code>
+        (or, much more commonly for me,
         <code>project-vc-dir</code>), mark edited files (or entire directories!)
         using <code>vc-dir-mark</code> (<code>m</code>), and check out (commit)
         those changes via <code>vc-next-action</code> (<code>v</code>) or see a
@@ -53,12 +55,13 @@
 
       <p>
         A problem for the magit interface, however, is
-        <i>visual clarity</i> when it comes to focusing on changes in a certain
-        subset of files. For example, sometimes I am working with changes in
-        files within a single directory alongside many other uncommitted changes
-        elsewhere in the repository. To make a commit with magit, I would need
-        to navigate past or fold changed hunks/files I want to ignore. With many
-        unstaged changes this means many files to ignore.
+        <i>visual clarity</i>
+        when it comes to focusing on changes in a certain subset of files. For
+        example, sometimes I am working with changes in files within a single
+        directory alongside many other uncommitted changes elsewhere in the
+        repository. To make a commit with magit, I would need to navigate past
+        or fold changed hunks/files I want to ignore. With many unstaged changes
+        this means many files to ignore.
         <b
           >This leads to a significant reduction in visual clarity since I end
           up having to ignore more files than I'm currently working on.</b
@@ -73,42 +76,48 @@
         >
         in <code>vc-dir</code> buffers after changes are committed. A mark is
         only removed once the corresponding line is removed via something like
-        <code>vc-dir-hide-up-to-date</code> (<code>x</code>) or
-        <code>vc-dir-kill-line</code> (<code>C-k</code>). Marks are magical
-        because they let me <i>focus</i> on the files relevant to my current
-        work: I can mark the files and directories I am focusing on
+        <code>vc-dir-hide-up-to-date</code>
+        (<code>x</code>) or
+        <code>vc-dir-kill-line</code>
+        (<code>C-k</code>). Marks are magical because they let me
+        <i>focus</i>
+        on the files relevant to my current work: I can mark the files and
+        directories I am focusing on
         <b
           >then call <code>vc-next-action</code> in the
-          <code>vc-dir</code> buffer to commit changes only in those files and
-          directories</b
+          <code>vc-dir</code>
+          buffer to commit changes only in those files and directories</b
         >
         (or, if I want to be selective about the hunks I commit: first call
-        <code>vc-diff</code> to see the diff of just the marked files,
-        kill/remove the hunks I don't want to commit, then
+        <code>vc-diff</code>
+        to see the diff of just the marked files, kill/remove the hunks I don't
+        want to commit, then
         <code>vc-next-action</code>).Then I can write more changes and make more
         commits in the same way. (Furthermore, while this
-        <code>vc</code> workflow might seem like it would necessarily involve
-        many more keystrokes, I found this not to be the case under certain
-        scenarios.)
+        <code>vc</code>
+        workflow might seem like it would necessarily involve many more
+        keystrokes, I found this not to be the case under certain scenarios.)
       </p>
 
       <p><b>In short,</b> with vc.el, a really efficient workflow is</p>
       <ol class="org-ol">
         <li>
-          <code>vc-diff</code> or <code>vc-root-diff</code> →
-          <code>vc-next-action</code> and
+          <code>vc-diff</code>
+          or <code>vc-root-diff</code> → <code>vc-next-action</code> and
         </li>
         <li>
-          <code>vc-dir</code> (with persistent marks) → <code>vc-diff</code> →
+          <code>vc-dir</code>
+          (with persistent marks) → <code>vc-diff</code> →
           <code>vc-next-action</code>.
         </li>
       </ol>
       <p>
         The latter is unique to vc.el, and a feature I don't think the magit UI
         can replicate. So while magit can sometimes become visually cluttered,
-        <code>vc-dir</code> marks let users focus on their current work by
-        easily excluding <i>from view</i> files and directories one is not
-        concerned with currently.
+        <code>vc-dir</code>
+        marks let users focus on their current work by easily excluding
+        <i>from view</i>
+        files and directories one is not concerned with currently.
       </p>
     </div>
   </div>
@@ -217,12 +226,16 @@
           <p class="footpara">
             If I want to commit changes with much fewer unstaged changes
             present, then a faster method would be: call
-            <code>vc-root-diff</code> (<code>C-x v D</code>), modify the
-            diff-mode buffer accordingly with
-            <code>diff-hunk-kill</code> (<code>k</code>) or
-            <code>diff-delete-other-hunks</code> (<code>C-c RET n</code>; a
-            recent addition to Emacs-30), then commit the changes with
-            <code>vc-next-action</code> (<code>v</code>). <a id="target-1"></a>
+            <code>vc-root-diff</code>
+            (<code>C-x v D</code>), modify the diff-mode buffer accordingly with
+            <code>diff-hunk-kill</code>
+            (<code>k</code>) or
+            <code>diff-delete-other-hunks</code>
+            (<code>C-c RET n</code>; a recent addition to Emacs-30), then commit
+            the changes with
+            <code>vc-next-action</code>
+            (<code>v</code>).
+            <span id="target-1"></span>
           </p>
         </div>
       </div>
@@ -234,7 +247,7 @@
           ></sup
         >
         <div class="footpara" role="doc-footnote">
-          <p class="footpara">See also <a href="#target-1">footnote 3.</a></p>
+          <p class="footpara">See also <a href="#target-1">footnote 3</a>.</p>
         </div>
       </div>
     </div>

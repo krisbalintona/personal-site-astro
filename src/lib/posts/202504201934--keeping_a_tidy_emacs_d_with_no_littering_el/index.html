@@ -38,13 +38,13 @@
           every package does&hellip; fortunately, no-littering already sets the
           relevant option of dozens of packages to use these directories. But if
           you use a package that isn't already set, you can easily use
-          <code>no-littering-expand-var-file-name</code> and
-          <code>no-littering-expand-etc-file-name</code> to change that. For
-          example:
+          <code>no-littering-expand-var-file-name</code>
+          and
+          <code>no-littering-expand-etc-file-name</code>
+          to change that. For example:
           <code
             >(setopt cursory-latest-state-file
-            (no-littering-expand-var-file-name
-            "cursory/cursory-latest-state"))</code
+            (no-littering-expand-var-file-name "cursory/cursory-latest-state"))</code
           >
           sets <code>cursory-latest-state-file</code> to
           <code>~/.emacs.d/var/cursory/cursory-latest-state</code>.
@@ -66,8 +66,7 @@ $ tree -L 1
 └── transient
 
 3 directories, 2 files
-</pre
-            >
+</pre>
           </li>
           <li>
             <p>
@@ -160,8 +159,7 @@ $ tree -L 1
 └── wombag
 
 60 directories, 22 files
-</pre
-            >
+</pre>
           </li>
         </ol>
         <p>
@@ -179,8 +177,8 @@ $ tree -L 1
       class="outline-3"
     >
       <h3 id="bonus-no-littering-theme-backups">
-        <span class="section-number-3">1.2.</span> Bonus:
-        <code>(no-littering-theme-backups)</code>
+        <span class="section-number-3">1.2.</span>
+        Bonus: <code>(no-littering-theme-backups)</code>
       </h3>
       <div class="outline-text-3" id="text-1-2">
         <p>
@@ -198,12 +196,14 @@ $ tree -L 1
           </li>
           <li>
             <code>backup-directory-alist</code>: Similar to
-            <code>auto-save-file-name-transforms</code> but for backup files.
+            <code>auto-save-file-name-transforms</code>
+            but for backup files.
           </li>
           <li>
-            <code>undo-tree-history-directory-alist</code> (from undo-tree):
-            Similar to <code>auto-save-file-name-transforms</code> but for
-            backup files.
+            <code>undo-tree-history-directory-alist</code>
+            (from undo-tree): Similar to
+            <code>auto-save-file-name-transforms</code>
+            but for backup files.
           </li>
         </ol>
         <p>
@@ -258,8 +258,7 @@ regardless of the location of the visited files.  In other words,
 even when using the default values, there is a significant risk
 of leaking sensitive data, and if you want to reduce that, then
 you must turn of these features completely.
-</pre
-        >
+</pre>
       </div>
     </div>
   </div>

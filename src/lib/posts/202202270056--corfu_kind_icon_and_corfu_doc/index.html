@@ -47,7 +47,8 @@
       >
       As is noted in the
       <a href="https://github.com/galeo/corfu-doc/issues/25"
-        ><code>corfu-doc</code> repository</a
+        ><code>corfu-doc</code>
+        repository</a
       >, <code>corfu-doc</code> has been deprecated by the built-in
       <code>corfu-popupinfo</code> <code>corfu</code> extension.
       <code>corfu-popupinfo</code>'s functionality is roughly identical to
@@ -60,32 +61,35 @@
     <div class="outline-text-2" id="text-1">
       <p>
         I will be going over my personal Emacs' text completion (e.g.
-        <code>company-mode</code> and its accessories) configuration, which
-        includes the following packages:
+        <code>company-mode</code>
+        and its accessories) configuration, which includes the following
+        packages:
       </p>
       <ul class="org-ul">
         <li>
-          <a href="https://github.com/minad/corfu">Corfu</a> by Minad — simpler
-          alternative to <code>company-mode</code>
+          <a href="https://github.com/minad/corfu">Corfu</a>
+          by Minad — simpler alternative to <code>company-mode</code>
         </li>
         <li>
-          <a href="https://github.com/jdtsmith/kind-icon">Kind-icon</a> by
-          jdtsmith (u/JDRiverRun)— add icons to <code>corfu</code> popup (analog
-          to <code>company-box-icons</code>)
+          <a href="https://github.com/jdtsmith/kind-icon">Kind-icon</a>
+          by jdtsmith (u/JDRiverRun)— add icons to <code>corfu</code> popup
+          (analog to <code>company-box-icons</code>)
         </li>
         <li>
-          <a href="https://github.com/galeo/corfu-doc">Corfu-doc</a> by Galeo —
-          add documentation popup for <code>corfu</code> candidates (analog to
-          <code>company-box-doc</code>)
+          <a href="https://github.com/galeo/corfu-doc">Corfu-doc</a>
+          by Galeo — add documentation popup for <code>corfu</code> candidates
+          (analog to <code>company-box-doc</code>)
         </li>
       </ul>
 
       <p>
         <i>Note</i>: I use <code>straight.el</code> for package management and
-        <code>general.el</code> to set my keybindings. Both of these packages
-        have integration with <code>use-package</code> which come in the form of
-        the <code>:straight</code> and <code>:general</code> keywords,
-        respectively.
+        <code>general.el</code>
+        to set my keybindings. Both of these packages have integration with
+        <code>use-package</code>
+        which come in the form of the
+        <code>:straight</code>
+        and <code>:general</code> keywords, respectively.
       </p>
     </div>
   </div>
@@ -97,27 +101,31 @@
       class="outline-3"
     >
       <h3 id="what-is-corfu-how-does-it-differ-from-company">
-        <span class="section-number-3">2.1.</span> What is <code>corfu</code>?
-        How does it differ from <code>company</code>?
+        <span class="section-number-3">2.1.</span>
+        What is <code>corfu</code>? How does it differ from
+        <code>company</code>?
       </h3>
       <div class="outline-text-3" id="text-2-1">
         <figure id="figure-1">
-          <img src="gif1.gif" alt="gif1.gif" />
+          <img src="gif1.gif" alt="gif1.gif">
 
           <figcaption>
             <span class="figure-number">Figure 1: </span>The default
-            <code>corfu</code> popup window. The GIF's framerate is low, which
-            makes <code>corfu</code> appear less performant here than in
-            actuality.
+            <code>corfu</code>
+            popup window. The GIF's framerate is low, which makes
+            <code>corfu</code>
+            appear less performant here than in actuality.
           </figcaption>
         </figure>
 
         <p>
-          <code>Corfu</code> is a text completion (e.g.
-          <code>completion-at-point</code>, <code>company-mode</code>) package.
-          In my opinion, since its release, <code>corfu</code> has not gotten
-          the attention that it deserves. I prefer it to
-          <code>company</code> for the following reasons:
+          <code>Corfu</code>
+          is a text completion (e.g. <code>completion-at-point</code>,
+          <code>company-mode</code>) package. In my opinion, since its release,
+          <code>corfu</code>
+          has not gotten the attention that it deserves. I prefer it to
+          <code>company</code>
+          for the following reasons:
         </p>
         <ol class="org-ol">
           <li>
@@ -131,7 +139,8 @@
             <ul class="org-ul">
               <li>
                 any built-in invocation of <code>completion-at-point</code> or
-                <code>completion-in-region</code> leverages <code>corfu</code>,
+                <code>completion-in-region</code>
+                leverages <code>corfu</code>,
               </li>
               <li>
                 and any <code>completion-style</code> (e.g.
@@ -140,17 +149,22 @@
             </ul>
           </li>
           <li>
-            <code>Corfu</code> has been more performant (i.e. fewer stutters,
-            smoother cycling of candidates) in my experience.
+            <code>Corfu</code>
+            has been more performant (i.e. fewer stutters, smoother cycling of
+            candidates) in my experience.
           </li>
           <li>
-            <code>Corfu</code> can support any <code>company</code> backend via
+            <code>Corfu</code>
+            can support any <code>company</code> backend via
             <code>cape-company-to-capf</code>, provided by the complementary
-            <code>cape</code> package. Thus, packages like
-            <code>company-yasnippet</code> can be used with
-            <code>corfu</code> easily (see the next post in my
-            <i>Text completion and minibuffer UI</i> series for more details and
-            examples.)
+            <code>cape</code>
+            package. Thus, packages like
+            <code>company-yasnippet</code>
+            can be used with
+            <code>corfu</code>
+            easily (see the next post in my
+            <i>Text completion and minibuffer UI</i>
+            series for more details and examples.)
           </li>
         </ol>
       </div>
@@ -181,17 +195,19 @@
           These keybinds have <code>C-n</code> and <code>C-p</code> move through
           the candidates popup, <code>&lt;return&gt;</code> choose the current
           candidate, and <code>&lt;escape&gt;</code> close the
-          <code>corfu</code> popup. Moreover, I have <code>corfu</code>'s
-          documentation command (<code>corfu-show-documentation</code>; shows
-          the available documentation for the current candidate, if any) bound
-          to <code>M-d</code>, and <code>corfu</code>'s location command
-          (<code>corfu-show-location</code>) to go to the location of the
-          current candidate to <code>M-l</code>.
+          <code>corfu</code>
+          popup. Moreover, I have <code>corfu</code>'s documentation command (<code
+            >corfu-show-documentation</code
+          >; shows the available documentation for the current candidate, if
+          any) bound to <code>M-d</code>, and <code>corfu</code>'s location
+          command (<code>corfu-show-location</code>) to go to the location of
+          the current candidate to <code>M-l</code>.
         </p>
 
         <p>
-          <code>Corfu</code> offers a few variables to configure. You can take a
-          look at each docstring to see its function. Here are my preferences:
+          <code>Corfu</code>
+          offers a few variables to configure. You can take a look at each
+          docstring to see its function. Here are my preferences:
         </p>
         <div class="org-src-container">
           <pre class="src src-emacs-lisp"><code>:custom
@@ -227,8 +243,10 @@
 
         <p>
           Additionally, the following two variables not under
-          <code>corfu</code> but related to
-          <code>completion-at-point</code> will be useful to set:
+          <code>corfu</code>
+          but related to
+          <code>completion-at-point</code>
+          will be useful to set:
         </p>
         <div class="org-src-container">
           <pre
@@ -246,8 +264,8 @@
       class="outline-3"
     >
       <h3 id="working-with-the-recent-changes-to-corfu">
-        <span class="section-number-3">2.3.</span> Working with the recent
-        changes to <code>corfu</code>
+        <span class="section-number-3">2.3.</span>
+        Working with the recent changes to <code>corfu</code>
       </h3>
       <div class="outline-text-3" id="text-2-3">
         <p>
@@ -264,18 +282,24 @@
           <a href="https://github.com/minad/corfu#orderless-completion"
             >on their README</a
           >, but, essentially, <code>orderless</code> now introduces the
-          <code>corfu-insert-separator</code> command that inserts the
-          <code>corfu-separator</code> character into the buffer. This character
-          is what delimits <code>orderless</code> components (see
+          <code>corfu-insert-separator</code>
+          command that inserts the
+          <code>corfu-separator</code>
+          character into the buffer. This character is what delimits
+          <code>orderless</code>
+          components (see
           <a
             href="https://www.reddit.com/r/emacs/comments/t38kkh/comment/hytmcpg/?utm_source=share&amp;utm_medium=web2x&amp;context=3"
             >this Reddit comment</a
           >
           for a more lengthy description of this behavior.) A
-          <code>corfu</code> workflow in which <code>corfu-auto</code> is set to
-          <code>t</code> leverages this change, <i>for without it</i> users
-          could not realistically use <code>corfu</code> with a multi-component
-          <code>completion-style</code> like <code>orderless</code>.
+          <code>corfu</code>
+          workflow in which <code>corfu-auto</code> is set to
+          <code>t</code>
+          leverages this change, <i>for without it</i> users could not
+          realistically use <code>corfu</code> with a multi-component
+          <code>completion-style</code>
+          like <code>orderless</code>.
         </p>
 
         <p>
@@ -284,10 +308,11 @@
               >3</a
             ></sup
           >, but if this behavior is desirable, you can set
-          <code>corfu-separator</code> to your <code>orderless</code> separator
-          character to properly delimit <code>orderless</code> components. I
-          personally use the regular space character. You can make the following
-          modifications to your configuration:
+          <code>corfu-separator</code>
+          to your <code>orderless</code> separator character to properly delimit
+          <code>orderless</code>
+          components. I personally use the regular space character. You can make
+          the following modifications to your configuration:
         </p>
         <div class="org-src-container">
           <pre class="src src-emacs-lisp"><code>:general
@@ -321,8 +346,8 @@
       class="outline-3"
     >
       <h3 id="further-configuration-in-minibuffers-and-with-lsp">
-        <span class="section-number-3">2.4.</span> Further configuration in
-        minibuffers and with <code>lsp</code>
+        <span class="section-number-3">2.4.</span>
+        Further configuration in minibuffers and with <code>lsp</code>
       </h3>
       <div class="outline-text-3" id="text-2-4">
         <p>
@@ -352,19 +377,21 @@
         </div>
         <p>
           This means that in commands like <code>eval-expression</code>,
-          <code>corfu</code> is able to be used (via <code>&lt;tab&gt;</code>)
-          and provide completion.
+          <code>corfu</code>
+          is able to be used (via <code>&lt;tab&gt;</code>) and provide
+          completion.
         </p>
 
         <figure id="figure-2">
           <img
             src="2022-03-01_16-52-17_screenshot.png"
             alt="2022-03-01_16-52-17_screenshot.png"
-          />
+          >
 
           <figcaption>
             <span class="figure-number">Figure 2: </span>Using
-            <code>corfu</code> in the minibuffer prompt for
+            <code>corfu</code>
+            in the minibuffer prompt for
             <code>eval-expression</code>.
           </figcaption>
         </figure>
@@ -392,7 +419,8 @@
     </div>
     <div id="outline-container-end-product" class="outline-3">
       <h3 id="end-product">
-        <span class="section-number-3">2.5.</span> End product
+        <span class="section-number-3">2.5.</span>
+        End product
       </h3>
       <div class="outline-text-3" id="text-2-5">
         <p>Putting it together, we end with my actual configuration:</p>
@@ -483,22 +511,24 @@ default lsp-passthrough."
     <h2 id="kind-icon"><span class="section-number-2">3.</span> Kind-icon</h2>
     <div class="outline-text-2" id="text-3">
       <p>
-        <code>Kind-icon</code> is essentially <code>company-box-icons</code> for
-        <code>corfu</code>. It adds icons to the left margin of the
-        <code>corfu</code> popup that represent the ‘function’ (e.g. variable,
-        method, file) of that candidate.
+        <code>Kind-icon</code>
+        is essentially <code>company-box-icons</code> for <code>corfu</code>. It
+        adds icons to the left margin of the <code>corfu</code> popup that
+        represent the ‘function’ (e.g. variable, method, file) of that
+        candidate.
       </p>
 
       <figure id="figure-3">
         <img
           src="2022-02-28_00-12-22_screenshot.png"
           alt="2022-02-28_00-12-22_screenshot.png"
-        />
+        >
 
         <figcaption>
           <span class="figure-number">Figure 3: </span>Using
-          <code>corfu-doc</code> in <code>java-mode</code> with completion
-          candidates provided by <code>lsp-mode</code>.
+          <code>corfu-doc</code>
+          in <code>java-mode</code> with completion candidates provided by
+          <code>lsp-mode</code>.
         </figcaption>
       </figure>
 
@@ -536,21 +566,24 @@ default lsp-passthrough."
     <h2 id="corfu-doc"><span class="section-number-2">4.</span> Corfu-doc</h2>
     <div class="outline-text-2" id="text-4">
       <p>
-        <code>Corfu-doc</code> is basically <code>company-quickhelp</code> for
-        <code>corfu</code>. It shows the documentation of the selected candidate
-        in an adjacent popup window.
+        <code>Corfu-doc</code>
+        is basically <code>company-quickhelp</code> for <code>corfu</code>. It
+        shows the documentation of the selected candidate in an adjacent popup
+        window.
       </p>
 
       <figure id="figure-4">
         <img
           src="2022-02-28_00-17-53_screenshot.png"
           alt="2022-02-28_00-17-53_screenshot.png"
-        />
+        >
 
         <figcaption>
           <span class="figure-number">Figure 4: </span>Using
-          <code>corfu-doc</code> in a <code>corfu</code> popup. Called from a
-          <code>java</code> file with completion candidates provided by
+          <code>corfu-doc</code>
+          in a <code>corfu</code> popup. Called from a
+          <code>java</code>
+          file with completion candidates provided by
           <code>lsp-mode</code>.
         </figcaption>
       </figure>
@@ -597,10 +630,11 @@ default lsp-passthrough."
           ></sup
         >, rapidly scrolling through candidates causes stuttering and/or lag.
         This is why I find setting a keybind for
-        <code>corfu-doc-toggle</code> to be useful.
+        <code>corfu-doc-toggle</code>
+        to be useful.
       </p>
 
-      <hr />
+      <hr>
     </div>
   </div>
   <div id="outline-container-changelog" class="outline-2">
@@ -620,7 +654,8 @@ default lsp-passthrough."
                 >Working with the recent changes to <code>corfu</code></a
               >
               section. Also update description of new
-              <code>corfu</code> behavior.
+              <code>corfu</code>
+              behavior.
             </li>
             <li>
               Added configuration for using <code>corfu</code> in the
@@ -657,8 +692,10 @@ default lsp-passthrough."
           <ul class="org-ul">
             <li>
               Update to include new compatibility with
-              <code>corfu-insert-separator</code> and
-              <code>corfu-quit-at-boundary</code> functionality.
+              <code>corfu-insert-separator</code>
+              and
+              <code>corfu-quit-at-boundary</code>
+              functionality.
             </li>
           </ul>
         </li>
@@ -677,7 +714,8 @@ default lsp-passthrough."
         <div class="footpara" role="doc-footnote">
           <p class="footpara">
             Kudos to u/JDRiverRun, the current maintainer of
-            <code>kind-icon</code> for
+            <code>kind-icon</code>
+            for
             <a
               href="https://www.reddit.com/r/emacs/comments/t38kkh/comment/hyturrd/?utm_source=share&amp;utm_medium=web2x&amp;context=3"
               >providing a few benefits</a
@@ -719,8 +757,10 @@ default lsp-passthrough."
             >. Also see this
             <a href="https://github.com/minad/corfu/issues/138">GitHub issue</a>
             which reimplemented the old
-            <code>corfu-quit-at-boundary</code> functionality alongside the then
-            new <code>corfu-insert-separator</code> functionality.
+            <code>corfu-quit-at-boundary</code>
+            functionality alongside the then new
+            <code>corfu-insert-separator</code>
+            functionality.
           </p>
         </div>
       </div>

@@ -14,11 +14,11 @@
       <div class="outline-text-3" id="text-1-1">
         <p>
           Over the last month or two I've been trying out the relatively new
-          <a href="https://jj-vcs.github.io/jj/latest/">jujutsu</a> version
-          control system (VCS) &mdash; and loving it. At first, I discovered it
-          and read their
-          <a href="https://github.com/jj-vcs/jj">GitHub README</a> with
-          curiosity but skepticism. Then I sought a few
+          <a href="https://jj-vcs.github.io/jj/latest/">jujutsu</a>
+          version control system (VCS) &mdash; and loving it. At first, I
+          discovered it and read their
+          <a href="https://github.com/jj-vcs/jj">GitHub README</a>
+          with curiosity but skepticism. Then I sought a few
           <a
             href="https://www.youtube.com/results?search_query=what+is+jujutsu+vcs"
             >YouTube videos</a
@@ -28,9 +28,9 @@
             ></sup
           >
           demonstrating jj in action, and
-          <a href="https://jj-vcs.github.io/jj/latest/">a tutorial</a> for a
-          text-based reference. I became very interested. I initialized a jj
-          repo in one of my small git projects and played around. Since then,
+          <a href="https://jj-vcs.github.io/jj/latest/">a tutorial</a>
+          for a text-based reference. I became very interested. I initialized a
+          jj repo in one of my small git projects and played around. Since then,
           I've migrated all of my personal repositories to jj, and use jj for
           practically everything.
         </p>
@@ -41,7 +41,7 @@
         </p>
         <ol class="org-ol">
           <li>
-            A <code>jj squash</code> workflow<br />
+            A <code>jj squash</code> workflow<br>
             In git, this would be a workflow where you make a commit and
             continually amend/extend that commit until its intended goal is
             completed.
@@ -71,7 +71,7 @@
             </ol>
           </li>
           <li>
-            Work in the working copy<br />
+            Work in the working copy<br>
             <ol class="org-ol">
               <li>
                 Envision a goal for a new commit. Express that into the
@@ -80,27 +80,30 @@
               </li>
               <li>Work until much of that goal is met.</li>
               <li>
-                <code>jj new</code> to work on the next goal. Or
-                <code>jj split -i</code> if some of the changes in the working
-                copy belong in the next commit.
+                <code>jj new</code>
+                to work on the next goal. Or <code>jj split -i</code> if some of
+                the changes in the working copy belong in the next commit.
               </li>
               <li>
-                <code>jj edit</code> to hop between commits and work on each
-                until completion. Perhaps <code>jj new -A ...</code> one or more
-                times when when you don't want certain changes in a commit: make
-                changes across however many of those commits, then
-                <code>jj squash</code> them all into your original commit when
-                you're happy. (You're basically creating a new git branch!)
+                <code>jj edit</code>
+                to hop between commits and work on each until completion.
+                Perhaps <code>jj new -A ...</code> one or more times when when
+                you don't want certain changes in a commit: make changes across
+                however many of those commits, then <code>jj squash</code> them
+                all into your original commit when you're happy. (You're
+                basically creating a new git branch!)
               </li>
             </ol>
           </li>
           <li>
-            Concurrent commits workflow<br />
+            Concurrent commits workflow<br>
             Work on several commits simultaneously, using combinations of
             <code>jj squash</code>, <code>jj new</code>, and
-            <code>jj rebase</code> to make make reversible changes while having
-            a clean <code>jj log</code> at the end. In essence, this is point
-            (3.4) above but with room for added complexity.
+            <code>jj rebase</code>
+            to make make reversible changes while having a clean
+            <code>jj log</code>
+            at the end. In essence, this is point (3.4) above but with room for
+            added complexity.
           </li>
         </ol>
         <p>
@@ -176,11 +179,16 @@
         <div class="footpara" role="doc-footnote">
           <p class="footpara">
             Without the <code>-u</code> flag,
-            <code>jj squash -i</code> effectively behaves like
-            <code>git commit \-\-amend</code> when your working copy has a
-            description (e.g., with <code>jj desc -m "..."</code> or if you
-            <code>jj edit</code> to a past commit). Without a commit,
-            <code>jj squash -i</code> is like
+            <code>jj squash -i</code>
+            effectively behaves like
+            <code>git commit \-\-amend</code>
+            when your working copy has a description (e.g., with
+            <code>jj desc -m "..."</code>
+            or if you
+            <code>jj edit</code>
+            to a past commit). Without a commit,
+            <code>jj squash -i</code>
+            is like
             <code>git commit \-\-amend \-\-no-edit</code>.
           </p>
         </div>

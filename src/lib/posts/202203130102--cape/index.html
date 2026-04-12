@@ -36,7 +36,8 @@
   </nav>
   <div id="outline-container-what-is-cape" class="outline-2">
     <h2 id="what-is-cape">
-      <span class="section-number-2">1.</span> What is <code>cape</code>?
+      <span class="section-number-2">1.</span>
+      What is <code>cape</code>?
     </h2>
     <div class="outline-text-2" id="text-1">
       <p>
@@ -44,34 +45,40 @@
         <a href="https://github.com/minad/cape">Cape</a>, namely how to add
         completion functions to <code>completion-at-point-functions</code> and
         how to use <code>cape's</code> built-in completion utilities (e.g.
-        <code>cape-company-to-capf</code> and <code>cape-capf-buster</code>) to
-        create backends with desired behavior. (Also see
+        <code>cape-company-to-capf</code>
+        and <code>cape-capf-buster</code>) to create backends with desired
+        behavior. (Also see
         <a
           href="https://www.reddit.com/r/emacs/comments/td0nth/comment/i0hz6re/?utm_source=share&amp;utm_medium=web2x&amp;context=3"
           >u/JDRiverRun's informative comment</a
         >
         about the advantages of using
-        <code>completion-at-point-functions</code> over <code>company</code>.)
+        <code>completion-at-point-functions</code>
+        over <code>company</code>.)
       </p>
 
       <p>
-        <code>Cape</code> is to <code>corfu</code> as
-        <code>company-backends</code> are to <code>company</code>:
+        <code>Cape</code>
+        is to <code>corfu</code> as <code>company-backends</code> are to
+        <code>company</code>:
       </p>
       <blockquote>
         <p>
           Cape provides a bunch of Completion At Point Extensions which can be
           used in combination with my Corfu completion UI or the default
           completion UI. The completion backends used by
-          <code>completion-at-point</code> are so called
-          <code>completion-at-point-functions</code> (Capfs). In principle, the
-          Capfs provided by Cape can also be used by Company.
+          <code>completion-at-point</code>
+          are so called
+          <code>completion-at-point-functions</code>
+          (Capfs). In principle, the Capfs provided by Cape can also be used by
+          Company.
         </p>
       </blockquote>
       <p>
         Consequently, <code>cape</code> is only used if you utilize the built-in
         <code>completion-at-point</code>, which is best complemented by
-        <code>corfu</code> text-completion
+        <code>corfu</code>
+        text-completion
         <sup
           ><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink"
             >1</a
@@ -81,31 +88,36 @@
 
       <p>
         You can also see the list of built-in
-        <code>completion-at-point-functions</code> in
+        <code>completion-at-point-functions</code>
+        in
         <a href="https://github.com/minad/cape#available-capfs">the README</a>.
         Several of these <code>completion-at-point-functions</code> are quite
         niche but others, such as <code>cape-file</code> and
-        <code>cape-symbol</code> have common use cases.
+        <code>cape-symbol</code>
+        have common use cases.
       </p>
 
       <p>
         <i>Note</i>: I use <code>straight.el</code> for package management and
-        <code>general.el</code> to set my keybindings. Both of these packages
-        have integration with <code>use-package</code> which come in the form of
-        the <code>:straight</code> and <code>:general</code> keywords,
-        respectively.
+        <code>general.el</code>
+        to set my keybindings. Both of these packages have integration with
+        <code>use-package</code>
+        which come in the form of the
+        <code>:straight</code>
+        and <code>:general</code> keywords, respectively.
       </p>
     </div>
   </div>
   <div id="outline-container-basic-usage-keybinds" class="outline-2">
     <h2 id="basic-usage-keybinds">
-      <span class="section-number-2">2.</span> Basic usage: keybinds
+      <span class="section-number-2">2.</span>
+      Basic usage: keybinds
     </h2>
     <div class="outline-text-2" id="text-2">
       <p>
         The most basic way to use <code>cape</code> is to bind its built-in
-        <code>completion-at-point-functions</code> to their own keys. For
-        instance:
+        <code>completion-at-point-functions</code>
+        to their own keys. For instance:
       </p>
       <div class="org-src-container">
         <pre class="src src-emacs-lisp"><code>(use-package cape
@@ -130,11 +142,12 @@
 
       <p>
         Additionally, if having
-        <code>completion-at-point-functions</code> readily available through
-        keybinds is desirable, then one can use
-        <code>cape-interactive-capf</code> to turn an already existing
-        <code>completion-at-point-function</code> into a command (i.e.
-        interactive function) that can be bound.
+        <code>completion-at-point-functions</code>
+        readily available through keybinds is desirable, then one can use
+        <code>cape-interactive-capf</code>
+        to turn an already existing
+        <code>completion-at-point-function</code>
+        into a command (i.e. interactive function) that can be bound.
       </p>
     </div>
   </div>
@@ -143,8 +156,8 @@
     class="outline-2"
   >
     <h2 id="adding-backends-to-completion-at-point-functions">
-      <span class="section-number-2">3.</span> Adding backends to
-      <code>completion-at-point-functions</code>
+      <span class="section-number-2">3.</span>
+      Adding backends to <code>completion-at-point-functions</code>
     </h2>
     <div class="outline-text-2" id="text-3">
       <p>
@@ -152,8 +165,8 @@
         added to <code>completion-at-point-functions</code>, meaning you can
         configure when each functions is used and where. The simplest way to
         accomplish this is by adding backends to
-        <code>completion-at-point-functions</code> in a hook. Here is a simple
-        example:
+        <code>completion-at-point-functions</code>
+        in a hook. Here is a simple example:
       </p>
       <div class="org-src-container">
         <pre
@@ -192,18 +205,21 @@
       </p>
       <ol class="org-ol">
         <li>
-          <code>add-to-list</code> prepends elements to a list, that is, place
-          an element at the front of a list<sup
+          <code>add-to-list</code>
+          prepends elements to a list, that is, place an element at the front of
+          a list<sup
             ><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink"
               >3</a
             ></sup
           >.
         </li>
         <li>
-          <code>add-to-list</code> is almost always preferable to
-          <code>push</code> because <code>push</code> adds an element to a list
-          even if it already in the list, whereas <code>add-to-list</code> will
-          not.
+          <code>add-to-list</code>
+          is almost always preferable to <code>push</code> because
+          <code>push</code>
+          adds an element to a list even if it already in the list, whereas
+          <code>add-to-list</code>
+          will not.
         </li>
         <li>
           Elements earlier in <code>dolist</code> will be added to the list
@@ -221,15 +237,16 @@
   >
     <h2 id="cape-company-to-capf-and-cape-super-capf">
       <span class="section-number-2">4.</span>
-      <code>Cape-company-to-capf</code> and <code>cape-super-capf</code>
+      <code>Cape-company-to-capf</code>
+      and <code>cape-super-capf</code>
     </h2>
     <div class="outline-text-2" id="text-4">
       <p>
         I think the killer feature of <code>cape</code> is
         <code>cape-company-to-capf</code>. This function is able to convert
         <i>any</i> <code>company</code> backend and convert it into a
-        <code>completion-at-point-function</code> which <code>corfu</code> can
-        use<sup
+        <code>completion-at-point-function</code>
+        which <code>corfu</code> can use<sup
           ><a id="fnr.4" class="footref" href="#fn.4" role="doc-backlink"
             >4</a
           ></sup
@@ -255,7 +272,8 @@
         combines multiple <code>completion-at-point-functions</code> into a
         single function. Effectively, this means candidates from multiple
         backends can appear jointly. For instance, one can combine
-        <code>cape-ispell</code> and <code>cape-dabbrev</code>:
+        <code>cape-ispell</code>
+        and <code>cape-dabbrev</code>:
       </p>
       <div class="org-src-container">
         <pre class="src src-emacs-lisp"><code>(defun kb/cape-capf-setup-org ()
@@ -309,39 +327,40 @@
     class="outline-2"
   >
     <h2 id="my-completion-at-point-functions">
-      <span class="section-number-2">6.</span> My
-      <code>completion-at-point-functions</code>
+      <span class="section-number-2">6.</span>
+      My <code>completion-at-point-functions</code>
     </h2>
     <div class="outline-text-2" id="text-6">
       <p>
         I have very hesitantly included my WIP code which leverages
-        <code>cape</code> and <code>completion-at-point</code> utilities. I have
-        not described in detail each of the following functions. I have,
-        however, attempted to provide useful docstrings and comments.
+        <code>cape</code>
+        and <code>completion-at-point</code> utilities. I have not described in
+        detail each of the following functions. I have, however, attempted to
+        provide useful docstrings and comments.
       </p>
 
       <p>
         I hesitate to publish this code because it was
-        <b>very haphazardly written and highly dependent on my configuration</b
+        <b
+          >very haphazardly written and highly dependent on my configuration</b
         >. The reason for this is the order in which the
-        <code>completion-at-point-functions</code> are added: any peculiarities
-        in another's configuration may lead to undesirable results. As a result,
-        <b>do not directly copy-and-paste this code</b> and expect proper
-        functionality. Rather, I put it here as a reference for what can be
-        done.
+        <code>completion-at-point-functions</code>
+        are added: any peculiarities in another's configuration may lead to
+        undesirable results. As a result,
+        <b>do not directly copy-and-paste this code</b>
+        and expect proper functionality. Rather, I put it here as a reference
+        for what can be done.
       </p>
 
       <details id="special-block-3">
         <summary id="special-block-1">
-          <p>
-            <b>Here they are</b>
-          </p>
+          <p><b>Here they are</b></p>
         </summary>
 
         <div class="alert" id="special-block-2">
           <p>
-            <b>Warning!</b> This code may produce undesirable effects! Copy at
-            your own risk.
+            <b>Warning!</b>
+            This code may produce undesirable effects! Copy at your own risk.
           </p>
         </div>
 
@@ -476,7 +495,7 @@ Additionally, add `cape-file' as early as possible to the list."
         </div>
       </details>
 
-      <hr />
+      <hr>
     </div>
   </div>
   <div id="outline-container-changelog" class="outline-2">
@@ -532,8 +551,8 @@ Additionally, add `cape-file' as early as possible to the list."
         >
         <div class="footpara" role="doc-footnote">
           <p class="footpara">
-            <code>tags-completion-at-point-function</code> is a default
-            <code>completion-at-point-function</code>
+            <code>tags-completion-at-point-function</code>
+            is a default <code>completion-at-point-function</code>
           </p>
         </div>
       </div>

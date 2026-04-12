@@ -9,7 +9,8 @@
       <p>
         Transparency in Emacs isn't that great. Every source I find regarding
         transparency of Emacs (as of writing this) points to setting the
-        <code>alpha</code> frame parameter. For instance:
+        <code>alpha</code>
+        frame parameter. For instance:
       </p>
       <ol class="org-ol">
         <li>
@@ -32,18 +33,19 @@
         <li>
           <a
             href="https://www.reddit.com/r/emacs/comments/ljev64/any_advice_on_getting_transparency_to_work_in/"
-            >Any Advice On Getting Transparency To Work In Emacs Window
-            Manager</a
+            >Any Advice On Getting Transparency To Work In Emacs Window Manager</a
           >
         </li>
       </ol>
       <p>
         The issue with <code>alpha</code> is that it sets the transparency of
         the <i>entire window</i>; what this means is that
-        <i>text and background</i> become transparent together. Clearly this is
-        undesirable for some: the <code>alpha</code> parameter needs to be near
-        100, otherwise the text becomes illegible. Ideally, the text remains
-        opaque while the background becomes transparent.<sup
+        <i>text and background</i>
+        become transparent together. Clearly this is undesirable for some: the
+        <code>alpha</code>
+        parameter needs to be near 100, otherwise the text becomes illegible.
+        Ideally, the text remains opaque while the background becomes
+        transparent.<sup
           ><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink"
             >1</a
           ></sup
@@ -61,19 +63,22 @@
           >on Reddit</a
         >
         received some attention. The patch adds the
-        <code>alpha-background</code> frame parameter which makes
-        <b>only the background</b> of a frame transparent:
+        <code>alpha-background</code>
+        frame parameter which makes
+        <b>only the background</b>
+        of a frame transparent:
       </p>
 
       <figure id="figure-1">
         <img
           src="2022-06-05_20-57-01_screenshot.png"
           alt="2022-06-05_20-57-01_screenshot.png"
-        />
+        >
 
         <figcaption>
           <span class="figure-number">Figure 1: </span
-          ><code>alpha-background</code> set to 75.
+          ><code>alpha-background</code>
+          set to 75.
         </figcaption>
       </figure>
 
@@ -96,7 +101,8 @@
       </div>
       <p>
         I've also defined my own command for toggling between a frame having
-        <code>alpha-background</code> values of 100 and 72:<sup
+        <code>alpha-background</code>
+        values of 100 and 72:<sup
           ><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink"
             >3</a
           ></sup
@@ -137,11 +143,12 @@ to if called with ARG, or any prefix argument."
       <p>In practice, this is what toggling transparency looks like:</p>
 
       <figure id="figure-2">
-        <img src="emacs-transparency.gif" alt="emacs-transparency.gif" />
+        <img src="emacs-transparency.gif" alt="emacs-transparency.gif">
 
         <figcaption>
           <span class="figure-number">Figure 2: </span>Live-toggling of the
-          <code>alpha-background</code> parameter.
+          <code>alpha-background</code>
+          parameter.
         </figcaption>
       </figure>
 
@@ -181,9 +188,9 @@ to if called with ARG, or any prefix argument."
         with Emacs compiled with GTK3 and cairo support. I do not know for
         certain if this is still the case. If it is, then an Emacs built with
         the <code>--with-cairo</code> and
-        <code>--with-x-toolkit=gtk3</code> flags is necessary (meaning this
-        feature is only available on machines using <code>X Window</code>).
-        However,
+        <code>--with-x-toolkit=gtk3</code>
+        flags is necessary (meaning this feature is only available on machines
+        using <code>X Window</code>). However,
         <a
           href="https://www.reddit.com/r/emacs/comments/v72tu6/comment/ibioym9/?utm_source=share&amp;utm_medium=web2x&amp;context=3"
           >according to this Reddit comment thread</a
@@ -193,7 +200,8 @@ to if called with ARG, or any prefix argument."
     </div>
     <div id="outline-container-changelog" class="outline-3">
       <h3 id="changelog">
-        <span class="section-number-3">1.1.</span> Changelog
+        <span class="section-number-3">1.1.</span>
+        Changelog
       </h3>
       <div class="outline-text-3" id="text-1-1">
         <ul class="org-ul">
@@ -273,8 +281,8 @@ to if called with ARG, or any prefix argument."
         <div class="footpara" role="doc-footnote">
           <p class="footpara">
             The reason why my frame is not <i>fully</i> opaque when
-            <code>alpha-background</code> is 100 is because I've additionally
-            set <code>alpha</code> to 98.
+            <code>alpha-background</code>
+            is 100 is because I've additionally set <code>alpha</code> to 98.
           </p>
         </div>
       </div>

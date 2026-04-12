@@ -1,6 +1,6 @@
-import { fileURLToPath } from "url";
-import path from "path";
-import fs from "fs";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
@@ -18,7 +18,7 @@ const POSTS_DIR = path.resolve(__dirname, "posts/");
 function serializePost(subdirName: string) {
   const postPath = path.join(POSTS_DIR, subdirName);
   const metadata = JSON.parse(
-    fs.readFileSync(path.join(postPath, "metadata.json"), "utf-8"),
+    fs.readFileSync(path.join(postPath, "metadata.json"), "utf-8")
   );
   const content = fs.readFileSync(path.join(postPath, "index.html"), "utf-8");
 

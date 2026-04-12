@@ -5,9 +5,9 @@ h3 {
 }
 
 a {
-  border-bottom: 1px solid var(--ink);
   color: var(--ink);
   text-decoration: none;
+  border-bottom: 1px solid var(--ink);
 }
 
 a:hover {

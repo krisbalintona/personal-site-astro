@@ -14,13 +14,11 @@ const identity = {
 <BaseLayout pageTitle={pageTitle}>
   <h2>... and my new Astro site!</h2>
   Here is some text:
-  {
-    identity.hobbies.length >= 2 && (
+  {identity.hobbies.length >= 2 && (
       <li>
         Two of my hobbies are: {identity.hobbies[0]} and {identity.hobbies[1]}
       </li>
-    )
-  }
+    )}
   <p>
     I am working through Astro's introductory tutorial. This is the second page
     on my website, and it's the first one I built myself!
