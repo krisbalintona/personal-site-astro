@@ -9,6 +9,11 @@
       "@lib/*": ["./src/lib/*"],
       "@posts/*": ["./src/lib/posts/*"]
     },
-    "plugins": [{ "name": "@astrojs/ts-plugin" }]
+    "plugins": [
+      {
+        "name": "@astrojs/ts-plugin"
+      }
+    ],
+    "strictNullChecks": true
   }
 }
