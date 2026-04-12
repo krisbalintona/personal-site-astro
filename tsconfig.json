@@ -8,6 +8,7 @@
       "@layouts/*": ["./src/layouts/*"],
       "@lib/*": ["./src/lib/*"],
       "@posts/*": ["./src/lib/posts/*"]
-    }
+    },
+    "plugins": [{ "name": "@astrojs/ts-plugin" }]
   }
 }
