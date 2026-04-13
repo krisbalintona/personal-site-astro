@@ -5,9 +5,22 @@ import { parse } from "node-html-parser";
 import { codeToHtml } from "shiki";
 
 // ==============================
-// Code highlighting (Shiki)
+// Code highlighting
 // ==============================
+//
+// Use Shiki to highlight code blocks.  See the Shiki documentation
+// for more information: https://shiki.style/guide/install.
 
+/**
+ * Highlights an HTML string and returns an HTML string with code
+ * blocks within highlighted using Shiki.  The highlighted code blocks
+ * are those matching the query "pre.src > code", which matches the
+ * HTML structure produced by Org mode's HTML export.
+ *
+ * @param html - Raw HTML string
+ * @param postId - Post Id, used for logging/debugging
+ * @returns HTML string with code blocks highlighted
+ */
 async function highlightCode(html: string, postId: string) {
   const dom = parse(html);
   const codeBlocks = dom.querySelectorAll("pre.src > code");
@@ -57,11 +70,19 @@ async function highlightCode(html: string, postId: string) {
 // 3. Each post subdirectory has (i) an index.html that is the HTML
 //    body of the post and (ii) a metadata.json that contains metadata
 //    about the post itself.
-// 4. Assets are contained in the assets subdirectory of each post subdirectory.
+// 4. Assets are contained in the assets subdirectory of each post
+//    subdirectory.
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const POSTS_DIR = path.resolve(__dirname, "posts/");
 
+/**
+ * Serialize post.
+ *
+ * @param subdirName - Name of subdirectory under src/lib/posts/
+ * @returns Object containing `postId`, `title`, `slug`, `date`, and
+ *   `content`
+ */
 function serializePost(subdirName: string) {
   const postPath = path.join(POSTS_DIR, subdirName);
   const metadata = JSON.parse(
@@ -83,6 +104,13 @@ function serializePost(subdirName: string) {
   };
 }
 
+/**
+ * Reads all posts from `POSTS_DIR` and returns them as a list of
+ * objects.  Each object contains the post's metadata and highlighted
+ * HTML content.
+ *
+ * @returns A list of objects, each returned by `serializePost`
+ */
 export function getPosts() {
   const posts_subdirs = fs
     .readdirSync(POSTS_DIR, { withFileTypes: true })
