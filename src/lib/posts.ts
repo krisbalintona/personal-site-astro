@@ -27,10 +27,10 @@ async function highlightCode(html: string, postId: string) {
     // console.log(`[${postId}] lang:`, lang); // Debug
     if (!lang) {
       console.warn(`[${postId}] pre.src has no language class!`);
-      return;
+      continue;
     }
 
-    const text = code?.rawText ?? "";
+    const text = code.rawText;
     // console.log("Text being passed to highlighter:", text);
     //
     // Shiki's `codeToHtml` returns a code element wrapped in a pre

@@ -3,4 +3,8 @@
 
 ((astro-mode . ((eval . (eglot-ensure))))
  (astro-ts-mode . ((eval . (eglot-ensure))))
- (typescript-ts-mode . ((eval . (eglot-ensure)))))
+ (typescript-ts-mode . ((eval . (eglot-ensure))
+                        (apheleia-formatter . biome)))
+ (json-ts-mode . ((apheleia-formatter . biome)))
+ (js-ts-mode . ((apheleia-formatter . biome)))
+ (tsx-ts-mode . ((apheleia-formatter . biome))))
