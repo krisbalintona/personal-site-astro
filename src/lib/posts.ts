@@ -139,7 +139,7 @@ async function serializePost(subdirName: string): Promise<Post> {
  *
  * @returns A list of objects, each returned by `serializePost`
  */
-export function getPosts(): Promise<Post[]> {
+function getPosts(): Promise<Post[]> {
   const posts_subdirs = fs
     .readdirSync(POSTS_DIR, { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())
@@ -147,3 +147,5 @@ export function getPosts(): Promise<Post[]> {
 
   return Promise.all(posts_subdirs.map(serializePost));
 }
+
+export const posts: Post[] = await getPosts();

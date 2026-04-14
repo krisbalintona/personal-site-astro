@@ -1,9 +1,8 @@
 ---
-import { getPosts, type Post } from "@lib/posts";
+import { posts } from "@lib/posts";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const pageTitle: string = "Home page";
-const posts: Post[] = await getPosts();
 ---
 
 <BaseLayout pageTitle={pageTitle}>
