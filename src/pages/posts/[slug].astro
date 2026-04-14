@@ -13,5 +13,5 @@ const { post } = Astro.props;
 ---
 
 <BaseLayout pageTitle={post.title}>
-  <div set:html={post.content} />
+  <Fragment set:html={post.content} />
 </BaseLayout>
