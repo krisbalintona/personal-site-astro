@@ -2,8 +2,8 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getPosts } from "@lib/posts";
 
-export function getStaticPaths() {
-  return getPosts().map((post) => ({
+export async function getStaticPaths() {
+  return (await getPosts()).map((post) => ({
     params: { slug: post.slug },
     props: { post },
   }));

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { parse } from "node-html-parser";
+import { load } from "cheerio";
 import { codeToHtml } from "shiki";
 
 // ==============================
@@ -22,41 +22,49 @@ import { codeToHtml } from "shiki";
  * @returns HTML string with code blocks highlighted
  */
 async function highlightCode(html: string, postId: string) {
-  const dom = parse(html);
-  const codeBlocks = dom.querySelectorAll("pre.src > code");
-  // console.log(`[${postId}] Number of code blocks found:`, codeBlocks.length);
-
   // Org exports code blocks inside a div whose class is
   // "org-src-container," which contains a code element wrapped in a
   // pre tag whose classes are "src" and "src-LANG"
-  for (const code of codeBlocks) {
-    // console.log(`[${postId}] code element:`, code); // Debug
-    const pre = code.parentNode;
+  const $ = load(html, null, false); // Don't introduce wrapping elements
 
-    const lang = pre.classNames
-      .split(" ")
+  // `codeToHtml` is async but Cheerio's `each` method isn't, so we
+  // have to iterate using a for loop
+  const codeBlocks = $("pre.src > code");
+  // console.log(`[${postId}] Number of code blocks found:`, codeBlocks.length);
+  for (const el of codeBlocks.toArray()) {
+    // Cheerio collections aren't iterable, so we turn it into an
+    // array of DOM objects, then convert those DOM objects back into
+    // Cheerio objects
+    const $code = $(el);
+    // console.log(`[${postId}] code element:`, $code); // Debug
+    const $pre = $code.parent();
+
+    const lang = $pre
+      .attr("class")
+      ?.split(" ")
       .find((c) => c.startsWith("src-"))
       ?.slice("src-".length);
     // console.log(`[${postId}] lang:`, lang); // Debug
     if (!lang) {
-      console.warn(`[${postId}] pre.src has no language class!`);
+      console.warn(
+        `[${postId}] pre.src has no language class! Not highlighting code`
+      );
       continue;
     }
-
-    const text = code.rawText;
+    const text = $code.text();
     // console.log("Text being passed to highlighter:", text);
-    //
-    // Shiki's `codeToHtml` returns a code element wrapped in a pre
-    // tag.  So we have to replace the pre element, not the code
-    // element.
-    pre.replaceWith(
+
+    // `codeToHtml` returns a code element wrapped in a pre tag.  So
+    // we have to replace the pre element, not the code element.
+    $pre.replaceWith(
       await codeToHtml(text, {
         lang,
         theme: "github-light",
       })
     );
   }
-  return dom.toString();
+
+  return $.html();
 }
 
 // ==============================
@@ -83,18 +91,27 @@ const POSTS_DIR = path.resolve(__dirname, "posts/");
  * @returns Object containing `postId`, `title`, `slug`, `date`, and
  *   `content`
  */
-function serializePost(subdirName: string) {
+async function serializePost(subdirName: string) {
   const postPath = path.join(POSTS_DIR, subdirName);
+
+  // Metadata
   const metadata = JSON.parse(
     fs.readFileSync(path.join(postPath, "metadata.json"), "utf-8")
   );
   const postId = metadata.postId;
+  if (!postId) {
+    throw new Error(`Post ID not found: ${JSON.stringify(metadata)}`);
+  }
+  // console.log(`Post metadata: ${JSON.stringify(metadata)}`); // Debug
+
+  // Content
   const rawContent = fs.readFileSync(
     path.join(postPath, "index.html"),
     "utf-8"
   );
-  const content = highlightCode(rawContent, postId);
+  const content = await highlightCode(rawContent, postId);
 
+  // Return an object literal combining metadata and content
   return {
     postId,
     title: metadata.title,
@@ -117,5 +134,5 @@ export function getPosts() {
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => dirent.name);
 
-  return posts_subdirs.map(serializePost);
+  return Promise.all(posts_subdirs.map(serializePost));
 }
