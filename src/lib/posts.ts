@@ -21,7 +21,7 @@ import { codeToHtml } from "shiki";
  * @param postId - Post Id, used for logging/debugging
  * @returns HTML string with code blocks highlighted
  */
-async function highlightCode(html: string, postId: string) {
+async function highlightCode(html: string, postId: string): Promise<string> {
   // Org exports code blocks inside a div whose class is
   // "org-src-container," which contains a code element wrapped in a
   // pre tag whose classes are "src" and "src-LANG"
@@ -84,6 +84,17 @@ async function highlightCode(html: string, postId: string) {
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const POSTS_DIR = path.resolve(__dirname, "posts/");
 
+interface PostMetadata {
+  date: string;
+  postId: string;
+  slug: string;
+  title: string;
+}
+
+export interface Post extends PostMetadata {
+  content: string;
+}
+
 /**
  * Serialize post.
  *
@@ -91,11 +102,11 @@ const POSTS_DIR = path.resolve(__dirname, "posts/");
  * @returns Object containing `postId`, `title`, `slug`, `date`, and
  *   `content`
  */
-async function serializePost(subdirName: string) {
+async function serializePost(subdirName: string): Promise<Post> {
   const postPath = path.join(POSTS_DIR, subdirName);
 
   // Metadata
-  const metadata = JSON.parse(
+  const metadata: PostMetadata = JSON.parse(
     fs.readFileSync(path.join(postPath, "metadata.json"), "utf-8")
   );
   const postId = metadata.postId;
@@ -128,7 +139,7 @@ async function serializePost(subdirName: string) {
  *
  * @returns A list of objects, each returned by `serializePost`
  */
-export function getPosts() {
+export function getPosts(): Promise<Post[]> {
   const posts_subdirs = fs
     .readdirSync(POSTS_DIR, { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())

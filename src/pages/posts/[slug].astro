@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { getPosts } from "@lib/posts";
+import { getPosts, type Post } from "@lib/posts";
 
 export async function getStaticPaths() {
   return (await getPosts()).map((post) => ({
@@ -9,7 +9,7 @@ export async function getStaticPaths() {
   }));
 }
 
-const { post } = Astro.props;
+const { post }: { post: Post } = Astro.props;
 ---
 
 <BaseLayout pageTitle={post.title}>
