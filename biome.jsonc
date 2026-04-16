@@ -4,6 +4,15 @@
     "rules": {
       "style": {
         "useFilenamingConvention": "off"
+      },
+      "correctness": {
+        // Biome does not have the ability to read path aliases in
+        // tsconfig.json, so it will report false positives.  See
+        // https://github.com/biomejs/biome/issues/3554
+        "noUndeclaredDependencies": "off",
+        // Biome does not recognize "virtual modules," modules that
+        // Astro generates at run/build time and exposes via Vite
+        "noUnresolvedImports": "off"
       }
     }
   },
