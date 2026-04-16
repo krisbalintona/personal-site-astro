@@ -1,0 +1,207 @@
+---
+title: "Some Notes Setting Up Syncthing in NixOS"
+date: 2025-05-04T22:19:00-05:00
+---
+
+# Table of Contents
+
+1.  [1.1](#11):ignore:
+    1.  [Introduction](#introduction):ignore:
+    2.  [The configuration](#the-configuration)
+    3.  [Devices](#devices)
+    4.  [Folders](#folders)
+    5.  [Closing remarks](#closing-remarks)
+    6.  [Other resources](#other-resources)
+    7.  [Changelog](#changelog)
+
+
+
+<a id="11"></a>
+
+# 1.1     :ignore:
+
+
+<a id="introduction"></a>
+
+## Introduction     :ignore:
+
+So I recently got around to trying out NixOS. Part of that experience was setting up Syncthing, which I've used on the past on my machines and mobile phone to sync files related to note-taking.<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup> It was a bit confusing since I had to fill-in-the-blanks for a few steps. Here, I write about a bit of the blanks I had to fill in myself, stuff that was not clear from the existing docs and forum posts I discovered.
+
+
+<a id="the-configuration"></a>
+
+## The configuration
+
+Below is the final NixOS configuration I have (with IDs elided for privacy) alongside commentary via comments:
+
+```nix
+systemd.services.syncthing.environment.STNODEFAULTFOLDER = "true"; # Don't create default ~/Sync folder.  See https://wiki.nixos.org/wiki/Syncthing
+services.syncthing = {
+  enable = true;
+  openDefaultPorts = true;
+  # I change the address SyncThing uses (which is also how you access the
+  # browser UI).  This is to avoid conflicts with the other SyncThing instances
+  # I have on the same machine.  Namely, from different WSL2 instances.
+  guiAddress = "127.0.0.1:8385";
+  user = "krisbalintona";
+  group = "users";
+  configDir = "/home/krisbalintona/.config/syncthing";
+  # Override all settings set from the GUI.  This is necessary if I don't want
+  # to have changes made from the GUI apply.
+  overrideDevices = true;
+  overrideFolders = true;
+  # Settings: this is where you set up devices and folders
+  settings = {
+    devices = {
+      "G14 2024 Arch" = {       # Name of SyncThing instance on other machine
+        id = "OQHSZRL-L2TT7IC-7USSLNU-ST7JYML-FOO-BAR"; # Elided for privacy
+      };
+      "OnePlus 7 Pro" = {       # Name of SyncThing instance on mobile device
+        id = "OVGYOBT-JPFQJKE-6CKRY7J-JULRCWK-FOO-BAR"; # Elided for privacy
+      };
+    };
+
+    folders = {
+      "k4vqh-foo" = {           # The ID of a folder you'd like to sync
+        label = "Agenda";       # Optional device-specific folder name
+        path = "/home/krisbalintona/Documents/org-database/agenda/";
+        # Share with these devices
+        devices = [
+          "G14 2024 Arch WSL2"
+          "OnePlus 7 Pro"
+        ];
+      };
+      "qtuzy-foo" = {           # The ID of a folder you'd like to sync
+        label = "Notes";        # Optional device-specific folder name
+        path = "/home/krisbalintona/Documents/org-database/notes";
+        # Share with these devices
+        devices = [
+          "G14 2024 Arch"
+          "OnePlus 7 Pro"
+        ];
+      };
+    };
+  };
+};
+```
+
+It was pretty straightforward to figure out the general settings for Syncthing by referencing [NixOS Search](https://search.nixos.org/options?channel=unstable). The tricky part was the "devices" and "folders" section. What should I put there? Below are the important bits.
+
+
+<a id="devices"></a>
+
+## Devices
+
+-   "Devices" are Machines/devices you'd like Syncthing to be aware of.
+-   Each machine has an ID.
+-   Each machine can optionally have a "label" (probably a human-readable name, like "Home computer").
+
+Looking at the relevant portion of my configuration:
+
+```nix
+devices = {
+  "G14 2024 Arch" = {  # Name of SyncThing instance on other machine
+    id = "OQHSZRL-L2TT7IC-7USSLNU-ST7JYML-FOO-BAR"; # Elided for privacy
+  };
+  "OnePlus 7 Pro" = {       # Name of SyncThing instance on mobile device
+    id = "OVGYOBT-JPFQJKE-6CKRY7J-JULRCWK-FOO-BAR"; # Elided for privacy
+  };
+};
+```
+
+This tells Syncthing that I have two devices:
+
+1.  One labeled "G14 2024 Arch" with an ID of `"OQHSZRL-L2TT7IC-7USSLNU-ST7JYML-FOO-BAR"`.
+2.  Another labeled "OnePlus 7 Pro" with an ID of `"OVGYOBT-JPFQJKE-6CKRY7J-JULRCWK-FOO-BAR"`.
+
+Now that Syncthing is aware of these devices, I can reference them by their label later in the folders section to specify which folders should be shared to which devices.
+
+
+<a id="folders"></a>
+
+## Folders
+
+-   Folders are the directories you'd like Syncthing to be aware of.
+-   Each folder has an ID.<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup>
+-   Each folder may optionally have a label (probably a human-readable name, like "Agenda"). This is basically a nickname you give to the folder specific to the current device.
+-   Folders are only shared to devices specified for each folder.
+
+Looking at the relevant portion of my configuration:
+
+```nix
+folders = {
+  "k4vqh-foo" = {               # The ID of a folder you'd like to sync
+    label = "Agenda";           # Optional device-specific folder name
+    path = "/home/krisbalintona/Documents/org-database/agenda/";
+    # Share with these devices
+    devices = [
+      "G14 2024 Arch WSL2"
+      "OnePlus 7 Pro"
+    ];
+  };
+  "qtuzy-foo" = {               # The ID of a folder you'd like to sync
+    label = "Notes";            # Optional device-specific folder name
+    path = "/home/krisbalintona/Documents/org-database/notes";
+    # Share with these devices
+    devices = [
+      "G14 2024 Arch"
+      "OnePlus 7 Pro"
+    ];
+  };
+};
+```
+
+This tells Syncthing that I want to share two folders:
+
+1.  Share folder `"k4vqh-foo"`, whose label is "Agenda," with two devices: the one labeled "G14 2024 Arch WSL2" and another labeled "OnePlus 7 Pro."
+2.  Share folder `"qtuzy-foo"`, whose label is "Notes," with two devices: the one labeled "G14 2024 Arch WSL2" and another labeled "OnePlus 7 Pro."
+
+It is important that the "devices" section be specified, otherwise Syncthing will not sync those folders to other devices.
+
+
+<a id="closing-remarks"></a>
+
+## Closing remarks
+
+And with that, I was done!
+
+In sum:
+
+-   Devices
+    -   "Devices" are Machines/devices you'd like Syncthing to be aware of.
+    -   Each machine has an ID.
+    -   Each machine can optionally have a "label" (probably a human-readable name, like "Home computer").
+-   Folders
+    -   Folders are the directories you'd like Syncthing to be aware of.
+    -   Each folder has an ID.
+    -   Each folder may optionally have a label (probably a human-readable name, like "Agenda"). This is basically a nickname you give to the folder specific to the current device.
+    -   Folders are only shared to devices specified for each folder.
+
+Simple, but it wasn't obvious from the resources I encountered online, so I had to do some tinkering to figure it out myself.
+
+For those who heavily customize Syncthing, there are other NixOS options available to tweak. You can find them [in the NixOS Search for options](https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=syncthing). Additionally, if you are trying to migrate an existing Syncthing configuration to Nix, then you can check out your config file at `~/.config/syncthing/config.xml`.<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3</a></sup> With this, you can see the value of every Syncthing setting (although the file will, of course, be in JSON format).
+
+
+<a id="other-resources"></a>
+
+## Other resources
+
+-   **[Syncthing - NixOS Wiki](https://wiki.nixos.org/wiki/Syncthing):** General resource; good starting point.
+-   **[Vimjoyer - YouTube](https://www.youtube.com/@vimjoyer):** A fantastic visual resource of making full use of Nix and NixOS. Has some beginner-friendly videos, but most videos are for intermediate or advanced users, ones looking to explore the ecosystem, full potential of Nix, and already having a familiarity with navigating Nix.
+
+
+<a id="changelog"></a>
+
+## Changelog
+
+-   <span class="timestamp-wrapper"><span class="timestamp">[2025-05-17 Sat]</span></span>
+    -   Add link to the [Syncthing configuration file documentation](https://docs.syncthing.net/users/config.html).
+
+
+# Footnotes
+
+<sup><a id="fn.1" href="#fnr.1">1</a></sup> I use Emacs's org-agenda to manage todos, and I've set up [Orgzly Revived](https://github.com/orgzly-revived/orgzly-android-revived) for basic creation and editing of org todos on my phone.
+
+<sup><a id="fn.2" href="#fnr.2">2</a></sup> You can see the ID of shared folders in the Syncthing GUI by expanding the collapsed info section a folder under the folders section of the GUI's homepage.
+
+<sup><a id="fn.3" href="#fnr.3">3</a></sup> Users can refer to the [Syncthing configuration file documentation](https://docs.syncthing.net/users/config.html) in order to understand the contents of this file.

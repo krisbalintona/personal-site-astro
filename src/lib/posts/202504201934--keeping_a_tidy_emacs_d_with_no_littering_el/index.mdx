@@ -1,0 +1,194 @@
+---
+title: "Keeping a tidy .emacs.d/ with no-littering.el"
+date: 2025-04-20T19:34:00-05:00
+---
+
+# Table of Contents
+
+1.  [1.2](#12):ignore:
+    1.  [Body](#body):ignore:
+    2.  [Bonus: `(no-littering-theme-backups)`](#bonus-no-littering-theme-backups)
+
+
+
+<a id="12"></a>
+
+# 1.2     :ignore:
+
+
+<a id="body"></a>
+
+## Body     :ignore:
+
+[No-littering.el](https://github.com/emacscollective/no-littering) keeps your .emacs.d clean. I've been using it for years&mdash;in fact it's one of the only third-party packages I first installed several years ago when I started using Emacs that I still have in my config today.
+
+It establishes conventions for keeping files created from packages:
+
+1.  The `no-littering-etc-directory`. The directory where packages place their configuration files.
+2.  The `no-littering-var-directory`. The directory where packages place their persistent data files.
+
+If every package followed this convention, then no files should litter (pun intended) your emacs configuration directory. Unfortunately, not every package does&hellip; fortunately, no-littering already sets the relevant option of dozens of packages to use these directories. But if you use a package that isn't already set, you can easily use `no-littering-expand-var-file-name` and `no-littering-expand-etc-file-name` to change that. For example: `(setopt cursory-latest-state-file (no-littering-expand-var-file-name "cursory/cursory-latest-state"))` sets `cursory-latest-state-file` to `~/.emacs.d/var/cursory/cursory-latest-state`.
+
+Here's a look at my own directories.
+
+1.  My `no-littering-etc-directory`, located at `~/.emacs.d/etc/`:
+    
+        $ tree -L 1
+        .
+        ├── abbrev.el
+        ├── custom.el
+        ├── gnus
+        └── transient
+        
+        3 directories, 2 files
+2.  My `no-littering-var-directory`, located at `~/.emacs.d/var/`:
+    
+        $ tree -L 1
+        .
+        ├── abbrev-mode
+        ├── amx-save.el
+        ├── anaconda-mode
+        ├── annotations.el
+        ├── auto-save
+        ├── backup
+        ├── bookmark-default.el
+        ├── citre
+        ├── company
+        ├── cursory
+        ├── dap
+        ├── dape-adapters
+        ├── desktop
+        ├── devdocs
+        ├── diary
+        ├── eaf
+        ├── eafpdf
+        ├── eglot-java
+        ├── elfeed
+        ├── emacs-gc-stats.eld.gz
+        ├── emms
+        ├── emojify
+        ├── erc
+        ├── eshell
+        ├── eww
+        ├── flycheck
+        ├── fontaine
+        ├── fontaine-latest-state.eld
+        ├── forge
+        ├── gamegrid-user-score
+        ├── gdb-bp-session
+        ├── .gitignore
+        ├── .gitmodules
+        ├── gnus
+        ├── helm
+        ├── ielm-history.eld
+        ├── image-dired
+        ├── irony
+        ├── ispell
+        ├── keyfreq.el
+        ├── languagetool
+        ├── ledger
+        ├── logview-cache
+        ├── lsp
+        ├── mc-list.el
+        ├── multisession
+        ├── newsticker
+        ├── nov-save-place.el
+        ├── nsm-settings.el
+        ├── org
+        ├── org-remark
+        ├── persist
+        ├── popweb
+        ├── prescient-save.el
+        ├── projectile
+        ├── project-list.el
+        ├── project-x
+        ├── psession
+        ├── racket-mode
+        ├── recentf-save.el
+        ├── request
+        ├── savehist.el
+        ├── save-place.el
+        ├── semantic
+        ├── shadow
+        ├── speed-type
+        ├── spell-fu
+        ├── srecode-map.el
+        ├── svg-lib
+        ├── tempel-templates
+        ├── tramp
+        ├── transient
+        ├── trash
+        ├── treemacs
+        ├── treesit
+        ├── tree-sitter
+        ├── type-break.el
+        ├── undohist
+        ├── url
+        ├── vimish-fold
+        └── wombag
+        
+        60 directories, 22 files
+
+Without no-littering, I would either (i) have a ton of directories in my .emacs.d or (ii) have to define my own variables whose values are directories and manually, whenever I install a new package, set their options to write their files into these directories&mdash;basically what no-littering already does but without no-littering's existing integrations. This way, my Emacs directory is neater.
+
+
+<a id="bonus-no-littering-theme-backups"></a>
+
+## Bonus: `(no-littering-theme-backups)`
+
+No-littering also provides the little-known `no-littering-theme-backups`. The TL;DR is this: this function makes Emacs's built-in auto-saving and backing up functions create files within no-littering's directories so that sensitive data is not written to disk in unsecured locations. Calling this function sets the value of three variables:
+
+1.  `auto-save-file-name-transforms`: Transforms to apply to buffer file name before making auto-save file name.
+2.  `backup-directory-alist`: Similar to `auto-save-file-name-transforms` but for backup files.
+3.  `undo-tree-history-directory-alist` (from undo-tree): Similar to `auto-save-file-name-transforms` but for backup files.
+
+Its docstring elaborates the mechanism and purpose of this function in greater depth:
+
+    no-littering-theme-backups is an autoloaded native-comp-function in
+    no-littering.el.
+    
+    (no-littering-theme-backups)
+    
+    Theme locations where backups of various sorts are created.
+    
+    The purpose of this package is to store data files of various
+    sorts in a handful of central locations, instead of spreading
+    them all over the place.  When doing that for temporary files,
+    which contain backups of some sort, that increases the odds that
+    sensitive data is written to disk in clear text and/or that such
+    clear text files persist longer, if they would be created anyway.
+    
+    Because of that, simply loading ‘no-littering’ does not theme
+    certain, potentially unsafe variables.  Instead, this function is
+    provided, so that you can decide whether to take the risk or not.
+    
+    Calling this function sets these variables:
+    - auto-save-file-name-transforms (built-in)
+    - backup-directory-alist (built-in)
+    - undo-tree-history-directory-alist (from ‘undo-tree’)
+    
+    The default values of these variables cause additional files to
+    be created in the same directories as the files that are being
+    visited.  Calling this function changes the values of these
+    variables, so that this is only done for visited files located in
+    certain directories.  For all other visited files, the additional
+    files are created in files inside no-littering-var-directory.
+    
+    Additional files are created in the same directory as the visited
+    file, for files located in:
+    - "/tmp/"
+    - "/dev/shm"
+    - temporary-file-directory
+    
+    With these settings it is still possible that sensitive data is
+    written to additional files, but you are more likely to spot it,
+    and because these directories usually use a ‘tmpfs’ file-system,
+    the leaked secrets should not persist after a reboot.
+    
+    If you do *not* call this function, then these additional files
+    are always created in the same directory as the visited files,
+    regardless of the location of the visited files.  In other words,
+    even when using the default values, there is a significant risk
+    of leaking sensitive data, and if you want to reduce that, then
+    you must turn of these features completely.
+
