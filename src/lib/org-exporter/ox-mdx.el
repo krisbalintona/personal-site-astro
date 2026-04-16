@@ -50,6 +50,23 @@ This option is used to define the value of other relevant paths."
 
 ;;;;; Functions
 
+(defun org-mdx-plain-text (text info)
+  "Transcode a TEXT string into MDX-safe plain text.
+Applies `org-md-plain-text' first, then escapes constructs that are
+valid in Markdown but invalid in MDX's JSX parser.
+
+TEXT is the string to transcode.  INFO is a plist holding contextual
+information."
+  (thread-last (org-md-plain-text text info)
+               ;; < followed by a word character is an unclosed JSX
+               ;; tag (e.g., <MyVar>, <email@domain>)
+               (replace-regexp-in-string
+                (rx "<" (group (any alphanumeric "_")))
+                "&lt;\\1")
+               ;; Bare { and } are parsed as JSX expressions
+               (replace-regexp-in-string "{" "&#123;")
+               (replace-regexp-in-string "}" "&#125;")))
+
 (defun org-mdx-src-block (src-block _contents info)
   "Transcode a SRC-BLOCK element from Org to a markdown fenced code block.
 SRC-BLOCK is org element src block.  CONTENTS is always nil for src
@@ -308,7 +325,7 @@ CONTENTS is the transcoded contents string (returned by the
 inner-template backend transcoder).  INFO is a plist used as a
 communication channel for the export process."
   (let* ((raw-title (org-mdx--frontmatter-quote-string
-                     (org-md-plain-text
+                     (org-mdx-plain-text
                       (org-element-interpret-data (plist-get info :title))
                       info)))
          (title (when raw-title (concat "title: " raw-title)))
@@ -526,6 +543,7 @@ Return the output directory's name."
   ;; backend transcoders
   :translate-alist
   '((template . org-mdx-template)
+    (plain-text . org-mdx-plain-text)
     (src-block . org-mdx-src-block)
     (special-block . org-mdx-special-block)
     (link . org-mdx-link)))
