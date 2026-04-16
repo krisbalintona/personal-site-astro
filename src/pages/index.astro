@@ -1,6 +1,8 @@
 ---
-import { posts } from "@lib/posts";
+import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const posts = await getCollection("posts");
 
 const pageTitle: string = "Home page";
 ---
@@ -10,7 +12,7 @@ const pageTitle: string = "Home page";
 
   {posts.map((post) => (
       <li>
-        <a href={`posts/${post.slug}`}>{post.title}</a>, posted on {post.date}
+        <a href={`posts/${post.id}`}>{post.data.title}</a>, posted on {post.data.date}
       </li>
     ))}
 </BaseLayout>

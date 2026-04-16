@@ -1,17 +1,15 @@
 ---
+import { getCollection, render } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { type Post, posts } from "@lib/posts";
 
-export function getStaticPaths() {
-  return posts.map((post) => ({
-    params: { slug: post.slug },
+export async function getStaticPaths() {
+  return (await getCollection("posts")).map((post) => ({
+    params: { slug: post.id },
     props: { post },
   }));
 }
-
-const { post }: { post: Post } = Astro.props;
+const { post } = Astro.props;
+const { Content } = await render(post);
 ---
 
-<BaseLayout pageTitle={post.title}>
-  <Fragment set:html={post.content} />
-</BaseLayout>
+<BaseLayout pageTitle={post.data.title}> <Content /> </BaseLayout>
