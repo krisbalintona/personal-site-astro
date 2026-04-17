@@ -1,0 +1,54 @@
+#+title: Personal site documentation
+
+#  LocalWords:  MDX NPM Astro
+
+This website is powered by [[https://astro.build/][Astro]]. Its content is written in [[https://orgmode.org/][Org-mode]] exported to MDX files (see [[file:src/lib/org-exporter/ox-mdx.el][ox-mdx.el]]).
+
+* Project structure
+
+This project's directory structure is like so:
+#+begin_example
+  /
+  ├── public
+  └── src
+      ├── components
+      ├── layouts
+      ├── lib
+      │   ├── org-exporter
+      │   └── posts
+      ├── pages
+      │   └── posts
+      └── styles
+#+end_example
+I follow the conventions laid out in the Astro documentation on [[https://docs.astro.build/en/basics/project-structure/][project structure]]. Aside from that:
++ In =/src/lib/posts/= are subdirectories, each associated with a post. Each subdirectory contains a =.mdx= file and an =assets/= subdirectory if the post has any associated asset files (e.g., images).
++ In =/src/lib/org-exporter/= is a bespoke Org-mode export backend: =ox-mdx.el=. This Elisp file exports my Org-mode writing to MDX files that will be ingested by Astro into Content Collections.
+
+* Architecture and Design
+
+The content of this site is written in [[https://orgmode.org/][Org-mode]]. Org-mode documents are exported to =.mdx= via [[file:src/lib/org-exporter/ox-mdx.el][ox-mdx.el]]. The reasoning behind this decision is thus:
++ With content in org-mode, an export backend could be created to make that content readable to Astro.
++ Initially, an HTML exporter was used. However, HTML files do not work as smoothly with many of the niceties that Astro offers (see [[https://devdocs.io/astro/basics/astro-components/index#html-components][this brief summary]]). In particular, [[https://docs.astro.build/en/reference/astro-syntax/#jsx-like-expressions][JSX-like dynamic expressions]], references to assets (not in =/public/=), and content collections. The HTML route involves more manual and ad-hoc work.
++ On the other hand, MDX is a format very well supported by Astro. Astro has many features and plugins for MDX content and Astro components can easily be used, as opposed to post-processing HTML. It's hassle-free and fully expressive.
+
+* Development
+
+Dependencies and environment variables are set up using [[https://direnv.net/][Direnv]], in combination with [[https://guix.gnu.org/][Guix]] (see the =.envrc= and =manifest.scm= files). Install the =direnv= executable from your system and set up Guix. Once done, [[https://direnv.net/docs/hook.html][add the relevant Direnv hooks into your favorite shell]].
+
+To build a local HTTP server for development, run:
+#+begin_src sh
+  npm run dev
+
+  # Or start the server and automatically open it in a new browser tab
+  npm run dev -- --open
+#+end_src
+
+To build files for a production version of the site:
+#+begin_src sh
+npm run build
+#+end_src
+You can preview the production build with ~npm run preview~.
+
+Additional NPM sub commands include:
++ ~npm run check~ to report on any formatting or stylistic errors
++ ~npm run fix~ to fix any formatting or stylistic errors
