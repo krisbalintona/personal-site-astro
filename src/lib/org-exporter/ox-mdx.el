@@ -50,29 +50,52 @@ This option is used to define the value of other relevant paths."
 
 ;;;;; Functions
 
+(defun org-mdx--escape-special-chars (string)
+  "Escape characters in STRING with special significance in MDX.
+This includes the following characters:
+- &
+- <
+- >
+- {
+- }"
+  ;; Escape characters that would be mistaken from JSX expression
+  ;; syntax
+  (thread-last string
+               (replace-regexp-in-string "&" "&amp;")
+               (replace-regexp-in-string "<" "&lt;")
+               (replace-regexp-in-string ">" "&gt;")
+               (replace-regexp-in-string "{" "&#123;")
+               (replace-regexp-in-string "}" "&#125;")))
+
 (defun org-mdx-plain-text (text info)
   "Transcode a TEXT string into MDX-safe plain text.
 Escapes constructs that are valid in Markdown but invalid in MDX's JSX
 parser, then applies `org-md-plain-text'.
 
-TEXT is the string to transcode.  INFO is a plist holding contextual
-information."
-  ;; Escape characters that would be mistaken from JSX expression
-  ;; syntax
-  (thread-last text
-               ;; "&" must be replaced first since later replacements
-               ;; insert this character
-               (replace-regexp-in-string "&" "&amp;")
-               (replace-regexp-in-string "<" "&lt;")
-               (replace-regexp-in-string ">" "&gt;")
-               (replace-regexp-in-string "{" "&#123;")
-               (replace-regexp-in-string "}" "&#125;")
-               ;; Then do the default, `org-md-plain-text'.  Go last
-               ;; since it may introduce characters that should not be
-               ;; escaped yet would be replaced above if called first.
-               ;; And it is safe to go last since it doesn't modify
-               ;; any of the replacements above.
-               (funcall (lambda (s) (org-md-plain-text s info)))))
+TEXT is the string to transcode.  INFO is a plist holding information
+for the export process."
+  ;; Do the default, `org-md-plain-text', after
+  ;; `org-mdx--escape-special-chars' since it may introduce characters
+  ;; that should not be escaped yet would be replaced above if called
+  ;; first.  And it is safe to go last since it doesn't modify any of
+  ;; the replacements above.
+  (org-md-plain-text (org-mdx--escape-special-chars text) info))
+
+(defun org-mdx-example-block (example-block contents info)
+  "Transcode EXAMPLE-BLOCK element into MDX format.
+Wrap in a `div' and `pre' tag.
+
+EXAMPLE-BLOCK is org element example block.  CONTENTS is always nil for
+example blocks.  INFO is a plist holding information for the export
+process."
+  (let* ((block-text (org-remove-indentation
+                      (org-export-format-code-default example-block info)))
+         (escaped-text
+          (thread-last block-text
+                       ;; Escape backticks and backslashes
+                       (replace-regexp-in-string "\\\\" "\\\\\\\\")
+                       (replace-regexp-in-string "`" "\\\\`"))))
+    (format "<div><pre>{`%s`}</pre></div>" escaped-text)))
 
 (defun org-mdx-src-block (src-block _contents info)
   "Transcode a SRC-BLOCK element from Org to a markdown fenced code block.
@@ -111,7 +134,9 @@ will return:
 ;; rather than checking in Elisp, somehow, whether that component
 ;; exists.)
 (defun org-mdx-special-block (_special-block contents info)
-  "Wrap CONTENTS in a `div'.
+  "Transcode _SPECIAL-BLOCK element into MDX format.
+Wrap CONTENTS in a `div' tag.
+
 _SPECIAL-BLOCK is a special block org element.  CONTENTS is the
 transcoded contents/value of that element.  INFO is a communication
 channel for the export process."
@@ -550,6 +575,7 @@ Return the output directory's name."
   :translate-alist
   '((template . org-mdx-template)
     (plain-text . org-mdx-plain-text)
+    (example-block . org-mdx-example-block)
     (src-block . org-mdx-src-block)
     (special-block . org-mdx-special-block)
     (link . org-mdx-link)))

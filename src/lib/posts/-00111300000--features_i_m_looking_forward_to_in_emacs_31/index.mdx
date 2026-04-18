@@ -22,279 +22,174 @@ title: "Features I'm looking forward to in Emacs 31"
 -   [savehist.el: Handle concurrent access to \`savehist-file\`](https://git.savannah.gnu.org/cgit/emacs.git/commit/etc/NEWS?id=bfeb755e03b5cab8f1f234b1a54afbcfd71f9eb2)
     But&hellip;
     
-    > This feature is activated only when 'savehist-additional-variables' is nil.
+    <div><pre>{`This feature is activated only when 'savehist-additional-variables' is nil.
+    `}</pre></div>
 -   [New user option to hide minor mode lighters (bug#77361)](https://git.savannah.gnu.org/cgit/emacs.git/commit/etc/NEWS?id=6f494d74f645d6cffd98e168721a0347de271a54)
     Basically minions.el
 -   `vc-dir-mark-file`: Consistently don't allow marking a subdirectory
     
-    > -   | a5f574429db 2025-04-06 (10 days ago) Sean Whitton
-    > 
-    > <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    > 
-    > 
-    > <colgroup>
-    > <col  class="org-left" />
-    > 
-    > <col  class="org-left" />
-    > </colgroup>
-    > <tbody>
-    > <tr>
-    > <td class="org-left">&nbsp;</td>
-    > <td class="org-left">vc-dir-mark-file: Consistently don't allow marking a subdirectory</td>
-    > </tr>
-    > </tbody>
-    > </table>
-    > 
-    > commit a5f574429db1f820cc4d25bfb0e700aae050dc07
-    > Author: Sean Whitton &lt;spwhitton@spwhitton.name&gt;
-    > Date:   Sun Apr 6 09:09:32 2025 +0800
-    > 
-    > vc-dir-mark-file: Consistently don't allow marking a subdirectory
-    > 
-    > -   lisp/vc/vc-dir.el (vc-dir-mark-file): Don't allow marking a
-    > 
-    > subdirectory if its parent is already marked.  This fixes an
-    > inconsistency whereby if a subdirectory was already marked then
-    > its parent could not be marked, but not vice-versa (bug #76769).
+    <div><pre>{`* | a5f574429db 2025-04-06 (10 days ago) Sean Whitton
+    | |   vc-dir-mark-file: Consistently don't allow marking a subdirectory
+    commit a5f574429db1f820cc4d25bfb0e700aae050dc07
+    Author: Sean Whitton <spwhitton@spwhitton.name>
+    Date:   Sun Apr 6 09:09:32 2025 +0800
+    
+    vc-dir-mark-file: Consistently don't allow marking a subdirectory
+    
+    * lisp/vc/vc-dir.el (vc-dir-mark-file): Don't allow marking a
+    subdirectory if its parent is already marked.  This fixes an
+    inconsistency whereby if a subdirectory was already marked then
+    its parent could not be marked, but not vice-versa (bug #76769).
+    `}</pre></div>
 -   Teach VC-Dir to automatically add and remove marks on other lines
     
-    > -   | 936b2efdb38 2025-04-06 (10 days ago) Sean Whitton
-    > 
-    > <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    > 
-    > 
-    > <colgroup>
-    > <col  class="org-left" />
-    > 
-    > <col  class="org-left" />
-    > </colgroup>
-    > <tbody>
-    > <tr>
-    > <td class="org-left">&nbsp;</td>
-    > <td class="org-left">Teach VC-Dir to automatically add and remove marks on other lines</td>
-    > </tr>
-    > </tbody>
-    > </table>
-    > 
-    > commit 936b2efdb389488d291086d5c2189fd1a7170aa6
-    > Author: Sean Whitton &lt;spwhitton@spwhitton.name&gt;
-    > Date:   Sun Apr 6 11:18:57 2025 +0800
-    > 
-    > Teach VC-Dir to automatically add and remove marks on other lines
-    > 
-    > -   lisp/vc/vc-dir.el (vc-dir-allow-mass-mark-changes): New option.
-    > 
-    > (vc-dir-parent-marked-p): Replace with &hellip;
-    > (vc-dir&ndash;parent): &hellip; this.
-    > (vc-dir-children-marked-p): Replace with &hellip;
-    > (vc-dir&ndash;children): &hellip; this.
-    > (vc-dir-mark-file): Unmark subitems before marking a directory.
-    > Offer to unmark a directory before marking a subitem.
-    > (vc-dir-unmark-file): For an implicitly marked item, offer to
-    > unmark it by marking everything else that's implicitly marked.
-    > For an unmarked directory with marked subitems, offer to unmark
-    > them all.
-    > 
-    > -   etc/NEWS: Document the changes.
+    <div><pre>{`* | 936b2efdb38 2025-04-06 (10 days ago) Sean Whitton
+    | |   Teach VC-Dir to automatically add and remove marks on other lines
+    commit 936b2efdb389488d291086d5c2189fd1a7170aa6
+    Author: Sean Whitton <spwhitton@spwhitton.name>
+    Date:   Sun Apr 6 11:18:57 2025 +0800
+    
+    Teach VC-Dir to automatically add and remove marks on other lines
+    
+    * lisp/vc/vc-dir.el (vc-dir-allow-mass-mark-changes): New option.
+    (vc-dir-parent-marked-p): Replace with ...
+    (vc-dir--parent): ... this.
+    (vc-dir-children-marked-p): Replace with ...
+    (vc-dir--children): ... this.
+    (vc-dir-mark-file): Unmark subitems before marking a directory.
+    Offer to unmark a directory before marking a subitem.
+    (vc-dir-unmark-file): For an implicitly marked item, offer to
+    unmark it by marking everything else that's implicitly marked.
+    For an unmarked directory with marked subitems, offer to unmark
+    them all.
+    * etc/NEWS: Document the changes.
+    `}</pre></div>
 -   `vc-setup-buffer`: Don't pass a string to buffer-live-p.
     
-    > -   | 2310c12658c 2025-04-09 (7 days ago) Sean Whitton
-    > 
-    > <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    > 
-    > 
-    > <colgroup>
-    > <col  class="org-left" />
-    > 
-    > <col  class="org-left" />
-    > </colgroup>
-    > <tbody>
-    > <tr>
-    > <td class="org-left">&nbsp;</td>
-    > <td class="org-left">; vc-setup-buffer: Don't pass a string to buffer-live-p.</td>
-    > </tr>
-    > </tbody>
-    > </table>
-    > 
-    > commit 2310c12658c4b563f9860cb1196bab0d56c6f94d
-    > Author: Sean Whitton &lt;spwhitton@spwhitton.name&gt;
-    > Date:   Wed Apr 9 11:04:26 2025 +0800
-    > 
-    > ; vc-setup-buffer: Don't pass a string to buffer-live-p.
+    <div><pre>{`* | 2310c12658c 2025-04-09 (7 days ago) Sean Whitton
+    | |   ; vc-setup-buffer: Don't pass a string to buffer-live-p.
+    commit 2310c12658c4b563f9860cb1196bab0d56c6f94d
+    Author: Sean Whitton <spwhitton@spwhitton.name>
+    Date:   Wed Apr 9 11:04:26 2025 +0800
+    
+    ; vc-setup-buffer: Don't pass a string to buffer-live-p.
+    `}</pre></div>
 -   savehist.el: Handle concurrent access to \`savehist-file\`
     
-    > -   bfeb755e03b 2025-04-12 (3 days ago) Stefan Monnier
-    > 
-    > <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    > 
-    > 
-    > <colgroup>
-    > <col  class="org-left" />
-    > </colgroup>
-    > <tbody>
-    > <tr>
-    > <td class="org-left">savehist.el: Handle concurrent access to `savehist-file`</td>
-    > </tr>
-    > </tbody>
-    > </table>
-    > 
-    > commit bfeb755e03b5cab8f1f234b1a54afbcfd71f9eb2
-    > Author: Stefan Monnier &lt;monnier@iro.umontreal.ca&gt;
-    > Date:   Sat Apr 12 22:43:20 2025 -0400
-    > 
-    > savehist.el: Handle concurrent access to \`savehist-file\`
-    > 
-    > -   lisp/savehist.el (savehist&ndash;manage-timer): Minor simplification.
-    > 
-    > (savehist-coding-system): Use \`utf-8-emacs-unix\` so it works even if
-    > some history entries contain chars that aren't in Unicode.
-    > (savehist-loaded): Mark it obsolete.
-    > (savehist&ndash;file-sync-modtime): New var to replace it.
-    > (savehist&ndash;file-modtime, savehist&ndash;merge): New functions.
-    > (savehist&ndash;reload): New function, extracted from \`savehist-mode\`.
-    > Make it merge the old history and the newly loaded one.
-    > Remember the time of sync in \`savehist&ndash;file-sync-modtime\`.
-    > (savehist-mode): Use it.
-    > (savehist-save): Use it as well, and set \`savehist&ndash;file-sync-modtime\`.
-    > (savehist&ndash;last-autosave): New var.
-    > (savehist-autosave): Use it to skip saves when not enough time has passed.
+    <div><pre>{`* bfeb755e03b 2025-04-12 (3 days ago) Stefan Monnier
+    |   savehist.el: Handle concurrent access to \`savehist-file\`
+    commit bfeb755e03b5cab8f1f234b1a54afbcfd71f9eb2
+    Author: Stefan Monnier <monnier@iro.umontreal.ca>
+    Date:   Sat Apr 12 22:43:20 2025 -0400
+    
+    savehist.el: Handle concurrent access to \`savehist-file\`
+    
+    * lisp/savehist.el (savehist--manage-timer): Minor simplification.
+    (savehist-coding-system): Use \`utf-8-emacs-unix\` so it works even if
+    some history entries contain chars that aren't in Unicode.
+    (savehist-loaded): Mark it obsolete.
+    (savehist--file-sync-modtime): New var to replace it.
+    (savehist--file-modtime, savehist--merge): New functions.
+    (savehist--reload): New function, extracted from \`savehist-mode\`.
+    Make it merge the old history and the newly loaded one.
+    Remember the time of sync in \`savehist--file-sync-modtime\`.
+    (savehist-mode): Use it.
+    (savehist-save): Use it as well, and set \`savehist--file-sync-modtime\`.
+    (savehist--last-autosave): New var.
+    (savehist-autosave): Use it to skip saves when not enough time has passed.
+    `}</pre></div>
 -   Better diagnostic capabilities in flymake 1.4.0
 -   Awesome: `mode-line-collapse-minor-modes`
     Only applies to active minor modes (unlike minions.el, which shows all minor modes that are hidden). If any minor mode is hidden, then an ellipsis will be shown at the end of the mode line lighters section.
 -   New 'fancy value for `flymake-show-diagnostics-at-end-of-line` ([commit diff](https://git.savannah.gnu.org/cgit/emacs.git/commit/etc/NEWS?id=0262e3e158e35770f864d3131baf8f1793a20e58))
     
-    > Enhanced 'flymake-show-diagnostics-at-end-of-line'
-    > The new value 'fancy' allowed for this variable will attempt to layout
-    > diagnostics below the affected line using unicode graphics to point to
-    > diagnostic locus.
+    <div><pre>{`Enhanced 'flymake-show-diagnostics-at-end-of-line'
+    The new value 'fancy' allowed for this variable will attempt to layout
+    diagnostics below the affected line using unicode graphics to point to
+    diagnostic locus.
+    `}</pre></div>
     
     Note that it works best (i) when the line-spacing is 0 (because of the vertical bars) and (ii) when there aren't many diagnostics per line
 -   `buffer-match-p` (and therefore `display-buffer-alist`) now accepts the "this-command" condition, allowing per-command buffer display rules<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>
     
-    > -   343f0c44f35 2025-05-01 (75 minutes ago) Sean Whitton (upstream/master, upstream/HEAD)
-    > 
-    > <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    > 
-    > 
-    > <colgroup>
-    > <col  class="org-left" />
-    > </colgroup>
-    > <tbody>
-    > <tr>
-    > <td class="org-left">New this-command buffer display action alist entry</td>
-    > </tr>
-    > </tbody>
-    > </table>
-    > 
-    > commit 343f0c44f35c41b93c66f67da0ddeceb98bbdb93
-    > Author: Sean Whitton &lt;spwhitton@spwhitton.name&gt;
-    > Date:   Thu May 1 20:55:56 2025 +0800
-    > 
-    > New this-command buffer display action alist entry
-    > 
-    > -   lisp/subr.el (buffer-match-p): New this-command cons cell
-    > 
-    > condition to implement new this-command buffer display action
-    > alist entry (bug#78082).
-    > 
-    > -   lisp/window.el (display-buffer):
-    > -   doc/lispref/windows.texi (Buffer Display Action Alists):
-    > -   etc/NEWS: Document the new buffer display action alist entry.
+    <div><pre>{`* 343f0c44f35 2025-05-01 (75 minutes ago) Sean Whitton (upstream/master, upstream/HEAD)
+    |   New this-command buffer display action alist entry
+    commit 343f0c44f35c41b93c66f67da0ddeceb98bbdb93
+    Author: Sean Whitton <spwhitton@spwhitton.name>
+    Date:   Thu May 1 20:55:56 2025 +0800
+    
+    New this-command buffer display action alist entry
+    
+    * lisp/subr.el (buffer-match-p): New this-command cons cell
+    condition to implement new this-command buffer display action
+    alist entry (bug#78082).
+    * lisp/window.el (display-buffer):
+    * doc/lispref/windows.texi (Buffer Display Action Alists):
+    * etc/NEWS: Document the new buffer display action alist entry.
+    `}</pre></div>
 -   New `native-comp-async-on-battery-power` option
 -   Add `next-error` support for flymake diagnostics buffers
 -   `delete-trailing-whitespace-mode`
     
-    > -   8a19c249f81 2025-05-05 (7 days ago) Stefan Monnier
-    > 
-    > <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    > 
-    > 
-    > <colgroup>
-    > <col  class="org-left" />
-    > </colgroup>
-    > <tbody>
-    > <tr>
-    > <td class="org-left">simple.el (delete-trailing-whitespace-mode): New minor mode (bug#78264)</td>
-    > </tr>
-    > </tbody>
-    > </table>
-    > 
-    > commit 8a19c249f813e9f3830308e40f0205d7665f78a3
-    > Author: Stefan Monnier &lt;monnier@iro.umontreal.ca&gt;
-    > Date:   Mon May 5 11:55:29 2025 -0400
-    > 
-    > simple.el (delete-trailing-whitespace-mode): New minor mode (bug#78264)
-    > 
-    > Partly motivated by bug#78097.
-    > 
-    > -   lisp/simple.el (delete-trailing-whitespace-if-possible): New function.
-    > 
-    > (delete-trailing-whitespace-mode): New minor mode.
-    > 
-    > -   lisp/editorconfig.el (editorconfig-trim-whitespaces-mode):
-    > 
-    > Change default to \`delete-trailing-whitespace-mode\`.
-    > (editorconfig&ndash;get-trailing-ws): Simplify accordingly.
-    > (editorconfig&ndash;add-hook-safe-p): Delete function.  Don't touch
-    > \`safe-local-eval-function\` any more.
+    <div><pre>{`* 8a19c249f81 2025-05-05 (7 days ago) Stefan Monnier
+    |   simple.el (delete-trailing-whitespace-mode): New minor mode (bug#78264)
+    commit 8a19c249f813e9f3830308e40f0205d7665f78a3
+    Author: Stefan Monnier <monnier@iro.umontreal.ca>
+    Date:   Mon May 5 11:55:29 2025 -0400
+    
+    simple.el (delete-trailing-whitespace-mode): New minor mode (bug#78264)
+    
+    Partly motivated by bug#78097.
+    
+    * lisp/simple.el (delete-trailing-whitespace-if-possible): New function.
+    (delete-trailing-whitespace-mode): New minor mode.
+    
+    * lisp/editorconfig.el (editorconfig-trim-whitespaces-mode):
+    Change default to \`delete-trailing-whitespace-mode\`.
+    (editorconfig--get-trailing-ws): Simplify accordingly.
+    (editorconfig--add-hook-safe-p): Delete function.  Don't touch
+    \`safe-local-eval-function\` any more.
+    `}</pre></div>
 -   New `vc-async-checkin` for async Git and Mercurial vc checkin (e.g., committing)
     
-    > -   8e02537d0be 2025-04-05 (5 weeks ago) Sean Whitton
-    > 
-    > <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    > 
-    > 
-    > <colgroup>
-    > <col  class="org-left" />
-    > </colgroup>
-    > <tbody>
-    > <tr>
-    > <td class="org-left">New vc-async-checkin user option</td>
-    > </tr>
-    > </tbody>
-    > </table>
-    > 
-    > commit 8e02537d0be3cfdeaaf7764e2ef2db8b66de542a
-    > Author: Sean Whitton &lt;spwhitton@spwhitton.name&gt;
-    > Date:   Sat Apr 5 10:58:35 2025 +0800
-    > 
-    > New vc-async-checkin user option
-    > 
-    > -   lisp/vc/vc.el (vc-async-checkin): New option.
-    > 
-    > (vc-checkin): Don't use with-vc-properties on or display
-    > messages around asynchronous checkins.
-    > 
-    > -   lisp/vc/vc-git.el (vc-git-checkin):
-    > -   lisp/vc/vc-hg.el (vc-hg-checkin, vc-hg-checkin-patch): Perform
-    > 
-    > an async checkin operation when vc-async-checkin is non-nil.
-    > 
-    > -   doc/emacs/vc1-xtra.texi (General VC Options):
-    > -   etc/NEWS: Document the new option.
-    > 
-    > -   lisp/vc/vc-dispatcher.el (vc-wait-for-process-before-save):
-    > 
-    > New function.
-    > (vc-set-async-update): If the current buffer visits a file, call
-    > vc-refresh-state.
-    > 
-    > -   lisp/vc/vc-hg.el (vc-wait-for-process-before-save): Autoload.
-    > 
-    > (vc-hg&ndash;async-command, vc-hg&ndash;async-buffer, vc-hg&ndash;command-1):
-    > New utilities, partially factored out of vc-hg-command.
-    > (vc-hg-merge-branch): Use vc-hg&ndash;async-command, thereby newly
-    > respecting vc-hg-global-switches.
+    <div><pre>{`* 8e02537d0be 2025-04-05 (5 weeks ago) Sean Whitton
+    |   New vc-async-checkin user option
+    commit 8e02537d0be3cfdeaaf7764e2ef2db8b66de542a
+    Author: Sean Whitton <spwhitton@spwhitton.name>
+    Date:   Sat Apr 5 10:58:35 2025 +0800
+    
+    New vc-async-checkin user option
+    
+    * lisp/vc/vc.el (vc-async-checkin): New option.
+    (vc-checkin): Don't use with-vc-properties on or display
+    messages around asynchronous checkins.
+    * lisp/vc/vc-git.el (vc-git-checkin):
+    * lisp/vc/vc-hg.el (vc-hg-checkin, vc-hg-checkin-patch): Perform
+    an async checkin operation when vc-async-checkin is non-nil.
+    * doc/emacs/vc1-xtra.texi (General VC Options):
+    * etc/NEWS: Document the new option.
+    
+    * lisp/vc/vc-dispatcher.el (vc-wait-for-process-before-save):
+    New function.
+    (vc-set-async-update): If the current buffer visits a file, call
+    vc-refresh-state.
+    * lisp/vc/vc-hg.el (vc-wait-for-process-before-save): Autoload.
+    (vc-hg--async-command, vc-hg--async-buffer, vc-hg--command-1):
+    New utilities, partially factored out of vc-hg-command.
+    (vc-hg-merge-branch): Use vc-hg--async-command, thereby newly
+    respecting vc-hg-global-switches.
+    `}</pre></div>
 -   Prettify and improve hideshow: `hs-display-lines-hidden` and “Buttonize the ellipsis and optionally display in the ellipsis the total number of hidden lines.”
 -   New `log-edit-hook` which can be combined nicely with new `log-edit-show-diff` to automatically display diff of changes to commit. From b9886bb2069:
     
-    > New 'log-edit-hook' option to display diff of changes to commit.
-    > 
-    > You can customize 'log-edit-hook' to include its new
-    > 'log-edit-maybe-show-diff' option to enable displaying a diff of the
-    > changes to be committed in a window.  This is like the 'C-c C-d' command
-    > in Log Edit mode buffers, except that it does not select the **vc-diff**
-    > buffer's window, and so works well when added to 'log-edit-hook'.
+    <div><pre>{`New 'log-edit-hook' option to display diff of changes to commit.
+    
+    You can customize 'log-edit-hook' to include its new
+    'log-edit-maybe-show-diff' option to enable displaying a diff of the
+    changes to be committed in a window.  This is like the 'C-c C-d' command
+    in Log Edit mode buffers, except that it does not select the *vc-diff*
+    buffer's window, and so works well when added to 'log-edit-hook'.
+    `}</pre></div>
 -   [New user option vc-dir-hide-up-to-date-on-revert - emacs.git - Emacs source repository](https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/etc/NEWS?id=f9b311464db2e1cc34faaf2c86a9c46216337013)
 -   [Add option for not highlight parens inside comments or strings - emacs.git - Emacs source repository](https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/etc/NEWS?id=12397e3eb00c052455f03dc024e9335834f0c6ef)
 -   New `crm-prompt` (patch contributed by vertico author)
@@ -303,82 +198,49 @@ title: "Features I'm looking forward to in Emacs 31"
 -   [VC: New incoming &amp; outgoing diff commands (bug#62940) - emacs.git - Emacs source repository](https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/etc/NEWS?id=af78b4d333e81a544ebf10d57067cca8c2fc732f)
 -   f746762e74a New command `mode-line-invisible-mode`
     
-    > -   f746762e74a 2025-06-23 (3 weeks ago) Elías Gabriel Pérez
-    > 
-    > <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    > 
-    > 
-    > <colgroup>
-    > <col  class="org-left" />
-    > </colgroup>
-    > <tbody>
-    > <tr>
-    > <td class="org-left">New command 'mode-line-invisible-mode'</td>
-    > </tr>
-    > </tbody>
-    > </table>
-    > 
-    > commit f746762e74adeac8beaa73abcf20ee5e74298597
-    > Author: Elías Gabriel Pérez &lt;eg642616@gmail.com&gt;
-    > Date:   Mon Jun 23 12:50:28 2025 -0600
-    > 
-    > New command 'mode-line-invisible-mode'
-    > 
-    > This new command allows hide the mode line in the current
-    > buffer.  (Bug#78881)
-    > 
-    > -   doc/emacs/display.texi (Optional Mode Line): Document feature.
-    > -   etc/NEWS: Announce changes.
-    > -   lisp/simple.el (mode-line-invisible&ndash;buf-state): New buffer
-    > 
-    > local variable.
-    > (mode-line-invisible-mode): New minor mode.
+    <div><pre>{`  * f746762e74a 2025-06-23 (3 weeks ago) Elías Gabriel Pérez
+    |   New command 'mode-line-invisible-mode'
+    commit f746762e74adeac8beaa73abcf20ee5e74298597
+    Author: Elías Gabriel Pérez <eg642616@gmail.com>
+    Date:   Mon Jun 23 12:50:28 2025 -0600
+    
+      New command 'mode-line-invisible-mode'
+      
+      This new command allows hide the mode line in the current
+      buffer.  (Bug#78881)
+      
+      * doc/emacs/display.texi (Optional Mode Line): Document feature.
+      * etc/NEWS: Announce changes.
+      * lisp/simple.el (mode-line-invisible--buf-state): New buffer
+      local variable.
+      (mode-line-invisible-mode): New minor mode.
+    `}</pre></div>
 -   9d750c7e804 New global minor mode vc-auto-revert-mode
     
-    > -   9d750c7e804 2025-07-13 (31 minutes ago) Sean Whitton (upstream/master, upstream/HEAD)
-    > 
-    > <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-    > 
-    > 
-    > <colgroup>
-    > <col  class="org-left" />
-    > </colgroup>
-    > <tbody>
-    > <tr>
-    > <td class="org-left">New global minor mode vc-auto-revert-mode</td>
-    > </tr>
-    > </tbody>
-    > </table>
-    > 
-    > commit 9d750c7e8041437758c919f6088d6f3686847812
-    > Author: Sean Whitton &lt;spwhitton@spwhitton.name&gt;
-    > Date:   Sun Jul 13 12:50:22 2025 +0100
-    > 
-    > New global minor mode vc-auto-revert-mode
-    > 
-    > -   lisp/vc/vc-hooks.el (auto-revert-mode): Declare.
-    > 
-    > (vc-auto-revert-mode): New global minor mode.
-    > (vc-turn-on-auto-revert-mode-for-tracked-files): New function.
-    > 
-    > -   lisp/vc/vc-dispatcher.el (auto-revert-mode)
-    > 
-    > (auto-revert-buffers): Declare.
-    > (vc-resynch-window): Don't call vc-revert-buffer-internal when
-    > auto-revert-mode will revert the buffer.  Call
-    > auto-revert-buffers to ensure that this reversion happens in a
-    > timely manner.
-    > 
-    > -   lisp/vc/vc.el (vc-register): Apply vc-auto-revert-mode to
-    > 
-    > buffers visiting newly registered files.
-    > 
-    > -   lisp/emacs-lisp/easy-mmode.el (define-globalized-minor-mode):
-    > 
-    > Improve the generated docstring.
-    > 
-    > -   doc/emacs/vc1-xtra.texi (VC Auto-Reverting):
-    > -   etc/NEWS: Document the new minor mode.
+    <div><pre>{`  * 9d750c7e804 2025-07-13 (31 minutes ago) Sean Whitton (upstream/master, upstream/HEAD)
+    |   New global minor mode vc-auto-revert-mode
+    commit 9d750c7e8041437758c919f6088d6f3686847812
+    Author: Sean Whitton <spwhitton@spwhitton.name>
+    Date:   Sun Jul 13 12:50:22 2025 +0100
+    
+      New global minor mode vc-auto-revert-mode
+      
+      * lisp/vc/vc-hooks.el (auto-revert-mode): Declare.
+      (vc-auto-revert-mode): New global minor mode.
+      (vc-turn-on-auto-revert-mode-for-tracked-files): New function.
+      * lisp/vc/vc-dispatcher.el (auto-revert-mode)
+      (auto-revert-buffers): Declare.
+      (vc-resynch-window): Don't call vc-revert-buffer-internal when
+      auto-revert-mode will revert the buffer.  Call
+      auto-revert-buffers to ensure that this reversion happens in a
+      timely manner.
+      * lisp/vc/vc.el (vc-register): Apply vc-auto-revert-mode to
+      buffers visiting newly registered files.
+      * lisp/emacs-lisp/easy-mmode.el (define-globalized-minor-mode):
+      Improve the generated docstring.
+      * doc/emacs/vc1-xtra.texi (VC Auto-Reverting):
+      * etc/NEWS: Document the new minor mode.
+    `}</pre></div>
     
     A less computing-taxing solution to `global-auto-revert-mode` since it is on-demand (after VC changes).
 -   [Bind vc-rename-file to C-x v R - emacs.git - Emacs source repository](https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/etc/NEWS?id=09e205fe60f074e143298e306431cb62b60a890c)
