@@ -110,19 +110,19 @@ In sum:
 <div>
 flowchart LR
 A((Plain-text)) &mdash; B&#123;Org-export&#125;
-B ===> C
-B ===>D
-B ===> E
+B ===&gt; C
+B ===&gt;D
+B ===&gt; E
 
 subgraph CSL Processor
 C&#123;&#123;HTML, MD, ODT, plain-text, etc.&#125;&#125;
 D[LaTeX]
-D -.->|Compile with citations as rendered text| F(PDF)
+D -.-&gt;|Compile with citations as rendered text| F(PDF)
 end
 
 subgraph Bibtex and Natbib processor
 E[LaTeX]
-E -.->|Compile with citations as LaTeX commands|G(PDF)
+E -.-&gt;|Compile with citations as LaTeX commands|G(PDF)
 end
 </div>
 

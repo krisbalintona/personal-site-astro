@@ -52,20 +52,27 @@ This option is used to define the value of other relevant paths."
 
 (defun org-mdx-plain-text (text info)
   "Transcode a TEXT string into MDX-safe plain text.
-Applies `org-md-plain-text' first, then escapes constructs that are
-valid in Markdown but invalid in MDX's JSX parser.
+Escapes constructs that are valid in Markdown but invalid in MDX's JSX
+parser, then applies `org-md-plain-text'.
 
 TEXT is the string to transcode.  INFO is a plist holding contextual
 information."
-  (thread-last (org-md-plain-text text info)
-               ;; < followed by a word character is an unclosed JSX
-               ;; tag (e.g., <MyVar>, <email@domain>)
-               (replace-regexp-in-string
-                (rx "<" (group (any alphanumeric "_")))
-                "&lt;\\1")
-               ;; Bare { and } are parsed as JSX expressions
+  ;; Escape characters that would be mistaken from JSX expression
+  ;; syntax
+  (thread-last text
+               ;; "&" must be replaced first since later replacements
+               ;; insert this character
+               (replace-regexp-in-string "&" "&amp;")
+               (replace-regexp-in-string "<" "&lt;")
+               (replace-regexp-in-string ">" "&gt;")
                (replace-regexp-in-string "{" "&#123;")
-               (replace-regexp-in-string "}" "&#125;")))
+               (replace-regexp-in-string "}" "&#125;")
+               ;; Then do the default, `org-md-plain-text'.  Go last
+               ;; since it may introduce characters that should not be
+               ;; escaped yet would be replaced above if called first.
+               ;; And it is safe to go last since it doesn't modify
+               ;; any of the replacements above.
+               (funcall (lambda (s) (org-md-plain-text s info)))))
 
 (defun org-mdx-src-block (src-block _contents info)
   "Transcode a SRC-BLOCK element from Org to a markdown fenced code block.
@@ -134,16 +141,15 @@ as a plist."
 
 (defun org-mdx--export-get-reference-advice (orig datum info)
   "Advice for `org-export-get-reference' to generate stable IDs.
-Normally,`org-export-get-reference' generates randomized IDs
-(see `org-export-new-reference') that are used as the values of the id
+Normally,`org-export-get-reference' generates randomized IDs \(see
+`org-export-new-reference') that are used as the values of the id
 attributes of elements throughout the document.  Advise the generation
 of these IDs specially for the `mdx' backend such that they are
-stable (unchanging) across exports:
-- For headlines, generate a deterministic slug from the headline text,
-  appending a counter only for duplicates.
-- For other elements, generate a reference of the form TYPE-N.
-When not using the `mdx' backend, call `org-export-get-reference'
-normally.
+stable (unchanging) across exports: - For headlines, generate a
+deterministic slug from the headline text, appending a counter only for
+duplicates.  - For other elements, generate a reference of the form
+TYPE-N.  When not using the `mdx' backend, call
+`org-export-get-reference' normally.
 
 Important note: although the exported content uses these fixed IDs, the
 final version presented on the site may use different ones, depending on

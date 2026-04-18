@@ -16,9 +16,9 @@ occur is an interactive native-comp-function in replace.el.<br />
 <br />
 It is bound to M-s o.<br />
 <br />
-(occur REGEXP &optional **NLINES REGION**)<br />
+(occur REGEXP &amp;optional **NLINES REGION**)<br />
 <br />
-Inferred type: (function (t &optional t t) t)<br />
+Inferred type: (function (t &amp;optional t t) t)<br />
 <br />
 Show all lines in the current buffer containing a match for REGEXP.<br />
 If a match spreads across multiple lines, all those lines are shown.<br />
@@ -41,7 +41,7 @@ When NLINES is a string or when the function is called<br />
 interactively with prefix argument without a number (C-u alone<br />
 as prefix) the matching strings are collected into the ‘\*Occur\*’<br />
 buffer by using NLINES as a replacement regexp.  NLINES may<br />
-contain \\& and \N which convention follows replace-match.<br />
+contain \\&amp; and \N which convention follows replace-match.<br />
 For example, providing "defun\s +$\S +$" for REGEXP and<br />
 "\\1" for NLINES collects all the function names in a lisp<br />
 program.  When there is no parenthesized subexpressions in REGEXP<br />
