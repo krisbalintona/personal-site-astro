@@ -35,7 +35,7 @@
 
 ;;;; Variables and options
 
-(defcustom org-mdx-root-dir (expand-file-name "../../.." load-file-name)
+(defcustom org-mdx-root-dir (project-root (project-current))
   "Root directory of project.
 This option is used to define the value of other relevant paths."
   :type 'directory
