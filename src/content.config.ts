@@ -1,4 +1,4 @@
-import { defineCollection } from "astro:content";
+import { type CollectionEntry, defineCollection } from "astro:content";
 import sluggify from "@lib/sluggify.ts";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
@@ -38,3 +38,12 @@ const articles = defineCollection({
 });
 
 export const collections = { articles };
+
+// FIXME 2026-04-19: Right now all my collections are post
+// collections.  However, in the future, once I have non-post
+// collections, I should do something more like:
+//
+// type PostCollectionNames = "articles";
+//
+type PostCollectionNames = keyof typeof collections;
+export type AnyPost = CollectionEntry<PostCollectionNames>;
