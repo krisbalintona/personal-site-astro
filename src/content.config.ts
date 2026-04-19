@@ -34,7 +34,7 @@ const postSchema = z
 export type Post = z.infer<typeof postSchema>;
 
 const articles = defineCollection({
-  loader: glob({ pattern: "*/index.mdx", base: "./src/lib/posts" }),
+  loader: glob({ pattern: "*/index.mdx", base: "./src/content/posts" }),
   schema: postSchema,
 });
 
