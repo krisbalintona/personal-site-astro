@@ -1,0 +1,11 @@
+---
+import { getAllTags } from "@lib/getTags";
+
+const tags = await getAllTags();
+---
+
+{tags.length > 0 && tags.map((tag: string) => (
+  <li>
+    {tag}
+  </li>
+))}
