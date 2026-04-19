@@ -33,7 +33,8 @@ Here's a look at my own directories.
 
 1.  My `no-littering-etc-directory`, located at `~/.emacs.d/etc/`:
     
-    <div><pre>{`$ tree -L 1
+    ```
+    $ tree -L 1
     .
     ├── abbrev.el
     ├── custom.el
@@ -41,10 +42,11 @@ Here's a look at my own directories.
     └── transient
     
     3 directories, 2 files
-    `}</pre></div>
+    ```
 2.  My `no-littering-var-directory`, located at `~/.emacs.d/var/`:
     
-    <div><pre>{`$ tree -L 1
+    ```
+    $ tree -L 1
     .
     ├── abbrev-mode
     ├── amx-save.el
@@ -129,7 +131,7 @@ Here's a look at my own directories.
     └── wombag
     
     60 directories, 22 files
-    `}</pre></div>
+    ```
 
 Without no-littering, I would either (i) have a ton of directories in my .emacs.d or (ii) have to define my own variables whose values are directories and manually, whenever I install a new package, set their options to write their files into these directories&mdash;basically what no-littering already does but without no-littering's existing integrations. This way, my Emacs directory is neater.
 
@@ -146,7 +148,8 @@ No-littering also provides the little-known `no-littering-theme-backups`. The TL
 
 Its docstring elaborates the mechanism and purpose of this function in greater depth:
 
-<div><pre>{`no-littering-theme-backups is an autoloaded native-comp-function in
+```
+no-littering-theme-backups is an autoloaded native-comp-function in
 no-littering.el.
 
 (no-littering-theme-backups)
@@ -193,5 +196,5 @@ regardless of the location of the visited files.  In other words,
 even when using the default values, there is a significant risk
 of leaking sensitive data, and if you want to reduce that, then
 you must turn of these features completely.
-`}</pre></div>
+```
 

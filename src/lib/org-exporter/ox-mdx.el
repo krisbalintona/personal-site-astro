@@ -83,19 +83,15 @@ for the export process."
 
 (defun org-mdx-example-block (example-block contents info)
   "Transcode EXAMPLE-BLOCK element into MDX format.
-Wrap in a `div' and `pre' tag.
+Wrap in a fenced code block.
 
 EXAMPLE-BLOCK is org element example block.  CONTENTS is always nil for
 example blocks.  INFO is a plist holding information for the export
 process."
-  (let* ((block-text (org-remove-indentation
-                      (org-export-format-code-default example-block info)))
-         (escaped-text
-          (thread-last block-text
-                       ;; Escape backticks and backslashes
-                       (replace-regexp-in-string "\\\\" "\\\\\\\\")
-                       (replace-regexp-in-string "`" "\\\\`"))))
-    (format "<div><pre>{`%s`}</pre></div>" escaped-text)))
+  (let ((block-text (string-trim-right
+                     (org-remove-indentation
+                      (org-export-format-code-default example-block info)))))
+    (format "```\n%s\n```" block-text)))
 
 (defun org-mdx-src-block (src-block _contents info)
   "Transcode a SRC-BLOCK element from Org to a markdown fenced code block.
