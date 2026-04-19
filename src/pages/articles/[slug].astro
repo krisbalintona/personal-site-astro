@@ -1,10 +1,10 @@
 ---
 import { getCollection } from "astro:content";
 import PostLayout from "@layouts/PostLayout.astro";
-import isPublished from "@lib/isPublished";
+import shouldShowEntry from "@lib/shouldShowEntry";
 
 export async function getStaticPaths() {
-  return (await getCollection("articles", isPublished)).map((article) => ({
+  return (await getCollection("articles", shouldShowEntry)).map((article) => ({
     params: { slug: article.data.slug },
     props: { article },
   }));
