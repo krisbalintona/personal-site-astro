@@ -8,7 +8,34 @@ interface Props {
 }
 
 const { post } = Astro.props;
+
+const date = post.data.date;
+const title = post.data.title;
+const formattedDate = date.toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+const tags = post.data.tags;
 const { Content } = await render(post);
 ---
 
-<BaseLayout pageTitle={post.data.title}> <Content /> </BaseLayout>
+<BaseLayout pageTitle={title}>
+  <div id="post-header">
+    <i id="post-date">{formattedDate}</i>
+    <h1 id="post-title">{title}</h1>
+    <hr>
+  </div>
+
+  <Content />
+
+  <div id="post-footer">
+    <hr>
+    <div id="post-tags">
+      {tags && <b><i>tagged:</i></b>}
+      {tags?.map((tag, i) =>
+        <>{i > 0 && ", "}<i>{tag}</i></>
+      )}
+    </div>
+  </div>
+</BaseLayout>
