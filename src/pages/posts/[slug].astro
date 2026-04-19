@@ -1,10 +1,11 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import sluggify from "@lib/sluggify";
 
 export async function getStaticPaths() {
   return (await getCollection("posts")).map((post) => ({
-    params: { slug: post.id },
+    params: { slug: sluggify(post.data.title) },
     props: { post },
   }));
 }

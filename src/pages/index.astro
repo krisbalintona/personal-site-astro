@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import sluggify from "@lib/sluggify";
 
 const posts = await getCollection("posts");
 
@@ -12,7 +13,7 @@ const pageTitle: string = "Home page";
 
   {posts.map((post) => (
       <li>
-        <a href={`posts/${post.id}`}>{post.data.title}</a>, posted on {post.data.date}
+        <a href={`posts/${sluggify(post.data.title)}`}>{post.data.title}</a>, posted on {post.data.date}
       </li>
     ))}
 </BaseLayout>

@@ -413,7 +413,7 @@ INFO is a plist holding export information."
                ;; Prevent this
                :ascii-text-width ,most-positive-fixnum))))
 
-(defun org-mdx--title-to-slug (title)
+(defun org-mdx--title-to-subdirectory-name (title)
   "Transform TITLE into a slug.
 This slug is used as the directory name associated with a post."
   (thread-last (downcase title)
@@ -428,8 +428,8 @@ then the output path is relative to `default-directory'.
 
 
 The returned path takes the form of \"TIMESTAMP--SLUG\", where TIMESTAMP
-is based on the date property of the post and SLUG is the title of the
-post passed to `org-mdx--title-to-slug'.
+is based on the date property of the post and SLUG is the return value
+of the post title passed to `org-mdx--title-to-subdirectory-name'.
 
 This function is called from the point in org buffer to-be exported.
 
@@ -458,7 +458,7 @@ directory."
            ;; Determine export file path for buffer
            (format "%s--%s"
                    (org-format-timestamp date-timestamp "%Y%m%d%H%M")
-                   (org-mdx--title-to-slug title))
+                   (org-mdx--title-to-subdirectory-name title))
            ;; As a fallback, ask user
            (read-file-name "Output directory: " org-mdx-posts-dir))))
     (expand-file-name directory output-dir)))
@@ -565,7 +565,8 @@ Return the output directory's name."
   ;; Used to define new options or overwrite those of the parent
   ;; backend
   :options-alist
-  '((:html-self-link-headlines nil "html-self-link-headlines" t))
+  '(;; REVIEW 2026-04-18: Does this have an effect in the md backend?
+    (:html-self-link-headlines nil "html-self-link-headlines" t))
   
   ;; Used to add new transcoders or overwrite those of the parent
   ;; backend.  See `org-export-define-backend' for more information on
