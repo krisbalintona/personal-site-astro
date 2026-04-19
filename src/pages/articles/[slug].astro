@@ -1,0 +1,16 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import sluggify from "@lib/sluggify";
+
+export async function getStaticPaths() {
+  return (await getCollection("articles")).map((article) => ({
+    params: { slug: sluggify(article.data.title) },
+    props: { article },
+  }));
+}
+const { article } = Astro.props;
+const { Content } = await render(article);
+---
+
+<BaseLayout pageTitle={article.data.title}> <Content /> </BaseLayout>

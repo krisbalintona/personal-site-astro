@@ -1,9 +1,9 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "../layouts/BaseLayout.astro";
 import sluggify from "@lib/sluggify";
+import BaseLayout from "../layouts/BaseLayout.astro";
 
-const posts = await getCollection("posts");
+const articles = await getCollection("articles");
 
 const pageTitle: string = "Home page";
 ---
@@ -11,9 +11,9 @@ const pageTitle: string = "Home page";
 <BaseLayout pageTitle={pageTitle}>
   This is home!
 
-  {posts.map((post) => (
+  {articles.map((article) => (
       <li>
-        <a href={`posts/${sluggify(post.data.title)}`}>{post.data.title}</a>, posted on {post.data.date}
+        <a href={`articles/${sluggify(article.data.title)}`}>{article.data.title}</a>, posted on {article.data.date}
       </li>
     ))}
 </BaseLayout>
