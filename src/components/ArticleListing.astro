@@ -1,0 +1,16 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import Listing, { type ListingItem } from "@components/Listing.astro";
+import sluggify from "@lib/sluggify";
+
+const articles = await getCollection("articles");
+const articleItems: ListingItem[] = articles.map(
+  (article: CollectionEntry<"articles">): ListingItem => ({
+    title: article.data.title,
+    date: article.data.date,
+    href: `articles/${sluggify(article.data.title)}`,
+  })
+);
+---
+
+<Listing items={articleItems} />

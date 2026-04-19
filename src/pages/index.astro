@@ -1,19 +1,12 @@
 ---
-import { getCollection } from "astro:content";
-import sluggify from "@lib/sluggify";
+import ArticleListing from "@components/ArticleListing.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const articles = await getCollection("articles");
-
-const pageTitle: string = "Home page";
+const pageTitle: string = "Home";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
   This is home!
 
-  {articles.map((article) => (
-      <li>
-        <a href={`articles/${sluggify(article.data.title)}`}>{article.data.title}</a>, posted on {article.data.date}
-      </li>
-    ))}
+  <ArticleListing />
 </BaseLayout>
