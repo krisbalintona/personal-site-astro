@@ -81,11 +81,11 @@ for the export process."
   ;; the replacements above.
   (org-md-plain-text (org-mdx--escape-special-chars text) info))
 
-(defun org-mdx-example-block (example-block contents info)
+(defun org-mdx-example-block (example-block _contents info)
   "Transcode EXAMPLE-BLOCK element into MDX format.
 Wrap in a fenced code block.
 
-EXAMPLE-BLOCK is org element example block.  CONTENTS is always nil for
+EXAMPLE-BLOCK is org element example block.  _CONTENTS is always nil for
 example blocks.  INFO is a plist holding information for the export
 process."
   (let ((block-text (string-trim-right
@@ -129,13 +129,13 @@ will return:
 ;; doesn't exist, then Astro will error; we fix it at that level
 ;; rather than checking in Elisp, somehow, whether that component
 ;; exists.)
-(defun org-mdx-special-block (_special-block contents info)
+(defun org-mdx-special-block (_special-block contents _info)
   "Transcode _SPECIAL-BLOCK element into MDX format.
 Wrap CONTENTS in a `div' tag.  Preserve newline characters when
 rendering CONTENTS.
 
 _SPECIAL-BLOCK is a special block org element.  CONTENTS is the
-transcoded contents/value of that element.  INFO is a communication
+transcoded contents/value of that element.  _INFO is a communication
 channel for the export process."
   ;; Preserve newline characters with the white-space CSS property
   (format "<div style=\"white-space: pre\">\n%s\n</div>" (string-trim contents)))
