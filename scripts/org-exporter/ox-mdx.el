@@ -41,7 +41,7 @@ This option is used to define the value of other relevant paths."
   :type 'directory
   :group 'org-mdx)
 
-(defcustom org-mdx-posts-dir (expand-file-name "src/lib/posts/" org-mdx-root-dir)
+(defcustom org-mdx-posts-dir (expand-file-name "src/content/posts/" org-mdx-root-dir)
   "Directory where posts will be exported to."
   :type 'directory
   :group 'org-mdx)
