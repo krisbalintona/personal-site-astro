@@ -551,7 +551,7 @@ Return the output directory's name."
                          (org-mdx--output-directory nil subtreep)))
          (outfile (expand-file-name "index.mdx" output-dir)))
     (org-mdx--prepare-output-directory output-dir)
-    (org-export-to-file 'mdx outfile async subtreep visible-only)))
+    (org-export-to-file 'mdx outfile async subtreep visible-only body-only ext-plist)))
 
 ;;;;; Define backend
 
