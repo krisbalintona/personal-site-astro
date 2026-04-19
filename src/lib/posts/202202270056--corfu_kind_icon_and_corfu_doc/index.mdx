@@ -5,16 +5,16 @@ date: 2022-02-27T00:56:00-06:00
 
 # Table of Contents
 
-1.  [Synopsis](#synopsis)
-2.  [Corfu](#corfu)
-    1.  [What is `corfu`? How does it differ from `company`?](#what-is-corfu-how-does-it-differ-from-company):ATTACH:
-    2.  [Basic](#basic)
-    3.  [Working with the recent changes to `corfu`](#working-with-the-recent-changes-to-corfu)
-    4.  [Further configuration in minibuffers and with `lsp`](#further-configuration-in-minibuffers-and-with-lsp):ATTACH:
-    5.  [End product](#end-product)
-3.  [Kind-icon](#kind-icon):ATTACH:
-4.  [Corfu-doc](#corfu-doc):ATTACH:
-5.  [Changelog](#changelog)
+-   [Synopsis](#synopsis)
+-   [Corfu](#corfu)
+    -   [What is `corfu`? How does it differ from `company`?](#what-is-corfu-how-does-it-differ-from-company)
+    -   [Basic](#basic)
+    -   [Working with the recent changes to `corfu`](#working-with-the-recent-changes-to-corfu)
+    -   [Further configuration in minibuffers and with `lsp`](#further-configuration-in-minibuffers-and-with-lsp)
+    -   [End product](#end-product)
+-   [Kind-icon](#kind-icon)
+-   [Corfu-doc](#corfu-doc)
+-   [Changelog](#changelog)
 
 <div style="white-space: pre">
 <span class="timestamp-wrapper"><span class="timestamp">[2022-11-28 Mon]</span></span> As is noted in the [`corfu-doc` repository](https://github.com/galeo/corfu-doc/issues/25), `corfu-doc` has been deprecated by the built-in `corfu-popupinfo` `corfu` extension. `corfu-popupinfo`'s functionality is roughly identical to `corfu-doc`'s, though its interface and code is naturally more idiomatic to `corfu`.
@@ -41,7 +41,7 @@ I will be going over my personal Emacs' text completion (e.g. `company-mode` and
 
 <a id="what-is-corfu-how-does-it-differ-from-company"></a>
 
-## What is `corfu`? How does it differ from `company`?     :ATTACH:
+## What is `corfu`? How does it differ from `company`?
 
 ![img](assets/gif1.gif "The default `corfu` popup window. The GIF's framerate is low, which makes `corfu` appear less performant here than in actuality.")
 
@@ -155,7 +155,7 @@ I do not use this workflow<sup><a id="fnr.3" class="footref" href="#fn.3" role="
 
 <a id="further-configuration-in-minibuffers-and-with-lsp"></a>
 
-## Further configuration in minibuffers and with `lsp`     :ATTACH:
+## Further configuration in minibuffers and with `lsp`
 
 `Corfu`'s [README](https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer) provides a way to be able to use `corfu` completion in the minibuffer:
 
@@ -282,7 +282,7 @@ default lsp-passthrough."
 
 <a id="kind-icon"></a>
 
-# Kind-icon     :ATTACH:
+# Kind-icon
 
 `Kind-icon` is essentially `company-box-icons` for `corfu`. It adds icons to the left margin of the `corfu` popup that represent the ‘function’ (e.g. variable, method, file) of that candidate.
 
@@ -320,7 +320,7 @@ The following is my configuration:
 
 <a id="corfu-doc"></a>
 
-# Corfu-doc     :ATTACH:
+# Corfu-doc
 
 `Corfu-doc` is basically `company-quickhelp` for `corfu`. It shows the documentation of the selected candidate in an adjacent popup window.
 

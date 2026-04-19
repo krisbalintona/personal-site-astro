@@ -4,23 +4,23 @@ title: "Org and LaTeX integration"
 
 # Table of Contents
 
-1.  [My desired workflow](#my-desired-workflow)
-2.  [Basic Formatting: `org-latex-classes`](#basic-formatting-org-latex-classes)
-3.  [Title pages: Creating an Org-export backend](#title-pages-creating-an-org-export-backend)
-    1.  [Customize the `org-export` LaTeX backend](#customize-the-org-export-latex-backend)
-        1.  [Backend](#backend)
-        2.  [Template](#template)
-    2.  [Final title command](#final-title-command)
-4.  [Citations and bibliographies: Org-cite](#citations-and-bibliographies-org-cite)
-    1.  [One way to specify citation style](#one-way-to-specify-citation-style)
-    2.  [My method to specify citation style](#my-method-to-specify-citation-style)
-5.  [Final result and screenshots](#final-result-and-screenshots)
-6.  [Extras](#extras)
-    1.  [Section numbers](#section-numbers)
-    2.  [Hyperref](#hyperref)
-    3.  [Table of contents](#table-of-contents)
-    4.  [Org links](#org-links)
-7.  [Full configuration](#full-configuration)
+-   [My desired workflow](#my-desired-workflow)
+-   [Basic Formatting: `org-latex-classes`](#basic-formatting-org-latex-classes)
+-   [Title pages: Creating an Org-export backend](#title-pages-creating-an-org-export-backend)
+    -   [Customize the `org-export` LaTeX backend](#customize-the-org-export-latex-backend)
+        -   [Backend](#backend)
+        -   [Template](#template)
+    -   [Final title command](#final-title-command)
+-   [Citations and bibliographies: Org-cite](#citations-and-bibliographies-org-cite)
+    -   [One way to specify citation style](#one-way-to-specify-citation-style)
+    -   [My method to specify citation style](#my-method-to-specify-citation-style)
+-   [Final result and screenshots](#final-result-and-screenshots)
+-   [Extras](#extras)
+    -   [Section numbers](#section-numbers)
+    -   [Hyperref](#hyperref)
+    -   [Table of contents](#table-of-contents)
+    -   [Org links](#org-links)
+-   [Full configuration](#full-configuration)
 
 
 
@@ -286,10 +286,10 @@ Notably, for LaTeX exports, **we can specify the style (citation style and bibli
 <p class="verse">
 ;; In any case, the library will override style-related options with those<br />
 ;; specified with the citation processor, in \`org-cite-export-processors' or<br />
-;; "cite<sub>export</sub>" keyword.  If you need to use different styles for bibliography<br />
+;; "cite\_export" keyword.  If you need to use different styles for bibliography<br />
 ;; and citations, you can separate them with "bibstyle/citestyle" syntax.  E.g.,<br />
 ;;<br />
-;;   #+cite<sub>export</sub>: biblatex authortitle/authortitle-ibid<br />
+;;   #+cite\_export: biblatex authortitle/authortitle-ibid<br />
 </p>
 
 This means that, for instance,
