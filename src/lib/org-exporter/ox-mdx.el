@@ -135,12 +135,14 @@ will return:
 ;; exists.)
 (defun org-mdx-special-block (_special-block contents info)
   "Transcode _SPECIAL-BLOCK element into MDX format.
-Wrap CONTENTS in a `div' tag.
+Wrap CONTENTS in a `div' tag.  Preserve newline characters when
+rendering CONTENTS.
 
 _SPECIAL-BLOCK is a special block org element.  CONTENTS is the
 transcoded contents/value of that element.  INFO is a communication
 channel for the export process."
-  (format "<div>\n%s\n</div>" (string-trim contents)))
+  ;; Preserve newline characters with the white-space CSS property
+  (format "<div style=\"white-space: pre\">\n%s\n</div>" (string-trim contents)))
 
 (defun ox-mdx--headline-text-to-slug (headline)
   "Slugify HEADLINE's text.
