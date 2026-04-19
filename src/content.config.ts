@@ -18,6 +18,7 @@ const postSchema = z
   .object({
     title: z.string().default("Untitled"),
     date: z.date().default(new Date("1970-01-01")),
+    draft: z.boolean().default(true),
   })
   .transform((data) => ({
     ...data,

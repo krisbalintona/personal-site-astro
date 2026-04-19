@@ -362,7 +362,8 @@ communication channel for the export process."
          (date
           (when date-timestamp
             (concat "date: " (org-format-timestamp date-timestamp "%FT%T%:z")))) ; YAML 1.1 timestamp spec
-         (frontmatter (string-trim (string-join (list title date) "\n"))))
+         (draft (concat "draft: " (plist-get info :mdx-draft-p))) ; Return YAML boolean
+         (frontmatter (string-join (delq nil (list title date draft)) "\n")))
     (concat
      "---\n"
      frontmatter
@@ -565,7 +566,8 @@ Return the output directory's name."
   ;; Used to define new options or overwrite those of the parent
   ;; backend
   :options-alist
-  '(;; REVIEW 2026-04-18: Does this have an effect in the md backend?
+  '((:mdx-draft-p "MDX_DRAFT" "mdx-draft" "true")
+    ;; REVIEW 2026-04-18: Does this have an effect in the md backend?
     (:html-self-link-headlines nil "html-self-link-headlines" t))
   
   ;; Used to add new transcoders or overwrite those of the parent
