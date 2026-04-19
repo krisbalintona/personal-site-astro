@@ -1,6 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
-import BaseLayout from "@layouts/BaseLayout.astro";
+import PostLayout from "@layouts/PostLayout.astro";
 import sluggify from "@lib/sluggify";
 
 export async function getStaticPaths() {
@@ -13,4 +13,4 @@ const { article } = Astro.props;
 const { Content } = await render(article);
 ---
 
-<BaseLayout pageTitle={article.data.title}> <Content /> </BaseLayout>
+<PostLayout pageTitle={article.data.title}> <Content /> </PostLayout>
