@@ -23,7 +23,9 @@ const postSchema = z
   .transform((data) => ({
     ...data,
     slug: sluggify(data.title),
-    postId: dateToPostId(data.date),
+    // There is only a postId once the post is published (and
+    // therefore having a date that can be converted to an ID)
+    postId: data.draft ? null : dateToPostId(data.date),
   }));
 
 // Extract the type of the parsed output of `postSchema`.  See

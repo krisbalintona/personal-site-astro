@@ -1,0 +1,27 @@
+---
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  // Get all posts that have a non-null postId entry property. That
+  // property is null only when the post is a draft; posts that are
+  // get a permalink once they are published.
+  const allPosts = (
+    await Promise.all([
+      getCollection("articles", (entry) => entry.data.postId !== null),
+    ])
+  ).flat();
+
+  return allPosts.map((post) => ({
+    params: { postid: post.data.postId },
+    props: { post },
+  }));
+}
+
+// NOTE 2026-04-19: I prefix the variable with an underscore because
+// `astro check` will complain that `post` is unused, despite it being
+// used in the redirect below. // I think the relevant bug report is:
+// https://github.com/withastro/astro/issues/14684.
+const { post: _post } = Astro.props;
+return Astro.redirect(`/${_post.collection}/${_post.data.slug}/`);
+---
+
