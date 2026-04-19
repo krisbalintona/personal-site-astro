@@ -11,6 +11,16 @@ const { post } = Astro.props;
 
 const date = post.data.date;
 const title = post.data.title;
+interface Breadcrumb {
+  href: string;
+  label: string;
+}
+// TODO 2026-04-19: In the future when I have breadcrumbs deeper than
+// one level, this can be computed by splitting the path of the
+// current post by slashes and using the segments to compose URLs
+const breadcrumbs: Breadcrumb[] = [
+  { label: post.collection, href: `/${post.collection}` },
+];
 const formattedDate = date.toLocaleDateString("en-US", {
   year: "numeric",
   month: "long",
@@ -22,6 +32,12 @@ const { Content } = await render(post);
 
 <BaseLayout pageTitle={title}>
   <div id="post-header">
+    <i id="post-breadcrumbs">
+      {breadcrumbs.map((b) => (
+        <><i><a href={b.href}>{b.label}</a></i>/</>
+      ))}
+    </i>
+    <br>
     <i id="post-date">{formattedDate}</i>
     <h1 id="post-title">{title}</h1>
     <hr>
