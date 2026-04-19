@@ -339,7 +339,9 @@ INFO is a plist holding contextual information.  See
           (format "[%s](%s)" desc path))))))
 
 (defun org-mdx--frontmatter-quote-string (s)
-  "Quote string S for YAML double-quoted scalars."
+  "Quote string S for YAML double-quoted scalars.
+This function should be used for any object in the YAML frontmatter of
+an MDX file whose type is a string."
   (concat "\""
           (thread-last s
                        (replace-regexp-in-string "\\\\" "\\\\\\\\") ; \ -> \\
@@ -363,7 +365,18 @@ communication channel for the export process."
           (when date-timestamp
             (concat "date: " (org-format-timestamp date-timestamp "%FT%T%:z")))) ; YAML 1.1 timestamp spec
          (draft (concat "draft: " (plist-get info :mdx-draft-p))) ; Return YAML boolean
-         (frontmatter (string-join (delq nil (list title date draft)) "\n")))
+         (raw-tags (plist-get info :mdx-tags))
+         (parsed-tags
+          (when (org-string-nw-p raw-tags)
+            (mapcar #'org-mdx--frontmatter-quote-string
+                    (split-string-and-unquote (string-trim raw-tags)))))
+         (tags
+          (when parsed-tags
+            (concat "tags:\n"
+                    (mapconcat (lambda (tag) (format "  - %s" tag))
+                               parsed-tags "\n"))))
+         (frontmatter
+          (string-join (delq nil (list title date draft tags)) "\n")))
     (concat
      "---\n"
      frontmatter
@@ -567,6 +580,7 @@ Return the output directory's name."
   ;; backend
   :options-alist
   '((:mdx-draft-p "MDX_DRAFT" "mdx-draft" "true")
+    (:mdx-tags "MDX_TAGS" nil nil space)
     ;; REVIEW 2026-04-18: Does this have an effect in the md backend?
     (:html-self-link-headlines nil "html-self-link-headlines" t))
   
