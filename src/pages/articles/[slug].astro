@@ -5,7 +5,7 @@ import sluggify from "@lib/sluggify";
 
 export async function getStaticPaths() {
   return (await getCollection("articles")).map((article) => ({
-    params: { slug: sluggify(article.data.title) },
+    params: { slug: article.data.slug },
     props: { article },
   }));
 }
