@@ -10,9 +10,13 @@ const hasItems = items.length > 0;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
-{hasItems && items.map((item: ListingItem) => (
+<ul>
+  {hasItems && items.map((item: ListingItem) => (
   <li>
-    <a href={item.href}>{item.title}</a>,
+    <article>
+      <a href={item.href}>{item.title}</a>,
     posted on {item.date}
+    </article>
   </li>
 ))}
+</ul>
