@@ -16,6 +16,13 @@
       }
     }
   },
+  "assist": {
+    "actions": {
+      "source": {
+        "useSortedProperties": "on"
+      }
+    }
+  },
   "extends": [
     "ultracite/biome/core",
     "ultracite/biome/astro",
