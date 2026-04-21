@@ -19,7 +19,7 @@ const articleItems: ListingItem[] = articles.map(
   (article: CollectionEntry<"articles">): ListingItem => ({
     title: article.data.title,
     date: article.data.date,
-    href: `articles/${sluggify(article.data.title)}`,
+    href: `/articles/${sluggify(article.data.title)}`,
   })
 );
 ---
