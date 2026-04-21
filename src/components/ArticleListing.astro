@@ -3,8 +3,18 @@ import { type CollectionEntry, getCollection } from "astro:content";
 import Listing, { type ListingItem } from "@components/Listing.astro";
 import shouldShowEntry from "@lib/shouldShowEntry";
 import sluggify from "@lib/sluggify";
+import type { AnyPost } from "@src/content.config";
 
-const articles = await getCollection("articles", shouldShowEntry);
+interface Props {
+  extraFilter?: (entry: AnyPost) => boolean;
+}
+
+const { extraFilter = () => true } = Astro.props;
+
+const finalFilter = (entry: AnyPost): boolean =>
+  shouldShowEntry(entry) && extraFilter(entry);
+
+const articles = await getCollection("articles", finalFilter);
 const articleItems: ListingItem[] = articles.map(
   (article: CollectionEntry<"articles">): ListingItem => ({
     title: article.data.title,

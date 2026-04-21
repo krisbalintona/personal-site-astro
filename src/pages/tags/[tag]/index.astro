@@ -1,0 +1,29 @@
+---
+import ArticleListing from "@components/ArticleListing.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getAllTags } from "@lib/getTags";
+import type { AnyPost } from "@src/content.config";
+
+export async function getStaticPaths() {
+  return (await getAllTags()).map((tag) => ({
+    params: { tag },
+    props: { tag },
+  }));
+}
+
+interface Props {
+  tag: string;
+}
+
+const { tag } = Astro.props;
+
+function hasThisTag(entry: AnyPost): boolean {
+  const entryTags: string[] = entry.data.tags ?? [];
+
+  return entryTags.includes(tag);
+}
+---
+
+<BaseLayout pageTitle={tag}>
+  <ArticleListing extraFilter={hasThisTag} />
+</BaseLayout>

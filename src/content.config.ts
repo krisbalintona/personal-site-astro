@@ -46,5 +46,5 @@ export const collections = { articles };
 //
 // type PostCollectionNames = "articles";
 //
-type PostCollectionNames = keyof typeof collections;
+export type PostCollectionNames = keyof typeof collections;
 export type AnyPost = CollectionEntry<PostCollectionNames>;

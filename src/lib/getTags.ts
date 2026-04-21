@@ -1,10 +1,8 @@
 import { getCollection } from "astro:content";
-import { collections } from "@src/content.config.ts";
-
-type CollectionName = keyof typeof collections;
+import { collections, type PostCollectionNames } from "@src/content.config.ts";
 
 export async function getAllTags(): Promise<string[]> {
-  const collectionNames = Object.keys(collections) as CollectionName[];
+  const collectionNames = Object.keys(collections) as PostCollectionNames[];
 
   const allEntries = await Promise.all(
     collectionNames.map((name) => getCollection(name))

@@ -6,6 +6,6 @@ const tags = await getAllTags();
 
 {tags.length > 0 && tags.map((tag: string) => (
   <li>
-    {tag}
+    <a href={`/tags/${encodeURIComponent(tag)}`}>{tag}</a>
   </li>
 ))}
