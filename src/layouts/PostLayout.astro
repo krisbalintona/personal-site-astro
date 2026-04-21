@@ -43,17 +43,20 @@ const { Content } = await render(post);
 
 <BaseLayout pageTitle={title}>
   <article>
-    <header id="post-header">
-      <i id="post-breadcrumbs">
+    <header>
+      <span id="post-breadcrumbs">
         {breadcrumbs.map((b) => (
-        <><i><a href={b.href}>{b.label}</a></i>/</>
+        <><a href={b.href}>{b.label}</a>/</>
       ))}
-      </i>
-      <br>
-      <time datetime={formattedDateTime}
-        ><i id="post-date">{formattedVisibleDate}</i></time
-      >
-      <h1 id="post-title">{title}</h1>
+      </span>
+
+      <div id="post-info-container">
+        <time datetime={formattedDateTime}
+          ><span id="post-date">{formattedVisibleDate}</span></time
+        >
+
+        <h1>{title}</h1>
+      </div>
       <hr>
     </header>
 
@@ -61,12 +64,43 @@ const { Content } = await render(post);
 
     <footer id="post-footer">
       <hr>
-      <div id="post-tags">
-        {tags && <b><i>tagged:</i></b>}
+      <div id="post-tags-container">
+        {tags && <b><span>tagged:</span></b>}
         {tags?.map((tag, i) =>
-        <>{i > 0 && ", "}<i>{tag}</i></>
+        <>{i > 0 && ", "}<span>{tag}</span></>
       )}
       </div>
     </footer>
   </article>
 </BaseLayout>
+
+<style>
+  article {
+    padding-top: 50px;
+  }
+
+  #post-breadcrumbs a {
+    font-style: italic;
+  }
+
+  #post-info-container {
+    padding-top: 40px;
+
+    h1 {
+      margin-top: 0;
+    }
+  }
+
+  #post-date {
+    font-size: smaller;
+    font-style: italic;
+  }
+
+  #post-tags-container {
+    font-size: smaller;
+
+    span {
+      font-style: italic;
+    }
+  }
+</style>
