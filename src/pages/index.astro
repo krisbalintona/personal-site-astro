@@ -1,12 +1,11 @@
 ---
 import ArticleListing from "@components/ArticleListing.astro";
+import Bio from "@content/bio/index.mdx";
 import BaseLayout from "@layouts/BaseLayout.astro";
-
-const pageTitle: string = "Home";
 ---
 
-<BaseLayout pageTitle={pageTitle}>
-  This is home!
+<BaseLayout pageTitle="Home">
+  <Bio />
 
   <ArticleListing />
 </BaseLayout>

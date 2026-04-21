@@ -35,16 +35,15 @@
 
 ;;;; Variables and options
 
-(defcustom org-mdx-root-dir (project-root (project-current))
+(defconst org-mdx-root-dir (project-root (project-current))
   "Root directory of project.
-This option is used to define the value of other relevant paths."
-  :type 'directory
-  :group 'org-mdx)
+This option is used to define the value of other relevant paths.")
 
-(defcustom org-mdx-posts-dir (expand-file-name "src/content/posts/" org-mdx-root-dir)
-  "Directory where posts will be exported to."
-  :type 'directory
-  :group 'org-mdx)
+(defconst org-mdx-content-dir (expand-file-name "src/content/" org-mdx-root-dir)
+  "Directory where all MDX content resides.")
+
+(defconst org-mdx-posts-dir (expand-file-name "posts/" org-mdx-content-dir)
+  "Directory where posts will be exported to.")
 
 ;;;; Backend
 
@@ -630,23 +629,34 @@ This function is used as the :publishing-function in
 
 ;; Make compiler happy
 (defvar krisb-manuscript-blog-posts-directory)
+(defvar krisb-manuscript-blog-directory)
 
-(setopt
- ;; NOTE 2026-02-12: This is set to nil as I develop, to force
- ;; publishing every file.  When in use, a value of t is more
- ;; appropriate.
- org-publish-use-timestamps-flag nil
- org-publish-project-alist
- `(("posts"
-    :base-directory ,krisb-manuscript-blog-posts-directory
-    :publishing-directory ,org-mdx-posts-dir
-    :base-extension "org"
-    :recursive t
-    :publishing-function org-mdx-publish-to-site
-    :with-toc nil
-    :with-tags nil
-    :with-todo-keywords nil
-    :time-stamp-file nil)))
+(let ((base-options '( :with-toc nil
+                       :with-tags nil
+                       :with-todo-keywords nil
+                       :time-stamp-file nil)))
+  (setopt
+   ;; NOTE 2026-02-12: This is set to nil as I develop, to force
+   ;; publishing every file.  When in use, a value of t is more
+   ;; appropriate.
+   org-publish-use-timestamps-flag nil
+   org-publish-project-alist
+   `(("bio"
+      :base-directory ,krisb-manuscript-blog-directory
+      :publishing-directory ,org-mdx-content-dir
+      :base-extension "org"
+      :exclude ".*"
+      :include ,(directory-files krisb-manuscript-blog-directory t "20260420T234605")
+      :recursive nil
+      :publishing-function org-mdx-publish-to-site
+      ,@base-options)
+     ("posts"
+      :base-directory ,krisb-manuscript-blog-posts-directory
+      :publishing-directory ,org-mdx-posts-dir
+      :base-extension "org"
+      :recursive t
+      :publishing-function org-mdx-publish-to-site
+      ,@base-options))))
 
 ;;; Provide
 (provide 'ox-mdx)
