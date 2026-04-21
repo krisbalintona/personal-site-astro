@@ -3,10 +3,11 @@ import ArticleListing from "@components/ArticleListing.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getAllTags } from "@lib/getTags";
 import type { AnyPost } from "@src/content.config";
+import slugify from "slugify";
 
 export async function getStaticPaths() {
   return (await getAllTags()).map((tag) => ({
-    params: { tag },
+    params: { tag: slugify(tag) },
     props: { tag },
   }));
 }

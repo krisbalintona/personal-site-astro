@@ -1,11 +1,12 @@
 ---
 import { getAllTags } from "@lib/getTags";
+import slugify from "slugify";
 
 const tags = await getAllTags();
 ---
 
 {tags.length > 0 && tags.map((tag: string) => (
   <li>
-    <a href={`/tags/${encodeURIComponent(tag)}`}>{tag}</a>
+    <a href={`/tags/${slugify(tag)}`}>{tag}</a>
   </li>
 ))}

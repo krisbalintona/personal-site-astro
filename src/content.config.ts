@@ -1,7 +1,7 @@
 import { type CollectionEntry, defineCollection } from "astro:content";
-import sluggify from "@lib/sluggify.ts";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
+import slugify from "slugify";
 
 function dateToPostId(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -23,7 +23,7 @@ const postSchema = z
   })
   .transform((data) => ({
     ...data,
-    slug: sluggify(data.title),
+    slug: slugify(data.title),
     // There is only a postId once the post is published (and
     // therefore having a date that can be converted to an ID)
     postId: data.draft ? null : dateToPostId(data.date),

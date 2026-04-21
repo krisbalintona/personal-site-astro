@@ -2,7 +2,6 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import Listing, { type ListingItem } from "@components/Listing.astro";
 import isPublished from "@lib/isPublished";
-import sluggify from "@lib/sluggify";
 import type { AnyPost } from "@src/content.config";
 
 interface Props {
@@ -19,7 +18,7 @@ const articleItems: ListingItem[] = articles.map(
   (article: CollectionEntry<"articles">): ListingItem => ({
     title: article.data.title,
     date: article.data.date,
-    href: `/articles/${sluggify(article.data.title)}`,
+    href: `/articles/${article.data.slug}`,
   })
 );
 ---
