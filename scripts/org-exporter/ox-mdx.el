@@ -45,6 +45,9 @@ This option is used to define the value of other relevant paths.")
 (defconst org-mdx-posts-dir (expand-file-name "posts/" org-mdx-content-dir)
   "Directory where posts will be exported to.")
 
+(defconst org-mdx-tags-dir (expand-file-name "tags/" org-mdx-content-dir)
+  "Directory where custom tag pages will be exported to.")
+
 ;;;; Backend
 
 ;;;;; Functions
@@ -354,28 +357,38 @@ an MDX file whose type is a string."
 CONTENTS is the transcoded contents string (returned by the
 inner-template backend transcoder).  INFO is a plist used as a
 communication channel for the export process."
-  (let* ((raw-title (org-mdx--frontmatter-quote-string
+  (let* ((entry-type (plist-get info :mdx-entry-type))
+         (raw-title (org-mdx--frontmatter-quote-string
                      (org-mdx-plain-text
                       (org-element-interpret-data (plist-get info :title))
                       info)))
-         (title (when raw-title (concat "title: " raw-title)))
-         (date-timestamp (car (plist-get info :date)))
-         (date
-          (when date-timestamp
-            (concat "date: " (org-format-timestamp date-timestamp "%FT%T%:z")))) ; YAML 1.1 timestamp spec
-         (draft (concat "draft: " (plist-get info :mdx-draft-p))) ; Return YAML boolean
-         (raw-tags (plist-get info :mdx-tags))
-         (parsed-tags
-          (when (org-string-nw-p raw-tags)
-            (mapcar #'org-mdx--frontmatter-quote-string
-                    (split-string-and-unquote (string-trim raw-tags)))))
-         (tags
-          (when parsed-tags
-            (concat "tags:\n"
-                    (mapconcat (lambda (tag) (format "  - %s" tag))
-                               parsed-tags "\n"))))
-         (frontmatter
-          (string-join (delq nil (list title date draft tags)) "\n")))
+         frontmatter)
+
+    (pcase entry-type
+      ("posts"
+       (let* ((title (when raw-title (concat "title: " raw-title)))
+              (date-timestamp (car (plist-get info :date)))
+              (date
+               (when date-timestamp
+                 (concat "date: " (org-format-timestamp date-timestamp "%FT%T%:z")))) ; YAML 1.1 timestamp spec
+              (draft (concat "draft: " (plist-get info :mdx-draft-p))) ; Return YAML boolean
+              (raw-tags (plist-get info :mdx-tags))
+              (parsed-tags
+               (when (org-string-nw-p raw-tags)
+                 (mapcar #'org-mdx--frontmatter-quote-string
+                         (split-string-and-unquote (string-trim raw-tags)))))
+              (tags
+               (when parsed-tags
+                 (concat "tags:\n"
+                         (mapconcat (lambda (tag) (format "  - %s" tag))
+                                    parsed-tags "\n")))))
+         (setq frontmatter (string-join (delq nil (list title date draft tags)) "\n"))))
+      ("tags"
+       (let* ((name (when raw-title (concat "name: " raw-title)))
+              (draft (concat "draft: " (plist-get info :mdx-draft-p))))
+         (setq frontmatter (string-join (delq nil (list name draft)) "\n")))))
+
+    ;; Final result
     (concat
      "---\n"
      frontmatter
@@ -628,13 +641,16 @@ This function is used as the :publishing-function in
                                    ,@(plist-get plist :filter-final-output)))))))))
 
 ;; Make compiler happy
-(defvar krisb-manuscript-blog-posts-directory)
 (defvar krisb-manuscript-blog-directory)
+(defvar krisb-manuscript-blog-posts-directory)
+(defvar krisb-manuscript-blog-tags-directory)
 
 (let ((base-options '( :with-toc nil
                        :with-tags nil
                        :with-todo-keywords nil
-                       :time-stamp-file nil)))
+                       :time-stamp-file nil
+                       :base-extension "org"
+                       :publishing-function org-mdx-publish-to-site)))
   (setopt
    ;; NOTE 2026-02-12: This is set to nil as I develop, to force
    ;; publishing every file.  When in use, a value of t is more
@@ -644,18 +660,21 @@ This function is used as the :publishing-function in
    `(("bio"
       :base-directory ,krisb-manuscript-blog-directory
       :publishing-directory ,org-mdx-content-dir
-      :base-extension "org"
       :exclude ".*"
       :include ,(directory-files krisb-manuscript-blog-directory t "20260420T234605")
       :recursive nil
-      :publishing-function org-mdx-publish-to-site
       ,@base-options)
      ("posts"
       :base-directory ,krisb-manuscript-blog-posts-directory
       :publishing-directory ,org-mdx-posts-dir
-      :base-extension "org"
       :recursive t
-      :publishing-function org-mdx-publish-to-site
+      :mdx-entry-type "posts"
+      ,@base-options)
+     ("tags"
+      :base-directory ,krisb-manuscript-blog-tags-directory
+      :publishing-directory ,org-mdx-tags-dir
+      :recursive t
+      :mdx-entry-type "tags"
       ,@base-options))))
 
 ;;; Provide
