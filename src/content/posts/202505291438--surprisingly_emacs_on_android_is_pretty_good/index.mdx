@@ -9,40 +9,28 @@ tags:
 
 # Table of Contents
 
--   [1.1](#11)
-    -   [Introduction](#introduction)
-    -   [The good and bad: what to expect on Android](#the-good-and-bad-what-to-expect-on-android)
-    -   [Installation](#installation)
-        -   [Option 1](#option-1)
-        -   [Option 2 (recommended)](#recommended-installation)
-    -   [Configuring an Android-specific Emacs](#configuring-an-android-specific-emacs)
-        -   [Necessary reading: the manual](#necessary-reading-the-manual)
-        -   [How to configure your `init.el` on a mobile device?](#how-to-configure-your-initel-on-a-mobile-device)
-        -   [First step: A Better UI for touchscreens](#first-step-a-better-ui-for-touchscreens)
-        -   [Android-specific Commands and Options](#android-specific-commands)
-        -   [Use a Special virtual keyboard](#virtual-keyboards)
-        -   [Fonts](#fonts)
-        -   [Tip: You can remap the volume buttons](#tip-you-can-remap-the-volume-buttons)
-    -   [Conclusion](#conclusion)
-        -   [Bonus: My wish list](#bonus-my-wish-list)
+-   [The good and bad: what to expect on Android](#the-good-and-bad-what-to-expect-on-android)
+-   [Installation](#installation)
+    -   [Option 1](#option-1)
+    -   [Option 2 (recommended)](#recommended-installation)
+-   [Configuring an Android-specific Emacs](#configuring-an-android-specific-emacs)
+    -   [Necessary reading: the manual](#necessary-reading-the-manual)
+    -   [How to configure your `init.el` on a mobile device?](#how-to-configure-your-initel-on-a-mobile-device)
+    -   [First step: A Better UI for touchscreens](#first-step-a-better-ui-for-touchscreens)
+    -   [Android-specific Commands and Options](#android-specific-commands)
+    -   [Use a Special virtual keyboard](#virtual-keyboards)
+    -   [Fonts](#fonts)
+    -   [Tip: You can remap the volume buttons](#tip-you-can-remap-the-volume-buttons)
+-   [Conclusion](#conclusion)
+    -   [Bonus: My wish list](#bonus-my-wish-list)
 
-
-
-<a id="11"></a>
-
-# 1.1
-
-
-<a id="introduction"></a>
-
-## Introduction
 
 Recently I got around to making steps toward a better mobile-PC workflow. Until now, I've pretty much exclusively been using the community-developed [orgzly-revived](https://github.com/orgzly-revived/orgzly-android-revived) app on Android. My intention was to use orgzly-revived for simple todo management and another app for more note-taking purposes&mdash;but I could never find another app I was happy with on Android. But I happened to remember reading good things about the *native* Emacs app on Android a few months ago. So I tried it out&hellip; and was immediately sold!
 
 
 <a id="the-good-and-bad-what-to-expect-on-android"></a>
 
-## The good and bad: what to expect on Android
+# The good and bad: what to expect on Android
 
 First, let's make sure our expectations are tempered: Emacs on Android won't be as pleasant as the full desktop experience.<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup> Of course. A phone's screen is tiny, and unless you have a physical keyboard connected, you'll have to manage with a virtual one (see [Use a Special virtual keyboard](#virtual-keyboards)). On top of that:
 
@@ -57,12 +45,12 @@ And finally: YMMV on other Android devices. My current phone is the OnePlus 7 Pr
 
 <a id="installation"></a>
 
-## Installation
+# Installation
 
 
 <a id="option-1"></a>
 
-### Option 1
+## Option 1
 
 The first option is as easy as it can get, but you won’t have a way to access other CLI tools:
 
@@ -75,7 +63,7 @@ Using Emacs this way is totally possible if all you need is elisp. But if you ne
 
 <a id="recommended-installation"></a>
 
-### Option 2 (recommended)
+## Option 2 (recommended)
 
 This option makes other CLI tools accessible to the Emacs Android application container. It is a little bit more of a hassle.
 
@@ -102,12 +90,12 @@ In short,
 
 <a id="configuring-an-android-specific-emacs"></a>
 
-## Configuring an Android-specific Emacs
+# Configuring an Android-specific Emacs
 
 
 <a id="necessary-reading-the-manual"></a>
 
-### Necessary reading: the manual
+## Necessary reading: the manual
 
 Chances are that you don't know that the Emacs manual has its own section for the Android system: `(info "(emacs) Android")`. Before anything, I highly recommend you peruse this section, returning to and reading more deeply specific parts as you see fit. In particular, I found the following Info nodes essential:
 
@@ -125,7 +113,7 @@ Moments like these are truly a testament to Emacs' dedication to an accessible e
 
 <a id="how-to-configure-your-initel-on-a-mobile-device"></a>
 
-### How to configure your `init.el` on a mobile device?
+## How to configure your `init.el` on a mobile device?
 
 Later I’ll explain how you make typing code on a touchscreen device easier by installing [a handy virtual keyboard](#virtual-keyboards). But I highly recommend that until you’ve settled on a configuration you’re willing to type out that you **heavily utilize the customize interface**. This means accessing the Customize interfaces via the tool-bar<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3</a></sup> buttons then using your touchscreen to tap the buttons available in `customize-mode` buffers. (Then, if you prefer, after setting many options with Customize, you can refactor the options Customize put in your `init.el` into e.g. use-package forms.)
 
@@ -138,7 +126,7 @@ If you haven’t used Customize much before, you can check out the available Cus
 
 <a id="first-step-a-better-ui-for-touchscreens"></a>
 
-### First step: A Better UI for touchscreens
+## First step: A Better UI for touchscreens
 
 The very first thing I did when I opened Emacs was enable these minor modes:
 
@@ -152,7 +140,7 @@ Desktop users might have disabled these years ago in favor of keyboard-centric w
 
 <a id="android-specific-commands"></a>
 
-### Android-specific Commands and Options
+## Android-specific Commands and Options
 
 There are a few built-in Android commands and options you should be aware of. (Pro tip: one can `M-x Info-index` or press `i` in the Emacs Info manual, itself accessible via `C-h r`, or `M-x info-emacs-manual`, then search for the string “android” to find all the specific mentions off “Android.”)
 
@@ -170,7 +158,7 @@ Also, don’t forget to let Emacs display over other apps. This is a device sett
 
 <a id="virtual-keyboards"></a>
 
-### Use a Special virtual keyboard
+## Use a Special virtual keyboard
 
 Unless you have a physical keyboard connected to your mobile device, typing will be a pain. For that, we install a virtual keyword that gives us easier access to modifier keys, function keys, arrow keys, and symbols. As far as I know, there are currently two main options:
 
@@ -182,7 +170,7 @@ Having briefly tried both, I personally prefer the latter. Though the former wor
 
 <a id="fonts"></a>
 
-### Fonts
+## Fonts
 
 You might want a set of fonts not already installed on your Android system. If that’s the case, you should read the `(info "(emacs) Android Fonts")` manual page.
 
@@ -193,14 +181,14 @@ Note: in my experience, *fonts are not recursively checked inside this directory
 
 <a id="tip-you-can-remap-the-volume-buttons"></a>
 
-### Tip: You can remap the volume buttons
+## Tip: You can remap the volume buttons
 
 Volume buttons are un-mapped by default (see `android-pass-multimedia-buttons-to-system`). That’s find with me, but if you feel inclined, you can rebind them to something else after setting `android-pass-multimedia-buttons-to-system` appropriately. Some possibilities would be for navigation between headings, tk list more.
 
 
 <a id="conclusion"></a>
 
-## Conclusion
+# Conclusion
 
 In conclusion,
 
@@ -215,7 +203,7 @@ And finally: YMMV on other Android devices. My current phone is the OnePlus 7 Pr
 
 <a id="bonus-my-wish-list"></a>
 
-### Bonus: My wish list
+## Bonus: My wish list
 
 -   **Touchscreen gestures:** There is the built-in strokes.el, but strokes.el, as far as I can tell, does not work for touchscreens. Additionally, significant changes would be required to its code base to make it compatible for touchscreens. So, for now, we have to settle with virtual keyboards&hellip;
 -   **Automatic keyboard/IME switching:** Ideally, I’d have my special virtual keyboard be automatically selected using Emacs and deselected when not using Emacs. Right now, I have to manually switch to it. As far as I know, there is no easy way to accomplish this.

@@ -6,24 +6,6 @@ tags:
   - "Emacs"
 ---
 
-# Table of Contents
-
--   [1.1](#11)
-    -   [Body](#body)
-    -   [Bonus: integration with `completion-preview-mode`](#bonus-integration-with-completion-preview-mode)
-    -   [Changelog](#changelog)
-
-
-
-<a id="11"></a>
-
-# 1.1
-
-
-<a id="body"></a>
-
-## Body
-
 <div style="white-space: pre">
 <span class="timestamp-wrapper"><span class="timestamp">[2025-04-07 Mon]</span></span> With several commits made on April 6, 2025, vertico spun off its sorting functionality into an extension: [vertico-sort](https://github.com/minad/vertico/blob/main/extensions/vertico-sort.el). As explained in vertico-sort.el's commentary section, it includes a new feature: when `history-delete-duplicates` is nil, all sorting functions defined in vertico-sort.el now rank *recently* selected candidates above frequently selected candidates. This approximates the sorting strategy of prescient.el. I think I'll stick with prescient.el sorting because I like `history-delete-duplicates` set to non-nil, but try it out yourself!
 </div>
@@ -118,9 +100,7 @@ Prescient.el is the core package, and there are several [auxiliary packages](htt
 The result is using orderless for completion filtering and prescient for completion sorting everywhere&mdash;for in-line completions with corfu and minibuffer completions with vertico. With this, among the candidates filtered by orderless, the most recent and common ones will be bumped up to the beginning. Try it out!
 
 
-<a id="bonus-integration-with-completion-preview-mode"></a>
-
-## Bonus: integration with `completion-preview-mode`
+# Bonus: integration with `completion-preview-mode`
 
 Emacs 30.1 ships with the new `completion-preview-mode`. You can read about it [in this blog post](https://eshelyaron.com/posts/2023-11-17-completion-preview-in-emacs.html) but also in the Emacs 30.1 news (i.e., `C-u 30 C-h n`). Apparently, `completion-preview-mode`
 has its own sorting function&mdash;which makes sense, since it isn't hooked into either corfu nor vertico (which we set up to use prescient above). The relevant user option to modify its sorting is `completion-preview-sort-function`. So we just have to make sure that function matches prescient's. We can do that like this:
@@ -168,9 +148,7 @@ set (i.e., OPERATION is \\='set).  This excludes, e.g., let bindings."
 ```
 
 
-<a id="changelog"></a>
-
-## Changelog
+# Changelog
 
 -   <span class="timestamp-wrapper"><span class="timestamp">[2025-04-07 Mon]</span></span>
     -   Fixed several typos.

@@ -643,8 +643,6 @@ This function is used as the :publishing-function in
     :base-extension "org"
     :recursive t
     :publishing-function org-mdx-publish-to-site
-    :html-head-include-default-style nil
-    :html-prefer-user-labels nil
     :with-toc nil
     :with-tags nil
     :with-todo-keywords nil

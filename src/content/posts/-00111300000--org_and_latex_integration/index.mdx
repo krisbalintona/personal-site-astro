@@ -5,29 +5,6 @@ tags:
   - "Emacs"
 ---
 
-# Table of Contents
-
--   [My desired workflow](#my-desired-workflow)
--   [Basic Formatting: `org-latex-classes`](#basic-formatting-org-latex-classes)
--   [Title pages: Creating an Org-export backend](#title-pages-creating-an-org-export-backend)
-    -   [Customize the `org-export` LaTeX backend](#customize-the-org-export-latex-backend)
-        -   [Backend](#backend)
-        -   [Template](#template)
-    -   [Final title command](#final-title-command)
--   [Citations and bibliographies: Org-cite](#citations-and-bibliographies-org-cite)
-    -   [One way to specify citation style](#one-way-to-specify-citation-style)
-    -   [My method to specify citation style](#my-method-to-specify-citation-style)
--   [Final result and screenshots](#final-result-and-screenshots)
--   [Extras](#extras)
-    -   [Section numbers](#section-numbers)
-    -   [Hyperref](#hyperref)
-    -   [Table of contents](#table-of-contents)
-    -   [Org links](#org-links)
--   [Full configuration](#full-configuration)
-
-
-
-<a id="my-desired-workflow"></a>
 
 # My desired workflow
 
@@ -43,12 +20,8 @@ In short, I simply want to produce my final paper's PDF by calling a single org-
 A note for STEM (Science, Technology, Engineering, and Mathematics) students: As a philosophy undergraduate, this article primarily centers on a subset of concerns STEM students would face in formatting their papers, since mathematics, tables, and other LaTeX features will be much more common. This is beyond my use case, but I hope that this article still has a use for those students. Additionally, there are many other resources available that cover similar use cases (link such sources later tk).
 
 
-<a id="basic-formatting-org-latex-classes"></a>
-
 # Basic Formatting: `org-latex-classes`
 
-
-<a id="title-pages-creating-an-org-export-backend"></a>
 
 # Title pages: Creating an Org-export backend
 
@@ -194,14 +167,10 @@ keywords are understood:<br />
 You have a few options.
 
 
-<a id="customize-the-org-export-latex-backend"></a>
-
 ## Customize the `org-export` LaTeX backend
 
 File properties
 
-
-<a id="backend"></a>
 
 ### Backend
 
@@ -210,12 +179,8 @@ There is `org-export-define-backend` and `org-export-define-derived-backend`. De
 The latter is identical, only in that it inherits the definition of a parent backend. For instance, `beamer` is a derived backend from latex. I won't go in depth into this because you can read the docstrings for them.
 
 
-<a id="template"></a>
-
 ### Template
 
-
-<a id="final-title-command"></a>
 
 ## Final title command
 
@@ -232,8 +197,6 @@ The latter is identical, only in that it inherits the definition of a parent bac
 }
 ```
 
-
-<a id="citations-and-bibliographies-org-cite"></a>
 
 # Citations and bibliographies: Org-cite
 
@@ -278,8 +241,6 @@ For reference, the following is my `org-cite` configuration (this doesn't includ
 </div>
 
 
-<a id="one-way-to-specify-citation-style"></a>
-
 ## One way to specify citation style
 
 The value of `org-cite-export-processors` is most notable. The configuration above instructs org-export to use the `biblatex` export processor to process citations and bibliographies when exporting to LaTeX. This can be overridden, for example, at the file-level with the `#CITE_EXPORT` keyword. See the docstring for `org-cite-export-processors` for more information about valid values.
@@ -312,8 +273,6 @@ results in `"bibstyle=mla-new,citestyle=authoryear"` being passed as an option t
 Valid styles include those provided by the built-in with biblatex, found in section 3.3.2 of the biblatex CTAN manual (link tk), and those provided by numerous other packages.
 
 
-<a id="my-method-to-specify-citation-style"></a>
-
 ## My method to specify citation style
 
 Though the above works, since I'm already using a .sty file to set all the options for the relevant LaTeX packages, I also do so there. For instance, with the MLA citation style:
@@ -334,8 +293,6 @@ In this way, I avoid adding a line in my org files to specify the citation style
 </div>
 
 
-<a id="final-result-and-screenshots"></a>
-
 # Final result and screenshots
 
 The following org file produces this:
@@ -343,12 +300,8 @@ The following org file produces this:
 which, compiled into a PDF, looks like this:
 
 
-<a id="extras"></a>
-
 # Extras
 
-
-<a id="section-numbers"></a>
 
 ## Section numbers
 
@@ -356,8 +309,6 @@ which, compiled into a PDF, looks like this:
 (setq org-export-with-section-numbers nil)
 ```
 
-
-<a id="hyperref"></a>
 
 ## Hyperref
 
@@ -375,8 +326,6 @@ hidelinks={true}}\n")
 ```
 
 
-<a id="table-of-contents"></a>
-
 ## Table of contents
 
 ```emacs-lisp
@@ -391,14 +340,10 @@ hidelinks={true}}\n")
 ```
 
 
-<a id="org-links"></a>
-
 ## Org links
 
 1.  Custom `org-mode` links (`org-link-set-parameters`)
 
-
-<a id="full-configuration"></a>
 
 # Full configuration
 

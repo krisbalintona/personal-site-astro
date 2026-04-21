@@ -5,29 +5,11 @@ tags:
   - "Emacs"
 ---
 
-# Table of Contents
 
--   [1](#1)
-    -   [The pain-point](#the-pain-point)
-    -   [Approach 1](#approach-1)
-    -   [Approach 2](#approach-2)
-    -   [Approach 3](#approach-3)
+# The pain-point
 
 
-
-<a id="1"></a>
-
-# 1
-
-
-<a id="the-pain-point"></a>
-
-## The pain-point
-
-
-<a id="approach-1"></a>
-
-## Approach 1
+# Approach 1
 
 initially redefined latex exporter; but that created a long section in my config with majority redundancy with upstream code and brittle to future upstream changes
 
@@ -38,18 +20,14 @@ also overkill when you just want "default latex exporter but recognizing a few m
 which is why we have approach 2 and 3
 
 
-<a id="approach-2"></a>
-
-## Approach 2
+# Approach 2
 
 first tried `org-export-filter-keyword-functions`; didn't work because unknown keywords are ignored, not making it to the stage when filter functions are run
 
 I found a solution with `org-export-before-parsing-functions`: convert those keyword lines into #+LATEX\_HEADER lines (which ox-latex does convert)
 
 
-<a id="approach-3"></a>
-
-## Approach 3
+# Approach 3
 
 but, in the end, if you just want latex export, you can use the #+LATEX\_HEADER and #+LATEX\_HEADER\_EXTRA keywords
 

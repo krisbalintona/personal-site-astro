@@ -8,32 +8,20 @@ tags:
 
 # Table of Contents
 
--   [1.1](#11)
-    -   [Introduction](#introduction)
-    -   [The configuration](#the-configuration)
-    -   [Devices](#devices)
-    -   [Folders](#folders)
-    -   [Closing remarks](#closing-remarks)
-    -   [Other resources](#other-resources)
-    -   [Changelog](#changelog)
+-   [The configuration](#the-configuration)
+-   [Devices](#devices)
+-   [Folders](#folders)
+-   [Closing remarks](#closing-remarks)
+-   [Other resources](#other-resources)
+-   [Changelog](#changelog)
 
-
-
-<a id="11"></a>
-
-# 1.1
-
-
-<a id="introduction"></a>
-
-## Introduction
 
 So I recently got around to trying out NixOS. Part of that experience was setting up Syncthing, which I've used on the past on my machines and mobile phone to sync files related to note-taking.<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup> It was a bit confusing since I had to fill-in-the-blanks for a few steps. Here, I write about a bit of the blanks I had to fill in myself, stuff that was not clear from the existing docs and forum posts I discovered.
 
 
 <a id="the-configuration"></a>
 
-## The configuration
+# The configuration
 
 Below is the final NixOS configuration I have (with IDs elided for privacy) alongside commentary via comments:
 
@@ -93,7 +81,7 @@ It was pretty straightforward to figure out the general settings for Syncthing b
 
 <a id="devices"></a>
 
-## Devices
+# Devices
 
 -   "Devices" are Machines/devices you'd like Syncthing to be aware of.
 -   Each machine has an ID.
@@ -122,7 +110,7 @@ Now that Syncthing is aware of these devices, I can reference them by their labe
 
 <a id="folders"></a>
 
-## Folders
+# Folders
 
 -   Folders are the directories you'd like Syncthing to be aware of.
 -   Each folder has an ID.<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup>
@@ -164,7 +152,7 @@ It is important that the "devices" section be specified, otherwise Syncthing wil
 
 <a id="closing-remarks"></a>
 
-## Closing remarks
+# Closing remarks
 
 And with that, I was done!
 
@@ -187,7 +175,7 @@ For those who heavily customize Syncthing, there are other NixOS options availab
 
 <a id="other-resources"></a>
 
-## Other resources
+# Other resources
 
 -   **[Syncthing - NixOS Wiki](https://wiki.nixos.org/wiki/Syncthing):** General resource; good starting point.
 -   **[Vimjoyer - YouTube](https://www.youtube.com/@vimjoyer):** A fantastic visual resource of making full use of Nix and NixOS. Has some beginner-friendly videos, but most videos are for intermediate or advanced users, ones looking to explore the ecosystem, full potential of Nix, and already having a familiarity with navigating Nix.
@@ -195,7 +183,7 @@ For those who heavily customize Syncthing, there are other NixOS options availab
 
 <a id="changelog"></a>
 
-## Changelog
+# Changelog
 
 -   <span class="timestamp-wrapper"><span class="timestamp">[2025-05-17 Sat]</span></span>
     -   Add link to the [Syncthing configuration file documentation](https://docs.syncthing.net/users/config.html).
