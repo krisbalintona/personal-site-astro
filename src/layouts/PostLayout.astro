@@ -19,7 +19,7 @@ interface Breadcrumb {
 // one level, this can be computed by splitting the path of the
 // current post by slashes and using the segments to compose URLs
 const breadcrumbs: Breadcrumb[] = [
-  { label: post.collection, href: `/${post.collection}` },
+  { label: post.collection, href: `/${encodeURIComponent(post.collection)}` },
 ];
 const formattedDate = date.toLocaleDateString("en-US", {
   year: "numeric",
