@@ -1,4 +1,5 @@
 ---
+import { getEntry, render } from "astro:content";
 import ArticleListing from "@components/ArticleListing.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getAllTags } from "@lib/getTags";
@@ -23,8 +24,13 @@ function hasThisTag(entry: AnyPost): boolean {
 
   return entryTags.includes(tag);
 }
+
+const tagEntry = await getEntry("tags", tag);
+const { Content } = tagEntry ? await render(tagEntry) : { Content: null };
 ---
 
 <BaseLayout pageTitle={tag}>
+  {Content && <Content />}
+
   <ArticleListing extraFilter={hasThisTag} />
 </BaseLayout>
