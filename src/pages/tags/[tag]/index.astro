@@ -4,14 +4,19 @@ import ArticleListing from "@components/ArticleListing.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getAllTags } from "@lib/getTags";
 import type { AnyPost } from "@src/content.config";
+import { createRoute } from "astro-typesafe-routes/create-route";
 import slugify from "slugify";
 
-export async function getStaticPaths() {
-  return (await getAllTags()).map((tag) => ({
+export const Route = createRoute({
+  routeId: "/tags/[tag]",
+});
+
+export const getStaticPaths = Route.createGetStaticPaths(async () =>
+  (await getAllTags()).map((tag) => ({
     params: { tag: slugify(tag) },
     props: { tag },
-  }));
-}
+  }))
+);
 
 interface Props {
   tag: string;

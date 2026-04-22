@@ -1,14 +1,24 @@
 ---
-import { getCollection } from "astro:content";
+import { type CollectionEntry, getCollection } from "astro:content";
 import PostLayout from "@layouts/PostLayout.astro";
 import isPublished from "@src/lib/isPublished";
+import { createRoute } from "astro-typesafe-routes/create-route";
 
-export async function getStaticPaths() {
-  return (await getCollection("articles", isPublished)).map((article) => ({
+export const Route = createRoute({
+  routeId: "/articles/[slug]",
+});
+
+export const getStaticPaths = Route.createGetStaticPaths(async () =>
+  (await getCollection("articles", isPublished)).map((article) => ({
     params: { slug: article.data.slug },
     props: { article },
-  }));
+  }))
+);
+
+interface Props {
+  article: CollectionEntry<"articles">;
 }
+
 const { article } = Astro.props;
 ---
 

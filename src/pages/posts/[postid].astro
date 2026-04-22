@@ -1,7 +1,13 @@
 ---
 import { getCollection } from "astro:content";
+import type { AnyPost } from "@src/content.config";
+import { createRoute } from "astro-typesafe-routes/create-route";
 
-export async function getStaticPaths() {
+export const Route = createRoute({
+  routeId: "/posts/[postid]",
+});
+
+export const getStaticPaths = Route.createGetStaticPaths(async () => {
   // Currently, only posts that aren't drafts get a permalink
   const allPosts = (
     await Promise.all([
@@ -13,6 +19,10 @@ export async function getStaticPaths() {
     params: { postid: post.id },
     props: { post },
   }));
+});
+
+interface Props {
+  post: AnyPost;
 }
 
 // NOTE 2026-04-19: I prefix the variable with an underscore because
@@ -20,6 +30,9 @@ export async function getStaticPaths() {
 // used in the redirect below. // I think the relevant bug report is:
 // https://github.com/withastro/astro/issues/14684.
 const { post: _post } = Astro.props;
-return Astro.redirect(`/${_post.collection}/${_post.data.slug}/`);
+return Route.redirect(Astro, {
+  to: `/${_post.collection}/[slug]`,
+  params: { slug: _post.data.slug },
+});
 ---
 
