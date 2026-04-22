@@ -1,0 +1,20 @@
+---
+export interface BreadcrumbComponent {
+  href?: string;
+  label: string;
+}
+
+interface Props {
+  breadcrumbs: BreadcrumbComponent[];
+  description?: string;
+}
+
+const { breadcrumbs, description } = Astro.props;
+---
+
+<div class="breadcrumbs-container">
+  {breadcrumbs.map((b) => (
+    <><span>{b.href ? <a href={b.href}>{b.label}</a> : b.label}</span> /</>
+  ))}
+  {description && <span id="breadcrumb-description">{description}</span>}
+</div>

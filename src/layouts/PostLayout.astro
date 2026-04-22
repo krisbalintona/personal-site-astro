@@ -1,5 +1,8 @@
 ---
 import { render } from "astro:content";
+import Breadcrumb, {
+  type BreadcrumbComponent,
+} from "@components/Breadcrumb.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import type { AnyPost } from "@src/content.config";
 import slugify from "slugify";
@@ -12,16 +15,11 @@ const { post } = Astro.props;
 
 const date = post.data.date;
 const title = post.data.title;
-interface Breadcrumb {
-  href: string;
-  label: string;
-}
-// TODO 2026-04-19: In the future when I have breadcrumbs deeper than
-// one level, this can be computed by splitting the path of the
-// current post by slashes and using the segments to compose URLs
-const breadcrumbs: Breadcrumb[] = [
+
+const breadcrumbs: BreadcrumbComponent[] = [
   { label: post.collection, href: `/${slugify(post.collection)}` },
 ];
+
 const formattedDateTime = date.toISOString().replace(/\.\d{3}Z$/, () => {
   const offset = -date.getTimezoneOffset();
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -37,6 +35,7 @@ const formattedVisibleDate = date.toLocaleDateString("en-US", {
   month: "long",
   day: "numeric",
 });
+
 const tags = post.data.tags;
 const { Content } = await render(post);
 ---
@@ -44,11 +43,7 @@ const { Content } = await render(post);
 <BaseLayout pageTitle={title}>
   <article>
     <header>
-      <span id="post-breadcrumbs">
-        {breadcrumbs.map((b) => (
-        <><a href={b.href}>{b.label}</a>/</>
-      ))}
-      </span>
+      <Breadcrumb breadcrumbs={breadcrumbs} />
 
       <div id="post-info-container">
         <time datetime={formattedDateTime}
@@ -75,16 +70,8 @@ const { Content } = await render(post);
 </BaseLayout>
 
 <style>
-  #post-breadcrumbs a {
-    font-style: italic;
-  }
-
-  #post-info-container {
-    padding-top: 40px;
-
-    h1 {
-      margin-top: 0;
-    }
+  #post-info-container h1 {
+    margin-top: 0;
   }
 
   #post-date {
