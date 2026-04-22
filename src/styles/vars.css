@@ -1,11 +1,11 @@
 :root {
   /* Colors */
-  --slate: #444444;
-  --background: #f2f2f2;
-
   --white: #ffffff;
   --black: #152030;
+  --background: #f7f5f0;
 
-  --ink: var(--slate);
-  --paper: var(--background);
+  --ink: #1a1814;
+  --faint: #c8c3b8;
+  --muted: #8a857a;
+  --accent: #c84b2f;
 }

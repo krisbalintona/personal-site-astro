@@ -27,7 +27,7 @@ export default defineConfig({
     {
       name: "Instrument Sans",
       cssVariable: "--font-ui",
-        provider: fontProviders.fontsource(),
+      provider: fontProviders.fontsource(),
       fallbacks: ["sans-serif"],
     },
   ],
