@@ -5,6 +5,7 @@ import Breadcrumb, {
 } from "@components/Breadcrumb.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import type { AnyPost } from "@src/content.config";
+import Link from "astro-typesafe-routes/link";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
 
@@ -43,27 +44,27 @@ const { Content } = await render(post);
 
 <BaseLayout pageTitle={title}>
   <article>
-    <header>
+    <header class="post-header">
       <Breadcrumb breadcrumbs={breadcrumbs} />
 
-      <div id="post-info-container">
+      <div class="post-info-container">
         <time datetime={formattedDateTime}
-          ><span id="post-date">{formattedVisibleDate}</span></time
+          ><span class="post-date">{formattedVisibleDate}</span></time
         >
 
-        <h1>{title}</h1>
+        <h1 id="post-title">{title}</h1>
       </div>
-      <hr>
     </header>
 
-    <Content />
+    <div class="post-content"><Content /></div>
 
-    <footer id="post-footer">
-      <hr>
-      <div id="post-tags-container">
-        {tags && <b><span>tagged:</span></b>}
+    <footer class="post-footer">
+      <div class="post-tags-container">
+        {tags && <span id="tags-label">tagged: </span>}
         {tags?.map((tag, i) =>
-        <>{i > 0 && ", "}<span><a href={`/tags/${slugify(tag)}`}>{tag}</a></span></>
+        <>{i > 0 && ", "}
+          <Link class="tag" params={{ tag: slugify(tag) }} to="/tags/[tag]">{tag}</Link>
+        </>
       )}
       </div>
     </footer>
@@ -71,25 +72,53 @@ const { Content } = await render(post);
 </BaseLayout>
 
 <style>
-  #post-info-container h1 {
-    margin-top: 0;
-    font-size: 2.5em;
-  }
+  .post-header {
+    margin-bottom: 3rem;
+    border-bottom: 2px solid var(--rule);
 
-  #post-date {
-    font-family: var(--font-ui);
-    font-size: smaller;
-  }
+    .post-info-container {
+      .post-date {
+        font-family: var(--font-ui);
+        font-size: smaller;
+      }
 
-  #post-tags-container {
-    font-size: smaller;
-
-    span {
-      font-style: italic;
+      #post-title {
+        margin: 0 0 1rem 0;
+        font-size: 3rem;
+      }
     }
   }
 
-  :global(#table-of-contents) {
-    font-size: 1.4em;
+  .post-content {
+    margin-top: 2rem;
+
+    :global(#table-of-contents) {
+      font-size: 1.8rem;
+    }
+  }
+
+  .post-footer {
+    padding-top: 0.5rem;
+    border-top: 2px solid var(--rule);
+
+    .post-tags-container {
+      display: inline;
+      align-items: baseline;
+      font-size: smaller;
+
+      #tags-label {
+        font-weight: bold;
+      }
+
+      .tag {
+        font-style: italic;
+        color: var(--muted);
+        border-bottom: 0;
+      }
+
+      .tag:hover {
+        color: var(--ink);
+      }
+    }
   }
 </style>
