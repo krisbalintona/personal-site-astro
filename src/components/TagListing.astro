@@ -1,5 +1,6 @@
 ---
 import { getAllTags } from "@lib/getTags";
+import Link from "astro-typesafe-routes/link";
 import slugify from "slugify";
 
 const tags = await getAllTags();
@@ -7,6 +8,6 @@ const tags = await getAllTags();
 
 {tags.length > 0 && tags.map((tag: string) => (
   <li>
-    <a href={`/tags/${slugify(tag)}`}>{tag}</a>
+    <Link params={{ tag: slugify(tag) }} to="/tags/[tag]">{tag}</Link>
   </li>
 ))}

@@ -1,11 +1,12 @@
 ---
+import Link from "astro-typesafe-routes/link";
 ---
 
 <header>
   <nav>
     <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/tags/">Tags</a></li>
+      <li><Link to="/">Home</Link></li>
+      <li><Link to="/tags">Tags</Link></li>
     </ul>
   </nav>
 </header>

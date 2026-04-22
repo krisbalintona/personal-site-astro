@@ -5,6 +5,7 @@ import Breadcrumb, {
 } from "@components/Breadcrumb.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import type { AnyPost } from "@src/content.config";
+import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
 
 interface Props {
@@ -17,7 +18,7 @@ const date = post.data.date;
 const title = post.data.title;
 
 const breadcrumbs: BreadcrumbComponent[] = [
-  { label: post.collection, href: `/${slugify(post.collection)}` },
+  { label: post.collection, href: $path({ to: `/${post.collection}` }) },
 ];
 
 const formattedDateTime = date.toISOString().replace(/\.\d{3}Z$/, () => {
