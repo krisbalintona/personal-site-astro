@@ -1,9 +1,4 @@
 :root {
-  /* Fonts */
-  --primaryFont:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
-
   /* Colors */
   --slate: #444444;
   --background: #f2f2f2;

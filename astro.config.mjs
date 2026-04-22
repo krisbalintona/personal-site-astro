@@ -1,7 +1,7 @@
 // @ts-check
 
 import mdx from "@astrojs/mdx";
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 
 import typesafeRoutes from "astro-typesafe-routes";
 
@@ -16,5 +16,19 @@ export default defineConfig({
       gfm: false,
     }),
     typesafeRoutes(),
+  ],
+  fonts: [
+    {
+      name: "Libre Baskerville",
+      cssVariable: "--font-primary",
+      provider: fontProviders.fontsource(),
+      fallbacks: ["Georgia", "serif"],
+    },
+    {
+      name: "Instrument Sans",
+      cssVariable: "--font-ui",
+        provider: fontProviders.fontsource(),
+      fallbacks: ["sans-serif"],
+    },
   ],
 });
