@@ -10,8 +10,8 @@ body {
   width: 100%;
   max-width: 650px;
   min-height: 100vh;
-  padding: 0 10px;
-  margin: 40px auto;
+  padding: 4rem 2rem 6rem;
+  margin: 0 auto;
   font-family: var(--font-primary);
   font-size: 17px;
   line-height: 2;
