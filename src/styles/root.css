@@ -2,10 +2,6 @@
   background: var(--background);
 }
 
-main {
-  padding-top: 30px;
-}
-
 body {
   width: 100%;
   max-width: 650px;
