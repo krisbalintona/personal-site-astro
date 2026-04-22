@@ -67,7 +67,7 @@ const { Content } = await render(post);
       <div id="post-tags-container">
         {tags && <b><span>tagged:</span></b>}
         {tags?.map((tag, i) =>
-        <>{i > 0 && ", "}<span>{tag}</span></>
+        <>{i > 0 && ", "}<span><a href={`/tags/${slugify(tag)}`}>{tag}</a></span></>
       )}
       </div>
     </footer>
