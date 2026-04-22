@@ -30,7 +30,13 @@ const { Content } = tagEntry ? await render(tagEntry) : { Content: null };
 ---
 
 <BaseLayout pageTitle={tag}>
-  {Content && <Content />}
+  {Content && <article><Content /></article>}
 
   <ArticleListing extraFilter={hasThisTag} />
 </BaseLayout>
+
+<style>
+  article {
+    margin-top: 50px;
+  }
+</style>
