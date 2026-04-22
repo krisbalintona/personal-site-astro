@@ -24,9 +24,6 @@ const postSchema = z
   .transform((data) => ({
     ...data,
     slug: slugify(data.title),
-    // There is only a postId once the post is published (and
-    // therefore having a date that can be converted to an ID)
-    postId: data.draft ? null : dateToPostId(data.date),
   }));
 
 // Extract the type of the parsed output of `postSchema`.  See
@@ -34,7 +31,14 @@ const postSchema = z
 export type Post = z.infer<typeof postSchema>;
 
 const articles = defineCollection({
-  loader: glob({ pattern: "*/index.mdx", base: "./src/content/posts" }),
+  loader: glob({
+    pattern: "*/index.mdx",
+    base: "./src/content/posts",
+    generateId: ({ entry, data }) =>
+      data?.date && data?.draft === false
+        ? dateToPostId(data.date as Date)
+        : entry.split("/")[0],
+  }),
   schema: postSchema,
 });
 

@@ -2,17 +2,15 @@
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-  // Get all posts that have a non-null postId entry property. That
-  // property is null only when the post is a draft; posts that are
-  // get a permalink once they are published.
+  // Currently, only posts that aren't drafts get a permalink
   const allPosts = (
     await Promise.all([
-      getCollection("articles", (entry) => entry.data.postId !== null),
+      getCollection("articles", (entry) => entry.data.draft === false),
     ])
   ).flat();
 
   return allPosts.map((post) => ({
-    params: { postid: post.data.postId },
+    params: { postid: post.id },
     props: { post },
   }));
 }
