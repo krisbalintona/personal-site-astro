@@ -14,17 +14,3 @@ a {
 a:hover {
   border-bottom: 0;
 }
-
-/* * Page breadcrumbs */
-
-.breadcrumbs-container {
-  margin-bottom: 20px;
-
-  span {
-    font-style: italic;
-  }
-
-  #breadcrumb-description {
-    display: block;
-  }
-}

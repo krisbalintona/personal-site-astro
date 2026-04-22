@@ -39,7 +39,7 @@ const { Content } = tagEntry ? await render(tagEntry) : { Content: null };
 
 const breadcrumbs: BreadcrumbComponent[] = [
   { label: "tags", href: $path({ to: "/tags" }) },
-  { label: tag },
+  { label: tag, styleNormal: true },
 ];
 ---
 

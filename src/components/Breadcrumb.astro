@@ -2,6 +2,7 @@
 export interface BreadcrumbComponent {
   href?: string;
   label: string;
+  styleNormal?: boolean;
 }
 
 interface Props {
@@ -12,9 +13,57 @@ interface Props {
 const { breadcrumbs, description } = Astro.props;
 ---
 
-<div class="breadcrumbs-container">
-  {breadcrumbs.map((b) => (
-    <><span>{b.href ? <a href={b.href}>{b.label}</a> : b.label}</span> /</>
-  ))}
+<div class="breadcrumb-container">
+  <div class="breadcrumb-components">
+    {breadcrumbs.map((b, i) => {
+      const classes = ["component", { normal: b.styleNormal }];
+      return (
+        <>
+          {b.href
+            ? <a href={b.href} class:list={classes}>{b.label}</a>
+            : <span class:list={classes}>{b.label}</span>
+          }
+          {i !== breadcrumbs.length - 1 && <span aria-hidden="true" class="sep">·</span>}
+        </>
+    )})}
+  </div>
   {description && <span id="breadcrumb-description">{description}</span>}
 </div>
+
+<style>
+  .breadcrumb-container {
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+
+    .breadcrumb-components {
+      display: flex;
+      align-items: baseline;
+
+      .component {
+        font-style: italic;
+        color: var(--muted);
+        border-bottom: 0;
+      }
+
+      .component:hover {
+        color: var(--ink);
+      }
+
+      .sep {
+        padding: 0 0.3em;
+        font-style: normal;
+        color: var(--faint);
+        user-select: none;
+      }
+
+      .normal {
+        font-style: normal;
+        color: var(--ink);
+      }
+    }
+
+    #breadcrumb-description {
+      display: block;
+    }
+  }
+</style>
