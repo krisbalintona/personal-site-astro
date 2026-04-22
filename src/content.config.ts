@@ -38,13 +38,19 @@ const articles = defineCollection({
   schema: postSchema,
 });
 
-export const collections = { articles };
+const tags = defineCollection({
+  loader: glob({
+    pattern: "*/index.mdx",
+    base: "./src/content/tags",
+    generateId: ({ entry, data }) =>
+      data?.name ? slugify(data.name as string) : entry.split("/")[0],
+  }),
+  schema: z.object({
+    name: z.string(),
+  }),
+});
 
-// FIXME 2026-04-19: Right now all my collections are post
-// collections.  However, in the future, once I have non-post
-// collections, I should do something more like:
-//
-// type PostCollectionNames = "articles";
-//
-export type PostCollectionNames = keyof typeof collections;
+export const collections = { articles, tags };
+
+export type PostCollectionNames = "articles";
 export type AnyPost = CollectionEntry<PostCollectionNames>;
