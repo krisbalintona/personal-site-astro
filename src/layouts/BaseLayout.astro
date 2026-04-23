@@ -25,6 +25,17 @@ const { pageTitle } = Astro.props;
     <Font cssVariable="--font-primary" />
     <Font cssVariable="--font-ui" />
     <link rel="sitemap" href="/sitemap-index.xml">
+
+    <!-- RSS autodiscovery. See
+    https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery
+    for more information -->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Kristoffer Balintona — Posts"
+      href={new URL("rss.xml", Astro.site)}
+    >
+
     <title>{pageTitle}</title>
   </head>
 
