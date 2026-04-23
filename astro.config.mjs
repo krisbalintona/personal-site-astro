@@ -7,9 +7,11 @@ import expressiveCode from "astro-expressive-code";
 import typesafeRoutes from "astro-typesafe-routes";
 import { pluginFullscreen } from "expressive-code-fullscreen";
 
+const site = "https://kristofferbalintona.me";
+
 // https://astro.build/config
 export default defineConfig({
-  site: "https://kristofferbalintona.me",
+  site,
   prerenderConflictBehavior: "error",
   integrations: [
     expressiveCode({
@@ -42,7 +44,7 @@ export default defineConfig({
     }),
     mdx({ gfm: false }),
     typesafeRoutes(),
-    sitemap(),
+    sitemap({ filter: (page) => !page.startsWith(`${site}/posts/`) }),
   ],
   fonts: [
     {
