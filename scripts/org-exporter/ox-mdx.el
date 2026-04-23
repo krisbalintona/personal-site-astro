@@ -365,7 +365,11 @@ communication channel for the export process."
          frontmatter)
 
     (pcase entry-type
-      ("posts"
+      ("tags"
+       (let* ((name (when raw-title (concat "name: " raw-title)))
+              (draft (concat "draft: " (plist-get info :mdx-draft-p))))
+         (setq frontmatter (string-join (delq nil (list name draft)) "\n"))))
+      (_                                ; For "posts," use as default
        (let* ((title (when raw-title (concat "title: " raw-title)))
               (date-timestamp (car (plist-get info :date)))
               (date
@@ -382,11 +386,7 @@ communication channel for the export process."
                  (concat "tags:\n"
                          (mapconcat (lambda (tag) (format "  - %s" tag))
                                     parsed-tags "\n")))))
-         (setq frontmatter (string-join (delq nil (list title date draft tags)) "\n"))))
-      ("tags"
-       (let* ((name (when raw-title (concat "name: " raw-title)))
-              (draft (concat "draft: " (plist-get info :mdx-draft-p))))
-         (setq frontmatter (string-join (delq nil (list name draft)) "\n")))))
+         (setq frontmatter (string-join (delq nil (list title date draft tags)) "\n")))))
 
     ;; Final result
     (concat
@@ -595,7 +595,7 @@ Return the output directory's name."
     (:mdx-tags "MDX_TAGS" nil nil space)
     ;; REVIEW 2026-04-18: Does this have an effect in the md backend?
     (:html-self-link-headlines nil "html-self-link-headlines" t))
-  
+
   ;; Used to add new transcoders or overwrite those of the parent
   ;; backend.  See `org-export-define-backend' for more information on
   ;; backend transcoders
