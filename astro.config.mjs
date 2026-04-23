@@ -4,6 +4,7 @@ import mdx from "@astrojs/mdx";
 import { defineConfig, fontProviders } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import typesafeRoutes from "astro-typesafe-routes";
+import { pluginFullscreen } from "expressive-code-fullscreen";
 
 // https://astro.build/config
 export default defineConfig({
@@ -12,6 +13,7 @@ export default defineConfig({
   integrations: [
     expressiveCode({
       themes: ["material-theme-lighter"],
+      plugins: [pluginFullscreen()],
     }),
     mdx({ gfm: false }),
     typesafeRoutes(),
