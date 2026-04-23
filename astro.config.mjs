@@ -1,6 +1,7 @@
 // @ts-check
 
 import mdx from "@astrojs/mdx";
+import sitemap from "@astrojs/sitemap";
 import { defineConfig, fontProviders } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import typesafeRoutes from "astro-typesafe-routes";
@@ -41,6 +42,7 @@ export default defineConfig({
     }),
     mdx({ gfm: false }),
     typesafeRoutes(),
+    sitemap(),
   ],
   fonts: [
     {
