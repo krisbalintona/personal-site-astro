@@ -6,8 +6,7 @@ import { allPostEntries } from "@lib/posts.ts";
 import type { APIContext } from "astro";
 import { experimental_AstroContainer } from "astro/container";
 import { $path } from "astro-typesafe-routes/path";
-import { transform, walk } from "ultrahtml";
-import sanitize from "ultrahtml/transformers/sanitize";
+import sanitize from "sanitize-html";
 
 const sharedConfig = {
   stylesheet: "/pretty-feed-v3.xsl",
@@ -37,42 +36,66 @@ export function makeRSSFeed(
 const container = await experimental_AstroContainer.create();
 container.addServerRenderer({ renderer: mdxRenderer });
 
-const DOCTYPE_REGEX = /^<!DOCTYPE html>/;
-
 export const rssArticleItems: RSSFeedItem[] = await Promise.all(
   (await allPostEntries()).map(async (entry) => {
     const { Content } = await render(entry);
     const rawHTML: string = await container.renderToString(Content);
 
-    // Process and sanitize the raw content.  Taken from
-    // https://github.com/delucis/astro-blog-full-text-rss/blob/latest/src/pages/rss.xml.ts
-    // as pointed to by
-    // https://docs.astro.build/en/recipes/rss/#including-full-post-content,
-    // which also describes what is necessary to consider in HTML
-    // contained in RSS feeds
+    // Sanitize rendered content to HTML suitable for an RSS feed
+    // reader.
     //
-    // It does the following:
-    // - Removes `<!DOCTYPE html>` preamble
+    // The method below is a variant of the one found here:
+    // https://github.com/delucis/astro-blog-full-text-rss/blob/latest/src/pages/rss.xml.ts,
+    // which was pointed to by
+    // https://docs.astro.build/en/recipes/rss/#including-full-post-content.
+    // The difference is that we use the sanitize-html library to more
+    // thoroughly strip elements and classes; the documentation linked
+    // above shows a rudimentary usage of the library for this
+    // purpose.
+    //
+    // Using sanitize-html is more appropriate since Expressive Code
+    // (EC) and its plugins may introduce undesirable elements such as
+    // buttons.  Using sanitize-html also brings forward compatibility
+    // for any other elements I may introduce into my rendered entry
+    // content in the future.
+    //
+    // Below does the following:
+    // - Strips all elements not in the allowlist (including EC's copy
+    //   buttons, fullscreen toggles, SVG icons, and wrapper divs),
+    //   leaving code blocks as plain `<pre><code>`
     // - Makes link `href` and image `src` attributes absolute instead
-    //   of relative
-    // - Strips any `<script>` and `<style>` tags
-    const renderedHTML: string = await transform(
-      rawHTML.replace(DOCTYPE_REGEX, ""),
-      [
-        async (node) => {
-          await walk(node, (node) => {
-            if (node.name === "a" && node.attributes.href?.startsWith("/")) {
-              node.attributes.href = SITE_URL + node.attributes.href;
-            }
-            if (node.name === "img" && node.attributes.src?.startsWith("/")) {
-              node.attributes.src = SITE_URL + node.attributes.src;
-            }
-          });
-          return node;
-        },
-        sanitize({ dropElements: ["script", "style"] }),
-      ]
-    );
+    //   of relative, so they resolve correctly in feed readers that
+    //   have no knowledge of the site's base URL
+    // - Strips any `<script>` and `<style>` tags (covered implicitly
+    //   by sanitize-html's allowlist, since neither is a permitted
+    //   tag)
+    const renderedHTML: string = sanitize(rawHTML, {
+      // Preserve `img`s in feed content
+      allowedTags: sanitize.defaults.allowedTags.concat(["img"]),
+      // Convert site-relative hrefs to absolute URLs
+      transformTags: {
+        a: (tagName, attribs) => ({
+          tagName,
+          attribs: {
+            ...attribs,
+            ...(attribs.href && {
+              href: attribs.href.startsWith("/")
+                ? SITE_URL + attribs.href
+                : attribs.href,
+            }),
+          },
+        }),
+        img: (tagName, attribs) => ({
+          tagName,
+          attribs: {
+            ...attribs,
+            src: attribs.src?.startsWith("/")
+              ? SITE_URL + attribs.src
+              : attribs.src,
+          },
+        }),
+      },
+    });
 
     // See
     // https://github.com/withastro/astro/tree/main/packages/astro-rss:
