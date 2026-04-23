@@ -1,7 +1,8 @@
 import { getCollection } from "astro:content";
 import type { PostEntry } from "@lib/posts.ts";
 import type { APIContext } from "astro";
-import { type AstroAny, createRoute } from "astro-typesafe-routes/create-route";
+import { createRoute } from "astro-typesafe-routes/create-route";
+import { $path } from "astro-typesafe-routes/path";
 
 export const Route = createRoute({
   routeId: "/posts/[postid]",
@@ -21,11 +22,14 @@ export const getStaticPaths = Route.createGetStaticPaths(async () => {
   }));
 });
 
-export function GET(context: APIContext<{ post: PostEntry }>) {
-  const { post } = context.props;
+export const GET = ({ props, redirect }: APIContext<{ post: PostEntry }>) => {
+  const { post } = props;
 
-  return Route.redirect(context as AstroAny, {
-    to: `/${post.collection}/[slug]`,
-    params: { slug: post.data.slug },
-  });
-}
+  return redirect(
+    $path({
+      to: `/${post.collection}/[slug]`,
+      params: { slug: post.data.slug },
+    }),
+    301
+  );
+};
