@@ -1,4 +1,5 @@
 import generateRssFeed, { type RSSFeedItem } from "@astrojs/rss";
+import { SITE_TITLE } from "@lib/consts.ts";
 import { allPostEntries } from "@lib/posts.ts";
 import type { APIContext } from "astro";
 import { $path } from "astro-typesafe-routes/path";
@@ -36,3 +37,22 @@ export const rssArticleItems = (await allPostEntries()).map((entry) => ({
     params: { slug: entry.data.slug },
   }),
 }));
+
+export interface RSSFeed {
+  description: string;
+  items: RSSFeedItem[];
+  title: string;
+}
+
+export const RSSFeeds: Record<string, RSSFeed> = {
+  all: {
+    title: `${SITE_TITLE} — All`,
+    description: "All posts",
+    items: rssArticleItems,
+  },
+  articles: {
+    title: `${SITE_TITLE} — Articles`,
+    description: "Essays and long-form writing",
+    items: rssArticleItems,
+  },
+};

@@ -7,6 +7,8 @@ import "@styles/code.css";
 import { Font } from "astro:assets";
 import Footer from "@components/Footer.astro";
 import Header from "@components/Header.astro";
+import { RSSFeeds } from "@lib/rss";
+import { $path } from "astro-typesafe-routes/path";
 
 interface Props {
   pageTitle: string;
@@ -32,14 +34,14 @@ const { pageTitle } = Astro.props;
     <link
       rel="alternate"
       type="application/rss+xml"
-      title="Kristoffer Balintona — Articles"
-      href={new URL("feeds/all.xml", Astro.site)}
+      title={RSSFeeds.all.title}
+      href={$path({ to: "/feeds/[feed].xml", params: { feed: "all" } })}
     >
     <link
       rel="alternate"
       type="application/rss+xml"
-      title="Kristoffer Balintona — Articles"
-      href={new URL("feeds/articles.xml", Astro.site)}
+      title={RSSFeeds.articles.title}
+      href={$path({ to: "/feeds/[feed].xml", params: { feed: "articles" } })}
     >
 
     <title>{pageTitle}</title>
