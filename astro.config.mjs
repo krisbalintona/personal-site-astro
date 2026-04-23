@@ -14,6 +14,30 @@ export default defineConfig({
     expressiveCode({
       themes: ["material-theme-lighter"],
       plugins: [pluginFullscreen()],
+      styleOverrides: {
+        fullscreen: {
+          // Toolbar uses --ink instead of neutral gray to feel
+          // intentional on a warm site
+          toolbarBg: "color-mix(in srgb, var(--ink) 95%, transparent)",
+          toolbarBorder: "color-mix(in srgb, var(--ink) 15%, transparent)",
+
+          // Button styling
+          buttonBgHover: "color-mix(in srgb, var(--muted) 30%, transparent)",
+          buttonBgActive: "color-mix(in srgb, var(--black) 95%, transparent)",
+          buttonText: "var(--background)", // warmer than pure white
+          buttonBorder: "color-mix(in srgb, var(--faint) 25%, transparent)",
+          buttonFocus: "color-mix(in srgb, var(--accent) 50%, transparent)", // --accent for focus rings
+
+          // --black instead of neutral black keeps shadows warm
+          contentShadow: "color-mix(in srgb, var(--black) 40%, transparent)",
+
+          // Hints use --ink + --background for text to stay
+          // on-palette
+          hintBg: "color-mix(in srgb, var(--ink) 97%, transparent)",
+          hintText: "var(--background)",
+          hintBorder: "color-mix(in srgb, var(--faint) 20%, transparent)",
+        },
+      },
     }),
     mdx({ gfm: false }),
     typesafeRoutes(),
