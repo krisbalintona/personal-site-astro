@@ -1,4 +1,4 @@
-import { defineCollection } from "astro:content";
+import { type CollectionEntry, defineCollection } from "astro:content";
 import { dateToPostId, postSchema } from "@lib/posts.ts";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
@@ -29,4 +29,14 @@ const tags = defineCollection({
   }),
 });
 
-export const collections = { articles, tags };
+const standalone = defineCollection({
+  loader: glob({
+    pattern: "*/index.mdx",
+    base: "./src/content/standalone",
+  }),
+  schema: postSchema,
+});
+
+export type CollectionName = keyof typeof collections;
+export type AnyCollectionEntry = CollectionEntry<CollectionName>;
+export const collections = { articles, tags, standalone };

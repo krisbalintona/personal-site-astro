@@ -42,6 +42,9 @@ This option is used to define the value of other relevant paths.")
 (defconst org-mdx-content-dir (expand-file-name "src/content/" org-mdx-root-dir)
   "Directory where all MDX content resides.")
 
+(defconst org-mdx-standalone-dir (expand-file-name "standalone/" org-mdx-content-dir)
+  "Directory where standalone content will be exported to.")
+
 (defconst org-mdx-posts-dir (expand-file-name "posts/" org-mdx-content-dir)
   "Directory where posts will be exported to.")
 
@@ -357,27 +360,34 @@ an MDX file whose type is a string."
 CONTENTS is the transcoded contents string (returned by the
 inner-template backend transcoder).  INFO is a plist used as a
 communication channel for the export process."
-  (let* ((entry-type (plist-get info :mdx-entry-type))
-         (raw-title
+  (let* ((entry-type
+          (or (plist-get info :mdx-entry-type)
+              ;; Infer project when not using org-publish.  Otherwise
+              ;; there will be no frontmatter
+              (and (buffer-file-name)
+                   (car (org-publish-get-project-from-filename (buffer-file-name))))))
+         (raw-title (org-mdx--title-to-utf8 info))
+         (escaped-title
           ;; We want a plain-text (UTF-8, since our HTML is encoded in
           ;; UTF-8 anyway) version of the title, since that's what we
           ;; want rendered on the page
-          (org-mdx--frontmatter-quote-string (org-mdx--title-to-utf8 info)))
+          (when raw-title (org-mdx--frontmatter-quote-string raw-title)))
+         (title (when raw-title (concat "title: " escaped-title)))
+         (raw-slug (plist-get info :mdx-slug))
+         (escaped-slug (when raw-slug (org-mdx--frontmatter-quote-string raw-slug)))
+         (slug (when raw-slug (concat "slug: " escaped-slug)))
+         (date-timestamp (car (plist-get info :date)))
+         (date
+          (when date-timestamp
+            (concat "pubDate: " (org-format-timestamp date-timestamp "%FT%T%:z")))) ; YAML 1.1 timestamp spec
+         (draft (concat "draft: " (plist-get info :mdx-draft-p))) ; Return YAML boolean
          frontmatter)
 
     (pcase entry-type
-      ("tags"
-       (let* ((name (when raw-title (concat "name: " raw-title)))
-              (draft (concat "draft: " (plist-get info :mdx-draft-p))))
-         (setq frontmatter (string-join (delq nil (list name draft)) "\n"))))
-      (_                                ; For "posts," use as default
-       (let* ((title (when raw-title (concat "title: " raw-title)))
-              (date-timestamp (car (plist-get info :date)))
-              (date
-               (when date-timestamp
-                 (concat "pubDate: " (org-format-timestamp date-timestamp "%FT%T%:z")))) ; YAML 1.1 timestamp spec
-              (draft (concat "draft: " (plist-get info :mdx-draft-p))) ; Return YAML boolean
-              (raw-tags (plist-get info :mdx-tags))
+      ("standalone"
+       (setq frontmatter (string-join (delq nil (list title slug date draft)) "\n")))
+      ("posts"
+       (let* ((raw-tags (plist-get info :mdx-tags))
               (parsed-tags
                (when (org-string-nw-p raw-tags)
                  (mapcar #'org-mdx--frontmatter-quote-string
@@ -387,13 +397,17 @@ communication channel for the export process."
                  (concat "tags:\n"
                          (mapconcat (lambda (tag) (format "  - %s" tag))
                                     parsed-tags "\n")))))
-         (setq frontmatter (string-join (delq nil (list title date draft tags)) "\n")))))
+         (setq frontmatter (string-join (delq nil (list title date draft tags)) "\n"))))
+      ("tags"
+       (let* ((name (when raw-title (concat "name: " escaped-title))))
+         (setq frontmatter (string-join (delq nil (list name draft)) "\n")))))
 
     ;; Final result
     (concat
-     "---\n"
-     frontmatter
-     "\n---\n"
+     (when frontmatter
+       (concat "---\n"
+               frontmatter
+               "\n---\n"))
      contents)))
 
 ;;;;; Exporters
@@ -610,7 +624,8 @@ Return the output directory's name."
   ;; Used to define new options or overwrite those of the parent
   ;; backend
   :options-alist
-  '((:mdx-draft-p "MDX_DRAFT" "mdx-draft" "true")
+  '((:mdx-slug "MDX_SLUG" nil nil)
+    (:mdx-draft-p "MDX_DRAFT" "mdx-draft" "true")
     (:mdx-tags "MDX_TAGS" nil nil space)
     ;; REVIEW 2026-04-18: Does this have an effect in the md backend?
     (:html-self-link-headlines nil "html-self-link-headlines" t))
@@ -674,12 +689,10 @@ This function is used as the :publishing-function in
    ;; appropriate.
    org-publish-use-timestamps-flag nil
    org-publish-project-alist
-   `(("bio"
-      :base-directory ,krisb-manuscript-blog-directory
-      :publishing-directory ,org-mdx-content-dir
-      :exclude ".*"
-      :include ,(directory-files krisb-manuscript-blog-directory t "20260420T234605")
-      :recursive nil
+   `(("standalone"
+      :base-directory ,(expand-file-name "standalone" krisb-manuscript-blog-directory)
+      :publishing-directory ,org-mdx-standalone-dir
+      :recursive t
       ,@base-options)
      ("posts"
       :base-directory ,(expand-file-name "posts" krisb-manuscript-blog-directory)
