@@ -1,7 +1,7 @@
 ---
 export interface ListingItem {
-  date: Date;
   href: string;
+  pubDate: Date;
   title: string;
 }
 
@@ -15,7 +15,7 @@ const hasItems = items.length > 0;
   <li>
     <article>
       <a href={item.href}>{item.title}</a>,
-    posted on {item.date}
+    posted on {item.pubDate}
     </article>
   </li>
 ))}

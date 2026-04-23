@@ -18,7 +18,7 @@ const articles = await getCollection("articles", finalFilter);
 const articleItems: ListingItem[] = articles.map(
   (article: CollectionEntry<"articles">): ListingItem => ({
     title: article.data.title,
-    date: article.data.date,
+    pubDate: article.data.pubDate,
     href: $path({
       to: "/articles/[slug]",
       params: { slug: article.data.slug },

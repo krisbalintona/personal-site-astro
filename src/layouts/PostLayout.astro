@@ -15,15 +15,15 @@ interface Props {
 
 const { post } = Astro.props;
 
-const date = post.data.date;
+const pubDate = post.data.pubDate;
 const title = post.data.title;
 
 const breadcrumbs: BreadcrumbComponent[] = [
   { label: post.collection, href: $path({ to: `/${post.collection}` }) },
 ];
 
-const formattedDateTime = date.toISOString().replace(/\.\d{3}Z$/, () => {
-  const offset = -date.getTimezoneOffset();
+const formattedDateTime = pubDate.toISOString().replace(/\.\d{3}Z$/, () => {
+  const offset = -pubDate.getTimezoneOffset();
   const pad = (n: number) => String(n).padStart(2, "0");
   return (
     (offset >= 0 ? "+" : "-") +
@@ -32,7 +32,7 @@ const formattedDateTime = date.toISOString().replace(/\.\d{3}Z$/, () => {
     pad(Math.abs(offset) % 60)
   );
 });
-const formattedVisibleDate = date.toLocaleDateString("en-US", {
+const formattedVisibleDate = pubDate.toLocaleDateString("en-US", {
   year: "numeric",
   month: "long",
   day: "numeric",

@@ -1,4 +1,5 @@
 import { type CollectionEntry, defineCollection } from "astro:content";
+import { rssSchema } from "@astrojs/rss";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import slugify from "slugify";
@@ -14,10 +15,14 @@ function dateToPostId(date: Date): string {
   );
 }
 
-const postSchema = z
-  .object({
+// See https://github.com/withastro/astro/tree/main/packages/astro-rss
+// for all properties of `rssSchema`.  Although all the properties in
+// `rssSchema` are typed as optional, RSS feeds themselves to have
+// required XML fields.
+const postSchema = rssSchema
+  .extend({
     title: z.string().default("Untitled"),
-    date: z.date().default(new Date("1970-01-01")),
+    pubDate: z.coerce.date().default(new Date("1970-01-01")),
     draft: z.boolean().default(true),
     tags: z.array(z.string()).optional(),
   })
@@ -35,6 +40,7 @@ const articles = defineCollection({
     pattern: "*/index.mdx",
     base: "./src/content/posts",
     generateId: ({ entry, data }) =>
+      // I use the entry ID as the permalink "slug"
       data?.date && data?.draft === false
         ? dateToPostId(data.date as Date)
         : entry.split("/")[0],

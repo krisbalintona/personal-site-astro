@@ -370,7 +370,7 @@ communication channel for the export process."
               (date-timestamp (car (plist-get info :date)))
               (date
                (when date-timestamp
-                 (concat "date: " (org-format-timestamp date-timestamp "%FT%T%:z")))) ; YAML 1.1 timestamp spec
+                 (concat "pubDate: " (org-format-timestamp date-timestamp "%FT%T%:z")))) ; YAML 1.1 timestamp spec
               (draft (concat "draft: " (plist-get info :mdx-draft-p))) ; Return YAML boolean
               (raw-tags (plist-get info :mdx-tags))
               (parsed-tags
