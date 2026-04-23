@@ -661,8 +661,6 @@ This function is used as the :publishing-function in
 
 ;; Make compiler happy
 (defvar krisb-manuscript-blog-directory)
-(defvar krisb-manuscript-blog-posts-directory)
-(defvar krisb-manuscript-blog-tags-directory)
 
 (let ((base-options '( :with-toc nil
                        :with-tags nil
@@ -684,13 +682,13 @@ This function is used as the :publishing-function in
       :recursive nil
       ,@base-options)
      ("posts"
-      :base-directory ,krisb-manuscript-blog-posts-directory
+      :base-directory ,(expand-file-name "posts" krisb-manuscript-blog-directory)
       :publishing-directory ,org-mdx-posts-dir
       :recursive t
       :mdx-entry-type "posts"
       ,@base-options)
      ("tags"
-      :base-directory ,krisb-manuscript-blog-tags-directory
+      :base-directory ,(expand-file-name "tags" krisb-manuscript-blog-directory)
       :publishing-directory ,org-mdx-tags-dir
       :recursive t
       :mdx-entry-type "tags"
