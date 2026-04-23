@@ -2,7 +2,7 @@
 
 import mdx from "@astrojs/mdx";
 import { defineConfig, fontProviders } from "astro/config";
-
+import expressiveCode from "astro-expressive-code";
 import typesafeRoutes from "astro-typesafe-routes";
 
 // https://astro.build/config
@@ -10,11 +10,10 @@ export default defineConfig({
   site: "https://kristofferbalintona.me",
   prerenderConflictBehavior: "error",
   integrations: [
-    mdx({
-      syntaxHighlight: "shiki",
-      shikiConfig: { theme: "github-light" },
-      gfm: false,
+    expressiveCode({
+      themes: ["github-light"],
     }),
+    mdx({ gfm: false }),
     typesafeRoutes(),
   ],
   fonts: [

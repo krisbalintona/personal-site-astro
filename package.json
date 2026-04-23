@@ -17,6 +17,7 @@
     "@astrojs/check": "^0.9.8",
     "@astrojs/mdx": "^5.0.3",
     "astro": "^6.1.8",
+    "astro-expressive-code": "^0.41.7",
     "astro-typesafe-routes": "^5.1.0",
     "typescript": "^5.9.3"
   },
