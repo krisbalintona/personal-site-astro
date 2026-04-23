@@ -1,8 +1,14 @@
 ---
+import { formatDate, toDateTimeAttribute } from "@lib/date";
+
 export interface ListingItem {
   href: string;
   pubDate: Date;
   title: string;
+}
+
+interface Props {
+  items: ListingItem[];
 }
 
 const { items } = Astro.props;
@@ -10,13 +16,44 @@ const hasItems = items.length > 0;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
-<ul>
+<ul class="listing">
   {hasItems && items.map((item: ListingItem) => (
-  <li>
-    <article>
-      <a href={item.href}>{item.title}</a>,
-    posted on {item.pubDate}
-    </article>
-  </li>
-))}
+    <li class="listing-item">
+      <a class="title" href={item.href}>{item.title}</a>
+      <time class="date" datetime={toDateTimeAttribute(item.pubDate)}>
+        {formatDate(item.pubDate)}
+      </time>
+    </li>
+  ))}
 </ul>
+
+<style>
+  .listing {
+    padding: 30px 0;
+    margin: 0;
+    list-style: none;
+
+    .listing-item {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1em;
+
+      a {
+        color: var(--ink);
+      }
+
+      a:hover {
+        color: var(--accent);
+      }
+
+      a,
+      time {
+        border-bottom: none;
+      }
+
+      time {
+        color: var(--muted);
+      }
+    }
+  }
+</style>
