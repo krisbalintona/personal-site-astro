@@ -11,7 +11,7 @@ export default defineConfig({
   prerenderConflictBehavior: "error",
   integrations: [
     expressiveCode({
-      themes: ["github-light"],
+      themes: ["material-theme-lighter"],
     }),
     mdx({ gfm: false }),
     typesafeRoutes(),
