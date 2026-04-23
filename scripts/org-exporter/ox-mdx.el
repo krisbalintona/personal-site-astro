@@ -358,10 +358,11 @@ CONTENTS is the transcoded contents string (returned by the
 inner-template backend transcoder).  INFO is a plist used as a
 communication channel for the export process."
   (let* ((entry-type (plist-get info :mdx-entry-type))
-         (raw-title (org-mdx--frontmatter-quote-string
-                     (org-mdx-plain-text
-                      (org-element-interpret-data (plist-get info :title))
-                      info)))
+         (raw-title
+          ;; We want a plain-text (UTF-8, since our HTML is encoded in
+          ;; UTF-8 anyway) version of the title, since that's what we
+          ;; want rendered on the page
+          (org-mdx--frontmatter-quote-string (org-mdx--title-to-utf8 info)))
          frontmatter)
 
     (pcase entry-type
@@ -421,23 +422,41 @@ non-nil."
     async subtreep visible-only body-only ext-plist
     #'markdown-mode))
 
+(defun org-mdx--interpret-as-ascii (data charset)
+  "Return DATA as an ASCII string.
+DATA is a parse tree, an element, an object or a secondary string to
+interpret.  CHARSET is the ASCII charset to export to.  For possible
+values, see `org-ascii-charset'."
+  (string-trim
+   (org-export-string-as
+    data
+    'ascii t `( :ascii-charset ,charset
+                ;; Newlines may be inserted to wrap the text according
+                ;; to :ascii-text-width or `org-ascii-text-width.'
+                ;; Prevent this
+                :ascii-text-width ,most-positive-fixnum))))
+
 (defun org-mdx--title-to-ascii (info)
   "Return the document title as an ASCII string.
 Convert the document title to a ASCII string via the ASCII exporter.
 Returns nil if :with-title is not set in INFO
 
 INFO is a plist holding export information."
-  (string-trim
-   (org-export-string-as
-    (org-element-interpret-data
-     (when (plist-get info :with-title)
-       (plist-get info :title)))
-    'ascii t `(;; Export to ASCII, as opposed to e.g. UTF-8
-               :ascii-charset ascii
-               ;; Newlines may be inserted to wrap the text according
-               ;; to :ascii-text-width or `org-ascii-text-width.'
-               ;; Prevent this
-               :ascii-text-width ,most-positive-fixnum))))
+  (org-mdx--interpret-as-ascii
+   (org-element-interpret-data
+    (when (plist-get info :with-title) (plist-get info :title)))
+   'ascii))
+
+(defun org-mdx--title-to-utf8 (info)
+  "Return the document title as a UTF-8 string.
+Convert the document title to a ASCII string via the ASCII exporter.
+Returns nil if :with-title is not set in INFO
+
+INFO is a plist holding export information."
+  (org-mdx--interpret-as-ascii
+   (org-element-interpret-data
+    (when (plist-get info :with-title) (plist-get info :title)))
+   'utf-8))
 
 (defun org-mdx--title-to-subdirectory-name (title)
   "Transform TITLE into a slug.
