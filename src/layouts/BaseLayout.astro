@@ -32,8 +32,14 @@ const { pageTitle } = Astro.props;
     <link
       rel="alternate"
       type="application/rss+xml"
-      title="Kristoffer Balintona — Posts"
-      href={new URL("rss.xml", Astro.site)}
+      title="Kristoffer Balintona — Articles"
+      href={new URL("feeds/all.xml", Astro.site)}
+    >
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Kristoffer Balintona — Articles"
+      href={new URL("feeds/articles.xml", Astro.site)}
     >
 
     <title>{pageTitle}</title>
