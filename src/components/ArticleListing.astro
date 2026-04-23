@@ -6,25 +6,31 @@ import type { PostEntry } from "@lib/posts";
 import { $path } from "astro-typesafe-routes/path";
 
 interface Props {
+  descending?: boolean;
   extraFilter?: (entry: PostEntry) => boolean;
 }
 
-const { extraFilter = () => true } = Astro.props;
+const { extraFilter = () => true, descending = true } = Astro.props;
 
 const finalFilter = (entry: PostEntry): boolean =>
   isPublished(entry) && extraFilter(entry);
 
 const articles = await getCollection("articles", finalFilter);
-const articleItems: ListingItem[] = articles.map(
-  (article: CollectionEntry<"articles">): ListingItem => ({
-    title: article.data.title,
-    pubDate: article.data.pubDate,
-    href: $path({
-      to: "/articles/[slug]",
-      params: { slug: article.data.slug },
-    }),
-  })
-);
+const articleItems: ListingItem[] = articles
+  .map(
+    (article: CollectionEntry<"articles">): ListingItem => ({
+      title: article.data.title,
+      pubDate: article.data.pubDate,
+      href: $path({
+        to: "/articles/[slug]",
+        params: { slug: article.data.slug },
+      }),
+    })
+  )
+  .sort((a, b) => {
+    const diff = a.pubDate.getTime() - b.pubDate.getTime();
+    return descending ? -diff : diff;
+  });
 ---
 
 <div class="article-listing">
