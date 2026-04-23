@@ -6,7 +6,7 @@ import Breadcrumb, {
 } from "@components/Breadcrumb.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getAllTags } from "@lib/getTags";
-import type { AnyPost } from "@src/content.config";
+import type { PostEntry } from "@lib/posts";
 import { createRoute } from "astro-typesafe-routes/create-route";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
@@ -28,7 +28,7 @@ interface Props {
 
 const { tag } = Astro.props;
 
-function hasThisTag(entry: AnyPost): boolean {
+function hasThisTag(entry: PostEntry): boolean {
   const entryTags: string[] = entry.data.tags ?? [];
 
   return entryTags.includes(tag);

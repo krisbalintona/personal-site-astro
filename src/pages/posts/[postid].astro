@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import type { AnyPost } from "@src/content.config";
+import type { PostEntry } from "@lib/posts";
 import { createRoute } from "astro-typesafe-routes/create-route";
 
 export const Route = createRoute({
@@ -22,7 +22,7 @@ export const getStaticPaths = Route.createGetStaticPaths(async () => {
 });
 
 interface Props {
-  post: AnyPost;
+  post: PostEntry;
 }
 
 // NOTE 2026-04-19: I prefix the variable with an underscore because

@@ -4,13 +4,13 @@ import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import type { AnyPost } from "@src/content.config";
+import type { PostEntry } from "@lib/posts";
 import Link from "astro-typesafe-routes/link";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
 
 interface Props {
-  post: AnyPost;
+  post: PostEntry;
 }
 
 const { post } = Astro.props;

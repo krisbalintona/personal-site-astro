@@ -2,16 +2,16 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import Listing, { type ListingItem } from "@components/Listing.astro";
 import isPublished from "@lib/isPublished";
-import type { AnyPost } from "@src/content.config";
+import type { PostEntry } from "@lib/posts";
 import { $path } from "astro-typesafe-routes/path";
 
 interface Props {
-  extraFilter?: (entry: AnyPost) => boolean;
+  extraFilter?: (entry: PostEntry) => boolean;
 }
 
 const { extraFilter = () => true } = Astro.props;
 
-const finalFilter = (entry: AnyPost): boolean =>
+const finalFilter = (entry: PostEntry): boolean =>
   isPublished(entry) && extraFilter(entry);
 
 const articles = await getCollection("articles", finalFilter);

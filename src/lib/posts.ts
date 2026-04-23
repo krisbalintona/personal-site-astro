@@ -1,4 +1,4 @@
-import type { CollectionEntry } from "astro:content";
+import { type CollectionEntry, getCollection } from "astro:content";
 import { rssSchema } from "@astrojs/rss";
 import { z } from "astro/zod";
 import slugify from "slugify";
@@ -30,8 +30,12 @@ export const postSchema = rssSchema
     slug: slugify(data.title),
   }));
 
-// Extract the type of the parsed output of `postSchema`.  See
-// https://v3.zod.dev/?id=type-inference
-export type Post = z.infer<typeof postSchema>;
-export type PostCollectionNames = "articles";
-export type AnyPost = CollectionEntry<PostCollectionNames>;
+export const PostCollectionNames = ["articles"] as const;
+export type PostCollection = (typeof PostCollectionNames)[number];
+export type PostEntry = CollectionEntry<PostCollection>;
+
+export async function allPostEntries(): Promise<PostEntry[]> {
+  return (
+    await Promise.all(PostCollectionNames.map((name) => getCollection(name)))
+  ).flat();
+}

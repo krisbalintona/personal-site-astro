@@ -1,5 +1,5 @@
 import { defineCollection } from "astro:content";
-import { dateToPostId, postSchema } from "@lib/content.ts";
+import { dateToPostId, postSchema } from "@lib/posts.ts";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import slugify from "slugify";
