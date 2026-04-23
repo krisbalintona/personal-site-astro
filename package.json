@@ -21,6 +21,7 @@
     "astro": "^6.1.8",
     "astro-expressive-code": "^0.41.7",
     "astro-typesafe-routes": "^5.1.0",
+    "sanitize-html": "^2.17.3",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
@@ -28,6 +29,7 @@
     "@astrojs/ts-plugin": "^1.10.7",
     "@biomejs/biome": "^2.4.11",
     "@types/node": "^25.6.0",
+    "@types/sanitize-html": "^2.16.1",
     "cheerio": "^1.2.0",
     "expressive-code-fullscreen": "^1.1.0",
     "shiki": "^4.0.2",
