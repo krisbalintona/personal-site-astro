@@ -7,6 +7,7 @@ import expressiveCode from "astro-expressive-code";
 import typesafeRoutes from "astro-typesafe-routes";
 import { pluginFullscreen } from "expressive-code-fullscreen";
 import { SITE_URL } from "./src/lib/consts.ts";
+import { faviconRss } from "./src/lib/faviconRss.ts";
 
 // https://astro.build/config
 export default defineConfig({
@@ -44,6 +45,7 @@ export default defineConfig({
     mdx({ gfm: false }),
     typesafeRoutes(),
     sitemap({ filter: (page) => !page.startsWith(`${SITE_URL}/posts/`) }),
+    faviconRss(),
   ],
   fonts: [
     {

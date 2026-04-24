@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # elisp byte compile files
 *.elc
+
+# auto-generated images for RSS feeds
+public/favicon-rss*

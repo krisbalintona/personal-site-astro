@@ -8,10 +8,7 @@ import { experimental_AstroContainer } from "astro/container";
 import { $path } from "astro-typesafe-routes/path";
 import sanitize from "sanitize-html";
 
-const sharedConfig = {
-  stylesheet: "/pretty-feed-v3.xsl",
-  customData: "<language>en-us</language>",
-};
+const TRAILING_SLASH_REGEX = /\/$/;
 
 export function makeRSSFeed(
   context: APIContext,
@@ -22,12 +19,27 @@ export function makeRSSFeed(
   if (!context.site) {
     throw new Error("site is not set in astro.config.ts");
   }
+  // Normalize, ensuring there is no trailing slash.  This way, the URLs
+  // below aren't dependent on the Astro `trailingSlash` setting
+  const siteURL = context.site.href.replace(TRAILING_SLASH_REGEX, "");
 
   return generateRssFeed({
-    ...sharedConfig,
-    site: context.site,
+    site: siteURL,
     title,
     description,
+    stylesheet: "/pretty-feed-v3.xsl",
+    // NOTE: As specified here
+    // (https://www.rssboard.org/rss-specification#ltimagegtSubelementOfLtchannelgt),
+    // in practice the image <title> and <link> should have the same value
+    // as the channel's <title> and <link>
+    customData: `
+    <language>en-us</language>
+    <image>
+      <url>${siteURL}/favicon-rss.png</url>
+      <title>${title}</title>
+      <link>${siteURL}</link>
+    </image>
+    `,
     items,
   });
 }
