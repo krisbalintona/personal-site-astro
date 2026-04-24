@@ -5,6 +5,7 @@ draft: false
 tags:
   - "Emacs"
 ---
+import { Image } from "astro:assets";
 import Alert from "@components/Alert.astro";
 import Timestamp from "@components/Timestamp.astro";
 
@@ -47,7 +48,10 @@ I will be going over my personal Emacs' text completion (e.g. `company-mode` and
 
 ## What is `corfu`? How does it differ from `company`?
 
-![img](assets/gif1.gif "The default `corfu` popup window. The GIF's framerate is low, which makes `corfu` appear less performant here than in actuality.")
+<figure>
+<Image src={import("assets/gif1.gif")} alt="img" />
+<figcaption>The default `corfu` popup window. The GIF's framerate is low, which makes `corfu` appear less performant here than in actuality.</figcaption>
+</figure>
 
 `Corfu` is a text completion (e.g. `completion-at-point`, `company-mode`) package. In my opinion, since its release, `corfu` has not gotten the attention that it deserves. I prefer it to `company` for the following reasons:
 
@@ -179,7 +183,10 @@ I do not use this workflow<sup><a id="fnr.3" class="footref" href="#fn.3" role="
 
 This means that in commands like `eval-expression`, `corfu` is able to be used (via `<tab>`) and provide completion.
 
-![img](assets/2022-03-01_16-52-17_screenshot.png "Using `corfu` in the minibuffer prompt for `eval-expression`.")
+<figure>
+<Image src={import("assets/2022-03-01_16-52-17_screenshot.png")} alt="img" />
+<figcaption>Using `corfu` in the minibuffer prompt for `eval-expression`.</figcaption>
+</figure>
 
 Additionally, for `lsp-mode` buffers, I have the following lines (this is entirely optional and preferential):
 
@@ -290,7 +297,10 @@ default lsp-passthrough."
 
 `Kind-icon` is essentially `company-box-icons` for `corfu`. It adds icons to the left margin of the `corfu` popup that represent the ‘function’ (e.g. variable, method, file) of that candidate.
 
-![img](assets/2022-02-28_00-12-22_screenshot.png "Using `corfu-doc` in `java-mode` with completion candidates provided by `lsp-mode`.")
+<figure>
+<Image src={import("assets/2022-02-28_00-12-22_screenshot.png")} alt="img" />
+<figcaption>Using `corfu-doc` in `java-mode` with completion candidates provided by `lsp-mode`.</figcaption>
+</figure>
 
 The following is my configuration:
 
@@ -328,7 +338,10 @@ The following is my configuration:
 
 `Corfu-doc` is basically `company-quickhelp` for `corfu`. It shows the documentation of the selected candidate in an adjacent popup window.
 
-![img](assets/2022-02-28_00-17-53_screenshot.png "Using `corfu-doc` in a `corfu` popup. Called from a `java` file with completion candidates provided by `lsp-mode`.")
+<figure>
+<Image src={import("assets/2022-02-28_00-17-53_screenshot.png")} alt="img" />
+<figcaption>Using `corfu-doc` in a `corfu` popup. Called from a `java` file with completion candidates provided by `lsp-mode`.</figcaption>
+</figure>
 
 Here is a sample configuration<sup><a id="fnr.4" class="footref" href="#fn.4" role="doc-backlink">4</a></sup>:
 

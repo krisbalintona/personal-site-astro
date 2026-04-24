@@ -5,6 +5,7 @@ draft: false
 tags:
   - "Emacs"
 ---
+import { Image } from "astro:assets";
 import Alert from "@components/Alert.astro";
 import Timestamp from "@components/Timestamp.astro";
 
@@ -50,9 +51,15 @@ I will be walking through my personal Emacs' minibuffer UI (which means packages
 
 The following is `vertico` with `marginalia` annotations right-aligned in the minibuffer.
 
-![img](assets/2022-02-22_14-52-49_screenshot.png "Using `helpful-variable`")
+<figure>
+<Image src={import("assets/2022-02-22_14-52-49_screenshot.png")} alt="img" />
+<figcaption>Using `helpful-variable`</figcaption>
+</figure>
 
-![img](assets/2022-02-22_15-03-29_screenshot.png "Using `find-file`")
+<figure>
+<Image src={import("assets/2022-02-22_15-03-29_screenshot.png")} alt="img" />
+<figcaption>Using `find-file`</figcaption>
+</figure>
 
 Marginalia is painless to set up. Remember, I use `general.el` to set keybindings:
 
@@ -75,7 +82,10 @@ Marginalia is painless to set up. Remember, I use `general.el` to set keybinding
 
 `Marginalia`, `Vertico`, and `Orderless` have already received considerable exposure, but `all-the-icons-completion` has not.
 
-![img](assets/2022-02-22_15-13-22_screenshot.png "Using `find-file` in a directory with subdirectories, python files, a .txt file, and an org file. You can see the icons in the far left.")
+<figure>
+<Image src={import("assets/2022-02-22_15-13-22_screenshot.png")} alt="img" />
+<figcaption>Using `find-file` in a directory with subdirectories, python files, a .txt file, and an org file. You can see the icons in the far left.</figcaption>
+</figure>
 
 `All-the-icons-completion` is also dead-simple to set up:
 
@@ -174,22 +184,40 @@ With the extensions installed, we have a lot of room to set their variables to o
 
 1.  `buffer` — minibuffer treated as a normal, separate buffer,
     
-    ![img](assets/2022-02-22_15-25-29_screenshot.png "`Vertico-buffer` UI (minibuffer now a separate window)")
+    <figure>
+    <Image src={import("assets/2022-02-22_15-25-29_screenshot.png")} alt="img" />
+    <figcaption>`Vertico-buffer` UI (minibuffer now a separate window)</figcaption>
+    </figure>
 2.  `flat` — a flat format (like `ido`),
     
-    ![img](assets/2022-02-22_15-23-05_screenshot.png "`Vertico-flat` minibuffer UI")
+    <figure>
+    <Image src={import("assets/2022-02-22_15-23-05_screenshot.png")} alt="img" />
+    <figcaption>`Vertico-flat` minibuffer UI</figcaption>
+    </figure>
 3.  `grid` — a grid format,
     
-    ![img](assets/2022-02-22_15-27-16_screenshot.png "`Vertico-grid` UI")
+    <figure>
+    <Image src={import("assets/2022-02-22_15-27-16_screenshot.png")} alt="img" />
+    <figcaption>`Vertico-grid` UI</figcaption>
+    </figure>
 4.  `reverse` — moves the area in which you type above the candidates, like `selectrum`,
     
-    ![img](assets/2022-02-22_15-28-46_screenshot.png "`Vertico-reverse` UI. Notice the text area is below the candidates. Moreover, the candidates are in reverse order.")
+    <figure>
+    <Image src={import("assets/2022-02-22_15-28-46_screenshot.png")} alt="img" />
+    <figcaption>`Vertico-reverse` UI. Notice the text area is below the candidates. Moreover, the candidates are in reverse order.</figcaption>
+    </figure>
 5.  `unobtrusive` — like the `vertico-flat` format, but only showing the selected candidate,
     
-    ![img](assets/2022-02-22_15-30-27_screenshot.png "`Vertico-unobtrusive` UI (there are multiple files in this directory, only the current candidate is shown)")
+    <figure>
+    <Image src={import("assets/2022-02-22_15-30-27_screenshot.png")} alt="img" />
+    <figcaption>`Vertico-unobtrusive` UI (there are multiple files in this directory, only the current candidate is shown)</figcaption>
+    </figure>
 6.  `indexed` — allows you “[to select indexed candidates with prefix arguments](https://github.com/minad/vertico#extensions)”
     
-    ![img](assets/2022-02-22_15-31-45_screenshot.png "`Vertico-indexed` UI")
+    <figure>
+    <Image src={import("assets/2022-02-22_15-31-45_screenshot.png")} alt="img" />
+    <figcaption>`Vertico-indexed` UI</figcaption>
+    </figure>
 
 These formats each have a separate minor-mode which can be activated if you want to use that format singly. However, with `vertico-multiform-mode` as well as configuration of `vertico-multiform-categories`, `vertico-multiform-commands`, and keybinds, you can enable/disable multiple of these formats simultaneously:
 
@@ -309,7 +337,10 @@ When using a command for selecting a file in the minibuffer, the following fixes
 :hook (rfn-eshadow-update-overlay . vertico-directory-tidy) ; Correct file path when changed
 ```
 
-![img](assets/2022-02-22_15-40-59_demonstrating-rfn-eshadow-update-overlay.gif "Using `find-file` and going from a subdirectory in `$HOME` to the distant `/tmp/` directory. Notice that the file-path is “cleaned up.”")
+<figure>
+<Image src={import("assets/2022-02-22_15-40-59_demonstrating-rfn-eshadow-update-overlay.gif")} alt="img" />
+<figcaption>Using `find-file` and going from a subdirectory in `$HOME` to the distant `/tmp/` directory. Notice that the file-path is “cleaned up.”</figcaption>
+</figure>
 
 Finally, the following makes working with remote files via `tramp` easier.
 
@@ -485,7 +516,10 @@ However, we want to be more interesting! The following configures the matching s
 
 ## Style dispatchers
 
-![img](assets/2022-02-22_15-18-54_screenshot.png "A first component of “lm” using the `prot-orderless-strict-initialism-dispatcher` style dispatcher, and a second component of “map” using the `prot-orderless-literal-dispatcher`.")
+<figure>
+<Image src={import("assets/2022-02-22_15-18-54_screenshot.png")} alt="img" />
+<figcaption>A first component of “lm” using the `prot-orderless-strict-initialism-dispatcher` style dispatcher, and a second component of “map” using the `prot-orderless-literal-dispatcher`.</figcaption>
+</figure>
 
 Orderless becomes much more powerful when using its style dispatchers. A description of style dispatches can be found [here](https://github.com/oantolin/orderless#style-dispatchers). Essentially, you can choose which matching style is used for a particular `orderless` component. Thus, one component can use the `orderless-initialism` matching style while the next can use the `orderless-literal` matching style, and the result will be candidates which match both styles:
 

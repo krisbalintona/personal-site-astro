@@ -88,11 +88,22 @@ const { Content } = await render(post);
       font-size: 1.8rem;
     }
 
+    /* "Bleed" effect for code blocks, standalone images, and figures */
+    .bleed,
+    figure,
     img {
       --bleed: 2rem;
       width: calc(100% + var(--bleed) * 2);
       max-width: calc(100% + var(--bleed) * 2);
       margin-left: calc(-1 * var(--bleed));
+    }
+
+    /* For images in figures: images fill their container and */
+    /* the container itself has the bleed effect */
+    figure img {
+      width: 100%;
+      max-width: 100%;
+      margin-left: 0;
     }
 
     .expressive-code {

@@ -7,6 +7,7 @@ tags:
 ---
 import Alert from "@components/Alert.astro";
 import Timestamp from "@components/Timestamp.astro";
+import { Image } from "astro:assets";
 
 
 Transparency in Emacs isn't that great. Every source I find regarding transparency of Emacs (as of writing this) points to setting the `alpha` frame parameter. For instance:
@@ -20,7 +21,10 @@ The issue with `alpha` is that it sets the transparency of the *entire window*; 
 
 The solution came from a [patched version of Emacs made by Håkon Flatval](https://github.com/TheVaffel/emacs) back in November 2021—his announcement that month [on Reddit](https://www.reddit.com/r/emacs/comments/qm3tsv/i_implemented_partial_support_for_background/) received some attention. The patch adds the `alpha-background` frame parameter which makes **only the background** of a frame transparent:
 
-![img](assets/2022-06-05_20-57-01_screenshot.png "`alpha-background` set to 75.")
+<figure>
+<Image src={import("assets/2022-06-05_20-57-01_screenshot.png")} alt="img" />
+<figcaption>`alpha-background` set to 75.</figcaption>
+</figure>
 
 You can set the `alpha-background` of a particular frame with the `set-frame-parameter` function, and the default value for frames by adding to `default-frame-alist`.<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup> For example:
 
@@ -53,7 +57,10 @@ to if called with ARG, or any prefix argument."
 
 In practice, this is what toggling transparency looks like:
 
-![img](assets/emacs-transparency.gif "Live-toggling of the `alpha-background` parameter.")
+<figure>
+<Image src={import("assets/emacs-transparency.gif")} alt="img" />
+<figcaption>Live-toggling of the `alpha-background` parameter.</figcaption>
+</figure>
 
 I had been using Håkon's patched version since becoming aware of it, and it's been perfect for me. My only gripe was that without the expertise of patching future releases of Emacs (Håkon wasn't updating his repository), I would inevitably be using an increasingly out-of-date version of Emacs.
 

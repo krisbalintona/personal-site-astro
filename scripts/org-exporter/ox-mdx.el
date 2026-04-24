@@ -370,9 +370,21 @@ INFO is a plist holding contextual information.  See
                (if (plist-get info :output-file)
                    (org-mdx--copy-attachments raw-path info)
                  path))))
-        (format "![img](%s)"
-                (if (not (org-string-nw-p caption)) path
-                  (format "%s \"%s\"" path caption)))))
+        (el-patch-remove
+          (format "![img](%s)"
+                  (if (not (org-string-nw-p caption)) path
+                    (format "%s \"%s\"" path caption))))
+        (el-patch-add
+          (if (not (org-string-nw-p caption))
+              (format "![img](%s)" path)
+            (org-mdx--register-import info "Image" "import { Image } from \"astro:assets\";")
+            (format (string-join
+                     (list "<figure>"
+                           "<Image src={import(\"%s\")} alt=\"img\" />"
+                           "<figcaption>%s</figcaption>"
+                           "</figure>")
+                     "\n")
+                    path caption)))))
      ((string= type "coderef")
       (format (org-export-get-coderef-format path desc)
               (org-export-resolve-coderef path info)))

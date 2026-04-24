@@ -5,6 +5,7 @@ draft: false
 tags:
   - "Emacs"
 ---
+import { Image } from "astro:assets";
 import Alert from "@components/Alert.astro";
 import Timestamp from "@components/Timestamp.astro";
 
@@ -427,7 +428,10 @@ Finally, we can change the way the `citar` interface appears. The most relevant 
 
 Here's the end-result:
 
-![img](assets/2022-06-15_12-52-26_screenshot.png "Visual improvements to `citar`'s minibuffer interface.")
+<figure>
+<Image src={import("assets/2022-06-15_12-52-26_screenshot.png")} alt="img" />
+<figcaption>Visual improvements to `citar`'s minibuffer interface.</figcaption>
+</figure>
 
 
 <a id="other-interesting-packages"></a>
