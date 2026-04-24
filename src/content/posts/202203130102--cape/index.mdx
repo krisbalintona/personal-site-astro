@@ -6,6 +6,7 @@ tags:
   - "Emacs"
 ---
 import Timestamp from "@components/Timestamp.astro";
+import Details from "@components/Details.astro";
 import Alert from "@components/Alert.astro";
 
 
@@ -165,11 +166,12 @@ I have very hesitantly included my WIP code which leverages `cape` and `completi
 
 I hesitate to publish this code because it was **very haphazardly written and highly dependent on my configuration**. The reason for this is the order in which the `completion-at-point-functions` are added: any peculiarities in another's configuration may lead to undesirable results. As a result, **do not directly copy-and-paste this code** and expect proper functionality. Rather, I put it here as a reference for what can be done.
 
-<div style="white-space: pre">
-<div style="white-space: pre">
+<Details>
+<Fragment slot="summary">
 **Here they are**
-</div>
 
+
+</Fragment>
 <Alert>**Warning!** This code may produce undesirable effects! Copy at your own risk.</Alert>
 
 ```emacs-lisp
@@ -300,7 +302,9 @@ Additionally, add `cape-file' as early as possible to the list."
   ;; `completion-at-point-function'.
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 ```
-</div>
+
+
+</Details>
 
 ---
 

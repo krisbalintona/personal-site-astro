@@ -148,6 +148,26 @@ channel for the export process."
     ("alert"
      (org-mdx--register-import info "Alert" "import Alert from \"@components/Alert.astro\";")
      (format "<Alert>%s</Alert>" (string-trim contents)))
+    ;; Handle both the summary and details blocks here.  A neat side
+    ;; effect is that a summary block without a details block falls to
+    ;; the fallback case (which is what we want)
+    ("details"
+     (org-mdx--register-import info "Details" "import Details from \"@components/Details.astro\";")
+     (let* ((children (org-element-contents special-block))
+            (summary-block
+             (car (member-if (lambda (c) (string= (org-element-property :type c) "summary"))
+                             children)))
+            (body-children (if summary-block
+                               (remove summary-block children)
+                             children))
+            (summary
+             (when summary-block
+               ;; Interpret (into a string) the contents of
+               ;; SUMMARY-BLOCK's children, not the entire block
+               (org-export-data (org-element-contents summary-block) info)))
+            (body (mapconcat (lambda (c) (org-export-data c info)) body-children)))
+       (format "<Details>\n<Fragment slot=\"summary\">\n%s\n</Fragment>\n%s\n</Details>"
+               summary body)))
     ;; Fallback case: wrap in div and preserve newline characters with
     ;; the white-space CSS property
     (_

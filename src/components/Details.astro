@@ -1,0 +1,53 @@
+---
+---
+
+<details>
+  <summary>
+    <span class="summary-content"><slot name="summary" /></span>
+  </summary>
+
+  <div class="content"><slot /></div>
+</details>
+
+<style>
+  summary {
+    display: flex;
+    gap: 1.5em;
+    align-items: baseline;
+    padding: 0 1.5em;
+    cursor: pointer;
+    background-color: var(--surface);
+    border-radius: 0.3rem;
+    box-shadow: 0 2px 4px var(--blue-subtle);
+  }
+
+  summary::before {
+    flex-shrink: 0;
+    font-size: 0.8em;
+    content: "▶";
+    transition: transform 0.2s ease;
+  }
+
+  details[open] summary::before {
+    transform: rotate(90deg);
+  }
+
+  .summary-content {
+    display: block;
+    width: 100%;
+  }
+
+  summary:focus-visible {
+    outline: 2px solid var(--blue);
+  }
+
+  details {
+    margin: 1.5rem 0.2rem;
+
+    .content {
+      padding: 0.5em 1rem 1rem;
+      background-color: color-mix(in srgb, var(--white) 90%, var(--black));
+      border-radius: 0.2rem;
+    }
+  }
+</style>

@@ -4,6 +4,8 @@ draft: true
 tags:
   - "Emacs"
 ---
+import Details from "@components/Details.astro";
+
 
 
 # My desired workflow
@@ -44,11 +46,12 @@ Items (1) and (4) can be done simply. However, (2) and (3) are contingent on the
 
 Take a look at the docstring for `org-export-define-backend`:
 
-<div style="white-space: pre">
-<div style="white-space: pre">
+<Details>
+<Fragment slot="summary">
 Docstring for `org-export-define-backend`
-</div>
 
+
+</Fragment>
 <p class="verse">
 (org-export-define-backend BACKEND TRANSCODERS &amp;rest BODY)<br />
 <br />
@@ -162,7 +165,9 @@ keywords are understood:<br />
 &nbsp;&nbsp;&nbsp;&nbsp;org-export-options-alist for more information about<br />
 &nbsp;&nbsp;&nbsp;&nbsp;structure of the values.<br />
 </p>
-</div>
+
+
+</Details>
 
 You have a few options.
 
@@ -204,11 +209,12 @@ Nowadays, with the comparatively new `org-cite`, citations and bibliography is t
 
 For reference, the following is my `org-cite` configuration (this doesn't include `citar`):
 
-<div style="white-space: pre">
-<div style="white-space: pre">
+<Details>
+<Fragment slot="summary">
 `org-cite` configuration
-</div>
 
+
+</Fragment>
 ```emacs-lisp
 (use-package oc
   :elpaca nil                           ; I use the `elpaca' package manager
@@ -238,7 +244,9 @@ For reference, the following is my `org-cite` configuration (this doesn't includ
   (require 'oc-bibtex)
   (require 'oc-biblatex))
 ```
-</div>
+
+
+</Details>
 
 
 ## One way to specify citation style
