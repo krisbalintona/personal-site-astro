@@ -111,8 +111,8 @@ export const rssArticleItems: RSSFeedItem[] = await Promise.all(
       title: entry.data.title,
       pubDate: entry.data.pubDate,
       link: $path({
-        to: "/articles/[slug]",
-        params: { slug: entry.data.slug },
+        to: "/posts/[postid]",
+        params: { postid: entry.id },
       }),
       description,
       content,
