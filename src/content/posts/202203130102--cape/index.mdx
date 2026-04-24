@@ -5,6 +5,7 @@ draft: false
 tags:
   - "Emacs"
 ---
+import Alert from "@components/Alert.astro";
 
 # Table of Contents
 
@@ -167,9 +168,7 @@ I hesitate to publish this code because it was **very haphazardly written and hi
 **Here they are**
 </div>
 
-<div style="white-space: pre">
-**Warning!** This code may produce undesirable effects! Copy at your own risk.
-</div>
+<Alert>**Warning!** This code may produce undesirable effects! Copy at your own risk.</Alert>
 
 ```emacs-lisp
 (use-package cape

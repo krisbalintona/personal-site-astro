@@ -5,6 +5,7 @@ draft: false
 tags:
   - "Emacs"
 ---
+import Alert from "@components/Alert.astro";
 
 Transparency in Emacs isn't that great. Every source I find regarding transparency of Emacs (as of writing this) points to setting the `alpha` frame parameter. For instance:
 
@@ -46,9 +47,7 @@ to if called with ARG, or any prefix argument."
     (set-frame-parameter nil 'alpha-background transparency)))
 ```
 
-<div style="white-space: pre">
-<span class="timestamp-wrapper"><span class="timestamp">[2025-03-08 Sat]</span></span> Readers should be aware that the above code snippet may have potential incompatibilities with other versions of Emacs. Small modifications may be necessary in such cases.
-</div>
+<Alert><span class="timestamp-wrapper"><span class="timestamp">[2025-03-08 Sat]</span></span> Readers should be aware that the above code snippet may have potential incompatibilities with other versions of Emacs. Small modifications may be necessary in such cases.</Alert>
 
 In practice, this is what toggling transparency looks like:
 

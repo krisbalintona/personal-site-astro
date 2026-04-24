@@ -5,6 +5,7 @@ draft: true
 tags:
   - "Emacs"
 ---
+import Alert from "@components/Alert.astro";
 
 # Table of Contents
 
@@ -34,9 +35,7 @@ tags:
 
 # Summary
 
-<div style="white-space: pre">
-<span class="timestamp-wrapper"><span class="timestamp">[2023-07-20 Thu]</span></span> Readers should be aware that some package-specific information in this article may be outdated. Thus, readers are advised from outright copying code in this article without verifying (e.g. reading docstrings) the intended behavior. Nevertheless, the concepts related to `org-cite` and citation management should remain relevant and insightful.
-</div>
+<Alert><span class="timestamp-wrapper"><span class="timestamp">[2023-07-20 Thu]</span></span> Readers should be aware that some package-specific information in this article may be outdated. Thus, readers are advised from outright copying code in this article without verifying (e.g. reading docstrings) the intended behavior. Nevertheless, the concepts related to `org-cite` and citation management should remain relevant and insightful.</Alert>
 
 First, I'll outline the broadest components to producing files in `org-mode` with a citation system (e.g. `org-cite`, `org-ref`). Then I'll introduce `org-cite` and the differences between its `bibtex`, `csl`, and `basic` export processors. Then, I will walk through my configuration for `org-cite` and `citar` (formerly `bibtex-actions`). You can see a [gist/snippet of all the code present in this post here (alongside other additions of mine)](https://gitlab.com/PreciousPudding/main-emacs/-/snippets/2351789).
 
@@ -261,9 +260,7 @@ If you use `embark` and `org-roam` you can also set these variables:
 
 ## Capturing (Outdated)
 
-<div style="white-space: pre">
-<span class="timestamp-wrapper"><span class="timestamp">[2023-08-19 Sat]</span></span> The [citar-org-roam](https://github.com/emacs-citar/citar-org-roam) package provides all that is mentioned in this section and more. That package should be used instead in any instance of a desired integration between `org-roam` and `citar`.
-</div>
+<Alert><span class="timestamp-wrapper"><span class="timestamp">[2023-08-19 Sat]</span></span> The [citar-org-roam](https://github.com/emacs-citar/citar-org-roam) package provides all that is mentioned in this section and more. That package should be used instead in any instance of a desired integration between `org-roam` and `citar`.</Alert>
 
 If you use `org-roam`, then the following is how you select bibliographic source and create an `org-roam` node from it. All credit goes to [Jethro Kuan](https://www.jethro.dev/), the creator of `org-roam`, though I've made a few of my own customizations:<sup><a id="fnr.8" class="footref" href="#fn.8" role="doc-backlink">8</a></sup>
 
@@ -303,9 +300,7 @@ I add it to an accessible keybinding:<sup><a id="fnr.9" class="footref" href="#f
 
 ## Advising `citar-org-update-pre-suffix` (Outdated)
 
-<div style="white-space: pre">
-<span class="timestamp-wrapper"><span class="timestamp">[2023-07-20 Thu]</span></span> [Upstream has recently merged](https://github.com/emacs-citar/citar/commit/648ef552283fd9de18e6ccdf088d55fa26fe3cd8) changes to `citar-org-update-pre-suffix`, renaming it to `citar-org-update-prefix-suffix` and ensuring that a single space is left between citekeys and their suffixes. Therefore, the code directly below is now unnecessary.
-</div>
+<Alert><span class="timestamp-wrapper"><span class="timestamp">[2023-07-20 Thu]</span></span> [Upstream has recently merged](https://github.com/emacs-citar/citar/commit/648ef552283fd9de18e6ccdf088d55fa26fe3cd8) changes to `citar-org-update-pre-suffix`, renaming it to `citar-org-update-prefix-suffix` and ensuring that a single space is left between citekeys and their suffixes. Therefore, the code directly below is now unnecessary.</Alert>
 
 A useful command is `citar-org-update-pre-suffix`. This command sets the prefix and suffix of a citation key (a single citation can have multiple keys). This is notable since a citation's suffix is where you provide a locator (e.g. a page number). The command is bound to `M-p` when the point is on a citation key.
 

@@ -1,0 +1,39 @@
+---
+---
+
+<div class="alert" role="note">
+  <span class="alert-icon" aria-hidden="true">ℹ</span>
+  <div class="alert-body"><slot /></div>
+</div>
+
+<style>
+  .alert {
+    display: flex;
+    gap: 0.8em;
+    align-items: flex-start;
+    padding: 0.75rem 1rem;
+    margin-block: 1rem;
+    font-size: 0.9em;
+    line-height: 2.2;
+    background-color: var(--blue-subtle);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--blue);
+
+    .alert-icon {
+      /* Prevent the icon from shrinking if the container gets */
+      /* narrow. Without this, flex layout could squish it. */
+      flex-shrink: 0;
+      margin-top: 0.125rem;
+      font-size: 1rem;
+      color: var(--blue);
+    }
+
+    .alert-body {
+      /* Override the flex default of `min-width: auto`, which */
+      /* prevents flex children from shrinking below their content's */
+      /* intrinsic width. Without this, long unbreakable content (e.g. */
+      /* URLs, code) would overflow the container instead of wrapping. */
+      min-width: 0;
+    }
+  }
+</style>

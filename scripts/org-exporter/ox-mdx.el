@@ -55,6 +55,19 @@ This option is used to define the value of other relevant paths.")
 
 ;;;;; Functions
 
+(defun org-mdx--register-import (info component-name import-statement)
+  "Register a component import into INFO.
+IMPORT-STATEMENT is the MDX full import string, e.g.:
+
+  \"import Alert from \"components/Alert.astro\"\"
+
+If COMPONENT-NAME is already registered, don't duplicate the import
+statement."
+  (let ((imports (plist-get info :mdx-imports)))
+    (unless (assoc component-name imports)
+      (plist-put info :mdx-imports
+                 (cons (cons component-name import-statement) imports)))))
+
 (defun org-mdx--escape-special-chars (string)
   "Escape characters in STRING with special significance in MDX.
 This includes the following characters:
@@ -126,24 +139,19 @@ will return:
                 (org-export-format-code-default src-block info))))
     (format "```%s\n%s\n```" lang (string-trim inner))))
 
-;; TODO 2026-04-16: For now we do this.  But this should be the place
-;; where I add support for e.g. alerts.  In such cases, it should be
-;; wrapped by component tags and that component should be imported if
-;; not already.  (Perhaps the component should just be the special
-;; block name, with normalized capitalization.  If the component
-;; doesn't exist, then Astro will error; we fix it at that level
-;; rather than checking in Elisp, somehow, whether that component
-;; exists.)
-(defun org-mdx-special-block (_special-block contents _info)
-  "Transcode _SPECIAL-BLOCK element into MDX format.
-Wrap CONTENTS in a `div' tag.  Preserve newline characters when
-rendering CONTENTS.
-
-_SPECIAL-BLOCK is a special block org element.  CONTENTS is the
-transcoded contents/value of that element.  _INFO is a communication
+(defun org-mdx-special-block (special-block contents info)
+  "Transcode SPECIAL-BLOCK element into MDX format.
+SPECIAL-BLOCK is a special block org element.  CONTENTS is the
+transcoded contents/value of that element.  INFO is a communication
 channel for the export process."
-  ;; Preserve newline characters with the white-space CSS property
-  (format "<div style=\"white-space: pre\">\n%s\n</div>" (string-trim contents)))
+  (pcase (org-element-property :type special-block)
+    ("alert"
+     (org-mdx--register-import info "Alert" "import Alert from \"@components/Alert.astro\";")
+     (format "<Alert>%s</Alert>" (string-trim contents)))
+    ;; Fallback case: wrap in div and preserve newline characters with
+    ;; the white-space CSS property
+    (_
+     (format "<div style=\"white-space: pre\">\n%s\n</div>" (string-trim contents)))))
 
 (defun ox-mdx--headline-text-to-slug (headline)
   "Slugify HEADLINE's text.
@@ -381,6 +389,8 @@ communication channel for the export process."
           (when date-timestamp
             (concat "pubDate: " (org-format-timestamp date-timestamp "%FT%T%:z")))) ; YAML 1.1 timestamp spec
          (draft (concat "draft: " (plist-get info :mdx-draft-p))) ; Return YAML boolean
+         (imports (org-string-nw-p
+                   (mapconcat #'cdr (plist-get info :mdx-imports) "\n")))
          frontmatter)
 
     (pcase entry-type
@@ -408,6 +418,7 @@ communication channel for the export process."
        (concat "---\n"
                frontmatter
                "\n---\n"))
+     (when imports (concat imports "\n"))
      contents)))
 
 ;;;;; Exporters
