@@ -110,6 +110,7 @@ export const rssArticleItems: RSSFeedItem[] = await Promise.all(
     return {
       title: entry.data.title,
       pubDate: entry.data.pubDate,
+      categories: entry.data.tags,
       link: $path({
         to: "/posts/[postid]",
         params: { postid: entry.id },
