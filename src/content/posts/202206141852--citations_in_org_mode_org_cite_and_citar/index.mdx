@@ -111,24 +111,44 @@ The `csl` processor will use CSL to export citations. [Citation Style Language](
 
 In sum:
 
-<div style="white-space: pre">
-flowchart LR
-A((Plain-text)) &mdash; B&#123;Org-export&#125;
-B ===&gt; C
-B ===&gt;D
-B ===&gt; E
+```d2
+plain-text: Plain-text {
+  shape: circle
+}
 
-subgraph CSL Processor
-C&#123;&#123;HTML, MD, ODT, plain-text, etc.&#125;&#125;
-D[LaTeX]
-D -.-&gt;|Compile with citations as rendered text| F(PDF)
-end
+org-export: Org-export {
+  shape: diamond
+}
 
-subgraph Bibtex and Natbib processor
-E[LaTeX]
-E -.-&gt;|Compile with citations as LaTeX commands|G(PDF)
-end
-</div>
+plain-text -> org-export
+
+csl: CSL Processor {
+  outputs: "HTML, MD, ODT, plain-text, etc." {
+    shape: hexagon
+  }
+  latex: LaTeX
+  pdf: PDF {
+    shape: oval
+  }
+  latex -> pdf: Compile with citations as rendered text {
+    style.stroke-dash: 4
+  }
+}
+
+bibtex: Bibtex and Natbib Processor {
+  latex: LaTeX
+  pdf: PDF {
+    shape: oval
+  }
+  latex -> pdf: Compile with citations as LaTeX commands {
+    style.stroke-dash: 4
+  }
+}
+
+org-export -> csl.outputs: {style.stroke-width: 4}
+org-export -> bibtex.latex: {style.stroke-width: 4}
+org-export -> csl.latex: {style.stroke-width: 4}
+```
 
 
 <a id="which-processor-should-i-use"></a>
