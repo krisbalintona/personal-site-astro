@@ -1,10 +1,12 @@
 ---
 ---
 
-<div class="alert" role="note">
-  <span class="alert-icon" aria-hidden="true">ℹ</span>
+<!-- We use a blockquote instead of e.g. a div for the sake of RSS
+feed readers: after sanitizing the HTML, the blockquote tag is the
+closest to conveying meaning of this component -->
+<blockquote class="alert" role="note">
   <div class="alert-body"><slot /></div>
-</div>
+</blockquote>
 
 <style>
   .alert {
@@ -13,19 +15,19 @@
     align-items: flex-start;
     padding: 0.75rem 1rem;
     margin-block: 1rem;
+    margin-inline: 0;
     font-size: 0.9em;
     line-height: 2.2;
     background-color: var(--blue-subtle);
     border: 1px solid var(--rule);
     border-left: 3px solid var(--blue);
 
-    .alert-icon {
-      /* Prevent the icon from shrinking if the container gets */
-      /* narrow. Without this, flex layout could squish it. */
+    &::before {
       flex-shrink: 0;
       margin-top: 0.125rem;
       font-size: 1rem;
       color: var(--blue);
+      content: "ℹ";
     }
 
     .alert-body {
