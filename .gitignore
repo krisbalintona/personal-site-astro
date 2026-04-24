@@ -28,3 +28,6 @@ pnpm-debug.log*
 
 # auto-generated images for RSS feeds
 public/favicon-rss*
+
+# generated d2 diagrams
+public/d2/

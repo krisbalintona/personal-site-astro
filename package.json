@@ -19,6 +19,7 @@
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
     "astro": "^6.1.8",
+    "astro-d2": "^0.10.0",
     "astro-expressive-code": "^0.41.7",
     "astro-typesafe-routes": "^5.1.0",
     "sanitize-html": "^2.17.3",
