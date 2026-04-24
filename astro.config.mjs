@@ -47,7 +47,7 @@ export default defineConfig({
     typesafeRoutes(),
     sitemap({ filter: (page) => !page.startsWith(`${SITE_URL}/posts/`) }),
     faviconRss(),
-    d2(),
+    d2({ experimental: { useD2js: true } }),
   ],
   fonts: [
     {

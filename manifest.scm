@@ -3,7 +3,6 @@
 ;; that accepts a '--manifest' (or '-m') option.
 
 (specifications->manifest (list "node"
-                                "d2"
                                 ;; For scripts/pixel-limit-fix.sh
                                 "ffmpeg" ; Installs ffprobe
                                 "gawk"   ; For awk
