@@ -351,6 +351,7 @@ INFO is a plist holding contextual information.  See
                (format "[%s](#%s)"
                        description
                        (org-export-get-reference destination info))))))))
+     ;; Images
      ((org-export-inline-image-p link org-html-inline-image-rules)
       (let ((path (cond ((not (string-equal type "file"))
                          (concat type ":" raw-path))
@@ -360,6 +361,10 @@ INFO is a plist holding contextual information.  See
                       (org-export-get-caption
                        (org-element-parent-element link))
                       info))
+            (el-patch-add
+              (alt-text
+               (or (org-export-read-attribute :attr_mdx (org-element-parent-element link) :alt)
+                   "img")))
             (el-patch-add
               ;; When we are exporting to a buffer, we leave the link
               ;; paths as they are.  However, when we are exporting to
@@ -375,16 +380,20 @@ INFO is a plist holding contextual information.  See
                   (if (not (org-string-nw-p caption)) path
                     (format "%s \"%s\"" path caption))))
         (el-patch-add
+          (org-mdx--register-import info "Image" "import { Image } from \"astro:assets\";")
           (if (not (org-string-nw-p caption))
-              (format "![img](%s)" path)
-            (org-mdx--register-import info "Image" "import { Image } from \"astro:assets\";")
+              (format "<Image src={import(\"%s\")} alt=\"%s\" />"
+                      path
+                      alt-text)
             (format (string-join
                      (list "<figure>"
-                           "<Image src={import(\"%s\")} alt=\"img\" />"
+                           "<Image src={import(\"%s\")} alt=\"%s\" />"
                            "<figcaption>%s</figcaption>"
                            "</figure>")
                      "\n")
-                    path caption)))))
+                    path
+                    alt-text
+                    caption)))))
      ((string= type "coderef")
       (format (org-export-get-coderef-format path desc)
               (org-export-resolve-coderef path info)))
