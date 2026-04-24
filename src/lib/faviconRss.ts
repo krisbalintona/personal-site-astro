@@ -1,12 +1,12 @@
 import { existsSync } from "node:fs";
 import type { AstroIntegration } from "astro";
+import sharp from "sharp";
 
 export function faviconRss(): AstroIntegration {
   return {
     name: "favicon-rss",
     hooks: {
       "astro:build:start": async () => {
-        const sharp = (await import("sharp")).default;
         const source = existsSync("public/favicon.png")
           ? "public/favicon.png"
           : "public/favicon.svg";
