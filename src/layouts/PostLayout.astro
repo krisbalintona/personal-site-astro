@@ -87,6 +87,13 @@ const { Content } = await render(post);
     :global(#table-of-contents) {
       font-size: 1.8rem;
     }
+
+    img {
+      --bleed: 2rem;
+      width: calc(100% + var(--bleed) * 2);
+      max-width: calc(100% + var(--bleed) * 2);
+      margin-left: calc(-1 * var(--bleed));
+    }
   }
 
   .post-footer {
