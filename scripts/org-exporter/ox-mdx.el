@@ -175,6 +175,20 @@ as a plist."
          (result (string-trim deduplicated "-")))
     (if (string-empty-p result) "headline" result)))
 
+(defun org-mdx-timestamp (timestamp _contents info)
+  "Transcode a TIMESTAMP object from Org to MDX.
+Passes to a Timestamp JSX component.
+
+CONTENTS is nil.  INFO is a plist holding contextual information."
+  (let* ((ts (org-element-put-property (org-element-copy timestamp t) :post-blank 0))
+         (date (org-timestamp-format ts "%Y-%m-%d"))
+         (time (when (org-element-property :hour-start ts)
+                 (org-timestamp-format ts "%H:%M"))))
+    (org-mdx--register-import info "Timestamp" "import Timestamp from \"@components/Timestamp.astro\";")
+    (if time
+        (format "<Timestamp date=\"%s\" time=\"%s\" />" date time)
+      (format "<Timestamp date=\"%s\" />" date))))
+
 (defun org-mdx--export-get-reference-advice (orig datum info)
   "Advice for `org-export-get-reference' to generate stable IDs.
 Normally,`org-export-get-reference' generates randomized IDs \(see
@@ -418,7 +432,7 @@ communication channel for the export process."
        (concat "---\n"
                frontmatter
                "\n---\n"))
-     (when imports (concat imports "\n"))
+     (when imports (concat imports "\n\n"))
      contents)))
 
 ;;;;; Exporters
@@ -650,7 +664,8 @@ Return the output directory's name."
     (example-block . org-mdx-example-block)
     (src-block . org-mdx-src-block)
     (special-block . org-mdx-special-block)
-    (link . org-mdx-link)))
+    (link . org-mdx-link)
+    (timestamp . org-mdx-timestamp)))
 
 ;;;; Org-publish
 ;; I use org-publish to make it easier to export all my blog posts all

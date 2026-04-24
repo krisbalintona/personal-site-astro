@@ -6,6 +6,8 @@ tags:
   - "Emacs"
 ---
 import Alert from "@components/Alert.astro";
+import Timestamp from "@components/Timestamp.astro";
+
 
 # Table of Contents
 
@@ -30,7 +32,7 @@ import Alert from "@components/Alert.astro";
 
 # Synopsis
 
-<Alert><span class="timestamp-wrapper"><span class="timestamp">[2025-04-05 Sat]</span></span> Readers should be aware that some of the package-specific information in this article, including configuration options and lines of code, may be outdated. Since publication, those packages have developed significantly. Additionally, my tastes and recommendations as an Emacs user have changed&ndash;if I were to rewrite this package today, I would do so different. For those curious about my current in-line and minibuffer completion configuration, you can the relevant sections in [my Emacs configuration](https://github.com/krisbalintona/emacs-config).</Alert>
+<Alert><Timestamp date="2025-04-05" /> Readers should be aware that some of the package-specific information in this article, including configuration options and lines of code, may be outdated. Since publication, those packages have developed significantly. Additionally, my tastes and recommendations as an Emacs user have changed&ndash;if I were to rewrite this package today, I would do so different. For those curious about my current in-line and minibuffer completion configuration, you can the relevant sections in [my Emacs configuration](https://github.com/krisbalintona/emacs-config).</Alert>
 
 I will be walking through my personal Emacs' minibuffer UI (which means packages like `Selectrum`, `Ido`, `Helm`, `Vertico`, and `Ivy`) configuration, which includes the following packages:
 
@@ -643,10 +645,10 @@ parses its input."
 
 # Changelog
 
--   <span class="timestamp-wrapper"><span class="timestamp">[2025-04-05 Sat]</span></span>
+-   <Timestamp date="2025-04-05" />
     -   Add a note at the beginning of the post alerting users of potentially outdated information as well as referencing my personal Emacs configuration.
     -   Minor updates to code formatting.
--   <span class="timestamp-wrapper"><span class="timestamp">[2022-02-22 Tue]</span></span> Added demonstrative images and a GIF. Added section on `all-the-icons-completion`.
+-   <Timestamp date="2022-02-22" /> Added demonstrative images and a GIF. Added section on `all-the-icons-completion`.
 
 
 # Footnotes

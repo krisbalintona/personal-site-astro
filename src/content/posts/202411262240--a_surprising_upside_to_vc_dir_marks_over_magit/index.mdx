@@ -6,6 +6,8 @@ tags:
   - "Emacs"
   - "VCS"
 ---
+import Timestamp from "@components/Timestamp.astro";
+
 Vc.el is Emacs's built-in interface for version control CLI tools. With respect to Git, magit has for several years now been the most favored (with respect to popularity) Git<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup> interface. At least in the r/emacs subreddit, magit is frequently considered a killer-feature&mdash;an irreplaceable feature unique to Emacs.
 
 For the most part I am inclined to agree. However, in the last few months, I've been regularly experimenting using `vc`. This is in part motivated by recent improvements to `vc`'s implementation of Git, and another part motivated by a curiosity to see whether I'd end up enjoying some parts of the `vc`-way of doing things over the magit-way of doing things.<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup>
@@ -36,7 +38,7 @@ Historically, I've found this especially fruitful when working on my literate Em
 
 # Changelog
 
--   <span class="timestamp-wrapper"><span class="timestamp">[2025-03-25 Tue]</span></span>
+-   <Timestamp date="2025-03-25" />
     -   Add clarifying prose to paragraph.
     -   Change formatting of "vc.el" and "magit."
 

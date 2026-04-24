@@ -6,6 +6,8 @@ tags:
   - "Emacs"
 ---
 import Alert from "@components/Alert.astro";
+import Timestamp from "@components/Timestamp.astro";
+
 
 Transparency in Emacs isn't that great. Every source I find regarding transparency of Emacs (as of writing this) points to setting the `alpha` frame parameter. For instance:
 
@@ -47,7 +49,7 @@ to if called with ARG, or any prefix argument."
     (set-frame-parameter nil 'alpha-background transparency)))
 ```
 
-<Alert><span class="timestamp-wrapper"><span class="timestamp">[2025-03-08 Sat]</span></span> Readers should be aware that the above code snippet may have potential incompatibilities with other versions of Emacs. Small modifications may be necessary in such cases.</Alert>
+<Alert><Timestamp date="2025-03-08" /> Readers should be aware that the above code snippet may have potential incompatibilities with other versions of Emacs. Small modifications may be necessary in such cases.</Alert>
 
 In practice, this is what toggling transparency looks like:
 
@@ -62,10 +64,10 @@ Of course, transparency in Emacs (alongside any other application on your system
 
 # Changelog
 
--   <span class="timestamp-wrapper"><span class="timestamp">[2022-06-08 Wed]</span></span>
+-   <Timestamp date="2022-06-08" />
     -   Note that a compositor is necessary for transparency.
     -   Added statement about GTK3 perhaps not being necessary that links to a corresponding Reddit comment thread.
--   <span class="timestamp-wrapper"><span class="timestamp">[2025-03-08 Sat]</span></span>
+-   <Timestamp date="2025-03-08" />
     -   Update code snippet for `kb/toggle-window-transparency`. Also add note about potential incompatibilities between this code snippet and other versions of Emacs.
 
 

@@ -1,0 +1,62 @@
+---
+import { toDateTimeAttribute } from "@lib/date";
+
+interface Props {
+  date: string; // "2025-04-07"
+  time?: string; // "14:30", optional
+}
+
+const { date, time } = Astro.props;
+
+const [year, month, day] = date.split("-").map(Number);
+const d = time
+  ? new Date(
+      year,
+      month - 1,
+      day,
+      ...(time.split(":").map(Number) as [number, number])
+    )
+  : new Date(year, month - 1, day);
+
+const monthStr = d.toLocaleDateString("en-US", { month: "short" });
+const dateStr = `${monthStr} ${day}, ${year}`;
+const timeStr = time
+  ? d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
+  : null;
+---
+
+<time class="ts" datetime={toDateTimeAttribute(d)}>
+  <span class="ts-date">{dateStr}</span>
+  {timeStr &&
+  <>
+    <span class="ts-sep">·</span>
+    <span class="ts-time">{timeStr}</span>
+  </>}
+</time>
+
+<style>
+  time.ts {
+    display: inline-flex;
+    gap: 0.1em;
+    align-items: center;
+    padding: 0.05em 0.5em;
+    font-family: var(--font-ui);
+    font-size: 0.85em;
+    font-variant-numeric: tabular-nums; /* Make all digits same horizontal width */
+    line-height: 1.8;
+    vertical-align: middle;
+    color: var(--ink);
+    white-space: nowrap; /* Don't wrap mid-render*/
+    background: var(--background);
+    border: 0.1em solid var(--rule);
+    border-radius: 0.4em;
+
+    .ts-date {
+      font-weight: bold;
+    }
+
+    .ts-sep {
+      color: var(--faint);
+    }
+  }
+</style>
