@@ -51,6 +51,9 @@ This option is used to define the value of other relevant paths.")
 (defconst org-mdx-tags-dir (expand-file-name "tags/" org-mdx-content-dir)
   "Directory where custom tag pages will be exported to.")
 
+(defconst org-mdx--default-alt-text "img"
+  "Default alt text used for `img' and `svg' HTML tags.")
+
 ;;;; Backend
 
 ;;;;; Functions
@@ -111,13 +114,37 @@ process."
                       (org-export-format-code-default example-block info)))))
     (format "```\n%s\n```" block-text)))
 
+(defun org-mdx--create-figure (fig caption)
+  "Return an HTML figure if necessary.
+FIG and CAPTION are both strings.  CAPTION is a figure caption and FIG
+is the figure itself (e.g., image).
+
+When CAPTION is a non-empty string, return a string of this form:
+
+  <figure>
+    FIG
+    <figcaption>CAPTION</figcaption>
+  </figure>
+
+when CAPTION is nil or an empty sting, then return FIG.
+
+The reason for this is that FIG should only be wrapped in a `figure'
+element when CAPTION accompanies it, for the sake of accessibility
+concerns (e.g., screen readers)."
+  (if (org-string-nw-p caption)
+      (let* ((figcaption
+              (format "<figcaption>%s</figcaption>\n" caption))
+             (content (concat (string-trim fig) "\n" figcaption)))
+        (format "<figure>\n%s</figure>" content))
+    fig))
+
 (defun org-mdx-src-block (src-block _contents info)
   "Transcode a SRC-BLOCK element from Org to a markdown fenced code block.
 SRC-BLOCK is org element src block.  CONTENTS is always nil for src
 blocks.  INFO is a plist holding information for the export process.
 
-Return the src block as CommonMark fenced code block.  For example, the
-following Org source block:
+Return the src block as CommonMark fenced code block, with special
+tweaks for some languages.  For example, the following Org source block:
 
     #+BEGIN_SRC python
     def greet(name):
@@ -134,10 +161,40 @@ will return:
 
     print(greet(\"World\"))
     \\=`\\=`\\=`"
-  (let ((lang (org-element-property :language src-block))
-        (inner (org-remove-indentation
-                (org-export-format-code-default src-block info))))
-    (format "```%s\n%s\n```" lang (string-trim inner))))
+  (let* ((lang (org-element-property :language src-block))
+         (inner (org-remove-indentation
+                 (org-export-format-code-default src-block info))))
+    (pcase lang
+      ("d2"
+       (let* ((caption
+               (let* ((raw-caption
+                       (car (org-element-property :caption src-block)))) ; First #+CAPTION value
+                 (when raw-caption
+                   (substring-no-properties
+                    (org-element-interpret-data raw-caption)))))
+              (info-string
+               (let* ((raw-alt (org-export-read-attribute :attr_mdx src-block :alt))
+                      (alt-text
+                       ;; The title attribute becomes the alt-text.
+                       ;; See
+                       ;; https://astro-d2.vercel.app/examples/attributes/title/
+                       (format "title=\"%s\""
+                               (if raw-alt
+                                   ;; Quotation marks are the only
+                                   ;; characters that need escaping
+                                   (replace-regexp-in-string "\"" "\\\\\"" raw-alt)
+                                 org-mdx--default-alt-text))))
+                 (org-string-nw-p (string-join (delq nil (list alt-text)) " "))))
+              (code-fence
+               (format "```%s%s\n%s\n```"
+                       lang
+                       (if info-string
+                           (concat " " (string-trim info-string))
+                         "")
+                       (string-trim inner))))
+         (org-mdx--create-figure code-fence caption)))
+      (_
+       (format "```%s\n%s\n```" lang (string-trim inner))))))
 
 (defun org-mdx-special-block (special-block contents info)
   "Transcode SPECIAL-BLOCK element into MDX format.
@@ -364,7 +421,7 @@ INFO is a plist holding contextual information.  See
             (el-patch-add
               (alt-text
                (or (org-export-read-attribute :attr_mdx (org-element-parent-element link) :alt)
-                   "img")))
+                   org-mdx--default-alt-text)))
             (el-patch-add
               ;; When we are exporting to a buffer, we leave the link
               ;; paths as they are.  However, when we are exporting to
@@ -381,19 +438,8 @@ INFO is a plist holding contextual information.  See
                     (format "%s \"%s\"" path caption))))
         (el-patch-add
           (org-mdx--register-import info "Image" "import { Image } from \"astro:assets\";")
-          (if (not (org-string-nw-p caption))
-              (format "<Image src={import(\"%s\")} alt=\"%s\" />"
-                      path
-                      alt-text)
-            (format (string-join
-                     (list "<figure>"
-                           "<Image src={import(\"%s\")} alt=\"%s\" />"
-                           "<figcaption>%s</figcaption>"
-                           "</figure>")
-                     "\n")
-                    path
-                    alt-text
-                    caption)))))
+          (org-mdx--create-figure (format "<Image src={import(\"%s\")} alt=\"%s\" />" path alt-text)
+                                  caption))))
      ((string= type "coderef")
       (format (org-export-get-coderef-format path desc)
               (org-export-resolve-coderef path info)))
