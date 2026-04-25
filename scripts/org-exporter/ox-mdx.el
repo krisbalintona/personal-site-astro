@@ -230,7 +230,7 @@ channel for the export process."
     (_
      (format "<div style=\"white-space: pre\">\n%s\n</div>" (string-trim contents)))))
 
-(defun ox-mdx--headline-text-to-slug (headline)
+(defun org-mdx--headline-text-to-slug (headline)
   "Slugify HEADLINE's text.
 Return a slug for the HEADLINE element suitable for use as a URL anchor.
 This function converts the text of HEADLINE to lowercase, replaces
@@ -314,7 +314,7 @@ description of DATUM and INFO."
                          ;; have to have another cache for the number
                          ;; of times a given base slug appears, so as
                          ;; to increment appropriately
-                         (let* ((base-slug (ox-mdx--headline-text-to-slug datum))
+                         (let* ((base-slug (org-mdx--headline-text-to-slug datum))
                                 (slug-counts
                                  ;; Table of BASE-SLUG to count
                                  (or (plist-get info :mdx-headline-slug-counts)
