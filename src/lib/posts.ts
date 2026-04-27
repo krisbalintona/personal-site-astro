@@ -25,10 +25,20 @@ export const postSchema = rssSchema
     draft: z.boolean().default(true),
     tags: z.array(z.string()).optional(),
   })
-  .transform((data) => ({
-    ...data,
-    slug: slugify(data.title),
-  }));
+  .transform((data) => {
+    const slug = slugify(
+      data.title,
+      { strict: true } // Strips special characters like colons
+    );
+    return {
+      ...data,
+      titleSlug: slug,
+      permalinkSlug:
+        data.pubDate && data.draft === false
+          ? dateToPostId(data.pubDate as Date)
+          : slug,
+    };
+  });
 
 export const PostCollectionNames = ["articles"] as const;
 export type PostCollection = (typeof PostCollectionNames)[number];

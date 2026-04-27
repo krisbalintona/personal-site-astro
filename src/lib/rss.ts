@@ -49,8 +49,8 @@ const container = await experimental_AstroContainer.create();
 container.addServerRenderer({ renderer: mdxRenderer });
 
 export const rssArticleItems: RSSFeedItem[] = await Promise.all(
-  (await allPostEntries()).map(async (entry) => {
-    const { Content } = await render(entry);
+  (await allPostEntries()).map(async (post) => {
+    const { Content } = await render(post);
     const rawHTML: string = await container.renderToString(Content);
 
     // Sanitize rendered content to HTML suitable for an RSS feed
@@ -115,17 +115,17 @@ export const rssArticleItems: RSSFeedItem[] = await Promise.all(
     // is no actual description or (ii) be in a content element if
     // there is an actual entry description, with that description
     // being in the description element
-    const hasDescription: boolean = !!entry.data.description;
-    const description = hasDescription ? entry.data.description : renderedHTML;
+    const hasDescription: boolean = !!post.data.description;
+    const description = hasDescription ? post.data.description : renderedHTML;
     const content = hasDescription ? renderedHTML : undefined;
 
     return {
-      title: entry.data.title,
-      pubDate: entry.data.pubDate,
-      categories: entry.data.tags,
+      title: post.data.title,
+      pubDate: post.data.pubDate,
+      categories: post.data.tags,
       link: $path({
-        to: "/posts/[postid]",
-        params: { postid: entry.id },
+        to: "/posts/[permalinkSlug]",
+        params: { permalinkSlug: post.data.permalinkSlug },
       }),
       description,
       content,

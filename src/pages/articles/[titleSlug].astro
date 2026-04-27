@@ -5,12 +5,12 @@ import isPublished from "@src/lib/isPublished";
 import { createRoute } from "astro-typesafe-routes/create-route";
 
 export const Route = createRoute({
-  routeId: "/articles/[slug]",
+  routeId: "/articles/[titleSlug]",
 });
 
 export const getStaticPaths = Route.createGetStaticPaths(async () =>
   (await getCollection("articles", isPublished)).map((article) => ({
-    params: { slug: article.data.slug },
+    params: { titleSlug: article.data.titleSlug },
     props: { article },
   }))
 );

@@ -5,19 +5,14 @@ import { createRoute } from "astro-typesafe-routes/create-route";
 import { $path } from "astro-typesafe-routes/path";
 
 export const Route = createRoute({
-  routeId: "/posts/[postid]",
+  routeId: "/posts/[permalinkSlug]",
 });
 
 export const getStaticPaths = Route.createGetStaticPaths(async () => {
-  // Currently, only posts that aren't drafts get a permalink
-  const allPosts = (
-    await Promise.all([
-      getCollection("articles", (entry) => entry.data.draft === false),
-    ])
-  ).flat();
+  const allPosts = (await Promise.all([getCollection("articles")])).flat();
 
   return allPosts.map((post) => ({
-    params: { postid: post.id },
+    params: { permalinkSlug: post.data.permalinkSlug },
     props: { post },
   }));
 });
@@ -27,8 +22,8 @@ export const GET = ({ props, redirect }: APIContext<{ post: PostEntry }>) => {
 
   return redirect(
     $path({
-      to: `/${post.collection}/[slug]`,
-      params: { slug: post.data.slug },
+      to: `/${post.collection}/[titleSlug]`,
+      params: { titleSlug: post.data.titleSlug },
     }),
     301
   );

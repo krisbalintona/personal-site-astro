@@ -1,5 +1,5 @@
 import { type CollectionEntry, defineCollection } from "astro:content";
-import { dateToPostId, postSchema } from "@lib/posts.ts";
+import { postSchema } from "@lib/posts.ts";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import slugify from "slugify";
@@ -8,11 +8,6 @@ const articles = defineCollection({
   loader: glob({
     pattern: "*/index.mdx",
     base: "./src/content/posts",
-    generateId: ({ entry, data }) =>
-      // I use the entry ID as the permalink "slug"
-      data?.date && data?.draft === false
-        ? dateToPostId(data.date as Date)
-        : entry.split("/")[0],
   }),
   schema: postSchema,
 });
