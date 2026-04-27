@@ -1,0 +1,25 @@
+---
+import { getEntry } from "astro:content";
+import { getEntryUrl } from "@lib/urls";
+import type { AnyCollectionEntry, CollectionName } from "@src/content.config";
+
+interface Props {
+  anchor?: string;
+  collectionName: CollectionName;
+  id: string; // Content collection ID is the output subdirectory
+}
+
+const { collectionName: collection, id, anchor } = Astro.props;
+
+const entry: AnyCollectionEntry | undefined = await getEntry(collection, id);
+if (!entry) {
+  throw new Error(
+    `ContentLink: no entry found for entry "${id}" in collection ${collection}`
+  );
+}
+
+const href = getEntryUrl(entry, anchor);
+const fallbackLabel = href;
+---
+
+<a href={href}><slot>{fallbackLabel}</slot></a>
