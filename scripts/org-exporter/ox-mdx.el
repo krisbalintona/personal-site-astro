@@ -42,14 +42,14 @@ This option is used to define the value of other relevant paths.")
 (defconst org-mdx-content-dir (expand-file-name "src/content/" org-mdx-root-dir)
   "Directory where all MDX content resides.")
 
-(defconst org-mdx-standalone-dir (expand-file-name "standalone/" org-mdx-content-dir)
-  "Directory where standalone content will be exported to.")
-
-(defconst org-mdx-posts-dir (expand-file-name "posts/" org-mdx-content-dir)
-  "Directory where posts will be exported to.")
+(defconst org-mdx-articles-dir (expand-file-name "articles/" org-mdx-content-dir)
+  "Directory where articles will be exported to.")
 
 (defconst org-mdx-tags-dir (expand-file-name "tags/" org-mdx-content-dir)
   "Directory where custom tag pages will be exported to.")
+
+(defconst org-mdx-standalone-dir (expand-file-name "standalone/" org-mdx-content-dir)
+  "Directory where standalone content will be exported to.")
 
 (defconst org-mdx--default-alt-text "img"
   "Default alt text used for `img' and `svg' HTML tags.")
@@ -497,7 +497,7 @@ communication channel for the export process."
     (pcase entry-type
       ("standalone"
        (setq frontmatter (string-join (delq nil (list title slug date draft)) "\n")))
-      ("posts"
+      ("articles"
        (let* ((raw-tags (plist-get info :mdx-tags))
               (parsed-tags
                (when (org-string-nw-p raw-tags)
@@ -631,7 +631,7 @@ directory."
                    (org-format-timestamp date-timestamp "%Y%m%d%H%M")
                    (org-mdx--title-to-subdirectory-name title))
            ;; As a fallback, ask user
-           (read-file-name "Output directory: " org-mdx-posts-dir))))
+           (read-file-name "Output directory: " org-mdx-articles-dir))))
     (expand-file-name directory output-dir)))
 
 (defun org-mdx--copy-attachments (path info)
@@ -807,11 +807,11 @@ This function is used as the :publishing-function in
       :publishing-directory ,org-mdx-standalone-dir
       :recursive t
       ,@base-options)
-     ("posts"
-      :base-directory ,(expand-file-name "posts" krisb-manuscript-blog-directory)
-      :publishing-directory ,org-mdx-posts-dir
+     ("articles"
+      :base-directory ,(expand-file-name "articles" krisb-manuscript-blog-directory)
+      :publishing-directory ,org-mdx-articles-dir
       :recursive t
-      :mdx-entry-type "posts"
+      :mdx-entry-type "articles"
       ,@base-options)
      ("tags"
       :base-directory ,(expand-file-name "tags" krisb-manuscript-blog-directory)
