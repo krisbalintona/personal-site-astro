@@ -51,8 +51,9 @@ This option is used to define the value of other relevant paths.")
 (defconst org-mdx-standalone-dir (expand-file-name "standalone/" org-mdx-content-dir)
   "Directory where standalone content will be exported to.")
 
-(defconst org-mdx--default-alt-text "img"
-  "Default alt text used for `img' and `svg' HTML tags.")
+(defvar org-mdx-default-alt-text "img"
+  "Default alt text used for `img' and `svg' HTML tags.
+This variable can be `let'-bound to change the default string.")
 
 ;;;; Backend
 
@@ -173,7 +174,8 @@ will return:
                    (substring-no-properties
                     (org-element-interpret-data raw-caption)))))
               (info-string
-               (let* ((raw-alt (org-export-read-attribute :attr_mdx src-block :alt))
+               (let* ((org-mdx-default-alt-text "diagram")
+                      (raw-alt (org-export-read-attribute :attr_mdx src-block :alt))
                       (alt-text
                        ;; The title attribute becomes the alt-text.
                        ;; See
@@ -183,7 +185,7 @@ will return:
                                    ;; Quotation marks are the only
                                    ;; characters that need escaping
                                    (replace-regexp-in-string "\"" "\\\\\"" raw-alt)
-                                 org-mdx--default-alt-text))))
+                                 org-mdx-default-alt-text))))
                  (org-string-nw-p (string-join (delq nil (list alt-text)) " "))))
               (code-fence
                (format "```%s%s\n%s\n```"
@@ -505,7 +507,7 @@ INFO is a plist holding contextual information.  See
             (el-patch-add
               (alt-text
                (or (org-export-read-attribute :attr_mdx (org-element-parent-element link) :alt)
-                   org-mdx--default-alt-text)))
+                   org-mdx-default-alt-text)))
             (el-patch-add
               ;; When we are exporting to a buffer, we leave the link
               ;; paths as they are.  However, when we are exporting to
