@@ -29,6 +29,6 @@ const standalone = defineCollection({
   schema: postSchema,
 });
 
-export type CollectionName = keyof typeof collections;
-export type AnyCollectionEntry = CollectionEntry<CollectionName>;
+export type AnyCollectionName = keyof typeof collections;
+export type AnyCollectionEntry = CollectionEntry<AnyCollectionName>;
 export const collections = { articles, tags, standalone };
