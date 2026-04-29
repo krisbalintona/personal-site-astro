@@ -3,6 +3,7 @@
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { defineConfig, fontProviders } from "astro/config";
+import astroBrokenLinksChecker from "astro-broken-links-checker";
 import d2 from "astro-d2";
 import expressiveCode from "astro-expressive-code";
 import typesafeRoutes from "astro-typesafe-routes";
@@ -48,6 +49,9 @@ export default defineConfig({
     sitemap({ filter: (page) => !page.startsWith(`${SITE_URL}/posts/`) }),
     faviconRss(),
     d2({ experimental: { useD2js: true } }),
+    astroBrokenLinksChecker({
+      checkExternalLinks: false,
+    }),
   ],
   fonts: [
     {
