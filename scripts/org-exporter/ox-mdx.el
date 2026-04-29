@@ -55,22 +55,33 @@ This option is used to define the value of other relevant paths.")
   "Default alt text used for `img' and `svg' HTML tags.
 This variable can be `let'-bound to change the default string.")
 
+(defvar org-mdx-import-statement-alist
+  '(("Alert" . "import Alert from \"@components/Alert.astro\";")
+    ("Image" . "import { Image } from \"astro:assets\";")
+    ("Details" . "import Details from \"@components/Details.astro\";")
+    ("Timestamp" . "import Timestamp from \"@components/Timestamp.astro\";")
+    ("ContentLink" . "import ContentLink from \"@components/ContentLink.astro\";"))
+  "Alist from component name to import statement.
+There are several components specific to this project.  This is an alist
+from component name to the import statement corresponding to that
+component.
+
+The import statements are like the following
+
+  \"import Alert from \"components/Alert.astro\"\"")
+
 ;;;; Backend
 
 ;;;;; Functions
 
-(defun org-mdx--register-import (info component-name import-statement)
+(defun org-mdx--register-import (info component-name)
   "Register a component import into INFO.
-IMPORT-STATEMENT is the MDX full import string, e.g.:
-
-  \"import Alert from \"components/Alert.astro\"\"
-
 If COMPONENT-NAME is already registered, don't duplicate the import
 statement."
   (let ((imports (plist-get info :mdx-imports)))
     (unless (assoc component-name imports)
       (plist-put info :mdx-imports
-                 (cons (cons component-name import-statement) imports)))))
+                 (cons (assoc component-name org-mdx-import-statement-alist) imports)))))
 
 (defun org-mdx--escape-special-chars (string)
   "Escape characters in STRING with special significance in MDX.
@@ -205,13 +216,13 @@ transcoded contents/value of that element.  INFO is a communication
 channel for the export process."
   (pcase (org-element-property :type special-block)
     ("alert"
-     (org-mdx--register-import info "Alert" "import Alert from \"@components/Alert.astro\";")
+     (org-mdx--register-import info "Alert")
      (format "<Alert>%s</Alert>" (string-trim contents)))
     ;; Handle both the summary and details blocks here.  A neat side
     ;; effect is that a summary block without a details block falls to
     ;; the fallback case (which is what we want)
     ("details"
-     (org-mdx--register-import info "Details" "import Details from \"@components/Details.astro\";")
+     (org-mdx--register-import info "Details")
      (let* ((children (org-element-contents special-block))
             (summary-block
              (car (member-if (lambda (c) (string= (org-element-property :type c) "summary"))
@@ -263,7 +274,7 @@ CONTENTS is nil.  INFO is a plist holding contextual information."
          (date (org-timestamp-format ts "%Y-%m-%d"))
          (time (when (org-element-property :hour-start ts)
                  (org-timestamp-format ts "%H:%M"))))
-    (org-mdx--register-import info "Timestamp" "import Timestamp from \"@components/Timestamp.astro\";")
+    (org-mdx--register-import info "Timestamp")
     (if time
         (format "<Timestamp date=\"%s\" time=\"%s\" />" date time)
       (format "<Timestamp date=\"%s\" />" date))))
@@ -459,8 +470,7 @@ INFO is a plist holding contextual information.  See
                    (error "Entry with ID %s has no collection name" id))
                  (unless id
                    (error "Entry with ID %s does not exist" id))
-                 (org-mdx--register-import info "ContentLink"
-                                           "import ContentLink from \"@components/ContentLink.astro\";")
+                 (org-mdx--register-import info "ContentLink")
                  (format "<ContentLink %s %s%s>%s</ContentLink>"
                          collection-name id
                          (if (org-string-nw-p anchor) (concat " " anchor) "")
@@ -523,7 +533,7 @@ INFO is a plist holding contextual information.  See
                   (if (not (org-string-nw-p caption)) path
                     (format "%s \"%s\"" path caption))))
         (el-patch-add
-          (org-mdx--register-import info "Image" "import { Image } from \"astro:assets\";")
+          (org-mdx--register-import info "Image")
           (org-mdx--create-figure (format "<Image src={import(\"%s\")} alt=\"%s\" />" path alt-text)
                                   caption))))
      ((string= type "coderef")
