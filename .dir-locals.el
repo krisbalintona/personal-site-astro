@@ -7,4 +7,5 @@
                         (apheleia-formatter . biome)))
  (json-ts-mode . ((apheleia-formatter . biome)))
  (js-ts-mode . ((apheleia-formatter . biome)))
- (tsx-ts-mode . ((apheleia-formatter . biome))))
+ (tsx-ts-mode . ((apheleia-formatter . biome)))
+ (nil . ((compile-command . "npm run fix && npm run build"))))
