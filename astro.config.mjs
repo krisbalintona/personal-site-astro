@@ -1,6 +1,6 @@
 // @ts-check
 
-import mdx from "@astrojs/mdx";
+import markdoc from "@astrojs/markdoc";
 import sitemap from "@astrojs/sitemap";
 import { defineConfig, fontProviders } from "astro/config";
 import astroBrokenLinksChecker from "astro-broken-links-checker";
@@ -44,11 +44,11 @@ export default defineConfig({
         },
       },
     }),
-    mdx({ gfm: false }),
     typesafeRoutes(),
     sitemap({ filter: (page) => !page.startsWith(`${SITE_URL}/posts/`) }),
     faviconRss(),
     d2({ experimental: { useD2js: true } }),
+    markdoc(),
     astroBrokenLinksChecker({
       checkExternalLinks: false,
     }),
