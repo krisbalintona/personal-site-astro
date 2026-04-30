@@ -1,0 +1,690 @@
+---
+title: "Vertico, Marginalia, All-the-icons-completion, and Orderless"
+pubDate: 2022-02-21T15:46:00-06:00
+draft: false
+---
+
+# Table of Contents
+
+-   [Synopsis](#synopsis)
+-   [Marginalia](#marginalia)
+-   [All-the-icons-completion](#all-the-icons-completion)
+-   [Vertico](#vertico)
+    -   [Basic](#basic)
+    -   [Extensions](#extensions)
+        -   [Vertico extension commands](#vertico-extension-commands)
+    -   [Niceties](#niceties)
+    -   [End product](#end-product)
+-   [Orderless](#orderless)
+    -   [Basic](#basic-1)
+    -   [Style dispatchers](#style-dispatchers)
+    -   [End product](#end-product-1)
+-   [Changelog](#changelog)
+
+
+
+<a id="synopsis"></a>
+
+# Synopsis
+
+{% alert %}{% timestamp date="2025-04-05" /%} Readers should be aware that some of the package-specific information in this article, including configuration options and lines of code, may be outdated. Since publication, those packages have developed significantly. Additionally, my tastes and recommendations as an Emacs user have changed&ndash;if I were to rewrite this package today, I would do so different. For those curious about my current in-line and minibuffer completion configuration, you can the relevant sections in [my Emacs configuration](https://github.com/krisbalintona/emacs-config).{% /alert %}
+
+I will be walking through my personal Emacs&rsquo; minibuffer UI (which means packages like `Selectrum`, `Ido`, `Helm`, `Vertico`, and `Ivy`) configuration, which includes the following packages:
+
+-   [Marginalia](https://github.com/minad/marginalia) — minibuffer annotations, i.e., auxiliary candidate information
+-   [All-the-icons-completion](https://github.com/iyefrat/all-the-icons-completion/tree/9e7d456b0934ecb568b6f05a8445e3f4ce32261f) — `all-the-icons` icons for minibuffer candidates
+-   [Vertico](https://github.com/minad/vertico) — vertical minibuffer interface
+-   [Orderless](https://github.com/oantolin/orderless) — a flexible `completion-style` with multi-component matching
+
+*Note*: I use `straight.el` for package management and `general.el` to set my keybindings. Both of these packages have integration with `use-package` which come in the form of the `:straight` and `:general` keywords, respectively.
+
+
+<a id="marginalia"></a>
+
+# Marginalia
+
+The following is `vertico` with `marginalia` annotations right-aligned in the minibuffer.
+
+<figure>
+{% image src="./assets/2022-02-22_14-52-49_screenshot.png" alt="img" /%}
+<figcaption>Using `helpful-variable`</figcaption>
+</figure>
+
+<figure>
+{% image src="./assets/2022-02-22_15-03-29_screenshot.png" alt="img" /%}
+<figcaption>Using `find-file`</figcaption>
+</figure>
+
+Marginalia is painless to set up. Remember, I use `general.el` to set keybindings:
+
+```emacs-lisp
+(use-package marginalia
+  :general
+  (:keymaps 'minibuffer-local-map
+            "M-A" 'marginalia-cycle)
+  :custom
+  (marginalia-max-relative-age 0)
+  (marginalia-align 'right)
+  :init
+  (marginalia-mode))
+```
+
+
+<a id="all-the-icons-completion"></a>
+
+# All-the-icons-completion
+
+`Marginalia`, `Vertico`, and `Orderless` have already received considerable exposure, but `all-the-icons-completion` has not.
+
+<figure>
+{% image src="./assets/2022-02-22_15-13-22_screenshot.png" alt="img" /%}
+<figcaption>Using `find-file` in a directory with subdirectories, python files, a .txt file, and an org file. You can see the icons in the far left.</figcaption>
+</figure>
+
+`All-the-icons-completion` is also dead-simple to set up:
+
+```emacs-lisp
+(use-package all-the-icons-completion
+  :after (marginalia all-the-icons)
+  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init
+  (all-the-icons-completion-mode))
+```
+
+*Note*: `All-the-icons-completion` depends on an already installed `all-the-icons`.
+
+
+<a id="vertico"></a>
+
+# Vertico
+
+Vertico is a minibuffer interface, that is, it changes the minibuffer looks and how you interact with it.
+
+
+<a id="basic"></a>
+
+## Basic
+
+This is a very basic Vertico configuration.
+
+```emacs-lisp
+(use-package vertico
+  :custom
+  (vertico-count 13)                    ; Number of candidates to display
+  (vertico-resize t)
+  (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
+  :config
+  (vertico-mode))
+```
+
+Now we can add a few changes to the default keybindings (again, I use `general.el` to set keybindings):
+
+```emacs-lisp
+(use-package vertico
+  :custom
+  (vertico-count 13)                    ; Number of candidates to display
+  (vertico-resize t)
+  (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
+  :general
+  (:keymaps 'vertico-map
+            "<tab>" #'vertico-insert  ; Insert selected candidate into text area
+            "<escape>" #'minibuffer-keyboard-quit ; Close minibuffer
+            ;; NOTE 2022-02-05: Cycle through candidate groups
+            "C-M-n" #'vertico-next-group
+            "C-M-p" #'vertico-previous-group)
+  :config
+  (vertico-mode))
+```
+
+
+<a id="extensions"></a>
+
+## Extensions
+
+Vertico becomes much more interesting with its extensions. These extensions have to manually be cloned from the repo with a corresponding `require` invocation. However, with `straight.el`, we can do something like this to install and load them:
+
+```emacs-lisp
+(use-package vertico
+  ;; Special recipe to load extensions conveniently
+  :straight (vertico :files (:defaults "extensions/*")
+                     :includes (vertico-indexed
+                                vertico-flat
+                                vertico-grid
+                                vertico-mouse
+                                vertico-quick
+                                vertico-buffer
+                                vertico-repeat
+                                vertico-reverse
+                                vertico-directory
+                                vertico-multiform
+                                vertico-unobtrusive
+                                ))
+  :general
+  (:keymaps 'vertico-map
+            "<tab>" #'vertico-insert    ; Choose selected candidate
+            "<escape>" #'minibuffer-keyboard-quit ; Close minibuffer
+            ;; NOTE 2022-02-05: Cycle through candidate groups
+            "C-M-n" #'vertico-next-group
+            "C-M-p" #'vertico-previous-group)
+  :custom
+  (vertico-count 13)                    ; Number of candidates to display
+  (vertico-resize t)
+  (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
+  :config
+  (vertico-mode))
+```
+
+With the extensions installed, we have a lot of room to set their variables to our liking. In particular, `vertico-multiform` is the most interesting and, in my opinion, useful. You can choose how the minibuffer appears, which is provided by Vertico&rsquo;s extensions (see more [here](https://github.com/minad/vertico#extensions)). The current options are
+
+1.  `buffer` — minibuffer treated as a normal, separate buffer,
+    
+    <figure>
+    {% image src="./assets/2022-02-22_15-25-29_screenshot.png" alt="img" /%}
+    <figcaption>`Vertico-buffer` UI (minibuffer now a separate window)</figcaption>
+    </figure>
+2.  `flat` — a flat format (like `ido`),
+    
+    <figure>
+    {% image src="./assets/2022-02-22_15-23-05_screenshot.png" alt="img" /%}
+    <figcaption>`Vertico-flat` minibuffer UI</figcaption>
+    </figure>
+3.  `grid` — a grid format,
+    
+    <figure>
+    {% image src="./assets/2022-02-22_15-27-16_screenshot.png" alt="img" /%}
+    <figcaption>`Vertico-grid` UI</figcaption>
+    </figure>
+4.  `reverse` — moves the area in which you type above the candidates, like `selectrum`,
+    
+    <figure>
+    {% image src="./assets/2022-02-22_15-28-46_screenshot.png" alt="img" /%}
+    <figcaption>`Vertico-reverse` UI. Notice the text area is below the candidates. Moreover, the candidates are in reverse order.</figcaption>
+    </figure>
+5.  `unobtrusive` — like the `vertico-flat` format, but only showing the selected candidate,
+    
+    <figure>
+    {% image src="./assets/2022-02-22_15-30-27_screenshot.png" alt="img" /%}
+    <figcaption>`Vertico-unobtrusive` UI (there are multiple files in this directory, only the current candidate is shown)</figcaption>
+    </figure>
+6.  `indexed` — allows you “[to select indexed candidates with prefix arguments](https://github.com/minad/vertico#extensions)”
+    
+    <figure>
+    {% image src="./assets/2022-02-22_15-31-45_screenshot.png" alt="img" /%}
+    <figcaption>`Vertico-indexed` UI</figcaption>
+    </figure>
+
+These formats each have a separate minor-mode which can be activated if you want to use that format singly. However, with `vertico-multiform-mode` as well as configuration of `vertico-multiform-categories`, `vertico-multiform-commands`, and keybinds, you can enable/disable multiple of these formats simultaneously:
+
+```emacs-lisp
+(vertico-multiform-mode)
+```
+
+Here are the extension variables I set in the `:custom` block of my `use-package`:
+
+```emacs-lisp
+(vertico-grid-separator "       ")
+(vertico-grid-lookahead 50)
+(vertico-buffer-display-action '(display-buffer-reuse-window)) ; Default
+(vertico-multiform-categories                                  ; Choose a multiform
+ '((file reverse)
+   (consult-grep buffer)
+   (consult-location)
+   (imenu buffer)
+   (library reverse indexed)
+   (org-roam-node reverse indexed)
+   (t reverse)))
+(vertico-multiform-commands
+ '(("flyspell-correct-*" grid reverse)
+   (org-refile grid reverse indexed)
+   (consult-yank-pop indexed)
+   (consult-flycheck)
+   (consult-lsp-diagnostics)))
+```
+
+Here are the `vertico-multiform` related keybinds I have in my `:general` block:
+
+```emacs-lisp
+(:keymaps 'vertico-map
+          ;; Toggle Vertico multiforms in active minibuffer
+          "C-i" #'vertico-quick-insert
+          "C-o" #'vertico-quick-exit
+          "M-G" #'vertico-multiform-grid
+          "M-F" #'vertico-multiform-flat
+          "M-R" #'vertico-multiform-reverse
+          "M-U" #'vertico-multiform-unobtrusive)
+```
+
+These are rarely used, but can be handy.
+
+Finally, the other Vertico extensions I configure are `vertico-repeat` and `vertico-directory`. I add the following keybinds:
+
+```emacs-lisp
+(:keymaps '(normal insert visual motion)
+          "M-." #'vertico-repeat) ; Perfectly return to the state of the last Vertico minibuffer usage
+(:keymaps 'vertico-map
+          ;; Vertico-directory which makes typing file paths in the minibuffer
+          ;; more convenient. Use it to get a sense of what these do
+          "<backspace>" #'vertico-directory-delete-char
+          "C-w" #'vertico-directory-delete-word
+          "C-<backspace>" #'vertico-directory-delete-word
+          "RET" #'vertico-directory-enter)
+```
+
+Additionally, we need to add the following hook for `vertico-repeat`:
+
+```emacs-lisp
+:hook (minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved for `vertico-repeat'
+```
+
+
+<a id="vertico-extension-commands"></a>
+
+### Vertico extension commands
+
+If you&rsquo;d like, you can set up a toggle between two multiforms in the minibuffer. For instance, the following function definition with a corresponding keybind in `vertico-map` toggles between `vertico-flat-mode` and `vertico-reverse-mode`:
+
+```emacs-lisp
+(defun kb/vertico-multiform-flat-toggle ()
+  "Toggle between flat and reverse."
+  (interactive)
+  (vertico-multiform--display-toggle 'vertico-flat-mode)
+  (if vertico-flat-mode
+      (vertico-multiform--temporary-mode 'vertico-reverse-mode -1)
+    (vertico-multiform--temporary-mode 'vertico-reverse-mode 1)))
+```
+
+The following function uses `vertico-quick-jump` (like `avy` but for minibuffer candidates) to `embark-act` on a candidate without having to first hover over the candidate:
+
+```emacs-lisp
+(defun kb/vertico-quick-embark (&optional arg)
+  "Embark on candidate using quick keys."
+  (interactive)
+  (when (vertico-quick-jump)
+    (embark-act arg)))
+```
+
+
+<a id="niceties"></a>
+
+## Niceties
+
+Finally, I add a few niceties.
+
+The following prefixes (i.e. in the left fringe) and arrow character on the currently selected candidate<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>:
+
+```emacs-lisp
+;; Prefix the current candidate with “» ”. From
+;; https://github.com/minad/vertico/wiki#prefix-current-candidate-with-arrow
+(advice-add #'vertico--format-candidate :around
+            (lambda (orig cand prefix suffix index _start)
+              (setq cand (funcall orig cand prefix suffix index _start))
+              (concat
+               (if (= vertico--index index)
+                   (propertize "» " 'face 'vertico-current)
+                 "  ")
+               cand)))
+```
+
+When using a command for selecting a file in the minibuffer, the following fixes the path so the path you select doesn&rsquo;t have prepended junk left behind<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup>:
+
+```emacs-lisp
+:hook (rfn-eshadow-update-overlay . vertico-directory-tidy) ; Correct file path when changed
+```
+
+<figure>
+{% image src="./assets/2022-02-22_15-40-59_demonstrating-rfn-eshadow-update-overlay.gif" alt="img" /%}
+<figcaption>Using `find-file` and going from a subdirectory in `$HOME` to the distant `/tmp/` directory. Notice that the file-path is “cleaned up.”</figcaption>
+</figure>
+
+Finally, the following makes working with remote files via `tramp` easier.
+
+```emacs-lisp
+;; Workaround for problem with `tramp' hostname completions. This overrides
+;; the completion style specifically for remote files! See
+;; https://github.com/minad/vertico#tramp-hostname-completion
+(defun kb/basic-remote-try-completion (string table pred point)
+  (and (vertico--remote-p string)
+       (completion-basic-try-completion string table pred point)))
+(defun kb/basic-remote-all-completions (string table pred point)
+  (and (vertico--remote-p string)
+       (completion-basic-all-completions string table pred point)))
+(add-to-list 'completion-styles-alist
+             '(basic-remote           ; Name of `completion-style'
+               kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
+```
+
+
+<a id="end-product"></a>
+
+## End product
+
+In the end, we have this<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3</a></sup>:
+
+```emacs-lisp
+(use-package vertico
+  :demand t                             ; Otherwise won't get loaded immediately
+  :straight (vertico :files (:defaults "extensions/*") ; Special recipe to load extensions conveniently
+                     :includes (vertico-indexed
+                                vertico-flat
+                                vertico-grid
+                                vertico-mouse
+                                vertico-quick
+                                vertico-buffer
+                                vertico-repeat
+                                vertico-reverse
+                                vertico-directory
+                                vertico-multiform
+                                vertico-unobtrusive))
+  :general
+  (:keymaps '(normal insert visual motion)
+            "M-." #'vertico-repeat)
+  (:keymaps 'vertico-map
+            "<tab>" #'vertico-insert ; Set manually otherwise setting `vertico-quick-insert' overrides this
+            "<escape>" #'minibuffer-keyboard-quit
+            "?" #'minibuffer-completion-help
+            "C-M-n" #'vertico-next-group
+            "C-M-p" #'vertico-previous-group
+            ;; Multiform toggles
+            "<backspace>" #'vertico-directory-delete-char
+            "C-w" #'vertico-directory-delete-word
+            "C-<backspace>" #'vertico-directory-delete-word
+            "RET" #'vertico-directory-enter
+            "C-i" #'vertico-quick-insert
+            "C-o" #'vertico-quick-exit
+            "M-o" #'kb/vertico-quick-embark
+            "M-G" #'vertico-multiform-grid
+            "M-F" #'vertico-multiform-flat
+            "M-R" #'vertico-multiform-reverse
+            "M-U" #'vertico-multiform-unobtrusive
+            "C-l" #'kb/vertico-multiform-flat-toggle)
+  :hook ((rfn-eshadow-update-overlay . vertico-directory-tidy) ; Clean up file path when typing
+         (minibuffer-setup . vertico-repeat-save)) ; Make sure vertico state is saved
+  :custom
+  (vertico-count 13)
+  (vertico-resize t)
+  (vertico-cycle nil)
+  ;; Extensions
+  (vertico-grid-separator "       ")
+  (vertico-grid-lookahead 50)
+  (vertico-buffer-display-action '(display-buffer-reuse-window))
+  (vertico-multiform-categories
+   '((file reverse)
+     (consult-grep buffer)
+     (consult-location)
+     (imenu buffer)
+     (library reverse indexed)
+     (org-roam-node reverse indexed)
+     (t reverse)))
+  (vertico-multiform-commands
+   '(("flyspell-correct-*" grid reverse)
+     (org-refile grid reverse indexed)
+     (consult-yank-pop indexed)
+     (consult-flycheck)
+     (consult-lsp-diagnostics)))
+  :init
+  (defun kb/vertico-multiform-flat-toggle ()
+    "Toggle between flat and reverse."
+    (interactive)
+    (vertico-multiform--display-toggle 'vertico-flat-mode)
+    (if vertico-flat-mode
+        (vertico-multiform--temporary-mode 'vertico-reverse-mode -1)
+      (vertico-multiform--temporary-mode 'vertico-reverse-mode 1)))
+  (defun kb/vertico-quick-embark (&optional arg)
+    "Embark on candidate using quick keys."
+    (interactive)
+    (when (vertico-quick-jump)
+      (embark-act arg)))
+
+  ;; Workaround for problem with `tramp' hostname completions. This overrides
+  ;; the completion style specifically for remote files! See
+  ;; https://github.com/minad/vertico#tramp-hostname-completion
+  (defun kb/basic-remote-try-completion (string table pred point)
+    (and (vertico--remote-p string)
+         (completion-basic-try-completion string table pred point)))
+  (defun kb/basic-remote-all-completions (string table pred point)
+    (and (vertico--remote-p string)
+         (completion-basic-all-completions string table pred point)))
+  (add-to-list 'completion-styles-alist
+               '(basic-remote           ; Name of `completion-style'
+                 kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
+  :config
+  (vertico-mode)
+  ;; Extensions
+  (vertico-multiform-mode)
+
+  ;; Prefix the current candidate with “» ”. From
+  ;; https://github.com/minad/vertico/wiki#prefix-current-candidate-with-arrow
+  (advice-add #'vertico--format-candidate :around
+              (lambda (orig cand prefix suffix index _start)
+                (setq cand (funcall orig cand prefix suffix index _start))
+                (concat
+                 (if (= vertico--index index)
+                     (propertize "» " 'face 'vertico-current)
+                   "  ")
+                 cand))))
+```
+
+
+<a id="orderless"></a>
+
+# Orderless
+
+`Orderless` is an alternative and powerful completion style, that is, it is an alternative to Emacs&rsquo;s basic candidate-filtering capacities.
+
+
+<a id="basic-1"></a>
+
+## Basic
+
+To use `orderless` you simply need the following.
+
+```emacs-lisp
+(use-package orderless
+  :custom
+  (completion-styles '(orderless))      ; Use orderless
+  (completion-category-defaults nil)    ; I want to be in control!
+  (completion-category-overrides
+   '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
+                   orderless)))))
+```
+
+However, we want to be more interesting! The following configures the matching styles that `orderless` uses. A matching style is a criterion for what is a valid candidate (a description of what each matching style does can be found in [Orderless&rsquo;s readme](https://github.com/oantolin/orderless#component-matching-styles)):
+
+```emacs-lisp
+:custom
+(orderless-matching-styles
+ '(orderless-literal
+   orderless-prefixes
+   orderless-initialism
+   orderless-regexp
+   ;; orderless-flex                       ; Basically fuzzy finding
+   ;; orderless-strict-leading-initialism
+   ;; orderless-strict-initialism
+   ;; orderless-strict-full-initialism
+   ;; orderless-without-literal          ; Recommended for dispatches instead
+   ))
+```
+
+
+<a id="style-dispatchers"></a>
+
+## Style dispatchers
+
+<figure>
+{% image src="./assets/2022-02-22_15-18-54_screenshot.png" alt="img" /%}
+<figcaption>A first component of “lm” using the `prot-orderless-strict-initialism-dispatcher` style dispatcher, and a second component of “map” using the `prot-orderless-literal-dispatcher`.</figcaption>
+</figure>
+
+Orderless becomes much more powerful when using its style dispatchers. A description of style dispatches can be found [here](https://github.com/oantolin/orderless#style-dispatchers). Essentially, you can choose which matching style is used for a particular `orderless` component. Thus, one component can use the `orderless-initialism` matching style while the next can use the `orderless-literal` matching style, and the result will be candidates which match both styles:
+
+```emacs-lisp
+;; The following is taken directly from Protesilaos's Emacs configuration, with
+;; very minor changes. See
+;; https://gitlab.com/protesilaos/dotfiles/-/blob/master/emacs/.emacs.d/prot-emacs.el
+:custom
+(orderless-style-dispatchers
+ '(prot-orderless-literal-dispatcher           ; = suffix for literal
+   prot-orderless-strict-initialism-dispatcher ; , suffix for initialism
+   prot-orderless-flex-dispatcher              ; . suffix for flex
+   ))
+:init
+(defun orderless--strict-*-initialism (component &optional anchored)
+  "Match a COMPONENT as a strict initialism, optionally ANCHORED.
+The characters in COMPONENT must occur in the candidate in that
+order at the beginning of subsequent words comprised of letters.
+Only non-letters can be in between the words that start with the
+initials.
+
+If ANCHORED is `start' require that the first initial appear in
+the first word of the candidate.  If ANCHORED is `both' require
+that the first and last initials appear in the first and last
+words of the candidate, respectively."
+  (orderless--separated-by
+      '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)))
+    (cl-loop for char across component collect `(seq word-start ,char))
+    (when anchored '(seq (group buffer-start) (zero-or-more (not alpha))))
+    (when (eq anchored 'both)
+      '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)) eol))))
+
+(defun orderless-strict-initialism (component)
+  "Match a COMPONENT as a strict initialism.
+This means the characters in COMPONENT must occur in the
+candidate in that order at the beginning of subsequent words
+comprised of letters.  Only non-letters can be in between the
+words that start with the initials."
+  (orderless--strict-*-initialism component))
+
+(defun prot-orderless-literal-dispatcher (pattern _index _total)
+  "Literal style dispatcher using the equals sign as a suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+  (when (string-suffix-p "=" pattern)
+    `(orderless-literal . ,(substring pattern 0 -1))))
+
+(defun prot-orderless-strict-initialism-dispatcher (pattern _index _total)
+  "Leading initialism  dispatcher using the comma suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+  (when (string-suffix-p "," pattern)
+    `(orderless-strict-initialism . ,(substring pattern 0 -1))))
+
+(defun prot-orderless-flex-dispatcher (pattern _index _total)
+  "Flex  dispatcher using the tilde suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+  (when (string-suffix-p "." pattern)
+    `(orderless-flex . ,(substring pattern 0 -1))))
+```
+
+Finally, rather than using the default  “+ “ to separate components, I use a space instead:
+
+```emacs-lisp
+:custom
+(orderless-component-separator 'orderless-escapable-split-on-space) ; Use backslash for literal space
+```
+
+
+<a id="end-product-1"></a>
+
+## End product
+
+The end result is this<sup><a id="fnr.4" class="footref" href="#fn.4" role="doc-backlink">4</a></sup>:
+
+```emacs-lisp
+(use-package orderless
+  :custom
+  (completion-styles '(orderless))
+  (completion-category-defaults nil)    ; I want to be in control!
+  (completion-category-overrides
+   '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
+                   orderless
+                   ))
+     ))
+
+  (orderless-component-separator 'orderless-escapable-split-on-space)
+  (orderless-matching-styles
+   '(orderless-literal
+     orderless-prefixes
+     orderless-initialism
+     orderless-regexp
+     ;; orderless-flex
+     ;; orderless-strict-leading-initialism
+     ;; orderless-strict-initialism
+     ;; orderless-strict-full-initialism
+     ;; orderless-without-literal          ; Recommended for dispatches instead
+     ))
+  (orderless-style-dispatchers
+   '(prot-orderless-literal-dispatcher
+     prot-orderless-strict-initialism-dispatcher
+     prot-orderless-flex-dispatcher))
+  :init
+  (defun orderless--strict-*-initialism (component &optional anchored)
+    "Match a COMPONENT as a strict initialism, optionally ANCHORED.
+The characters in COMPONENT must occur in the candidate in that
+order at the beginning of subsequent words comprised of letters.
+Only non-letters can be in between the words that start with the
+initials.
+
+If ANCHORED is `start' require that the first initial appear in
+the first word of the candidate.  If ANCHORED is `both' require
+that the first and last initials appear in the first and last
+words of the candidate, respectively."
+    (orderless--separated-by
+        '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)))
+      (cl-loop for char across component collect `(seq word-start ,char))
+      (when anchored '(seq (group buffer-start) (zero-or-more (not alpha))))
+      (when (eq anchored 'both)
+        '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)) eol))))
+
+  (defun orderless-strict-initialism (component)
+    "Match a COMPONENT as a strict initialism.
+This means the characters in COMPONENT must occur in the
+candidate in that order at the beginning of subsequent words
+comprised of letters.  Only non-letters can be in between the
+words that start with the initials."
+    (orderless--strict-*-initialism component))
+
+  (defun prot-orderless-literal-dispatcher (pattern _index _total)
+    "Literal style dispatcher using the equals sign as a suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "=" pattern)
+      `(orderless-literal . ,(substring pattern 0 -1))))
+
+  (defun prot-orderless-strict-initialism-dispatcher (pattern _index _total)
+    "Leading initialism  dispatcher using the comma suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "," pattern)
+      `(orderless-strict-initialism . ,(substring pattern 0 -1))))
+
+  (defun prot-orderless-flex-dispatcher (pattern _index _total)
+    "Flex  dispatcher using the tilde suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "." pattern)
+      `(orderless-flex . ,(substring pattern 0 -1)))))
+```
+
+---
+
+
+<a id="changelog"></a>
+
+# Changelog
+
+-   {% timestamp date="2025-04-05" /%}
+    -   Add a note at the beginning of the post alerting users of potentially outdated information as well as referencing my personal Emacs configuration.
+    -   Minor updates to code formatting.
+-   {% timestamp date="2022-02-22" /%} Added demonstrative images and a GIF. Added section on `all-the-icons-completion`.
+
+
+# Footnotes
+
+<sup><a id="fn.1" href="#fnr.1">1</a></sup> This does add width to the left side of the minibuffer, which may interfere with your aesthetic-related configurations of other packages.
+
+<sup><a id="fn.2" href="#fnr.2">2</a></sup> This relies on the `vertico-directory` extension.
+
+<sup><a id="fn.3" href="#fnr.3">3</a></sup> This is a direct copy and paste from my configuration file. There are slight differences in comments compared to the code snippets above.
+
+<sup><a id="fn.4" href="#fnr.4">4</a></sup> Again, taken verbatim from my Emacs configuration, with fewer useful comments.

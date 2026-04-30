@@ -1,10 +1,8 @@
-import { render } from "astro:content";
-import mdxRenderer from "@astrojs/mdx/server.js";
 import generateRssFeed, { type RSSFeedItem } from "@astrojs/rss";
 import { SITE_TITLE, SITE_URL } from "@lib/consts.ts";
 import { allPostEntries } from "@lib/posts.ts";
+import Markdoc from "@markdoc/markdoc";
 import type { APIContext } from "astro";
-import { experimental_AstroContainer } from "astro/container";
 import { $path } from "astro-typesafe-routes/path";
 import sanitize from "sanitize-html";
 
@@ -44,14 +42,11 @@ export function makeRSSFeed(
   });
 }
 
-// Create a container to return rendered HTML as a string
-const container = await experimental_AstroContainer.create();
-container.addServerRenderer({ renderer: mdxRenderer });
-
 export const rssArticleItems: RSSFeedItem[] = await Promise.all(
-  (await allPostEntries()).map(async (post) => {
-    const { Content } = await render(post);
-    const rawHTML: string = await container.renderToString(Content);
+  (await allPostEntries()).map((post) => {
+    const ast = Markdoc.parse(post.body ?? "");
+    const transformed = Markdoc.transform(ast);
+    const rawHTML: string = Markdoc.renderers.html(transformed) as string;
 
     // Sanitize rendered content to HTML suitable for an RSS feed
     // reader.

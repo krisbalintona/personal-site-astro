@@ -1,0 +1,77 @@
+---
+title: "What I learned starting web dev with Astro"
+draft: true
+---
+
+
+# HTML best practices
+
+see [BROKEN LINK: 20260406T155358.633044]
+
+This is a sentence.<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup><sup>, </sup><sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup>
+
+
+# Components are awesome
+
+-   scoped CSS (selectors, see [Scoped CSS](#h:20260421T031520.230702))
+
+
+<a id="h:20260421T031520.230702"></a>
+
+# Scoped CSS
+
+a confusing bit: selectors are scoped by styling in the rendered page is not scoped by component
+
+
+# MD vs MDX vs Markdoc
+
+[Markdoc | Frequently asked questions](https://markdoc.dev/docs/faq)
+[Markdoc | The Markdoc syntax](https://markdoc.dev/docs/syntax)
+
+
+# Footnotes
+
+<sup><a id="fn.1" href="#fnr.1">1</a></sup> This is a footnote. Aliquam erat volutpat.  Nunc eleifend leo vitae magna.  In id erat non orci commodo lobortis.  Proin neque massa, cursus ut, gravida ut, lobortis eget, lacus.  Sed diam.  Praesent fermentum tempor tellus.  Nullam tempus.  Mauris ac felis vel velit tristique imperdiet.
+
+```d2 title="diagram"
+plain-text: Plain-text {
+  shape: circle
+}
+
+org-export: Org-export {
+  shape: diamond
+}
+
+plain-text -> org-export
+
+csl: CSL Processor {
+  outputs: "HTML, MD, ODT, plain-text, etc." {
+    shape: hexagon
+  }
+  latex: LaTeX
+  pdf: PDF {
+    shape: oval
+  }
+  latex -> pdf: Compile with citations as rendered text {
+    style.stroke-dash: 4
+  }
+}
+
+bibtex: Bibtex and Natbib Processor {
+  latex: LaTeX
+  pdf: PDF {
+    shape: oval
+  }
+  latex -> pdf: Compile with citations as LaTeX commands {
+    style.stroke-dash: 4
+  }
+}
+
+org-export -> csl.outputs: {style.stroke-width: 4}
+org-export -> bibtex.latex: {style.stroke-width: 4}
+org-export -> csl.latex: {style.stroke-width: 4}
+```
+
+Donec at pede.  Etiam vel neque nec dui dignissim bibendum.  Vivamus id enim.  Phasellus neque orci, porta a, aliquet quis, semper a, massa.  Phasellus purus.  Pellentesque tristique imperdiet tortor.  Nam euismod tellus id erat.
+
+<sup><a id="fn.2" href="#fnr.2">2</a></sup> Foo bar

@@ -1,0 +1,159 @@
+---
+title: "Complement corfu, vertico, and completion-preview with prescient.el sorting"
+pubDate: 2025-04-05T09:23:00-05:00
+draft: true
+---
+
+{% alert %}{% timestamp date="2025-04-07" /%} With several commits made on April 6, 2025, vertico spun off its sorting functionality into an extension: [vertico-sort](https://github.com/minad/vertico/blob/main/extensions/vertico-sort.el). As explained in vertico-sort.el&rsquo;s commentary section, it includes a new feature: when `history-delete-duplicates` is nil, all sorting functions defined in vertico-sort.el now rank *recently* selected candidates above frequently selected candidates. This approximates the sorting strategy of prescient.el. I think I&rsquo;ll stick with prescient.el sorting because I like `history-delete-duplicates` set to non-nil, but try it out yourself!{% /alert %}
+
+{% alert %}{% timestamp date="2025-04-22" /%} Corfu now offers a similar functionality as vertic-sort does for vertico with the new [corfu-sort](https://github.com/minad/corfu/blob/main/extensions/corfu-history.el) extension. Like vertico-sort, corfu-sort requires `history-delete-duplicates` to be nil.{% /alert %}
+
+[Prescient.el](https://github.com/radian-software/prescient.el) is a package that was popular during the era of ivy and helm. Nowadays, I don&rsquo;t see it mentioned much because of the very popular corfu + vertico + marginalia + orderless combination which enhance built-in Emacs completion and overtaken ivy and helm in terms of popularity. (And it&rsquo;s deserved! I use this combination, too.)<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup> But I&rsquo;ve found prescient.el a noticeable convenience that complements this set of packages.
+
+The reason is prescient.el&rsquo;s sorting. Roughly, we can think of completion as having two halves: filtering and sorting. Filtering is what `completion-styles` does: among the generated completion candidates, which are shown to the user? Sorting is the order in which the filtered candidates are shown. One might think that orderless, which is filters candidates with its completion-style, also sorts candidates&mdash;but it doesn&rsquo;t. As explained in the [orderless README](https://github.com/oantolin/orderless?tab=readme-ov-file#prescient):
+
+> The [prescient.el](https://github.com/radian-software/prescient.el) library also provides matching of space-separated components in any order. It offers a completion-style that can be used with Emacs’ default completion UI, Mct, Vertico or with Icomplete. Furthermore Ivy is supported. The components can be matched literally, as regexps, as initialisms or in the flex style (called “fuzzy” in prescient). Prescient does not offer the same flexibility as Orderless with its style dispatchers. However in addition to matching, **Prescient supports sorting of candidates, while Orderless leaves that up to the candidate source and the completion UI.**
+
+As such, in the corfu + vertico + marginalia + orderless world, vertico (for minibuffer completions) and corfu (for in-inline completions) are responsible for sorting candidates.
+
+The problem is this: although orderless brilliantly narrows down candidates, both vertico and corfu have somewhat naive sorting algorithms (see `vertico-sort-function` and `corfu-sort-function`). Vertico offers `vertico-sort-history-alpha` and `vertico-sort-history-length-alpha`, and corfu offers `corfu-history-mode`. In my limited experience, however, I give prescient.el&rsquo;s sorting algorithm an edge to both. (YMMV&mdash;feel free to try them!) Oftentimes vertico and corfu will **consistently show the candidate you have in mind later in the list**. This tends to be the case when using certain common commands and certain `completion-at-point-functions`: I would common seek out certain candidates that orderless would place third or fourth in the list.
+
+Prescient.el almost entirely solved this issue for me. Prescient.el offers a `completion-style`&mdash;this is its filtering functionality&mdash;but it also offers sorting functionality. The sorting functionality is what&rsquo;s relevant here:
+
+> When sorting, **the last few candidates you selected are displayed first, followed by the most frequently selected ones**, and then the remaining candidates are sorted by length.
+
+Prescient.el is the core package, and there are several [auxiliary packages](https://github.com/radian-software/prescient.el?tab=readme-ov-file#usage) to integrate prescient with vertico, corfu, and others. We can enable prescient&rsquo;s sorting for vertico and corfu (but not its filtering; I want to leave this to orderless) with something like the following:
+
+```emacs-lisp
+;; Core package
+(use-package prescient
+  :custom
+  ;; My settings for relevant user options:
+  ;; (prescient-aggressive-file-save t)
+  ;; (prescient-sort-length-enable nil)
+  ;; (prescient-sort-full-matches-first t)
+  ;; (prescient-history-length 200)
+  ;; (prescient-frequency-decay 0.997)
+  ;; (prescient-frequency-threshold 0.05)
+  :config
+  ;; Optional: persist prescient statistics to an on-disk cache
+  ;; (`prescient-save-file')
+  (prescient-persist-mode 1))
+
+;; Integration with corfu
+(use-package corfu-prescient
+  ;; The :after keyword defers loading this package, meaning this package is
+  ;; only loaded until something else wants something from it.  If we want
+  ;; `corfu-prescient-mode' to be enabled in the :config block, we need to
+  ;; prevent deferral with the :demand keyword. In combination with our :after
+  ;; block, the package is immediately loaded only after both corfu and
+  ;; prescient are loaded.
+  :demand t
+  :after corfu prescient
+  :custom
+  ;; Sorting.  These are the default values but I include them here to be
+  ;; explicit.
+  (corfu-prescient-enable-sorting t)
+  (corfu-prescient-override-sorting nil) ; Don't override `display-sort-function'
+
+  ;; Filtering
+  (corfu-prescient-enable-filtering nil) ; We want orderless to do the filtering
+  ;; See also `corfu-prescient-completion-styles',
+  ;; `corfu-prescient-completion-category-overrides' and
+  ;; `prescient--completion-recommended-overrides'.  Those options apply only
+  ;; when `corfu-prescient-enable-filtering' is non-nil.
+  :config
+  (corfu-prescient-mode 1))
+
+;; Integration with vertico
+(use-package vertico-prescient
+  ;; The :after keyword defers loading this package, meaning this package is
+  ;; only loaded until something else wants something from it.  If we want
+  ;; `vertico-prescient-mode' to be enabled in the :config block, we need to
+  ;; prevent deferral with the :demand keyword. In combination with our :after
+  ;; block, the package is immediately loaded only after both vertico and
+  ;; prescient are loaded.
+  :demand t
+  :after vertico prescient
+  :custom
+  ;; Sorting.  These are the default values but I include them here to be
+  ;; explicit.
+  (vertico-prescient-enable-sorting t)
+  (vertico-prescient-override-sorting nil) ; Don't override `display-sort-function'
+
+  ;; Filtering
+  (vertico-prescient-enable-filtering nil) ; We want orderless to do the filtering
+  ;; See also `vertico-prescient-completion-styles',
+  ;; `vertico-prescient-completion-category-overrides', and
+  ;; `prescient--completion-recommended-overrides'.  Those options apply only
+  ;; when when `vertico-prescient-enable-filtering' is non-nil.
+  :config
+  (vertico-prescient-mode 1))
+```
+
+The result is using orderless for completion filtering and prescient for completion sorting everywhere&mdash;for in-line completions with corfu and minibuffer completions with vertico. With this, among the candidates filtered by orderless, the most recent and common ones will be bumped up to the beginning. Try it out!
+
+
+# Bonus: integration with `completion-preview-mode`
+
+Emacs 30.1 ships with the new `completion-preview-mode`. You can read about it [in this blog post](https://eshelyaron.com/posts/2023-11-17-completion-preview-in-emacs.html) but also in the Emacs 30.1 news (i.e., `C-u 30 C-h n`). Apparently, `completion-preview-mode`
+has its own sorting function&mdash;which makes sense, since it isn&rsquo;t hooked into either corfu nor vertico (which we set up to use prescient above). The relevant user option to modify its sorting is `completion-preview-sort-function`. So we just have to make sure that function matches prescient&rsquo;s. We can do that like this:
+
+```emacs-lisp
+(with-eval-after-load 'prescient
+  ;; Have `completion-preview-mode' use prescient's sorting algorithm
+  (setopt completion-preview-sort-function #'prescient-completion-sort))
+```
+
+But, if you also use corfu on top of `completion-preview-mode`, you&rsquo;ll still notice a discrepancy between corfu&rsquo;s first candidate and completion-preview&rsquo;s candidate. They should be the same with the same sorting algorithm but they&rsquo;re not! I&rsquo;m not 100%, but I&rsquo;m fairly confident that corfu-prescient keeps track of corfu-specific completion usage, which is separate from non-corfu-specific use. Consequently, the statistics used to sort candidates ends up different between corfu and `prescient-completion-sort`.
+
+In any case, below is a simple fix that gets corfu and completion-preview on the same page:
+
+```emacs-lisp
+;; We set completion-preview's sorting function
+;; (`completion-preview-sort-function') to corfu's sorting function
+;; (`corfu-sort-function').
+(with-eval-after-load 'corfu
+  (setopt completion-preview-sort-function corfu-sort-function))
+
+;; Alternative: for a solution that ensures `completion-preview-sort-function'
+;; always matches `corfu-sort-function', we can use a variable watcher.  This is
+;; my preference.
+;;
+;; The below accounts for cases in which (i) the user has buffer-local values
+;; for `corfu-sort-function' or (ii) the user changes the global value of
+;; `corfu-sort-function' (e.g., from minor modes that disable/enable
+;; functionality).  It is a robust solution, and although I have not tested its
+;; performance overhead, it should cause no problems.
+(add-variable-watcher 'corfu-sort-function
+                      (lambda (_symbol newval operation where)
+                        "Match the value of `completion-preview-sort-function' to `corfu-sort-function'.
+If `corfu-sort-function' is set buffer-locally, also set
+`completion-preview-sort-function' buffer-locally.  Otherwise, change
+the default value of `completion-preview-sort-function' accordingly.
+
+This action only applies when the value of `corfu-sort-function' is
+set (i.e., OPERATION is \\='set).  This excludes, e.g., let bindings."
+                        (when (equal operation 'set)
+                          (if where
+                              (with-current-buffer where
+                                (setq-local completion-preview-sort-function newval))
+                            (setopt completion-preview-sort-function newval)))))
+```
+
+
+# Changelog
+
+-   {% timestamp date="2025-04-07" /%}
+    -   Fixed several typos.
+    -   Added clarity to several phrases.
+    -   Added a note mentioning the new vertico-sort extension.
+-   {% timestamp date="2025-04-05" /%}
+    -   Correction to explanation according to [r/JDRiverRun&rsquo;s comment](https://www.reddit.com/r/emacs/comments/1js6xvw/comment/mlkpge6/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button).
+-   {% timestamp date="2025-04-22" /%}
+    -   Added a note mentioning the new corfu-history extension.
+
+
+# Footnotes
+
+<sup><a id="fn.1" href="#fnr.1">1</a></sup> In my opinion, each package is much more modular than the helm or ivy ecosystems while being more performant, integrated with existing Emacs functionality, and just as useful, if not more. Though a bit dated, I&rsquo;ve previously written a big about how to configure this set of packages: {% content-link collectionName="articles" id="202202211546--vertico_marginalia_all_the_icons_completion_and_orderless" %}Vertico, Marginalia, All-the-icons-completion, and Orderless{% /content-link %}.

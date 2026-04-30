@@ -1,0 +1,35 @@
+---
+title: "Customized LaTeX exports for humanities papers"
+draft: true
+---
+
+
+# The pain-point
+
+
+# Approach 1
+
+initially redefined latex exporter; but that created a long section in my config with majority redundancy with upstream code and brittle to future upstream changes
+
+lots of boilerplate to register new derived backend, and a bit hacky to repalce the old latex backend entry in the org export menu with the replacement version
+
+also overkill when you just want &ldquo;default latex exporter but recognizing a few more keywords&rdquo;
+
+which is why we have approach 2 and 3
+
+
+# Approach 2
+
+first tried `org-export-filter-keyword-functions`; didn&rsquo;t work because unknown keywords are ignored, not making it to the stage when filter functions are run
+
+I found a solution with `org-export-before-parsing-functions`: convert those keyword lines into #+LATEX\_HEADER lines (which ox-latex does convert)
+
+
+# Approach 3
+
+but, in the end, if you just want latex export, you can use the #+LATEX\_HEADER and #+LATEX\_HEADER\_EXTRA keywords
+
+merit: explicit declaration, not depending on your config
+
+but: as a consequence, if aspects involving in exporting the file are declared outside of the file (e.g., .sty file), the explicit file declaration might be end up brittle
+

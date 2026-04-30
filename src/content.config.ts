@@ -5,7 +5,7 @@ import { z } from "astro/zod";
 
 const articles = defineCollection({
   loader: glob({
-    pattern: "*/index.mdx",
+    pattern: "*/index.mdoc",
     base: "./src/content/articles",
   }),
   schema: postSchema,
@@ -13,7 +13,7 @@ const articles = defineCollection({
 
 const tags = defineCollection({
   loader: glob({
-    pattern: "*/index.mdx",
+    pattern: "*/index.mdoc",
     base: "./src/content/tags",
   }),
   schema: z.object({
@@ -23,7 +23,7 @@ const tags = defineCollection({
 
 const standalone = defineCollection({
   loader: glob({
-    pattern: "*/index.mdx",
+    pattern: "*/index.mdoc",
     base: "./src/content/standalone",
   }),
   schema: postSchema,

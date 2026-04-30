@@ -1,13 +1,19 @@
 ---
+const summaryHtml = await Astro.slots.render("default");
 ---
 
-<details>
-  <summary>
-    <span class="summary-content"><slot name="summary" /></span>
-  </summary>
+<!-- <details> -->
+<!--   <summary> -->
+<!--     <span class="summary-content"><slot name="summary" /></span> -->
+<!--   </summary> -->
+<!--  -->
+<!--   <div class="content"><slot /></div> -->
+<!-- </details> -->
 
-  <div class="content"><slot /></div>
+<details set:html={summaryHtml}>
 </details>
+
+<!-- <details><slot /></details> -->
 
 <style>
   summary {

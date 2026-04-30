@@ -1,0 +1,9 @@
+---
+interface Props {
+  slot?: string;
+}
+
+const { slot } = Astro.props;
+---
+
+<Fragment slot={slot}><slot /></Fragment>

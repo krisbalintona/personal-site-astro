@@ -1,0 +1,72 @@
+---
+title: "Neat behavior of M-x occur"
+pubDate: 2024-11-09T00:00:00-06:00
+draft: true
+---
+Having used Emacs for several years now, I somehow hadn&rsquo;t come across the prefix argument and active region behavior for one of the most well-known commands: `occur`.
+
+Below is the docstring of `occur` reads, with the relevant portions preserved:
+
+<p class="verse">
+occur is an interactive native-comp-function in replace.el.<br />
+<br />
+It is bound to M-s o.<br />
+<br />
+(occur REGEXP &optional **NLINES REGION**)<br />
+<br />
+Inferred type: (function (t &optional t t) t)<br />
+<br />
+Show all lines in the current buffer containing a match for REGEXP.<br />
+If a match spreads across multiple lines, all those lines are shown.<br />
+<br />
+[&hellip;]<br />
+<br />
+Each line is displayed with NLINES lines before and after, or -NLINES<br />
+before if NLINES is negative.<br />
+NLINES defaults to list-matching-lines-default-context-lines.<br />
+Interactively it is the prefix arg.<br />
+<br />
+Optional arg REGION, if non-nil, mean restrict search to the<br />
+specified region.  Otherwise search the entire buffer.\*<br />
+\*REGION must be a list of (START . END) positions as returned by<br />
+region-bounds.<br />
+<br />
+[&hellip;]<br />
+<br />
+When NLINES is a string or when the function is called<br />
+interactively with prefix argument without a number (C-u alone<br />
+as prefix) the matching strings are collected into the ‘\*Occur\*’<br />
+buffer by using NLINES as a replacement regexp.  NLINES may<br />
+contain \\& and \N which convention follows replace-match.<br />
+For example, providing &ldquo;defun\s +$\S +$&rdquo; for REGEXP and<br />
+&ldquo;\\1&rdquo; for NLINES collects all the function names in a lisp<br />
+program.  When there is no parenthesized subexpressions in REGEXP<br />
+the entire match is collected.  In any case the searched buffer<br />
+is not modified.<br />
+<br />
+[&hellip;]<br />
+</p>
+
+So:
+
+1.  When called on a region, on that region is searched.
+2.  When called with a numerical prefix argument, that many lines before and after every match is added to the search results. (This reminds me of `next-screen-context-lines`.) *This functionality is particularly useful to me since added context is sometimes necessary.*<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>
+3.  When called with a universal argument, just the matching string (not the entire line) is inserted into a line in a read-only buffer.
+4.  If called from elisp and `NLINES` is provided (as a regexp string), then the behavior is like `C-u` but matches can be modified like `replace-match`. (See `(elisp) Replacing Match` for more information.)
+
+Also, searching &ldquo;NLINES&rdquo; with `apropos-documentation` brings up a few other built-in commands that have similar functionality. `isearch-occur`, `multi-occur`, `list-matching-lines`, and `occur-context-lines` to name a few.
+
+Pretty neat!
+
+
+# Further Reading
+
+-   [Searching and Editing in Buffers with Occur Mode - Mastering Emacs](https://www.masteringemacs.org/article/searching-buffers-occur-mode)
+-   [What do you use for occur?  - Reddit](https://www.reddit.com/r/emacs/comments/1466y8d/what_do_you_use_for_occur/)
+-   [Emacs’ powerful OCCUR function in practice | Protesilaos Stavrou](https://protesilaos.com/codelog/2019-08-04-emacs-occur/)
+-   [EmacsWiki: Occur Mode](https://www.emacswiki.org/emacs/OccurMode)
+
+
+# Footnotes
+
+<sup><a id="fn.1" href="#fnr.1">1</a></sup> I sometimes use `occur-edit-mode` (bound to `e` in `occur-mode` buffers), and the added context lines can be relevant to the edits I want to make to the matched text.

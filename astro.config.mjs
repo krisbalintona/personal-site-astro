@@ -48,7 +48,7 @@ export default defineConfig({
     sitemap({ filter: (page) => !page.startsWith(`${SITE_URL}/posts/`) }),
     faviconRss(),
     d2({ experimental: { useD2js: true } }),
-    markdoc(),
+    markdoc({ allowHTML: true }),
     astroBrokenLinksChecker({
       checkExternalLinks: false,
     }),

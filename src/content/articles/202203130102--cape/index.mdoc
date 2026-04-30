@@ -1,0 +1,320 @@
+---
+title: "Cape"
+pubDate: 2022-03-13T01:02:00-06:00
+draft: true
+---
+
+# Table of Contents
+
+-   [What is `cape`?](#what-is-cape)
+-   [Basic usage: keybinds](#basic-usage-keybinds)
+-   [Adding backends to `completion-at-point-functions`](#adding-backends-to-completion-at-point-functions)
+-   [`Cape-company-to-capf` and `cape-super-capf`](#cape-company-to-capf-and-cape-super-capf)
+-   [`pcomplete` nicety](#pcomplete-nicety)
+-   [My `completion-at-point-functions`](#my-completion-at-point-functions)
+-   [Changelog](#changelog)
+
+
+
+<a id="what-is-cape"></a>
+
+# What is `cape`?
+
+I will be going over the basic usages of [Cape](https://github.com/minad/cape), namely how to add completion functions to `completion-at-point-functions` and how to use `cape's` built-in completion utilities (e.g. `cape-company-to-capf` and `cape-capf-buster`) to create backends with desired behavior. (Also see [u/JDRiverRun&rsquo;s informative comment](https://www.reddit.com/r/emacs/comments/td0nth/comment/i0hz6re/?utm_source=share&utm_medium=web2x&context=3) about the advantages of using `completion-at-point-functions` over `company`.)
+
+`Cape` is to `corfu` as `company-backends` are to `company`:
+
+> Cape provides a bunch of Completion At Point Extensions which can be used in combination with my Corfu completion UI or the default completion UI. The completion backends used by `completion-at-point` are so called `completion-at-point-functions` (Capfs). In principle, the Capfs provided by Cape can also be used by Company.
+
+Consequently, `cape` is only used if you utilize the built-in `completion-at-point`, which is best complemented by `corfu` text-completion <sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>.
+
+You can also see the list of built-in `completion-at-point-functions` in [the README](https://github.com/minad/cape#available-capfs). Several of these `completion-at-point-functions` are quite niche but others, such as `cape-file` and `cape-symbol` have common use cases.
+
+*Note*: I use `straight.el` for package management and `general.el` to set my keybindings. Both of these packages have integration with `use-package` which come in the form of the `:straight` and `:general` keywords, respectively.
+
+
+<a id="basic-usage-keybinds"></a>
+
+# Basic usage: keybinds
+
+The most basic way to use `cape` is to bind its built-in `completion-at-point-functions` to their own keys. For instance:
+
+```emacs-lisp
+(use-package cape
+  :general (:prefix "M-c"              ; Choose a particular completion function
+                    "p" 'completion-at-point
+                    "t" 'complete-tag   ; etags
+                    "d" 'cape-dabbrev   ; basically `dabbrev-completion'
+                    "f" 'cape-file
+                    "k" 'cape-keyword
+                    "s" 'cape-symbol
+                    "a" 'cape-abbrev
+                    "i" 'cape-ispell
+                    "l" 'cape-line
+                    "w" 'cape-dict
+                    "\\" 'cape-tex
+                    "_" 'cape-tex
+                    "^" 'cape-tex
+                    "&" 'cape-sgml
+                    "r" 'cape-rfc1345))
+```
+
+Additionally, if having `completion-at-point-functions` readily available through keybinds is desirable, then one can use `cape-interactive-capf` to turn an already existing `completion-at-point-function` into a command (i.e. interactive function) that can be bound.
+
+
+<a id="adding-backends-to-completion-at-point-functions"></a>
+
+# Adding backends to `completion-at-point-functions`
+
+However, `cape` is powerful because these functions can be added to `completion-at-point-functions`, meaning you can configure when each functions is used and where. The simplest way to accomplish this is by adding backends to `completion-at-point-functions` in a hook. Here is a simple example:
+
+```emacs-lisp
+(defun kb/cape-capf-setup-git-commit ()
+  (let ((result))
+    (dolist (element '(cape-symbol cape-dabbrev) result)
+      (add-to-list 'completion-at-point-functions element))))
+```
+
+I then add this to the appropriate hook:
+
+```emacs-lisp
+:hook (git-commit-mode . kb/cape-capf-setup-git-commit)
+```
+
+Consequently, when making commits to git, via `magit`, for instance, `completion-at-point-functions` looks like this<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup>:
+
+```emacs-lisp
+'(cape-symbol
+  cape-dabbrev
+  tags-completion-at-point-function)
+```
+
+There are a few additional things to keep in mind when adding backends to `completion-function-at-point`:
+
+1.  `add-to-list` prepends elements to a list, that is, place an element at the front of a list<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3</a></sup>.
+2.  `add-to-list` is almost always preferable to `push` because `push` adds an element to a list even if it already in the list, whereas `add-to-list` will not.
+3.  Elements earlier in `dolist` will be added to the list before later elements. This means that elements which should be deeper within `completion-at-point-functions` should be placed first. (Notice how `cape-dabbrev` is added after `cape-symbol`.)
+
+
+<a id="cape-company-to-capf-and-cape-super-capf"></a>
+
+# `Cape-company-to-capf` and `cape-super-capf`
+
+I think the killer feature of `cape` is `cape-company-to-capf`. This function is able to convert *any* `company` backend and convert it into a `completion-at-point-function` which `corfu` can use<sup><a id="fnr.4" class="footref" href="#fn.4" role="doc-backlink">4</a></sup>. For this reason, I regard `cape` as quite an underrated package since it achieves almost full feature parity with `company`. Here is an example with `company-yasnippet`:
+
+```emacs-lisp
+(defun kb/cape-capf-setup-lsp ()
+  "Replace the default `lsp-completion-at-point' with its
+`cape-capf-buster' version. Also add `cape-file' and
+`company-yasnippet' backends."
+  (setf (elt (cl-member 'lsp-completion-at-point completion-at-point-functions) 0)
+        (cape-capf-buster #'lsp-completion-at-point))
+  (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet))
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev t))
+```
+
+Another useful function is `cape-super-capf`. This function combines multiple `completion-at-point-functions` into a single function. Effectively, this means candidates from multiple backends can appear jointly. For instance, one can combine `cape-ispell` and `cape-dabbrev`:
+
+```emacs-lisp
+(defun kb/cape-capf-setup-org ()
+  (require 'org-roam)
+  (if (org-roam-file-p)
+      (org-roam--register-completion-functions-h)
+    (let (result)
+      (dolist (element (list
+                        (cape-super-capf #'cape-ispell #'cape-dabbrev)
+                        (cape-company-to-capf #'company-yasnippet))
+                       result)
+        (add-to-list 'completion-at-point-functions element)))
+    ))
+```
+
+For other `cape` transformers, see the [appropriate section of the README](https://github.com/minad/cape#other-capf-transformers).
+
+
+<a id="pcomplete-nicety"></a>
+
+# `pcomplete` nicety
+
+Finally, I have the following advice to make usage with `pcomplete`, what `eshell` uses for completion:
+
+```emacs-lisp
+:config
+;; For pcomplete. For now these two advices are strongly recommended to
+;; achieve a sane Eshell experience. See
+;; https://github.com/minad/corfu#completing-with-corfu-in-the-shell-or-eshell
+
+;; Silence the pcomplete capf, no errors or messages!
+(advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+;; Ensure that pcomplete does not write to the buffer and behaves as a pure
+;; `completion-at-point-function'.
+(advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
+```
+
+
+<a id="my-completion-at-point-functions"></a>
+
+# My `completion-at-point-functions`
+
+I have very hesitantly included my WIP code which leverages `cape` and `completion-at-point` utilities. I have not described in detail each of the following functions. I have, however, attempted to provide useful docstrings and comments.
+
+I hesitate to publish this code because it was **very haphazardly written and highly dependent on my configuration**. The reason for this is the order in which the `completion-at-point-functions` are added: any peculiarities in another&rsquo;s configuration may lead to undesirable results. As a result, **do not directly copy-and-paste this code** and expect proper functionality. Rather, I put it here as a reference for what can be done.
+
+{% details %}
+{% summary %}
+**Here they are**
+{% /summary %}
+{% alert %}**Warning!** This code may produce undesirable effects! Copy at your own risk.{% /alert %}
+
+```emacs-lisp
+(use-package cape
+  :hook ((emacs-lisp-mode .  kb/cape-capf-setup-elisp)
+         (lsp-completion-mode . kb/cape-capf-setup-lsp)
+         (org-mode . kb/cape-capf-setup-org)
+         (eshell-mode . kb/cape-capf-setup-eshell)
+         (git-commit-mode . kb/cape-capf-setup-git-commit)
+         (LaTeX-mode . kb/cape-capf-setup-latex)
+         (sh-mode . kb/cape-capf-setup-sh)
+         )
+  :general (:prefix "M-c"               ; Particular completion function
+                    "p" 'completion-at-point
+                    "t" 'complete-tag           ; etags
+                    "d" 'cape-dabbrev           ; or dabbrev-completion
+                    "f" 'cape-file
+                    "k" 'cape-keyword
+                    "s" 'cape-symbol
+                    "a" 'cape-abbrev
+                    "i" 'cape-ispell
+                    "l" 'cape-line
+                    "w" 'cape-dict
+                    "\\"' cape-tex
+                    "_" 'cape-tex
+                    "^" 'cape-tex
+                    "&" 'cape-sgml
+                    "r" 'cape-rfc1345
+                    )
+  :custom
+  (cape-dabbrev-min-length 3)
+  :init
+  ;; Elisp
+  (defun kb/cape-capf-ignore-keywords-elisp (cand)
+    "Ignore keywords with forms that begin with \":\" (e.g.
+:history)."
+    (or (not (keywordp cand))
+        (eq (char-after (car completion-in-region--data)) ?:)))
+  (defun kb/cape-capf-setup-elisp ()
+    "Replace the default `elisp-completion-at-point'
+completion-at-point-function. Doing it this way will prevent
+disrupting the addition of other capfs (e.g. merely setting the
+variable entirely, or adding to list).
+
+Additionally, add `cape-file' as early as possible to the list."
+    (setf (elt (cl-member 'elisp-completion-at-point completion-at-point-functions) 0)
+          #'elisp-completion-at-point)
+    (add-to-list 'completion-at-point-functions #'cape-symbol)
+    ;; I prefer this being early/first in the list
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (require 'company-yasnippet)
+    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet)))
+
+  ;; LSP
+  (defun kb/cape-capf-setup-lsp ()
+    "Replace the default `lsp-completion-at-point' with its
+`cape-capf-buster' version. Also add `cape-file' and
+`company-yasnippet' backends."
+    (setf (elt (cl-member 'lsp-completion-at-point completion-at-point-functions) 0)
+          (cape-capf-buster #'lsp-completion-at-point))
+    ;; TODO 2022-02-28: Maybe use `cape-wrap-predicate' to have candidates
+    ;; listed when I want?
+    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-yasnippet))
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev t))
+
+  ;; Org
+  (defun kb/cape-capf-setup-org ()
+    (require 'org-roam)
+    (if (org-roam-file-p)
+        (org-roam--register-completion-functions-h)
+      (let (result)
+        (dolist (element (list
+                          (cape-super-capf #'cape-ispell #'cape-dabbrev)
+                          (cape-company-to-capf #'company-yasnippet))
+                         result)
+          (add-to-list 'completion-at-point-functions element)))
+      ))
+
+  ;; Eshell
+  (defun kb/cape-capf-setup-eshell ()
+    (let ((result))
+      (dolist (element '(pcomplete-completions-at-point cape-file) result)
+        (add-to-list 'completion-at-point-functions element))
+      ))
+
+  ;; Git-commit
+  (defun kb/cape-capf-setup-git-commit ()
+    (general-define-key
+     :keymaps 'local
+     :states 'insert
+     "<tab>" 'completion-at-point)      ; Keybinding for `completion-at-point'
+    (let ((result))
+      (dolist (element '(cape-dabbrev cape-symbol) result)
+        (add-to-list 'completion-at-point-functions element))))
+
+  ;; LaTeX
+  (defun kb/cape-capf-setup-latex ()
+    (require 'company-auctex)
+    (let ((result))
+      (dolist (element (list
+                        ;; First add `company-yasnippet'
+                        (cape-company-to-capf #'company-yasnippet)
+                        ;; Then add `cape-tex'
+                        #'cape-tex
+                        ;; Then add `company-auctex' in the order it adds its
+                        ;; backends.
+                        (cape-company-to-capf #'company-auctex-bibs)
+                        (cape-company-to-capf #'company-auctex-labels)
+                        (cape-company-to-capf
+                         (apply-partially #'company--multi-backend-adapter
+                                          '(company-auctex-macros company-auctex-symbols company-auctex-environments))))
+                       result)
+        (add-to-list 'completion-at-point-functions element))))
+
+
+  ;; Sh
+  (defun kb/cape-capf-setup-sh ()
+    (require 'company-shell)
+    (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-shell)))
+  :config
+  ;; For pcomplete. For now these two advices are strongly recommended to
+  ;; achieve a sane Eshell experience. See
+  ;; https://github.com/minad/corfu#completing-with-corfu-in-the-shell-or-eshell
+
+  ;; Silence the pcomplete capf, no errors or messages!
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+  ;; Ensure that pcomplete does not write to the buffer and behaves as a pure
+  ;; `completion-at-point-function'.
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
+```
+
+
+{% /details %}
+
+---
+
+
+<a id="changelog"></a>
+
+# Changelog
+
+-   {% timestamp date="2022-03-13" /%}
+    -   Fixed typo. Added link to [u/JDRiverRun&rsquo;s informative Reddit comment](https://www.reddit.com/r/emacs/comments/td0nth/comment/i0hz6re/?utm_source=share&utm_medium=web2x&context=3).
+
+
+# Footnotes
+
+<sup><a id="fn.1" href="#fnr.1">1</a></sup> See {% content-link collectionName="articles" id="202202270056--corfu_kind_icon_and_corfu_doc" %}Corfu, Kind-icon, and Corfu-doc{% /content-link %} to see the basic usage of `corfu` and several accessory packages.
+
+<sup><a id="fn.2" href="#fnr.2">2</a></sup> `tags-completion-at-point-function` is a default `completion-at-point-function`
+
+<sup><a id="fn.3" href="#fnr.3">3</a></sup> See its docstring to learn how to append to a list
+
+<sup><a id="fn.4" href="#fnr.4">4</a></sup> This feature is currently listed as experimental but, for the most part, the results are as expected. If anything, rare edge cases are the only points of missing functionality.
