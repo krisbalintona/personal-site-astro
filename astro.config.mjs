@@ -4,7 +4,7 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { defineConfig, fontProviders } from "astro/config";
 import astroBrokenLinksChecker from "astro-broken-links-checker";
-import d2 from "astro-d2";
+import astroD2 from "astro-d2";
 import expressiveCode from "astro-expressive-code";
 import typesafeRoutes from "astro-typesafe-routes";
 import { pluginFullscreen } from "expressive-code-fullscreen";
@@ -16,6 +16,8 @@ export default defineConfig({
   site: SITE_URL,
   prerenderConflictBehavior: "error",
   integrations: [
+    faviconRss(),
+    typesafeRoutes(),
     expressiveCode({
       themes: ["material-theme-lighter"],
       plugins: [pluginFullscreen()],
@@ -44,14 +46,12 @@ export default defineConfig({
         },
       },
     }),
+    astroD2({ experimental: { useD2js: true } }),
     mdx({ gfm: false }),
-    typesafeRoutes(),
-    sitemap({ filter: (page) => !page.startsWith(`${SITE_URL}/posts/`) }),
-    faviconRss(),
-    d2({ experimental: { useD2js: true } }),
     astroBrokenLinksChecker({
       checkExternalLinks: false,
     }),
+    sitemap({ filter: (page) => !page.startsWith(`${SITE_URL}/posts/`) }),
   ],
   fonts: [
     {
