@@ -56,11 +56,11 @@ This option is used to define the value of other relevant paths.")
 This variable can be `let'-bound to change the default string.")
 
 (defvar org-mdx-import-statement-alist
-  '(("Alert" . "import Alert from \"@components/Alert.astro\";")
+  '(("Alert" . "import Alert from \"@components/markup/Alert.astro\";")
     ("Image" . "import { Image } from \"astro:assets\";")
-    ("Details" . "import Details from \"@components/Details.astro\";")
-    ("Timestamp" . "import Timestamp from \"@components/Timestamp.astro\";")
-    ("ContentLink" . "import ContentLink from \"@components/ContentLink.astro\";"))
+    ("Details" . "import Details from \"@components/markup/Details.astro\";")
+    ("Timestamp" . "import Timestamp from \"@components/markup/Timestamp.astro\";")
+    ("ContentLink" . "import ContentLink from \"@components/markup/ContentLink.astro\";"))
   "Alist from component name to import statement.
 There are several components specific to this project.  This is an alist
 from component name to the import statement corresponding to that

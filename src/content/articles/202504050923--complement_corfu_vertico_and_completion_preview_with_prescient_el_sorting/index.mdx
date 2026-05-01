@@ -5,9 +5,9 @@ draft: false
 tags:
   - "Emacs"
 ---
-import ContentLink from "@components/ContentLink.astro";
-import Alert from "@components/Alert.astro";
-import Timestamp from "@components/Timestamp.astro";
+import ContentLink from "@components/markup/ContentLink.astro";
+import Alert from "@components/markup/Alert.astro";
+import Timestamp from "@components/markup/Timestamp.astro";
 
 
 <Alert><Timestamp date="2025-04-07" /> With several commits made on April 6, 2025, vertico spun off its sorting functionality into an extension: [vertico-sort](https://github.com/minad/vertico/blob/main/extensions/vertico-sort.el). As explained in vertico-sort.el's commentary section, it includes a new feature: when `history-delete-duplicates` is nil, all sorting functions defined in vertico-sort.el now rank *recently* selected candidates above frequently selected candidates. This approximates the sorting strategy of prescient.el. I think I'll stick with prescient.el sorting because I like `history-delete-duplicates` set to non-nil, but try it out yourself!</Alert>
