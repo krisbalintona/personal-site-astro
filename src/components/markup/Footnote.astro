@@ -1,0 +1,25 @@
+---
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+---
+
+<li id={`fn-${name}`}>
+  <sup
+    ><a
+      href={`#fnref-${name}`}
+      aria-label={`Return to footnote ${name} reference`}
+      >{name}</a
+    ></sup
+  >
+  <div><slot /></div>
+</li>
+
+<style>
+  li {
+    display: flex;
+    gap: 0.6em;
+  }
+</style>

@@ -5,6 +5,9 @@ draft: false
 tags:
   - "Emacs"
 ---
+import Footnote from "@components/markup/Footnote.astro";
+import FootnoteSection from "@components/markup/FootnoteSection.astro";
+import FootnoteRef from "@components/markup/FootnoteRef.astro";
 import { Image } from "astro:assets";
 import Alert from "@components/markup/Alert.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
@@ -55,7 +58,7 @@ I will be going over my personal Emacs' text completion (e.g. `company-mode` and
 
 `Corfu` is a text completion (e.g. `completion-at-point`, `company-mode`) package. In my opinion, since its release, `corfu` has not gotten the attention that it deserves. I prefer it to `company` for the following reasons:
 
-1.  It is easier to configure since `corfu`'s internals rely on the built-in `completion-at-point`. This also means that, unlike `company`,<sup><a id="fnref-1" class="fnref" href="#fn-1" role="doc-backlink" aria-label="Footnote 1">1</a></sup>…
+1.  It is easier to configure since `corfu`'s internals rely on the built-in `completion-at-point`. This also means that, unlike `company`,<FootnoteRef name="1" />…
     -   any built-in invocation of `completion-at-point` or `completion-in-region` leverages `corfu`,
     -   and any `completion-style` (e.g. `orderless`) can be used for filtering candidates.
 2.  `Corfu` has been more performant (i.e. fewer stutters, smoother cycling of candidates) in my experience.
@@ -131,9 +134,9 @@ Additionally, the following two variables not under `corfu` but related to `comp
 
 ## Working with the recent changes to `corfu`
 
-On [February 7, 2022](https://github.com/minad/corfu/commit/91feb66630eea6f36fee10576760c219896c1d05), `corfu` introduced an important change<sup><a id="fnref-2" class="fnref" href="#fn-2" role="doc-backlink" aria-label="Footnote 2">2</a></sup>, particularly the interaction between `corfu` and `orderless`. You can read more [on their README](https://github.com/minad/corfu#orderless-completion), but, essentially, `orderless` now introduces the `corfu-insert-separator` command that inserts the `corfu-separator` character into the buffer. This character is what delimits `orderless` components (see [this Reddit comment](https://www.reddit.com/r/emacs/comments/t38kkh/comment/hytmcpg/?utm_source=share&utm_medium=web2x&context=3) for a more lengthy description of this behavior.) A `corfu` workflow in which `corfu-auto` is set to `t` leverages this change, *for without it* users could not realistically use `corfu` with a multi-component `completion-style` like `orderless`.
+On [February 7, 2022](https://github.com/minad/corfu/commit/91feb66630eea6f36fee10576760c219896c1d05), `corfu` introduced an important change<FootnoteRef name="2" />, particularly the interaction between `corfu` and `orderless`. You can read more [on their README](https://github.com/minad/corfu#orderless-completion), but, essentially, `orderless` now introduces the `corfu-insert-separator` command that inserts the `corfu-separator` character into the buffer. This character is what delimits `orderless` components (see [this Reddit comment](https://www.reddit.com/r/emacs/comments/t38kkh/comment/hytmcpg/?utm_source=share&utm_medium=web2x&context=3) for a more lengthy description of this behavior.) A `corfu` workflow in which `corfu-auto` is set to `t` leverages this change, *for without it* users could not realistically use `corfu` with a multi-component `completion-style` like `orderless`.
 
-I do not use this workflow<sup><a id="fnref-3" class="fnref" href="#fn-3" role="doc-backlink" aria-label="Footnote 3">3</a></sup>, but if this behavior is desirable, you can set `corfu-separator` to your `orderless` separator character to properly delimit `orderless` components. I personally use the regular space character. You can make the following modifications to your configuration:
+I do not use this workflow<FootnoteRef name="3" />, but if this behavior is desirable, you can set `corfu-separator` to your `orderless` separator character to properly delimit `orderless` components. I personally use the regular space character. You can make the following modifications to your configuration:
 
 ```emacs-lisp
 :general
@@ -343,7 +346,7 @@ The following is my configuration:
 <figcaption>Using `corfu-doc` in a `corfu` popup. Called from a `java` file with completion candidates provided by `lsp-mode`.</figcaption>
 </figure>
 
-Here is a sample configuration<sup><a id="fnref-4" class="fnref" href="#fn-4" role="doc-backlink" aria-label="Footnote 4">4</a></sup>:
+Here is a sample configuration<FootnoteRef name="4" />:
 
 ```emacs-lisp
 (use-package corfu-doc
@@ -368,7 +371,7 @@ Here is a sample configuration<sup><a id="fnref-4" class="fnref" href="#fn-4" ro
   (corfu-echo-documentation nil))
 ```
 
-From my experience, `corfu-doc` is perfect for most. However, it should be noted that for those who have a high [repeat rate](https://wiki.archlinux.org/title/Xorg/Keyboard_configuration#Adjusting_typematic_delay_and_rate)<sup><a id="fnref-5" class="fnref" href="#fn-5" role="doc-backlink" aria-label="Footnote 5">5</a></sup>, rapidly scrolling through candidates causes stuttering and/or lag. This is why I find setting a keybind for `corfu-doc-toggle` to be useful.
+From my experience, `corfu-doc` is perfect for most. However, it should be noted that for those who have a high [repeat rate](https://wiki.archlinux.org/title/Xorg/Keyboard_configuration#Adjusting_typematic_delay_and_rate)<FootnoteRef name="5" />, rapidly scrolling through candidates causes stuttering and/or lag. This is why I find setting a keybind for `corfu-doc-toggle` to be useful.
 
 ---
 
@@ -388,23 +391,21 @@ From my experience, `corfu-doc` is perfect for most. However, it should be noted
 -   <Timestamp date="2022-03-11" />
     -   Update to include new compatibility with `corfu-insert-separator` and `corfu-quit-at-boundary` functionality.
 
-<section class="fn-section" role="doc-endnotes" aria-labelledby="footnotes-heading">
-<h1 id="footnotes-heading">Footnotes</h1>
-<ol style="list-style: none;">
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-1" href="#fnref-1">1</a></sup> Kudos to u/JDRiverRun, the current maintainer of `kind-icon` for [providing a few benefits](https://www.reddit.com/r/emacs/comments/t38kkh/comment/hyturrd/?utm_source=share&utm_medium=web2x&context=3) I didn't originally list.
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-2" href="#fnref-2">2</a></sup> This change was initially motivated by jdtsmith (u/JDRiverRun) and is described in [this GitHub issue](https://github.com/minad/corfu/issues/119).
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-3" href="#fnref-3">3</a></sup> See [this commit](https://github.com/minad/corfu/commit/b71465fa6b6588babc98a1ae7034c9a41e5eaca7). Also see this [GitHub issue](https://github.com/minad/corfu/issues/138) which reimplemented the old `corfu-quit-at-boundary` functionality alongside the then new `corfu-insert-separator` functionality.
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-4" href="#fnref-4">4</a></sup> This is not exactly my configuration, but is quite close to it.
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-5" href="#fnref-5">5</a></sup> I personally use a repeat rate of 37 ms with a delay rate of 225, set by `xset r rate 225 37`.
-</li>
-</ol>
-</section>
+<FootnoteSection>
+Footnotes
+<Footnote name="1" slot="footnotes">
+Kudos to u/JDRiverRun, the current maintainer of `kind-icon` for [providing a few benefits](https://www.reddit.com/r/emacs/comments/t38kkh/comment/hyturrd/?utm_source=share&utm_medium=web2x&context=3) I didn't originally list.
+</Footnote>
+<Footnote name="2" slot="footnotes">
+This change was initially motivated by jdtsmith (u/JDRiverRun) and is described in [this GitHub issue](https://github.com/minad/corfu/issues/119).
+</Footnote>
+<Footnote name="3" slot="footnotes">
+See [this commit](https://github.com/minad/corfu/commit/b71465fa6b6588babc98a1ae7034c9a41e5eaca7). Also see this [GitHub issue](https://github.com/minad/corfu/issues/138) which reimplemented the old `corfu-quit-at-boundary` functionality alongside the then new `corfu-insert-separator` functionality.
+</Footnote>
+<Footnote name="4" slot="footnotes">
+This is not exactly my configuration, but is quite close to it.
+</Footnote>
+<Footnote name="5" slot="footnotes">
+I personally use a repeat rate of 37 ms with a delay rate of 225, set by `xset r rate 225 37`.
+</Footnote>
+</FootnoteSection>

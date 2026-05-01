@@ -5,8 +5,11 @@ draft: false
 tags:
   - "Emacs"
 ---
+import Footnote from "@components/markup/Footnote.astro";
+import FootnoteSection from "@components/markup/FootnoteSection.astro";
 import ContentLink from "@components/markup/ContentLink.astro";
 import { Image } from "astro:assets";
+import FootnoteRef from "@components/markup/FootnoteRef.astro";
 import Alert from "@components/markup/Alert.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
 
@@ -103,7 +106,7 @@ exporting a citation), as a string or nil.  Both BIBLIOGRAPHY-STYLE and<br />
 CITATION-STYLE are optional.  NAME is mandatory.<br />
 </p>
 
-What this suggests is that different combinations of “processors,” “bibliography styles,” and “citation styles” can be configured to work with different `org-export` backends. Presently, there are three processors available: `basic`, `csl`, `natbib`, and `bibtex`.  Though `org-cite` citations will always follow the same format, **the output text that is exported will change depending on the processor used**. I will go over these differences now, focusing primarily on the `bibtex` and `csl` backends<sup><a id="fnref-1" class="fnref" href="#fn-1" role="doc-backlink" aria-label="Footnote 1">1</a></sup>.
+What this suggests is that different combinations of “processors,” “bibliography styles,” and “citation styles” can be configured to work with different `org-export` backends. Presently, there are three processors available: `basic`, `csl`, `natbib`, and `bibtex`.  Though `org-cite` citations will always follow the same format, **the output text that is exported will change depending on the processor used**. I will go over these differences now, focusing primarily on the `bibtex` and `csl` backends<FootnoteRef name="1" />.
 
 **The `bibtex` processor can only be used with the `latex` backend.** Using this processor exports citations using the [BibLaTex LaTeX package](https://www.ctan.org/pkg/biblatex). That means that `[cite:@bradleyAppearanceRealityMetaphysical2011 82–5;]` will export into a LaTeX command like `\cite[82–5]{bradleyAppearanceRealityMetaphysical2011}`. Compiling the `org` exported LaTeX file will in turn produce a PDF whose citations are handled by `biblatex`. The end *citation style* will be determined by the provided package options (e.g. `style=mla-new`). Read the [biblatex documentation](https://www.ctan.org/pkg/biblatex) for more information (namely, section 3.1.1 in the February 2, 2022 version of the manual).
 
@@ -170,7 +173,7 @@ I will give an example. Basic MLA in-text citations following a `(AUTHOR PAGE)` 
 -   want automatic selection of citation variants
 -   or have rare field or entry types in your `.bib` file.
 
-*Otherwise*, use the `csl` processor<sup><a id="fnref-2" class="fnref" href="#fn-2" role="doc-backlink" aria-label="Footnote 2">2</a></sup> (assuming you have a `.csl` file for your desired citation style).
+*Otherwise*, use the `csl` processor<FootnoteRef name="2" /> (assuming you have a `.csl` file for your desired citation style).
 
 Finally, it should be noted that **the `csl` and `bibtex` processors use different locators in citations**. As explained in [tecosaur's guide](https://blog.tecosaur.com/tmio/2021-07-31-citations.html#cite-syntax), the `csl` processor uses locators like `bk.` and `vol.`, so citations may look like `[cite/noauthor:See@mollisonNietzscheContraStoicism2018 pp. 28–9;@priestWhyItIrrational2001 pp. 14;]`​—CSL processes these locators. On the other hand, a citation key's suffix is *directly passed as an option to BibLaTeX commands*, so an equivalent to the above would be `[cite/noauthor:See@mollisonNietzscheContraStoicism2018 28–9;@priestWhyItIrrational2001 14;]`, which doesn't have CSL locators.
 
@@ -197,7 +200,7 @@ Luckily, the difficulty in `org-cite` is only conceptually: configuring it is in
 
 Alternatively, you can use the org-mode `#+BIBLIOGRAPHY:` keyword to set this value per-file; it's value should be a file path.
 
-`org-cite-export-processors` is useful as a means to tweak how you'd like `org-cite` to export citations. You can also set a file-local value using the `#+CITE_EXPORT` file keyword (e.g. `#+CITE_EXPORT: csl chicago-author-date.csl`); see [this section in tecosaur's guide](https://blog.tecosaur.com/tmio/2021-07-31-citations.html#more-exporting) for an example of how to set the processor, bibliography style, and citation style with this keyword. For a given backend<sup><a id="fnref-3" class="fnref" href="#fn-3" role="doc-backlink" aria-label="Footnote 3">3</a></sup>, you can choose how `org-cite` exports it. For instance, here is mine:
+`org-cite-export-processors` is useful as a means to tweak how you'd like `org-cite` to export citations. You can also set a file-local value using the `#+CITE_EXPORT` file keyword (e.g. `#+CITE_EXPORT: csl chicago-author-date.csl`); see [this section in tecosaur's guide](https://blog.tecosaur.com/tmio/2021-07-31-citations.html#more-exporting) for an example of how to set the processor, bibliography style, and citation style with this keyword. For a given backend<FootnoteRef name="3" />, you can choose how `org-cite` exports it. For instance, here is mine:
 
 ```emacs-lisp
 :custom
@@ -208,9 +211,9 @@ Alternatively, you can use the org-mode `#+BIBLIOGRAPHY:` keyword to set this va
    (t . (csl "modern-language-association.csl"))))      ; Fallback
 ```
 
-As you can see, I have CSL be the default in every case aside from LaTeX. The styles can either be a file path or a file name in `org-cite-csl-styles-dir`​—see [Zotero](#zotero) for how to easily acquire CSL files.<sup><a id="fnref-4" class="fnref" href="#fn-4" role="doc-backlink" aria-label="Footnote 4">4</a></sup> (I use LaTeX strictly for my academic papers, so I really enjoy `biblatex`'s features.)
+As you can see, I have CSL be the default in every case aside from LaTeX. The styles can either be a file path or a file name in `org-cite-csl-styles-dir`​—see [Zotero](#zotero) for how to easily acquire CSL files.<FootnoteRef name="4" /> (I use LaTeX strictly for my academic papers, so I really enjoy `biblatex`'s features.)
 
-I also choose to customize faces—I prefer the green faces that `org-ref` uses:<sup><a id="fnref-5" class="fnref" href="#fn-5" role="doc-backlink" aria-label="Footnote 5">5</a></sup>
+I also choose to customize faces—I prefer the green faces that `org-ref` uses:<FootnoteRef name="5" />
 
 ```emacs-lisp
 :custom-face
@@ -227,7 +230,7 @@ I also choose to customize faces—I prefer the green faces that `org-ref` uses:
 Using `org-cite` is incredibly simple:
 
 1.  `org-cite-insert` to insert citations in `org` files, and
-2.  `#+PRINT_BIBLIOGRAPHY:` within a document to mark where the bibliography/references/works cited should be.<sup><a id="fnref-6" class="fnref" href="#fn-6" role="doc-backlink" aria-label="Footnote 6">6</a></sup>
+2.  `#+PRINT_BIBLIOGRAPHY:` within a document to mark where the bibliography/references/works cited should be.<FootnoteRef name="6" />
 
 
 <a id="citar"></a>
@@ -259,7 +262,7 @@ Using `org-cite` is really simple. But many users will find the interface… too
   (org-cite-activate-processor 'citar))
 ```
 
-You can then set keybinds for common `citar` commands. For example, in the `:general` use-package keyword:<sup><a id="fnref-7" class="fnref" href="#fn-7" role="doc-backlink" aria-label="Footnote 7">7</a></sup>
+You can then set keybinds for common `citar` commands. For example, in the `:general` use-package keyword:<FootnoteRef name="7" />
 
 ```emacs-lisp
 :general
@@ -286,7 +289,7 @@ If you use `embark` and `org-roam` you can also set these variables:
 
 <Alert><Timestamp date="2023-08-19" /> The [citar-org-roam](https://github.com/emacs-citar/citar-org-roam) package provides all that is mentioned in this section and more. That package should be used instead in any instance of a desired integration between `org-roam` and `citar`.</Alert>
 
-If you use `org-roam`, then the following is how you select bibliographic source and create an `org-roam` node from it. All credit goes to [Jethro Kuan](https://www.jethro.dev/), the creator of `org-roam`, though I've made a few of my own customizations:<sup><a id="fnref-8" class="fnref" href="#fn-8" role="doc-backlink" aria-label="Footnote 8">8</a></sup>
+If you use `org-roam`, then the following is how you select bibliographic source and create an `org-roam` node from it. All credit goes to [Jethro Kuan](https://www.jethro.dev/), the creator of `org-roam`, though I've made a few of my own customizations:<FootnoteRef name="8" />
 
 ```emacs-lisp
 ;; Create a new node from a bibliographic source. taken from
@@ -311,7 +314,7 @@ If you use `org-roam`, then the following is how you select bibliographic source
                        :props '(:finalize find-file))))
 ```
 
-I add it to an accessible keybinding:<sup><a id="fnref-9" class="fnref" href="#fn-9" role="doc-backlink" aria-label="Footnote 9">9</a></sup>
+I add it to an accessible keybinding:<FootnoteRef name="9" />
 
 ```emacs-lisp
 :general
@@ -343,7 +346,7 @@ A limitation with this code is that this only calls `citar-org-update-pre-suffix
 
 Additionally, I override `citar-org-update-pre-suffix` with my own version which adds the following functionality:
 
-1.  Temporarily enable [typo-mode](https://github.com/jorgenschaefer/typoel).<sup><a id="fnref-10" class="fnref" href="#fn-10" role="doc-backlink" aria-label="Footnote 10">10</a></sup>
+1.  Temporarily enable [typo-mode](https://github.com/jorgenschaefer/typoel).<FootnoteRef name="10" />
 2.  Avoid manually inserting a separating space in the suffix.
 
 ```emacs-lisp
@@ -387,7 +390,7 @@ to manually add one myself."
 (advice-add 'citar-org-update-pre-suffix :override #'kb/citar-org-update-pre-suffix)
 ```
 
-One can also add this command to `citar-citation-map`.<sup><a id="fnref-11" class="fnref" href="#fn-11" role="doc-backlink" aria-label="Footnote 11">11</a></sup>
+One can also add this command to `citar-citation-map`.<FootnoteRef name="11" />
 
 
 <a id="aesthetics"></a>
@@ -480,7 +483,7 @@ Additionally, as [as `citar`'s author, u/bdarcus, shares here](https://www.reddi
 
 ## Citar-capf
 
-[Citar-capf](https://github.com/mclear-tools/citar-capf) provides a `complation-at-point-function`<sup><a id="fnref-12" class="fnref" href="#fn-12" role="doc-backlink" aria-label="Footnote 12">12</a></sup> for citations. However, if you're reading this in the future, there's a likely chance that [this commit](https://github.com/emacs-citar/citar/commit/784791a090f9a2ed293f8b3ebd5636c690b718bc) would have been merged. The commit merges `citar-capf` with `citar`.
+[Citar-capf](https://github.com/mclear-tools/citar-capf) provides a `complation-at-point-function`<FootnoteRef name="12" /> for citations. However, if you're reading this in the future, there's a likely chance that [this commit](https://github.com/emacs-citar/citar/commit/784791a090f9a2ed293f8b3ebd5636c690b718bc) would have been merged. The commit merges `citar-capf` with `citar`.
 
 
 <a id="org-ref"></a>
@@ -513,44 +516,42 @@ Additionally, as [as `citar`'s author, u/bdarcus, shares here](https://www.reddi
 -   <Timestamp date="2023-11-20" />
     -   Updated GitLab Gist.
 
-<section class="fn-section" role="doc-endnotes" aria-labelledby="footnotes-heading">
-<h1 id="footnotes-heading">Footnotes</h1>
-<ol style="list-style: none;">
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-1" href="#fnref-1">1</a></sup> The `basic` processor provides bare functionality and should never be preferred over the alternative, if possible.
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-2" href="#fnref-2">2</a></sup> See [Configuration](#configuration).
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-3" href="#fnref-3">3</a></sup> This is an `org-export` backend. This means that, for instance, `md` refers to the `org-export` `md` backend as well as any other derived backends. Read the documentation for `org-export-define-derived-backend`.
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-4" href="#fnref-4">4</a></sup> Notice that a citation style is required for the `csl` processor, and not for the `bibtex` processor.
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-5" href="#fnref-5">5</a></sup> Be aware that I use `use-package`'s `:custom-face` keyword to redefine these two faces. One can just as easily use the built-in `defface` of `set-face-attribute`.
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-6" href="#fnref-6">6</a></sup> Also see [this section of tecosaur's guide](https://blog.tecosaur.com/tmio/2021-07-31-citations.html#basic-usage).
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-7" href="#fnref-7">7</a></sup> You can also just use the built-in `define-key`.
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-8" href="#fnref-8">8</a></sup> This assumes that you have `org-roam-bibtex` installed and enabled. See [Org-roam-bibtex](#org-roam-bibtex).
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-9" href="#fnref-9">9</a></sup> `kb/note-keys` is my own `general.el` leader key. I've mapped its prefix to `C-c n`.
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-10" href="#fnref-10">10</a></sup> I prefer directly inserting curly quotes, em-dashes, and en-dashes into my buffers. I enable `typo-mode` here so that typing page ranges properly inserts en-dashes.
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-11" href="#fnref-11">11</a></sup> See [Embark](#embark).
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-12" href="#fnref-12">12</a></sup> Also see <ContentLink collectionName="articles" id="202202211546--vertico_marginalia_all_the_icons_completion_and_orderless">Vertico, Marginalia, All-the-icons-completion, and Orderless</ContentLink>.
-</li>
-</ol>
-</section>
+<FootnoteSection>
+Footnotes
+<Footnote name="1" slot="footnotes">
+The `basic` processor provides bare functionality and should never be preferred over the alternative, if possible.
+</Footnote>
+<Footnote name="2" slot="footnotes">
+See [Configuration](#configuration).
+</Footnote>
+<Footnote name="3" slot="footnotes">
+This is an `org-export` backend. This means that, for instance, `md` refers to the `org-export` `md` backend as well as any other derived backends. Read the documentation for `org-export-define-derived-backend`.
+</Footnote>
+<Footnote name="4" slot="footnotes">
+Notice that a citation style is required for the `csl` processor, and not for the `bibtex` processor.
+</Footnote>
+<Footnote name="5" slot="footnotes">
+Be aware that I use `use-package`'s `:custom-face` keyword to redefine these two faces. One can just as easily use the built-in `defface` of `set-face-attribute`.
+</Footnote>
+<Footnote name="6" slot="footnotes">
+Also see [this section of tecosaur's guide](https://blog.tecosaur.com/tmio/2021-07-31-citations.html#basic-usage).
+</Footnote>
+<Footnote name="7" slot="footnotes">
+You can also just use the built-in `define-key`.
+</Footnote>
+<Footnote name="8" slot="footnotes">
+This assumes that you have `org-roam-bibtex` installed and enabled. See [Org-roam-bibtex](#org-roam-bibtex).
+</Footnote>
+<Footnote name="9" slot="footnotes">
+`kb/note-keys` is my own `general.el` leader key. I've mapped its prefix to `C-c n`.
+</Footnote>
+<Footnote name="10" slot="footnotes">
+I prefer directly inserting curly quotes, em-dashes, and en-dashes into my buffers. I enable `typo-mode` here so that typing page ranges properly inserts en-dashes.
+</Footnote>
+<Footnote name="11" slot="footnotes">
+See [Embark](#embark).
+</Footnote>
+<Footnote name="12" slot="footnotes">
+Also see <ContentLink collectionName="articles" id="202202211546--vertico_marginalia_all_the_icons_completion_and_orderless">Vertico, Marginalia, All-the-icons-completion, and Orderless</ContentLink>.
+</Footnote>
+</FootnoteSection>

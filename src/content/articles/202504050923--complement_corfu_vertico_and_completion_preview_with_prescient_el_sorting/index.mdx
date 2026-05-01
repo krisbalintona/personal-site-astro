@@ -5,7 +5,10 @@ draft: false
 tags:
   - "Emacs"
 ---
+import Footnote from "@components/markup/Footnote.astro";
+import FootnoteSection from "@components/markup/FootnoteSection.astro";
 import ContentLink from "@components/markup/ContentLink.astro";
+import FootnoteRef from "@components/markup/FootnoteRef.astro";
 import Alert from "@components/markup/Alert.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
 
@@ -14,7 +17,7 @@ import Timestamp from "@components/markup/Timestamp.astro";
 
 <Alert><Timestamp date="2025-04-22" /> Corfu now offers a similar functionality as vertic-sort does for vertico with the new [corfu-sort](https://github.com/minad/corfu/blob/main/extensions/corfu-history.el) extension. Like vertico-sort, corfu-sort requires `history-delete-duplicates` to be nil.</Alert>
 
-[Prescient.el](https://github.com/radian-software/prescient.el) is a package that was popular during the era of ivy and helm. Nowadays, I don't see it mentioned much because of the very popular corfu + vertico + marginalia + orderless combination which enhance built-in Emacs completion and overtaken ivy and helm in terms of popularity. (And it's deserved! I use this combination, too.)<sup><a id="fnref-1" class="fnref" href="#fn-1" role="doc-backlink" aria-label="Footnote 1">1</a></sup> But I've found prescient.el a noticeable convenience that complements this set of packages.
+[Prescient.el](https://github.com/radian-software/prescient.el) is a package that was popular during the era of ivy and helm. Nowadays, I don't see it mentioned much because of the very popular corfu + vertico + marginalia + orderless combination which enhance built-in Emacs completion and overtaken ivy and helm in terms of popularity. (And it's deserved! I use this combination, too.)<FootnoteRef name="1" /> But I've found prescient.el a noticeable convenience that complements this set of packages.
 
 The reason is prescient.el's sorting. Roughly, we can think of completion as having two halves: filtering and sorting. Filtering is what `completion-styles` does: among the generated completion candidates, which are shown to the user? Sorting is the order in which the filtered candidates are shown. One might think that orderless, which is filters candidates with its completion-style, also sorts candidates&mdash;but it doesn't. As explained in the [orderless README](https://github.com/oantolin/orderless?tab=readme-ov-file#prescient):
 
@@ -159,11 +162,9 @@ set (i.e., OPERATION is \\='set).  This excludes, e.g., let bindings."
 -   <Timestamp date="2025-04-22" />
     -   Added a note mentioning the new corfu-history extension.
 
-<section class="fn-section" role="doc-endnotes" aria-labelledby="footnotes-heading">
-<h1 id="footnotes-heading">Footnotes</h1>
-<ol style="list-style: none;">
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-1" href="#fnref-1">1</a></sup> In my opinion, each package is much more modular than the helm or ivy ecosystems while being more performant, integrated with existing Emacs functionality, and just as useful, if not more. Though a bit dated, I've previously written a big about how to configure this set of packages: <ContentLink collectionName="articles" id="202202211546--vertico_marginalia_all_the_icons_completion_and_orderless">Vertico, Marginalia, All-the-icons-completion, and Orderless</ContentLink>.
-</li>
-</ol>
-</section>
+<FootnoteSection>
+Footnotes
+<Footnote name="1" slot="footnotes">
+In my opinion, each package is much more modular than the helm or ivy ecosystems while being more performant, integrated with existing Emacs functionality, and just as useful, if not more. Though a bit dated, I've previously written a big about how to configure this set of packages: <ContentLink collectionName="articles" id="202202211546--vertico_marginalia_all_the_icons_completion_and_orderless">Vertico, Marginalia, All-the-icons-completion, and Orderless</ContentLink>.
+</Footnote>
+</FootnoteSection>

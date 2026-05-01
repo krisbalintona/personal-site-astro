@@ -60,7 +60,10 @@ This variable can be `let'-bound to change the default string.")
     ("Image" . "import { Image } from \"astro:assets\";")
     ("Details" . "import Details from \"@components/markup/Details.astro\";")
     ("Timestamp" . "import Timestamp from \"@components/markup/Timestamp.astro\";")
-    ("ContentLink" . "import ContentLink from \"@components/markup/ContentLink.astro\";"))
+    ("ContentLink" . "import ContentLink from \"@components/markup/ContentLink.astro\";")
+    ("FootnoteSection" . "import FootnoteSection from \"@components/markup/FootnoteSection.astro\";")
+    ("Footnote" . "import Footnote from \"@components/markup/Footnote.astro\";")
+    ("FootnoteRef" . "import FootnoteRef from \"@components/markup/FootnoteRef.astro\";"))
   "Alist from component name to import statement.
 There are several components specific to this project.  This is an alist
 from component name to the import statement corresponding to that
@@ -551,82 +554,60 @@ INFO is a plist holding contextual information.  See
 (defun org-mdx-footnote-reference (footnote-reference _contents info)
   "Transcode a FOOTNOTE-REFERENCE element from Org to MDX.
 CONTENTS is nil.  INFO is a plist holding contextual information."
-  (concat
-   ;; Insert separator between two footnotes in a row.
-   (let ((prev (org-export-get-previous-element footnote-reference info)))
-     (when (org-element-type-p prev 'footnote-reference)
-       (plist-get info :html-footnote-separator)))
-   (let* ((n (org-export-get-footnote-number footnote-reference info))
-          (label (org-element-property :label footnote-reference))
-          ;; Do not assign number labels as they appear in Org mode -
-          ;; the footnotes are re-numbered by
-          ;; `org-export-get-footnote-number'.  If the label is not a
-          ;; number, keep it.
-          (label (if (and (stringp label)
-                          (equal label (number-to-string (string-to-number label))))
-                     nil
-                   label))
-          (id (format "fnref-%s%s"
-                      (or label n)
-                      (if (org-export-footnote-first-reference-p
-                           footnote-reference info)
-                          ""
-                        (let ((label (org-element-property :label footnote-reference)))
-                          (format
-                           "-%d"
-                           (org-export-get-ordinal
-                            footnote-reference info '(footnote-reference)
-                            `(lambda (ref _)
-                               (if ,label
-                                   (equal (org-element-property :label ref) ,label)
-                                 (not (org-element-property :label ref))))))))))
-          (attrs
-           (format " class=\"fnref\" href=\"#fn-%s\" role=\"doc-backlink\" aria-label=\"Footnote %s\""
-                   (or label n)
-                   (or label n))))
-     (format (plist-get info :html-footnote-format)
-             (org-html--anchor id n attrs info)))))
+  (let* ((next-element (org-export-get-next-element footnote-reference info))
+         (separatorp (org-element-type-p next-element 'footnote-reference))
+         (n (org-export-get-footnote-number footnote-reference info))
+         (label (org-element-property :label footnote-reference))
+         (label (unless (and (stringp label)
+                             (equal label (number-to-string (string-to-number label))))
+                  label))
+         (name (or label n))
+         (id
+          ;; The ID for footnote references is normally based on just
+          ;; the name of the footnote linked to.  However, multiple
+          ;; references may point to the same footnote.  So to avoid
+          ;; HTML element ID conflicts, a number suffix is appended if
+          ;; necessary.  (There cannot be multiple footnotes of the
+          ;; same name, though.)
+          (unless (org-export-footnote-first-reference-p footnote-reference info)
+            (format "%s-%d"
+                    name
+                    (org-export-get-ordinal
+                     footnote-reference info '(footnote-reference)
+                     `(lambda (ref _plist)
+                        (if ,label
+                            (equal (org-element-property :label ref) ,label)
+                          (not (org-element-property :label ref)))))))))
+    (org-mdx--register-import info "FootnoteRef")
+    (format "<FootnoteRef name=\"%s\"%s%s />"
+            name
+            (if id (format " id=\"%s\"" id) "")
+            (if separatorp " hasSeparator={true}" ""))))
 
 (defun org-mdx--footnote-formatted (footnote info)
   "Formats a single footnote entry FOOTNOTE.
-Footnotes should be `li' elements in an `ol' wrapper.
-
-FOOTNOTE is a cons cell of the form (number . definition).  INFO is a
+FOOTNOTE is a list of the form (NUMBER LABEL DEFINITION).  INFO is a
 plist with contextual information."
-  (let* ((footnote-num (car footnote))
-         (footnote-text (cdr footnote))
-         (footnote-format (plist-get info :md-footnote-format))
-         (footnote-anchor (format "fn-%d" footnote-num))
-         (footnote-link-to-fnref
-          (format footnote-format
-                  (org-html--anchor footnote-anchor
-                                    footnote-num
-                                    (format " href=\"#fnref-%d\"" footnote-num)
-                                    info))))
-    (format "<li class=\"fn\" role=\"doc-footnote\">\n%s %s\n</li>"
-            footnote-link-to-fnref
-            footnote-text)))
+  (let* ((n (nth 0 footnote))
+         (label (nth 1 footnote))
+         (text (nth 2 footnote)))
+    (org-mdx--register-import info "Footnote")
+    (format "<Footnote name=\"%s\" slot=\"footnotes\">\n%s\n</Footnote>"
+            (or label n) text)))
 
 (defun org-mdx--footnote-section (info)
   "Format the footnote section.
 INFO is a plist used as a communication channel."
   (let* ((footnote-alist (org-export-collect-footnote-definitions info))
-         (footnote-alist (cl-loop for (n _type raw) in footnote-alist collect
-                                  (cons n (org-trim (org-export-data raw info)))))
-         (footnote-section-attrs
-          "class=\"fn-section\" role=\"doc-endnotes\" aria-labelledby=\"footnotes-heading\"")
-         (footnote-heading
-          (format "<h%s id=\"footnotes-heading\">%s</h%s>"
-                  (plist-get info :md-toplevel-hlevel)
-                  (org-html--translate "Footnotes" info)
-                  (plist-get info :md-toplevel-hlevel))))
+         (footnote-alist
+          (cl-loop for (n label raw) in footnote-alist collect
+                   (list n label (org-trim (org-export-data raw info))))))
     (when footnote-alist
-      (format "<section %s>\n%s\n<ol style=\"list-style: none;\">\n%s\n</ol>\n</section>"
-              footnote-section-attrs
-              footnote-heading
+      (org-mdx--register-import info "FootnoteSection")
+      (format "<FootnoteSection>\n%s\n%s\n</FootnoteSection>"
+              (org-html--translate "Footnotes" info)
               (mapconcat (lambda (fn) (org-mdx--footnote-formatted fn info))
-                         footnote-alist
-                         "\n")))))
+                         footnote-alist "\n")))))
 
 (defun org-mdx-inner-template (contents info)
   "Return body of document after converting it to MDX syntax.

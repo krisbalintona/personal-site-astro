@@ -1,0 +1,29 @@
+---
+import type { HTMLTag } from "astro/types";
+
+interface Props {
+  headingLevel?: number | string;
+}
+
+const { headingLevel } = Astro.props;
+const FootnoteHeading = (
+  headingLevel ? headingLevel.toString() : "h2"
+) as HTMLTag;
+---
+
+<section aria-labelledby="footnotes-heading">
+  <FootnoteHeading id="footnotes-heading"
+    ><slot>Footnotes</slot></FootnoteHeading
+  >
+
+  {Astro.slots.has("footnotes") && 
+  <ol>
+    <slot name="footnotes"/>
+  </ol>}
+</section>
+
+<style>
+  ol {
+    list-style: none;
+  }
+</style>

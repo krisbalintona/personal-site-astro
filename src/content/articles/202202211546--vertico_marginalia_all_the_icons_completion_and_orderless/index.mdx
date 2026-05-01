@@ -5,6 +5,9 @@ draft: false
 tags:
   - "Emacs"
 ---
+import Footnote from "@components/markup/Footnote.astro";
+import FootnoteSection from "@components/markup/FootnoteSection.astro";
+import FootnoteRef from "@components/markup/FootnoteRef.astro";
 import { Image } from "astro:assets";
 import Alert from "@components/markup/Alert.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
@@ -316,7 +319,7 @@ The following function uses `vertico-quick-jump` (like `avy` but for minibuffer 
 
 Finally, I add a few niceties.
 
-The following prefixes (i.e. in the left fringe) and arrow character on the currently selected candidate<sup><a id="fnref-1" class="fnref" href="#fn-1" role="doc-backlink" aria-label="Footnote 1">1</a></sup>:
+The following prefixes (i.e. in the left fringe) and arrow character on the currently selected candidate<FootnoteRef name="1" />:
 
 ```emacs-lisp
 ;; Prefix the current candidate with “» ”. From
@@ -331,7 +334,7 @@ The following prefixes (i.e. in the left fringe) and arrow character on the curr
                cand)))
 ```
 
-When using a command for selecting a file in the minibuffer, the following fixes the path so the path you select doesn't have prepended junk left behind<sup><a id="fnref-2" class="fnref" href="#fn-2" role="doc-backlink" aria-label="Footnote 2">2</a></sup>:
+When using a command for selecting a file in the minibuffer, the following fixes the path so the path you select doesn't have prepended junk left behind<FootnoteRef name="2" />:
 
 ```emacs-lisp
 :hook (rfn-eshadow-update-overlay . vertico-directory-tidy) ; Correct file path when changed
@@ -364,7 +367,7 @@ Finally, the following makes working with remote files via `tramp` easier.
 
 ## End product
 
-In the end, we have this<sup><a id="fnref-3" class="fnref" href="#fn-3" role="doc-backlink" aria-label="Footnote 3">3</a></sup>:
+In the end, we have this<FootnoteRef name="3" />:
 
 ```emacs-lisp
 (use-package vertico
@@ -594,7 +597,7 @@ Finally, rather than using the default  “+ “ to separate components, I use a
 
 ## End product
 
-The end result is this<sup><a id="fnref-4" class="fnref" href="#fn-4" role="doc-backlink" aria-label="Footnote 4">4</a></sup>:
+The end result is this<FootnoteRef name="4" />:
 
 ```emacs-lisp
 (use-package orderless
@@ -684,20 +687,18 @@ parses its input."
     -   Minor updates to code formatting.
 -   <Timestamp date="2022-02-22" /> Added demonstrative images and a GIF. Added section on `all-the-icons-completion`.
 
-<section class="fn-section" role="doc-endnotes" aria-labelledby="footnotes-heading">
-<h1 id="footnotes-heading">Footnotes</h1>
-<ol style="list-style: none;">
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-1" href="#fnref-1">1</a></sup> This does add width to the left side of the minibuffer, which may interfere with your aesthetic-related configurations of other packages.
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-2" href="#fnref-2">2</a></sup> This relies on the `vertico-directory` extension.
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-3" href="#fnref-3">3</a></sup> This is a direct copy and paste from my configuration file. There are slight differences in comments compared to the code snippets above.
-</li>
-<li class="fn" role="doc-footnote">
-<sup><a id="fn-4" href="#fnref-4">4</a></sup> Again, taken verbatim from my Emacs configuration, with fewer useful comments.
-</li>
-</ol>
-</section>
+<FootnoteSection>
+Footnotes
+<Footnote name="1" slot="footnotes">
+This does add width to the left side of the minibuffer, which may interfere with your aesthetic-related configurations of other packages.
+</Footnote>
+<Footnote name="2" slot="footnotes">
+This relies on the `vertico-directory` extension.
+</Footnote>
+<Footnote name="3" slot="footnotes">
+This is a direct copy and paste from my configuration file. There are slight differences in comments compared to the code snippets above.
+</Footnote>
+<Footnote name="4" slot="footnotes">
+Again, taken verbatim from my Emacs configuration, with fewer useful comments.
+</Footnote>
+</FootnoteSection>
