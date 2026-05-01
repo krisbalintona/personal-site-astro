@@ -108,7 +108,7 @@ tags:
     ```
     
     Note that it works best (i) when the line-spacing is 0 (because of the vertical bars) and (ii) when there aren't many diagnostics per line
--   `buffer-match-p` (and therefore `display-buffer-alist`) now accepts the "this-command" condition, allowing per-command buffer display rules<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>
+-   `buffer-match-p` (and therefore `display-buffer-alist`) now accepts the "this-command" condition, allowing per-command buffer display rules<sup><a id="fnref-1" class="fnref" href="#fn-1" role="doc-backlink" aria-label="Footnote 1">1</a></sup>
     
     ```
     * 343f0c44f35 2025-05-01 (75 minutes ago) Sean Whitton (upstream/master, upstream/HEAD)
@@ -277,7 +277,11 @@ tags:
     Author: João Távora &lt;joaotavora@gmail.com&gt;
     Date:   Tue Feb 3 12:14:03 2026 +0000
 
-
-# Footnotes
-
-<sup><a id="fn.1" href="#fnr.1">1</a></sup> We could always do this since `buffer-match-p` accepts a predicate (in which we can check for the valueo of `this-command`), but this way is more convenient and neat.
+<section class="fn-section" role="doc-endnotes" aria-labelledby="footnotes-heading">
+<h1 id="footnotes-heading">Footnotes</h1>
+<ol style="list-style: none;">
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-1" href="#fnref-1">1</a></sup> We could always do this since `buffer-match-p` accepts a predicate (in which we can check for the valueo of `this-command`), but this way is more convenient and neat.
+</li>
+</ol>
+</section>

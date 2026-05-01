@@ -316,7 +316,7 @@ The following function uses `vertico-quick-jump` (like `avy` but for minibuffer 
 
 Finally, I add a few niceties.
 
-The following prefixes (i.e. in the left fringe) and arrow character on the currently selected candidate<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>:
+The following prefixes (i.e. in the left fringe) and arrow character on the currently selected candidate<sup><a id="fnref-1" class="fnref" href="#fn-1" role="doc-backlink" aria-label="Footnote 1">1</a></sup>:
 
 ```emacs-lisp
 ;; Prefix the current candidate with “» ”. From
@@ -331,7 +331,7 @@ The following prefixes (i.e. in the left fringe) and arrow character on the curr
                cand)))
 ```
 
-When using a command for selecting a file in the minibuffer, the following fixes the path so the path you select doesn't have prepended junk left behind<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup>:
+When using a command for selecting a file in the minibuffer, the following fixes the path so the path you select doesn't have prepended junk left behind<sup><a id="fnref-2" class="fnref" href="#fn-2" role="doc-backlink" aria-label="Footnote 2">2</a></sup>:
 
 ```emacs-lisp
 :hook (rfn-eshadow-update-overlay . vertico-directory-tidy) ; Correct file path when changed
@@ -364,7 +364,7 @@ Finally, the following makes working with remote files via `tramp` easier.
 
 ## End product
 
-In the end, we have this<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3</a></sup>:
+In the end, we have this<sup><a id="fnref-3" class="fnref" href="#fn-3" role="doc-backlink" aria-label="Footnote 3">3</a></sup>:
 
 ```emacs-lisp
 (use-package vertico
@@ -594,7 +594,7 @@ Finally, rather than using the default  “+ “ to separate components, I use a
 
 ## End product
 
-The end result is this<sup><a id="fnr.4" class="footref" href="#fn.4" role="doc-backlink">4</a></sup>:
+The end result is this<sup><a id="fnref-4" class="fnref" href="#fn-4" role="doc-backlink" aria-label="Footnote 4">4</a></sup>:
 
 ```emacs-lisp
 (use-package orderless
@@ -684,13 +684,20 @@ parses its input."
     -   Minor updates to code formatting.
 -   <Timestamp date="2022-02-22" /> Added demonstrative images and a GIF. Added section on `all-the-icons-completion`.
 
-
-# Footnotes
-
-<sup><a id="fn.1" href="#fnr.1">1</a></sup> This does add width to the left side of the minibuffer, which may interfere with your aesthetic-related configurations of other packages.
-
-<sup><a id="fn.2" href="#fnr.2">2</a></sup> This relies on the `vertico-directory` extension.
-
-<sup><a id="fn.3" href="#fnr.3">3</a></sup> This is a direct copy and paste from my configuration file. There are slight differences in comments compared to the code snippets above.
-
-<sup><a id="fn.4" href="#fnr.4">4</a></sup> Again, taken verbatim from my Emacs configuration, with fewer useful comments.
+<section class="fn-section" role="doc-endnotes" aria-labelledby="footnotes-heading">
+<h1 id="footnotes-heading">Footnotes</h1>
+<ol style="list-style: none;">
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-1" href="#fnref-1">1</a></sup> This does add width to the left side of the minibuffer, which may interfere with your aesthetic-related configurations of other packages.
+</li>
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-2" href="#fnref-2">2</a></sup> This relies on the `vertico-directory` extension.
+</li>
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-3" href="#fnref-3">3</a></sup> This is a direct copy and paste from my configuration file. There are slight differences in comments compared to the code snippets above.
+</li>
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-4" href="#fnref-4">4</a></sup> Again, taken verbatim from my Emacs configuration, with fewer useful comments.
+</li>
+</ol>
+</section>

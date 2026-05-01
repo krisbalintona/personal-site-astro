@@ -33,7 +33,7 @@ I will be going over the basic usages of [Cape](https://github.com/minad/cape), 
 
 > Cape provides a bunch of Completion At Point Extensions which can be used in combination with my Corfu completion UI or the default completion UI. The completion backends used by `completion-at-point` are so called `completion-at-point-functions` (Capfs). In principle, the Capfs provided by Cape can also be used by Company.
 
-Consequently, `cape` is only used if you utilize the built-in `completion-at-point`, which is best complemented by `corfu` text-completion <sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>.
+Consequently, `cape` is only used if you utilize the built-in `completion-at-point`, which is best complemented by `corfu` text-completion <sup><a id="fnref-1" class="fnref" href="#fn-1" role="doc-backlink" aria-label="Footnote 1">1</a></sup>.
 
 You can also see the list of built-in `completion-at-point-functions` in [the README](https://github.com/minad/cape#available-capfs). Several of these `completion-at-point-functions` are quite niche but others, such as `cape-file` and `cape-symbol` have common use cases.
 
@@ -88,7 +88,7 @@ I then add this to the appropriate hook:
 :hook (git-commit-mode . kb/cape-capf-setup-git-commit)
 ```
 
-Consequently, when making commits to git, via `magit`, for instance, `completion-at-point-functions` looks like this<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup>:
+Consequently, when making commits to git, via `magit`, for instance, `completion-at-point-functions` looks like this<sup><a id="fnref-2" class="fnref" href="#fn-2" role="doc-backlink" aria-label="Footnote 2">2</a></sup>:
 
 ```emacs-lisp
 '(cape-symbol
@@ -98,7 +98,7 @@ Consequently, when making commits to git, via `magit`, for instance, `completion
 
 There are a few additional things to keep in mind when adding backends to `completion-function-at-point`:
 
-1.  `add-to-list` prepends elements to a list, that is, place an element at the front of a list<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3</a></sup>.
+1.  `add-to-list` prepends elements to a list, that is, place an element at the front of a list<sup><a id="fnref-3" class="fnref" href="#fn-3" role="doc-backlink" aria-label="Footnote 3">3</a></sup>.
 2.  `add-to-list` is almost always preferable to `push` because `push` adds an element to a list even if it already in the list, whereas `add-to-list` will not.
 3.  Elements earlier in `dolist` will be added to the list before later elements. This means that elements which should be deeper within `completion-at-point-functions` should be placed first. (Notice how `cape-dabbrev` is added after `cape-symbol`.)
 
@@ -107,7 +107,7 @@ There are a few additional things to keep in mind when adding backends to `compl
 
 # `Cape-company-to-capf` and `cape-super-capf`
 
-I think the killer feature of `cape` is `cape-company-to-capf`. This function is able to convert *any* `company` backend and convert it into a `completion-at-point-function` which `corfu` can use<sup><a id="fnr.4" class="footref" href="#fn.4" role="doc-backlink">4</a></sup>. For this reason, I regard `cape` as quite an underrated package since it achieves almost full feature parity with `company`. Here is an example with `company-yasnippet`:
+I think the killer feature of `cape` is `cape-company-to-capf`. This function is able to convert *any* `company` backend and convert it into a `completion-at-point-function` which `corfu` can use<sup><a id="fnref-4" class="fnref" href="#fn-4" role="doc-backlink" aria-label="Footnote 4">4</a></sup>. For this reason, I regard `cape` as quite an underrated package since it achieves almost full feature parity with `company`. Here is an example with `company-yasnippet`:
 
 ```emacs-lisp
 (defun kb/cape-capf-setup-lsp ()
@@ -317,13 +317,20 @@ Additionally, add `cape-file' as early as possible to the list."
 -   <Timestamp date="2022-03-13" />
     -   Fixed typo. Added link to [u/JDRiverRun's informative Reddit comment](https://www.reddit.com/r/emacs/comments/td0nth/comment/i0hz6re/?utm_source=share&utm_medium=web2x&context=3).
 
-
-# Footnotes
-
-<sup><a id="fn.1" href="#fnr.1">1</a></sup> See <ContentLink collectionName="articles" id="202202270056--corfu_kind_icon_and_corfu_doc">Corfu, Kind-icon, and Corfu-doc</ContentLink> to see the basic usage of `corfu` and several accessory packages.
-
-<sup><a id="fn.2" href="#fnr.2">2</a></sup> `tags-completion-at-point-function` is a default `completion-at-point-function`
-
-<sup><a id="fn.3" href="#fnr.3">3</a></sup> See its docstring to learn how to append to a list
-
-<sup><a id="fn.4" href="#fnr.4">4</a></sup> This feature is currently listed as experimental but, for the most part, the results are as expected. If anything, rare edge cases are the only points of missing functionality.
+<section class="fn-section" role="doc-endnotes" aria-labelledby="footnotes-heading">
+<h1 id="footnotes-heading">Footnotes</h1>
+<ol style="list-style: none;">
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-1" href="#fnref-1">1</a></sup> See <ContentLink collectionName="articles" id="202202270056--corfu_kind_icon_and_corfu_doc">Corfu, Kind-icon, and Corfu-doc</ContentLink> to see the basic usage of `corfu` and several accessory packages.
+</li>
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-2" href="#fnref-2">2</a></sup> `tags-completion-at-point-function` is a default `completion-at-point-function`
+</li>
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-3" href="#fnref-3">3</a></sup> See its docstring to learn how to append to a list
+</li>
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-4" href="#fnref-4">4</a></sup> This feature is currently listed as experimental but, for the most part, the results are as expected. If anything, rare edge cases are the only points of missing functionality.
+</li>
+</ol>
+</section>

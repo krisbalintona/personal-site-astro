@@ -18,7 +18,7 @@ import Timestamp from "@components/Timestamp.astro";
 -   [Changelog](#changelog)
 
 
-So I recently got around to trying out NixOS. Part of that experience was setting up Syncthing, which I've used on the past on my machines and mobile phone to sync files related to note-taking.<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup> It was a bit confusing since I had to fill-in-the-blanks for a few steps. Here, I write about a bit of the blanks I had to fill in myself, stuff that was not clear from the existing docs and forum posts I discovered.
+So I recently got around to trying out NixOS. Part of that experience was setting up Syncthing, which I've used on the past on my machines and mobile phone to sync files related to note-taking.<sup><a id="fnref-1" class="fnref" href="#fn-1" role="doc-backlink" aria-label="Footnote 1">1</a></sup> It was a bit confusing since I had to fill-in-the-blanks for a few steps. Here, I write about a bit of the blanks I had to fill in myself, stuff that was not clear from the existing docs and forum posts I discovered.
 
 
 <a id="the-configuration"></a>
@@ -115,7 +115,7 @@ Now that Syncthing is aware of these devices, I can reference them by their labe
 # Folders
 
 -   Folders are the directories you'd like Syncthing to be aware of.
--   Each folder has an ID.<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup>
+-   Each folder has an ID.<sup><a id="fnref-2" class="fnref" href="#fn-2" role="doc-backlink" aria-label="Footnote 2">2</a></sup>
 -   Each folder may optionally have a label (probably a human-readable name, like "Agenda"). This is basically a nickname you give to the folder specific to the current device.
 -   Folders are only shared to devices specified for each folder.
 
@@ -172,7 +172,7 @@ In sum:
 
 Simple, but it wasn't obvious from the resources I encountered online, so I had to do some tinkering to figure it out myself.
 
-For those who heavily customize Syncthing, there are other NixOS options available to tweak. You can find them [in the NixOS Search for options](https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=syncthing). Additionally, if you are trying to migrate an existing Syncthing configuration to Nix, then you can check out your config file at `~/.config/syncthing/config.xml`.<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3</a></sup> With this, you can see the value of every Syncthing setting (although the file will, of course, be in JSON format).
+For those who heavily customize Syncthing, there are other NixOS options available to tweak. You can find them [in the NixOS Search for options](https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=syncthing). Additionally, if you are trying to migrate an existing Syncthing configuration to Nix, then you can check out your config file at `~/.config/syncthing/config.xml`.<sup><a id="fnref-3" class="fnref" href="#fn-3" role="doc-backlink" aria-label="Footnote 3">3</a></sup> With this, you can see the value of every Syncthing setting (although the file will, of course, be in JSON format).
 
 
 <a id="other-resources"></a>
@@ -190,11 +190,17 @@ For those who heavily customize Syncthing, there are other NixOS options availab
 -   <Timestamp date="2025-05-17" />
     -   Add link to the [Syncthing configuration file documentation](https://docs.syncthing.net/users/config.html).
 
-
-# Footnotes
-
-<sup><a id="fn.1" href="#fnr.1">1</a></sup> I use Emacs's org-agenda to manage todos, and I've set up [Orgzly Revived](https://github.com/orgzly-revived/orgzly-android-revived) for basic creation and editing of org todos on my phone.
-
-<sup><a id="fn.2" href="#fnr.2">2</a></sup> You can see the ID of shared folders in the Syncthing GUI by expanding the collapsed info section a folder under the folders section of the GUI's homepage.
-
-<sup><a id="fn.3" href="#fnr.3">3</a></sup> Users can refer to the [Syncthing configuration file documentation](https://docs.syncthing.net/users/config.html) in order to understand the contents of this file.
+<section class="fn-section" role="doc-endnotes" aria-labelledby="footnotes-heading">
+<h1 id="footnotes-heading">Footnotes</h1>
+<ol style="list-style: none;">
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-1" href="#fnref-1">1</a></sup> I use Emacs's org-agenda to manage todos, and I've set up [Orgzly Revived](https://github.com/orgzly-revived/orgzly-android-revived) for basic creation and editing of org todos on my phone.
+</li>
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-2" href="#fnref-2">2</a></sup> You can see the ID of shared folders in the Syncthing GUI by expanding the collapsed info section a folder under the folders section of the GUI's homepage.
+</li>
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-3" href="#fnref-3">3</a></sup> Users can refer to the [Syncthing configuration file documentation](https://docs.syncthing.net/users/config.html) in order to understand the contents of this file.
+</li>
+</ol>
+</section>

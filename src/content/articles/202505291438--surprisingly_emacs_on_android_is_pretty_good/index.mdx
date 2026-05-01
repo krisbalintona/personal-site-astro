@@ -32,10 +32,10 @@ Recently I got around to making steps toward a better mobile-PC workflow. Until 
 
 # The good and bad: what to expect on Android
 
-First, let's make sure our expectations are tempered: Emacs on Android won't be as pleasant as the full desktop experience.<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup> Of course. A phone's screen is tiny, and unless you have a physical keyboard connected, you'll have to manage with a virtual one (see [Use a Special virtual keyboard](#virtual-keyboards)). On top of that:
+First, let's make sure our expectations are tempered: Emacs on Android won't be as pleasant as the full desktop experience.<sup><a id="fnref-1" class="fnref" href="#fn-1" role="doc-backlink" aria-label="Footnote 1">1</a></sup> Of course. A phone's screen is tiny, and unless you have a physical keyboard connected, you'll have to manage with a virtual one (see [Use a Special virtual keyboard](#virtual-keyboards)). On top of that:
 
 -   **Tooling:** To have non-Emacs programs available, you have to install Emacs in a particular way with Termux to expose Termux’s binaries to Emacs. (See [the recommended way to install Emacs](#recommended-installation).) The initial set up is longer, but it's worth it.
--   **File paths:** Android "sandboxes" each app. You can think of each app having their own "section" of the file system that they can read or write to (unless they are given explicit access to that outside directory; see `info "(emacs) Android Document Providers"`). As such, one finds themselves fiddling with the obnoxiously long Android file paths if they want to, for instance, access their notes directory that is outside the Emacs app sandbox.<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup> This is a minor inconvenience though.
+-   **File paths:** Android "sandboxes" each app. You can think of each app having their own "section" of the file system that they can read or write to (unless they are given explicit access to that outside directory; see `info "(emacs) Android Document Providers"`). As such, one finds themselves fiddling with the obnoxiously long Android file paths if they want to, for instance, access their notes directory that is outside the Emacs app sandbox.<sup><a id="fnref-2" class="fnref" href="#fn-2" role="doc-backlink" aria-label="Footnote 2">2</a></sup> This is a minor inconvenience though.
 -   **Writing to the file system:** Relatively speaking, writing to the file system can be long sometimes. Not too long, but long nonetheless, As far as I've experienced, this has only been the case when saving files that are outside the Emacs sandbox.
 
 So, really, the situation is pretty good!
@@ -115,7 +115,7 @@ Moments like these are truly a testament to Emacs' dedication to an accessible e
 
 ## How to configure your `init.el` on a mobile device?
 
-Later I’ll explain how you make typing code on a touchscreen device easier by installing [a handy virtual keyboard](#virtual-keyboards). But I highly recommend that until you’ve settled on a configuration you’re willing to type out that you **heavily utilize the customize interface**. This means accessing the Customize interfaces via the tool-bar<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3</a></sup> buttons then using your touchscreen to tap the buttons available in `customize-mode` buffers. (Then, if you prefer, after setting many options with Customize, you can refactor the options Customize put in your `init.el` into e.g. use-package forms.)
+Later I’ll explain how you make typing code on a touchscreen device easier by installing [a handy virtual keyboard](#virtual-keyboards). But I highly recommend that until you’ve settled on a configuration you’re willing to type out that you **heavily utilize the customize interface**. This means accessing the Customize interfaces via the tool-bar<sup><a id="fnref-3" class="fnref" href="#fn-3" role="doc-backlink" aria-label="Footnote 3">3</a></sup> buttons then using your touchscreen to tap the buttons available in `customize-mode` buffers. (Then, if you prefer, after setting many options with Customize, you can refactor the options Customize put in your `init.el` into e.g. use-package forms.)
 
 If you haven’t used Customize much before, you can check out the available Customize commands via `C-h a` (`apropos-command`), search for “customize.” The most useful commands are:
 
@@ -145,7 +145,7 @@ Desktop users might have disabled these years ago in favor of keyboard-centric w
 There are a few built-in Android commands and options you should be aware of. (Pro tip: one can `M-x Info-index` or press `i` in the Emacs Info manual, itself accessible via `C-h r`, or `M-x info-emacs-manual`, then search for the string “android” to find all the specific mentions off “Android.”)
 
 -   Commands:
-    -   `android-request-directory-access` to request access to file paths of other apps<sup><a id="fnr.4" class="footref" href="#fn.4" role="doc-backlink">4</a></sup>
+    -   `android-request-directory-access` to request access to file paths of other apps<sup><a id="fnref-4" class="fnref" href="#fn-4" role="doc-backlink" aria-label="Footnote 4">4</a></sup>
     -   and its inverse, `android-relinquish-directory-access`.
 -   Options:
     -   `android-pass-multimedia-buttons-to-system`,
@@ -174,7 +174,7 @@ Having briefly tried both, I personally prefer the latter. Though the former wor
 
 You might want a set of fonts not already installed on your Android system. If that’s the case, you should read the `(info "(emacs) Android Fonts")` manual page.
 
-That page explains that if you want to install fonts for your user (in the Emacs app container), you should place them in `~/fonts/`.<sup><a id="fnr.5" class="footref" href="#fn.5" role="doc-backlink">5</a></sup> Getting those fonts was somewhat cumbersome for me: I had to manually download them, unzip them with Termux, place them inside a directory Emacs had access to (see [Android-specific Commands and Options](#android-specific-commands)), then copy them to `~/fonts/`.
+That page explains that if you want to install fonts for your user (in the Emacs app container), you should place them in `~/fonts/`.<sup><a id="fnref-5" class="fnref" href="#fn-5" role="doc-backlink" aria-label="Footnote 5">5</a></sup> Getting those fonts was somewhat cumbersome for me: I had to manually download them, unzip them with Termux, place them inside a directory Emacs had access to (see [Android-specific Commands and Options](#android-specific-commands)), then copy them to `~/fonts/`.
 
 Note: in my experience, *fonts are not recursively checked inside this directory*. That is, you should place your e.g. .ttf files inside that folder, not any subdirectories.
 
@@ -209,15 +209,23 @@ And finally: YMMV on other Android devices. My current phone is the OnePlus 7 Pr
 -   **Automatic keyboard/IME switching:** Ideally, I’d have my special virtual keyboard be automatically selected using Emacs and deselected when not using Emacs. Right now, I have to manually switch to it. As far as I know, there is no easy way to accomplish this.
 -   **Larger tool bar and menu bar:** The tool bar and menu bar are useful, but they’re also small. I wish they were larger and easier to tap.
 
-
-# Footnotes
-
-<sup><a id="fn.1" href="#fnr.1">1</a></sup> Although, some users might find benefits from “typing” via voice input&hellip;
-
-<sup><a id="fn.2" href="#fnr.2">2</a></sup> This is what I do: I use Syncthing to share my notes across devices. On my phone, they are located in `"/content/storage/com.android.externalstorage.documents/primary:Org files/`&hellip; quite a long file path.
-
-<sup><a id="fn.3" href="#fnr.3">3</a></sup> See [Android-specific Commands and Options](#android-specific-commands) for why to use the tool-bar tk.
-
-<sup><a id="fn.4" href="#fnr.4">4</a></sup> I use this to access my files shared through Syncthing.
-
-<sup><a id="fn.5" href="#fnr.5">5</a></sup> Recall what `(info "(emacs) Android File System")` explains the “home” for the Emacs app container is.
+<section class="fn-section" role="doc-endnotes" aria-labelledby="footnotes-heading">
+<h1 id="footnotes-heading">Footnotes</h1>
+<ol style="list-style: none;">
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-1" href="#fnref-1">1</a></sup> Although, some users might find benefits from “typing” via voice input&hellip;
+</li>
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-2" href="#fnref-2">2</a></sup> This is what I do: I use Syncthing to share my notes across devices. On my phone, they are located in `"/content/storage/com.android.externalstorage.documents/primary:Org files/`&hellip; quite a long file path.
+</li>
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-3" href="#fnref-3">3</a></sup> See [Android-specific Commands and Options](#android-specific-commands) for why to use the tool-bar tk.
+</li>
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-4" href="#fnref-4">4</a></sup> I use this to access my files shared through Syncthing.
+</li>
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-5" href="#fnref-5">5</a></sup> Recall what `(info "(emacs) Android File System")` explains the “home” for the Emacs app container is.
+</li>
+</ol>
+</section>

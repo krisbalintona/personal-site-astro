@@ -17,7 +17,7 @@ Transparency in Emacs isn't that great. Every source I find regarding transparen
 3.  [How to set a key binding to make Emacs as transparent/opaque](https://stackoverflow.com/questions/2935520/how-to-set-a-key-binding-to-make-emacs-as-transparent-opaque-as-i-want)
 4.  [Any Advice On Getting Transparency To Work In Emacs Window Manager](https://www.reddit.com/r/emacs/comments/ljev64/any_advice_on_getting_transparency_to_work_in/)
 
-The issue with `alpha` is that it sets the transparency of the *entire window*; what this means is that *text and background* become transparent together. Clearly this is undesirable for some: the `alpha` parameter needs to be near 100, otherwise the text becomes illegible. Ideally, the text remains opaque while the background becomes transparent.<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>
+The issue with `alpha` is that it sets the transparency of the *entire window*; what this means is that *text and background* become transparent together. Clearly this is undesirable for some: the `alpha` parameter needs to be near 100, otherwise the text becomes illegible. Ideally, the text remains opaque while the background becomes transparent.<sup><a id="fnref-1" class="fnref" href="#fn-1" role="doc-backlink" aria-label="Footnote 1">1</a></sup>
 
 The solution came from a [patched version of Emacs made by Håkon Flatval](https://github.com/TheVaffel/emacs) back in November 2021—his announcement that month [on Reddit](https://www.reddit.com/r/emacs/comments/qm3tsv/i_implemented_partial_support_for_background/) received some attention. The patch adds the `alpha-background` frame parameter which makes **only the background** of a frame transparent:
 
@@ -26,14 +26,14 @@ The solution came from a [patched version of Emacs made by Håkon Flatval](https
 <figcaption>`alpha-background` set to 75.</figcaption>
 </figure>
 
-You can set the `alpha-background` of a particular frame with the `set-frame-parameter` function, and the default value for frames by adding to `default-frame-alist`.<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup> For example:
+You can set the `alpha-background` of a particular frame with the `set-frame-parameter` function, and the default value for frames by adding to `default-frame-alist`.<sup><a id="fnref-2" class="fnref" href="#fn-2" role="doc-backlink" aria-label="Footnote 2">2</a></sup> For example:
 
 ```emacs-lisp
 (set-frame-parameter nil 'alpha-background 100) ; For current frame
 (add-to-list 'default-frame-alist '(alpha-background . 100)) ; For all new frames henceforth
 ```
 
-I've also defined my own command for toggling between a frame having `alpha-background` values of 100 and 72:<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3</a></sup>
+I've also defined my own command for toggling between a frame having `alpha-background` values of 100 and 72:<sup><a id="fnref-3" class="fnref" href="#fn-3" role="doc-backlink" aria-label="Footnote 3">3</a></sup>
 
 ```emacs-lisp
 (defun kb/toggle-window-transparency ()
@@ -77,11 +77,17 @@ Of course, transparency in Emacs (alongside any other application on your system
 -   <Timestamp date="2025-03-08" />
     -   Update code snippet for `kb/toggle-window-transparency`. Also add note about potential incompatibilities between this code snippet and other versions of Emacs.
 
-
-# Footnotes
-
-<sup><a id="fn.1" href="#fnr.1">1</a></sup> I work exclusively on a 14-inch laptop, so screen real-estate is valuable. I often use transparency to watch videos (e.g. YouTube, Netflix, lecture) while working on something in Emacs—I benefit from having the space of my entire screen.
-
-<sup><a id="fn.2" href="#fnr.2">2</a></sup> The behavior of `alpha-background` matches that of `alpha`; that is, 100 is fully opaque while 0 is fully transparent.
-
-<sup><a id="fn.3" href="#fnr.3">3</a></sup> The reason why my frame is not *fully* opaque when `alpha-background` is 100 is because I've additionally set `alpha` to 98.
+<section class="fn-section" role="doc-endnotes" aria-labelledby="footnotes-heading">
+<h1 id="footnotes-heading">Footnotes</h1>
+<ol style="list-style: none;">
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-1" href="#fnref-1">1</a></sup> I work exclusively on a 14-inch laptop, so screen real-estate is valuable. I often use transparency to watch videos (e.g. YouTube, Netflix, lecture) while working on something in Emacs—I benefit from having the space of my entire screen.
+</li>
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-2" href="#fnref-2">2</a></sup> The behavior of `alpha-background` matches that of `alpha`; that is, 100 is fully opaque while 0 is fully transparent.
+</li>
+<li class="fn" role="doc-footnote">
+<sup><a id="fn-3" href="#fnref-3">3</a></sup> The reason why my frame is not *fully* opaque when `alpha-background` is 100 is because I've additionally set `alpha` to 98.
+</li>
+</ol>
+</section>

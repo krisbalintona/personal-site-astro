@@ -548,6 +548,102 @@ INFO is a plist holding contextual information.  See
      (t (if (not desc) (format "<%s>" path)
           (format "[%s](%s)" desc path))))))
 
+(defun org-mdx-footnote-reference (footnote-reference _contents info)
+  "Transcode a FOOTNOTE-REFERENCE element from Org to MDX.
+CONTENTS is nil.  INFO is a plist holding contextual information."
+  (concat
+   ;; Insert separator between two footnotes in a row.
+   (let ((prev (org-export-get-previous-element footnote-reference info)))
+     (when (org-element-type-p prev 'footnote-reference)
+       (plist-get info :html-footnote-separator)))
+   (let* ((n (org-export-get-footnote-number footnote-reference info))
+          (label (org-element-property :label footnote-reference))
+          ;; Do not assign number labels as they appear in Org mode -
+          ;; the footnotes are re-numbered by
+          ;; `org-export-get-footnote-number'.  If the label is not a
+          ;; number, keep it.
+          (label (if (and (stringp label)
+                          (equal label (number-to-string (string-to-number label))))
+                     nil
+                   label))
+          (id (format "fnref-%s%s"
+                      (or label n)
+                      (if (org-export-footnote-first-reference-p
+                           footnote-reference info)
+                          ""
+                        (let ((label (org-element-property :label footnote-reference)))
+                          (format
+                           "-%d"
+                           (org-export-get-ordinal
+                            footnote-reference info '(footnote-reference)
+                            `(lambda (ref _)
+                               (if ,label
+                                   (equal (org-element-property :label ref) ,label)
+                                 (not (org-element-property :label ref))))))))))
+          (attrs
+           (format " class=\"fnref\" href=\"#fn-%s\" role=\"doc-backlink\" aria-label=\"Footnote %s\""
+                   (or label n)
+                   (or label n))))
+     (format (plist-get info :html-footnote-format)
+             (org-html--anchor id n attrs info)))))
+
+(defun org-mdx--footnote-formatted (footnote info)
+  "Formats a single footnote entry FOOTNOTE.
+Footnotes should be `li' elements in an `ol' wrapper.
+
+FOOTNOTE is a cons cell of the form (number . definition).  INFO is a
+plist with contextual information."
+  (let* ((footnote-num (car footnote))
+         (footnote-text (cdr footnote))
+         (footnote-format (plist-get info :md-footnote-format))
+         (footnote-anchor (format "fn-%d" footnote-num))
+         (footnote-link-to-fnref
+          (format footnote-format
+                  (org-html--anchor footnote-anchor
+                                    footnote-num
+                                    (format " href=\"#fnref-%d\"" footnote-num)
+                                    info))))
+    (format "<li class=\"fn\" role=\"doc-footnote\">\n%s %s\n</li>"
+            footnote-link-to-fnref
+            footnote-text)))
+
+(defun org-mdx--footnote-section (info)
+  "Format the footnote section.
+INFO is a plist used as a communication channel."
+  (let* ((footnote-alist (org-export-collect-footnote-definitions info))
+         (footnote-alist (cl-loop for (n _type raw) in footnote-alist collect
+                                  (cons n (org-trim (org-export-data raw info)))))
+         (footnote-section-attrs
+          "class=\"fn-section\" role=\"doc-endnotes\" aria-labelledby=\"footnotes-heading\"")
+         (footnote-heading
+          (format "<h%s id=\"footnotes-heading\">%s</h%s>"
+                  (plist-get info :md-toplevel-hlevel)
+                  (org-html--translate "Footnotes" info)
+                  (plist-get info :md-toplevel-hlevel))))
+    (when footnote-alist
+      (format "<section %s>\n%s\n<ol style=\"list-style: none;\">\n%s\n</ol>\n</section>"
+              footnote-section-attrs
+              footnote-heading
+              (mapconcat (lambda (fn) (org-mdx--footnote-formatted fn info))
+                         footnote-alist
+                         "\n")))))
+
+(defun org-mdx-inner-template (contents info)
+  "Return body of document after converting it to MDX syntax.
+CONTENTS is the transcoded contents string.  INFO is a plist holding
+export options."
+  (let ((toc
+         (let ((depth (plist-get info :with-toc)))
+           (when depth
+             (org-md--build-toc info (and (wholenump depth) depth)))))
+        (footnotes (org-mdx--footnote-section info)))
+    ;; Make sure CONTENTS is separated from table of contents and
+    ;; footnotes with at least a blank line.
+    (concat
+     (when toc (concat toc "\n"))
+     contents
+     (when footnotes (concat "\n" footnotes)))))
+
 (defun org-mdx--frontmatter-quote-string (s)
   "Quote string S for YAML double-quoted scalars.
 This function should be used for any object in the YAML frontmatter of
@@ -843,12 +939,14 @@ Return the output directory's name."
   ;; backend transcoders
   :translate-alist
   '((template . org-mdx-template)
+    (inner-template . org-mdx-inner-template)
     (plain-text . org-mdx-plain-text)
     (example-block . org-mdx-example-block)
     (src-block . org-mdx-src-block)
     (special-block . org-mdx-special-block)
     (link . org-mdx-link)
-    (timestamp . org-mdx-timestamp)))
+    (timestamp . org-mdx-timestamp)
+    (footnote-reference . org-mdx-footnote-reference)))
 
 ;;;; Org-publish
 ;; I use org-publish to make it easier to export all my blog posts all
