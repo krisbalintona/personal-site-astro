@@ -112,7 +112,7 @@ import FootnoteRef from "@components/markup/FootnoteRef.astro";
     ```
     
     Note that it works best (i) when the line-spacing is 0 (because of the vertical bars) and (ii) when there aren't many diagnostics per line
--   `buffer-match-p` (and therefore `display-buffer-alist`) now accepts the "this-command" condition, allowing per-command buffer display rules<FootnoteRef name="1" />
+-   `buffer-match-p` (and therefore `display-buffer-alist`) now accepts the "this-command" condition, allowing per-command buffer display rules<FootnoteRef num="1" />
     
     ```
     * 343f0c44f35 2025-05-01 (75 minutes ago) Sean Whitton (upstream/master, upstream/HEAD)
@@ -283,7 +283,7 @@ import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
 <FootnoteSection>
 Footnotes
-<Footnote name="1" slot="footnotes">
+<Footnote num="1" slot="footnotes">
 We could always do this since `buffer-match-p` accepts a predicate (in which we can check for the valueo of `this-command`), but this way is more convenient and neat.
 </Footnote>
 </FootnoteSection>

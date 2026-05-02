@@ -11,11 +11,11 @@ import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
 see [BROKEN LINK: 20260406T155358.633044]
 
-This is a<FootnoteRef name="foo" /> sentence.<FootnoteRef name="foo" id="foo-1" hasSeparator={true} /><FootnoteRef name="2" />
+This is a<FootnoteRef num="1" /> sentence.<FootnoteRef num="1" id="1-1" hasSeparator={true} /> <FootnoteRef num="2" />
 
 <h2 id="components-are-awesome"><a href="#components-are-awesome">Components are awesome</a></h2>
 
--   scoped <FootnoteRef name="3" />CSS (selectors, see [Scoped CSS](#h:20260421T031520.230702))
+-   scoped <FootnoteRef num="3" />CSS (selectors, see [Scoped CSS](#h:20260421T031520.230702))
 
 <h2 id="h:20260421T031520.230702"><a href="#h:20260421T031520.230702">Scoped CSS</a></h2>
 
@@ -28,15 +28,15 @@ a confusing bit: selectors are scoped by styling in the rendered page is not sco
 
 <FootnoteSection>
 Footnotes
-<Footnote name="foo" slot="footnotes">
+<Footnote num="1" slot="footnotes">
 This is a footnote. Aliquam erat volutpat.  Nunc eleifend leo vitae magna.  In id erat non orci commodo lobortis.  Proin neque massa, cursus ut, gravida ut, lobortis eget, lacus.  Sed diam.  Praesent fermentum tempor tellus.  Nullam tempus.  Mauris ac felis vel velit tristique imperdiet.
 
 Donec at pede.  Etiam vel neque nec dui dignissim bibendum.  Vivamus id enim.  Phasellus neque orci, porta a, aliquet quis, semper a, massa.  Phasellus purus.  Pellentesque tristique imperdiet tortor.  Nam euismod tellus id erat.
 </Footnote>
-<Footnote name="1" slot="footnotes">
+<Footnote num="2" slot="footnotes">
 Foo bar
 </Footnote>
-<Footnote name="2" slot="footnotes">
+<Footnote num="3" slot="footnotes">
 This is another footnote
 </Footnote>
 </FootnoteSection>

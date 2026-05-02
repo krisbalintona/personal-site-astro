@@ -2,20 +2,27 @@
 interface Props {
   hasSeparator?: boolean; // Handle sequential footnote references
   id?: string;
-  name: string;
+  num: string;
 }
 
 // There may be multiple references to the same footnote, so we take
 // in `id` to uniquify reference IDs
-const { name, id, hasSeparator } = Astro.props;
+const { num, id, hasSeparator } = Astro.props;
 ---
 
 <sup
   ><a
-    id={`fnref-${id ? id : name}`}
+    id={`fnref-${id ?? num}`}
     class="fnref"
-    href={`#fn-${name}`}
-    aria-label={`Reference to footnote ${name}`}
-    >{name}</a
-  >{hasSeparator && <>, </>}</sup
+    href={`#fn-${num}`}
+    aria-label={`Footnote ${num} reference`}
+    >[{num}]</a
+  >{hasSeparator && <span aria-hidden="true">, </span>}</sup
 >
+
+<style>
+  .fnref {
+    color: var(--accent);
+    border-bottom: unset;
+  }
+</style>

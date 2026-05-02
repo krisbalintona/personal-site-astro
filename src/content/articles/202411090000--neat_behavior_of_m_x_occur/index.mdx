@@ -56,7 +56,7 @@ is not modified.<br />
 So:
 
 1.  When called on a region, on that region is searched.
-2.  When called with a numerical prefix argument, that many lines before and after every match is added to the search results. (This reminds me of `next-screen-context-lines`.) *This functionality is particularly useful to me since added context is sometimes necessary.*<FootnoteRef name="1" />
+2.  When called with a numerical prefix argument, that many lines before and after every match is added to the search results. (This reminds me of `next-screen-context-lines`.) *This functionality is particularly useful to me since added context is sometimes necessary.*<FootnoteRef num="1" />
 3.  When called with a universal argument, just the matching string (not the entire line) is inserted into a line in a read-only buffer.
 4.  If called from elisp and `NLINES` is provided (as a regexp string), then the behavior is like `C-u` but matches can be modified like `replace-match`. (See `(elisp) Replacing Match` for more information.)
 
@@ -73,7 +73,7 @@ Pretty neat!
 
 <FootnoteSection>
 Footnotes
-<Footnote name="1" slot="footnotes">
+<Footnote num="1" slot="footnotes">
 I sometimes use `occur-edit-mode` (bound to `e` in `occur-mode` buffers), and the added context lines can be relevant to the edits I want to make to the matched text.
 </Footnote>
 </FootnoteSection>

@@ -33,7 +33,7 @@ I will be going over the basic usages of [Cape](https://github.com/minad/cape), 
 
 > Cape provides a bunch of Completion At Point Extensions which can be used in combination with my Corfu completion UI or the default completion UI. The completion backends used by `completion-at-point` are so called `completion-at-point-functions` (Capfs). In principle, the Capfs provided by Cape can also be used by Company.
 
-Consequently, `cape` is only used if you utilize the built-in `completion-at-point`, which is best complemented by `corfu` text-completion <FootnoteRef name="1" />.
+Consequently, `cape` is only used if you utilize the built-in `completion-at-point`, which is best complemented by `corfu` text-completion <FootnoteRef num="1" />.
 
 You can also see the list of built-in `completion-at-point-functions` in [the README](https://github.com/minad/cape#available-capfs). Several of these `completion-at-point-functions` are quite niche but others, such as `cape-file` and `cape-symbol` have common use cases.
 
@@ -82,7 +82,7 @@ I then add this to the appropriate hook:
 :hook (git-commit-mode . kb/cape-capf-setup-git-commit)
 ```
 
-Consequently, when making commits to git, via `magit`, for instance, `completion-at-point-functions` looks like this<FootnoteRef name="2" />:
+Consequently, when making commits to git, via `magit`, for instance, `completion-at-point-functions` looks like this<FootnoteRef num="2" />:
 
 ```emacs-lisp
 '(cape-symbol
@@ -92,13 +92,13 @@ Consequently, when making commits to git, via `magit`, for instance, `completion
 
 There are a few additional things to keep in mind when adding backends to `completion-function-at-point`:
 
-1.  `add-to-list` prepends elements to a list, that is, place an element at the front of a list<FootnoteRef name="3" />.
+1.  `add-to-list` prepends elements to a list, that is, place an element at the front of a list<FootnoteRef num="3" />.
 2.  `add-to-list` is almost always preferable to `push` because `push` adds an element to a list even if it already in the list, whereas `add-to-list` will not.
 3.  Elements earlier in `dolist` will be added to the list before later elements. This means that elements which should be deeper within `completion-at-point-functions` should be placed first. (Notice how `cape-dabbrev` is added after `cape-symbol`.)
 
 <h2 id="cape-company-to-capf-and-cape-super-capf"><a href="#cape-company-to-capf-and-cape-super-capf">`Cape-company-to-capf` and `cape-super-capf`</a></h2>
 
-I think the killer feature of `cape` is `cape-company-to-capf`. This function is able to convert *any* `company` backend and convert it into a `completion-at-point-function` which `corfu` can use<FootnoteRef name="4" />. For this reason, I regard `cape` as quite an underrated package since it achieves almost full feature parity with `company`. Here is an example with `company-yasnippet`:
+I think the killer feature of `cape` is `cape-company-to-capf`. This function is able to convert *any* `company` backend and convert it into a `completion-at-point-function` which `corfu` can use<FootnoteRef num="4" />. For this reason, I regard `cape` as quite an underrated package since it achieves almost full feature parity with `company`. Here is an example with `company-yasnippet`:
 
 ```emacs-lisp
 (defun kb/cape-capf-setup-lsp ()
@@ -301,16 +301,16 @@ Additionally, add `cape-file' as early as possible to the list."
 
 <FootnoteSection>
 Footnotes
-<Footnote name="1" slot="footnotes">
+<Footnote num="1" slot="footnotes">
 See <ContentLink collectionName="articles" id="202202270056--corfu_kind_icon_and_corfu_doc">Corfu, Kind-icon, and Corfu-doc</ContentLink> to see the basic usage of `corfu` and several accessory packages.
 </Footnote>
-<Footnote name="2" slot="footnotes">
+<Footnote num="2" slot="footnotes">
 `tags-completion-at-point-function` is a default `completion-at-point-function`
 </Footnote>
-<Footnote name="3" slot="footnotes">
+<Footnote num="3" slot="footnotes">
 See its docstring to learn how to append to a list
 </Footnote>
-<Footnote name="4" slot="footnotes">
+<Footnote num="4" slot="footnotes">
 This feature is currently listed as experimental but, for the most part, the results are as expected. If anything, rare edge cases are the only points of missing functionality.
 </Footnote>
 </FootnoteSection>

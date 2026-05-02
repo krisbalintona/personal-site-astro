@@ -295,7 +295,7 @@ The following function uses `vertico-quick-jump` (like `avy` but for minibuffer 
 
 Finally, I add a few niceties.
 
-The following prefixes (i.e. in the left fringe) and arrow character on the currently selected candidate<FootnoteRef name="1" />:
+The following prefixes (i.e. in the left fringe) and arrow character on the currently selected candidate<FootnoteRef num="1" />:
 
 ```emacs-lisp
 ;; Prefix the current candidate with “» ”. From
@@ -310,7 +310,7 @@ The following prefixes (i.e. in the left fringe) and arrow character on the curr
                cand)))
 ```
 
-When using a command for selecting a file in the minibuffer, the following fixes the path so the path you select doesn't have prepended junk left behind<FootnoteRef name="2" />:
+When using a command for selecting a file in the minibuffer, the following fixes the path so the path you select doesn't have prepended junk left behind<FootnoteRef num="2" />:
 
 ```emacs-lisp
 :hook (rfn-eshadow-update-overlay . vertico-directory-tidy) ; Correct file path when changed
@@ -340,7 +340,7 @@ Finally, the following makes working with remote files via `tramp` easier.
 
 <h3 id="end-product"><a href="#end-product">End product</a></h3>
 
-In the end, we have this<FootnoteRef name="3" />:
+In the end, we have this<FootnoteRef num="3" />:
 
 ```emacs-lisp
 (use-package vertico
@@ -558,7 +558,7 @@ Finally, rather than using the default  “+ “ to separate components, I use a
 
 <h3 id="end-product-1"><a href="#end-product-1">End product</a></h3>
 
-The end result is this<FootnoteRef name="4" />:
+The end result is this<FootnoteRef num="4" />:
 
 ```emacs-lisp
 (use-package orderless
@@ -647,16 +647,16 @@ parses its input."
 
 <FootnoteSection>
 Footnotes
-<Footnote name="1" slot="footnotes">
+<Footnote num="1" slot="footnotes">
 This does add width to the left side of the minibuffer, which may interfere with your aesthetic-related configurations of other packages.
 </Footnote>
-<Footnote name="2" slot="footnotes">
+<Footnote num="2" slot="footnotes">
 This relies on the `vertico-directory` extension.
 </Footnote>
-<Footnote name="3" slot="footnotes">
+<Footnote num="3" slot="footnotes">
 This is a direct copy and paste from my configuration file. There are slight differences in comments compared to the code snippets above.
 </Footnote>
-<Footnote name="4" slot="footnotes">
+<Footnote num="4" slot="footnotes">
 Again, taken verbatim from my Emacs configuration, with fewer useful comments.
 </Footnote>
 </FootnoteSection>

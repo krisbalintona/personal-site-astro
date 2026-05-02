@@ -651,12 +651,7 @@ INFO is a plist holding contextual information.  See
 CONTENTS is nil.  INFO is a plist holding contextual information."
   (let* ((next-element (org-export-get-next-element footnote-reference info))
          (separatorp (org-element-type-p next-element 'footnote-reference))
-         (n (org-export-get-footnote-number footnote-reference info))
-         (label (org-element-property :label footnote-reference))
-         (label (unless (and (stringp label)
-                             (equal label (number-to-string (string-to-number label))))
-                  label))
-         (name (or label n))
+         (num (org-export-get-footnote-number footnote-reference info))
          (id
           ;; The ID for footnote references is normally based on just
           ;; the name of the footnote linked to.  However, multiple
@@ -666,37 +661,36 @@ CONTENTS is nil.  INFO is a plist holding contextual information."
           ;; same name, though.)
           (unless (org-export-footnote-first-reference-p footnote-reference info)
             (format "%s-%d"
-                    name
+                    num
                     (org-export-get-ordinal
                      footnote-reference info '(footnote-reference)
                      `(lambda (ref _plist)
-                        (if ,label
-                            (equal (org-element-property :label ref) ,label)
+                        (if ,num
+                            (equal (org-element-property :label ref) ,num)
                           (not (org-element-property :label ref)))))))))
     (org-mdx--register-import info "FootnoteRef")
-    (format "<FootnoteRef name=\"%s\"%s%s />"
-            name
+    (format "<FootnoteRef num=\"%s\"%s%s />"
+            num
             (if id (format " id=\"%s\"" id) "")
             (if separatorp " hasSeparator={true}" ""))))
 
 (defun org-mdx--footnote-formatted (footnote info)
   "Formats a single footnote entry FOOTNOTE.
-FOOTNOTE is a list of the form (NUMBER LABEL DEFINITION).  INFO is a
-plist with contextual information."
+FOOTNOTE is a list of the form (NUMBER DEFINITION).  INFO is a plist
+with contextual information."
   (let* ((n (nth 0 footnote))
-         (label (nth 1 footnote))
-         (text (nth 2 footnote)))
+         (text (nth 1 footnote)))
     (org-mdx--register-import info "Footnote")
-    (format "<Footnote name=\"%s\" slot=\"footnotes\">\n%s\n</Footnote>"
-            (or label n) text)))
+    (format "<Footnote num=\"%s\" slot=\"footnotes\">\n%s\n</Footnote>"
+            n text)))
 
 (defun org-mdx--footnote-section (info)
   "Format the footnote section.
 INFO is a plist used as a communication channel."
   (let* ((footnote-alist (org-export-collect-footnote-definitions info))
          (footnote-alist
-          (cl-loop for (n label raw) in footnote-alist collect
-                   (list n label (org-trim (org-export-data raw info))))))
+          (cl-loop for (n _label raw) in footnote-alist collect
+                   (list n (org-trim (org-export-data raw info))))))
     (when footnote-alist
       (org-mdx--register-import info "FootnoteSection")
       (format "<FootnoteSection>\n%s\n%s\n</FootnoteSection>"

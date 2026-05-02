@@ -21,7 +21,7 @@ import FootnoteRef from "@components/markup/FootnoteRef.astro";
 -   [Changelog](#changelog)
 
 
-So I recently got around to trying out NixOS. Part of that experience was setting up Syncthing, which I've used on the past on my machines and mobile phone to sync files related to note-taking.<FootnoteRef name="1" /> It was a bit confusing since I had to fill-in-the-blanks for a few steps. Here, I write about a bit of the blanks I had to fill in myself, stuff that was not clear from the existing docs and forum posts I discovered.
+So I recently got around to trying out NixOS. Part of that experience was setting up Syncthing, which I've used on the past on my machines and mobile phone to sync files related to note-taking.<FootnoteRef num="1" /> It was a bit confusing since I had to fill-in-the-blanks for a few steps. Here, I write about a bit of the blanks I had to fill in myself, stuff that was not clear from the existing docs and forum posts I discovered.
 
 <h2 id="the-configuration"><a href="#the-configuration">The configuration</a></h2>
 
@@ -109,7 +109,7 @@ Now that Syncthing is aware of these devices, I can reference them by their labe
 <h2 id="folders"><a href="#folders">Folders</a></h2>
 
 -   Folders are the directories you'd like Syncthing to be aware of.
--   Each folder has an ID.<FootnoteRef name="2" />
+-   Each folder has an ID.<FootnoteRef num="2" />
 -   Each folder may optionally have a label (probably a human-readable name, like "Agenda"). This is basically a nickname you give to the folder specific to the current device.
 -   Folders are only shared to devices specified for each folder.
 
@@ -163,7 +163,7 @@ In sum:
 
 Simple, but it wasn't obvious from the resources I encountered online, so I had to do some tinkering to figure it out myself.
 
-For those who heavily customize Syncthing, there are other NixOS options available to tweak. You can find them [in the NixOS Search for options](https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=syncthing). Additionally, if you are trying to migrate an existing Syncthing configuration to Nix, then you can check out your config file at `~/.config/syncthing/config.xml`.<FootnoteRef name="3" /> With this, you can see the value of every Syncthing setting (although the file will, of course, be in JSON format).
+For those who heavily customize Syncthing, there are other NixOS options available to tweak. You can find them [in the NixOS Search for options](https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=syncthing). Additionally, if you are trying to migrate an existing Syncthing configuration to Nix, then you can check out your config file at `~/.config/syncthing/config.xml`.<FootnoteRef num="3" /> With this, you can see the value of every Syncthing setting (although the file will, of course, be in JSON format).
 
 <h2 id="other-resources"><a href="#other-resources">Other resources</a></h2>
 
@@ -177,13 +177,13 @@ For those who heavily customize Syncthing, there are other NixOS options availab
 
 <FootnoteSection>
 Footnotes
-<Footnote name="1" slot="footnotes">
+<Footnote num="1" slot="footnotes">
 I use Emacs's org-agenda to manage todos, and I've set up [Orgzly Revived](https://github.com/orgzly-revived/orgzly-android-revived) for basic creation and editing of org todos on my phone.
 </Footnote>
-<Footnote name="2" slot="footnotes">
+<Footnote num="2" slot="footnotes">
 You can see the ID of shared folders in the Syncthing GUI by expanding the collapsed info section a folder under the folders section of the GUI's homepage.
 </Footnote>
-<Footnote name="3" slot="footnotes">
+<Footnote num="3" slot="footnotes">
 Users can refer to the [Syncthing configuration file documentation](https://docs.syncthing.net/users/config.html) in order to understand the contents of this file.
 </Footnote>
 </FootnoteSection>

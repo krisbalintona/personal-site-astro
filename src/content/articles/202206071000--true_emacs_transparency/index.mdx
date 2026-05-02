@@ -20,7 +20,7 @@ Transparency in Emacs isn't that great. Every source I find regarding transparen
 3.  [How to set a key binding to make Emacs as transparent/opaque](https://stackoverflow.com/questions/2935520/how-to-set-a-key-binding-to-make-emacs-as-transparent-opaque-as-i-want)
 4.  [Any Advice On Getting Transparency To Work In Emacs Window Manager](https://www.reddit.com/r/emacs/comments/ljev64/any_advice_on_getting_transparency_to_work_in/)
 
-The issue with `alpha` is that it sets the transparency of the *entire window*; what this means is that *text and background* become transparent together. Clearly this is undesirable for some: the `alpha` parameter needs to be near 100, otherwise the text becomes illegible. Ideally, the text remains opaque while the background becomes transparent.<FootnoteRef name="1" />
+The issue with `alpha` is that it sets the transparency of the *entire window*; what this means is that *text and background* become transparent together. Clearly this is undesirable for some: the `alpha` parameter needs to be near 100, otherwise the text becomes illegible. Ideally, the text remains opaque while the background becomes transparent.<FootnoteRef num="1" />
 
 The solution came from a [patched version of Emacs made by Håkon Flatval](https://github.com/TheVaffel/emacs) back in November 2021—his announcement that month [on Reddit](https://www.reddit.com/r/emacs/comments/qm3tsv/i_implemented_partial_support_for_background/) received some attention. The patch adds the `alpha-background` frame parameter which makes **only the background** of a frame transparent:
 
@@ -29,14 +29,14 @@ The solution came from a [patched version of Emacs made by Håkon Flatval](https
 <figcaption>`alpha-background` set to 75.</figcaption>
 </figure>
 
-You can set the `alpha-background` of a particular frame with the `set-frame-parameter` function, and the default value for frames by adding to `default-frame-alist`.<FootnoteRef name="2" /> For example:
+You can set the `alpha-background` of a particular frame with the `set-frame-parameter` function, and the default value for frames by adding to `default-frame-alist`.<FootnoteRef num="2" /> For example:
 
 ```emacs-lisp
 (set-frame-parameter nil 'alpha-background 100) ; For current frame
 (add-to-list 'default-frame-alist '(alpha-background . 100)) ; For all new frames henceforth
 ```
 
-I've also defined my own command for toggling between a frame having `alpha-background` values of 100 and 72:<FootnoteRef name="3" />
+I've also defined my own command for toggling between a frame having `alpha-background` values of 100 and 72:<FootnoteRef num="3" />
 
 ```emacs-lisp
 (defun kb/toggle-window-transparency ()
@@ -81,13 +81,13 @@ Of course, transparency in Emacs (alongside any other application on your system
 
 <FootnoteSection>
 Footnotes
-<Footnote name="1" slot="footnotes">
+<Footnote num="1" slot="footnotes">
 I work exclusively on a 14-inch laptop, so screen real-estate is valuable. I often use transparency to watch videos (e.g. YouTube, Netflix, lecture) while working on something in Emacs—I benefit from having the space of my entire screen.
 </Footnote>
-<Footnote name="2" slot="footnotes">
+<Footnote num="2" slot="footnotes">
 The behavior of `alpha-background` matches that of `alpha`; that is, 100 is fully opaque while 0 is fully transparent.
 </Footnote>
-<Footnote name="3" slot="footnotes">
+<Footnote num="3" slot="footnotes">
 The reason why my frame is not *fully* opaque when `alpha-background` is 100 is because I've additionally set `alpha` to 98.
 </Footnote>
 </FootnoteSection>

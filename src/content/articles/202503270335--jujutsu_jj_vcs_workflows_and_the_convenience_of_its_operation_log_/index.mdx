@@ -10,7 +10,7 @@ import FootnoteSection from "@components/markup/FootnoteSection.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
 
-Over the last month or two I've been trying out the relatively new [jujutsu](https://jj-vcs.github.io/jj/latest/) version control system (VCS) &mdash; and loving it. At first, I discovered it and read their [GitHub README](https://github.com/jj-vcs/jj) with curiosity but skepticism. Then I sought a few [YouTube videos](https://www.youtube.com/results?search_query=what+is+jujutsu+vcs)<FootnoteRef name="1" /> demonstrating jj in action, and [a tutorial](https://jj-vcs.github.io/jj/latest/) for a text-based reference. I became very interested. I initialized a jj repo in one of my small git projects and played around. Since then, I've migrated all of my personal repositories to jj, and use jj for practically everything.
+Over the last month or two I've been trying out the relatively new [jujutsu](https://jj-vcs.github.io/jj/latest/) version control system (VCS) &mdash; and loving it. At first, I discovered it and read their [GitHub README](https://github.com/jj-vcs/jj) with curiosity but skepticism. Then I sought a few [YouTube videos](https://www.youtube.com/results?search_query=what+is+jujutsu+vcs)<FootnoteRef num="1" /> demonstrating jj in action, and [a tutorial](https://jj-vcs.github.io/jj/latest/) for a text-based reference. I became very interested. I initialized a jj repo in one of my small git projects and played around. Since then, I've migrated all of my personal repositories to jj, and use jj for practically everything.
 
 From the time I've spent with jj, I've felt myself sliding into some general workflows:
 
@@ -19,7 +19,7 @@ From the time I've spent with jj, I've felt myself sliding into some general wor
     1.  Make progress toward a desired goal.
     2.  Commit (`jj commit`, or `jj new` then `jj describe -m "..."`) with a message describing this unit of work.
     3.  Continue making changes.
-    4.  Squash (perhaps interactively: `jj squash -i`<FootnoteRef name="2" />) new changes until the desired goal is accomplished.
+    4.  Squash (perhaps interactively: `jj squash -i`<FootnoteRef num="2" />) new changes until the desired goal is accomplished.
     5.  Maybe change the description of the previous commit commit.
 2.  Work in the working copy  
     1.  Envision a goal for a new commit. Express that into the description of the working copy commit: `jj describe -m "..."`.
@@ -29,7 +29,7 @@ From the time I've spent with jj, I've felt myself sliding into some general wor
 3.  Concurrent commits workflow  
     Work on several commits simultaneously, using combinations of `jj squash`, `jj new`, and `jj rebase` to make make reversible changes while having a clean `jj log` at the end. In essence, this is point (3.4) above but with room for added complexity.
 
-I'm not a VCS expert, and my projects are small, but I've gravitated to (1) and (2) without feeling any mental strain of keeping track of where this and that change is and what CLI operations avoid x problem or y merging conflict (which, by the way, jj permits! Jujutsu treats conflicts as first-class, so conflicts and their resolutions percolate through ancestors and descendants without problem.)<FootnoteRef name="3" />
+I'm not a VCS expert, and my projects are small, but I've gravitated to (1) and (2) without feeling any mental strain of keeping track of where this and that change is and what CLI operations avoid x problem or y merging conflict (which, by the way, jj permits! Jujutsu treats conflicts as first-class, so conflicts and their resolutions percolate through ancestors and descendants without problem.)<FootnoteRef num="3" />
 
 Perhaps the most exciting part of using jj is fearlessly making changes and experimenting. This has been an extraordinary boon for my learning about how to use jj in accordance to its VCS concepts. The reason is jj's operation log (`jj op log`) and the ability to **revert back to *any* past repository state** (`jj op restore OPERATION_ID`).
 
@@ -39,13 +39,13 @@ I'd definitely recommend trying jj out if you haven't already! Easily turn a git
 
 <FootnoteSection>
 Footnotes
-<Footnote name="1" slot="footnotes">
+<Footnote num="1" slot="footnotes">
 I found [this talk](https://www.youtube.com/watch?v=bx_LGilOuE4) by the originator of jujutsu, Martin von Zweigbergk, a senior software engineer at Google, especially insightful with respect to the technical merits of jj over git. If jj is meant to potentially eventually handle Google's gigantic monorepo (86 terabytes of data, ~2 billion lines of code across 9 million source files!), then surely there's something to it! The talk justifies the existence of jj.
 </Footnote>
-<Footnote name="2" slot="footnotes">
+<Footnote num="2" slot="footnotes">
 Without the `-u` flag, `jj squash -i` effectively behaves like `git commit \-\-amend` when your working copy has a description (e.g., with `jj desc -m "..."` or if you `jj edit` to a past commit). Without a commit, `jj squash -i` is like `git commit \-\-amend \-\-no-edit`.
 </Footnote>
-<Footnote name="3" slot="footnotes">
+<Footnote num="3" slot="footnotes">
 A great resource on the matter of "conflicts as first-class" is [this talk](https://youtu.be/LV0JzI8IcCY?si=n0xrGZfRx6vZGNmr&t=553) by the mind behind jj.
 </Footnote>
 </FootnoteSection>

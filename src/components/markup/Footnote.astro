@@ -1,25 +1,72 @@
 ---
 interface Props {
-  name: string;
+  num: string;
 }
 
-const { name } = Astro.props;
+const { num } = Astro.props;
 ---
 
-<li id={`fn-${name}`}>
-  <sup
-    ><a
-      href={`#fnref-${name}`}
-      aria-label={`Return to footnote ${name} reference`}
-      >{name}</a
-    ></sup
+<li id={`fn-${num}`}>
+  <!-- For sighted users -->
+  <!-- biome-ignore lint/a11y/useAnchorContent: decorative duplicate of sr-only backref -->
+  <a
+    href={`#fnref-${num}`}
+    class="fn-marker"
+    aria-label={`Return to footnote ${num} reference`}
+    aria-hidden="true"
+    tabindex="-1"
+    >[{num}]</a
   >
-  <div><slot /></div>
+  <div class="fn-content">
+    <slot />
+    <!-- For screen readers -->
+    <a
+      href={`#fnref-${num}`}
+      class="sr-only"
+      aria-label={`Return to footnote ${num} reference`}
+      >↩</a
+    >
+  </div>
 </li>
 
 <style>
   li {
-    display: flex;
-    gap: 0.6em;
+    --border-left: 2px;
+
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5em;
+    align-items: baseline;
+    padding-left: 0.5em;
+    margin-bottom: 1.2rem;
+    border-left: var(--border-left) solid transparent;
+  }
+
+  li:target {
+    animation: slow-flash 1.5s ease;
+  }
+
+  @keyframes slow-flash {
+    from {
+      border-left: var(--border-left) solid var(--accent);
+    }
+    to {
+      border-left: var(--border-left) solid transparent;
+    }
+  }
+
+  .fn-marker {
+    color: var(--accent);
+    border-bottom: unset;
+  }
+
+  .fn-content > :global(*:first-child) {
+    margin-top: 0;
+  }
+
+  /* We want the penultimate element since The final element */
+  /* is the sr-only `a` tag */
+  .fn-content > :global(*:nth-last-child(2)) {
+    margin-bottom: 0;
   }
 </style>

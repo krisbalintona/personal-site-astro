@@ -34,7 +34,7 @@ import FootnoteRef from "@components/markup/FootnoteRef.astro";
 -   [Bonus: bespoke org-agenda scatter function](#bonus-bespoke-org-agenda-scatter-function)
 
 
-In the last few months I've revamped my org-agenda workflow to a state I've never been more satisfied with. I'll share here how [org-review](https://github.com/brabalan/org-review)<FootnoteRef name="1" /> made it possible.
+In the last few months I've revamped my org-agenda workflow to a state I've never been more satisfied with. I'll share here how [org-review](https://github.com/brabalan/org-review)<FootnoteRef num="1" /> made it possible.
 
 <h2 id="the-ideal-separating-now-and-very-soon-from-everything-else"><a href="#the-ideal-separating-now-and-very-soon-from-everything-else">The ideal: Separating "now" and "very soon" from everything else</a></h2>
 
@@ -55,7 +55,7 @@ As such, an ideal org-agenda means **(i) occluding (hiding) or separating tasks 
 There are two common straightforward ways to fulfill (i):
 
 1.  Having an "inbox." An inbox separates tasks which one has already committed to from ones they haven't yet committed to.
-2.  Add scheduling and deadline information to tasks and occlude (hide) them until they approach. This is to delay visibility of tasks until a date more appropriate to attending to that task.<FootnoteRef name="2" />
+2.  Add scheduling and deadline information to tasks and occlude (hide) them until they approach. This is to delay visibility of tasks until a date more appropriate to attending to that task.<FootnoteRef num="2" />
 
 I have used and continue to use both strategies to occlude tasks.
 
@@ -69,7 +69,7 @@ Consequently, I naturally moved to crafting an org-agenda practice reliant on or
 
 My previous org-agenda set up tried to cut down the number of non-inbox todos by abusing the scheduling functionality of org. The functionality of deadlines remained as intended, but I re-tooled scheduling in an atypical way: **a task's scheduled date was the date I wanted to see that task again**. In my org-agenda views, the tasks meant for "now" were the ones whose scheduled date was today or in the past. *There was flexibility in the method, since I could also use the scheduled date as simply a date I wanted to check back in with a todo, deciding whether I should move it to the inbox, do it now, or defer it again.* (Of course, abusing scheduling like this meant there was no longer an equivalent to the typical schedule-deadline difference.)
 
-**Effectively, this was a way to *snooze*<FootnoteRef name="3" /> tasks until later&mdash;that is, I would defer tasks, which is a temporal way to occlude todos.** I ended up sticking with this workflow for over a year.
+**Effectively, this was a way to *snooze*<FootnoteRef num="3" /> tasks until later&mdash;that is, I would defer tasks, which is a temporal way to occlude todos.** I ended up sticking with this workflow for over a year.
 
 But over time, I discovered a significant issue. I realized that (i) wasn't enough: **there was no way to tell how long a todo sat in my agenda, waiting for me to attend to it**. As such, although I could hide a task for another day, once it became visible and I was actively working on it, if I forgot about the task or de-prioritized it, **there was nothing in the system that would tell me that too much time had passed since I was last productive on that task**. Consequently, there were many todos that fell through my workflow because I started work on them, did not complete them, and the time I should've had it completed by had passed. (Strictly speaking, one could use deadlines for this purpose, but I never could find a way for such deadlined todos to be prominent nor distinguished from other deadlines used in the typical "this is an actual deadline" way.)
 
@@ -85,8 +85,8 @@ Retaining (i) while achieving (ii) is what I have made perfect use of org-review
 
 Currently, I have (in outline) two org agenda views.
 
-1.  One org-agenda view for tasks whose scheduled or deadline date is today (or in the past) and other tasks (non-schedule, non-deadline) that I'm either working on now or will work on soon&mdash;the urgency and priority of these tasks are determined using org priorities and effort estimates, although it's ultimately up to me what I choose to work on any given day.<FootnoteRef name="4" /> This is my main, "time to be productive" org-agenda view.
-2.  The other org agenda view shows my "inbox" and "to-review tasks"---*this is where org-review comes in*. A task tagged with "inbox" is in the inbox org-agenda block *until* I call `org-review-insert-next-review` on it, selecting the date on which this task will reappear as a task to review.<FootnoteRef name="5" /> (Alternatively, I can just remove the inbox tag and this task will appear in my first agenda view: it is a task that I am working on now or will work on soon. In these cases, I also call `org-review-insert-next-review`, or `org-review-insert-last-review` which automatically sets the `NEXT_REVIEW` property value if `org-review-sets-next-date` is non-nil. I explain why later.) In this same agenda view, I have another org-agenda block for tasks whose `NEXT_REVIEW` date is today or in the past.<FootnoteRef name="6" /> It is here that I decide what to do with a task. Do I move it to my main, first agenda view by removing the inbox tag? Do I call `org-review-insert-next-review` again to re-defer it? Or do I remove its `NEXT_REVIEW` property because I'm no longer sure whether or when this task should be deferred to.
+1.  One org-agenda view for tasks whose scheduled or deadline date is today (or in the past) and other tasks (non-schedule, non-deadline) that I'm either working on now or will work on soon&mdash;the urgency and priority of these tasks are determined using org priorities and effort estimates, although it's ultimately up to me what I choose to work on any given day.<FootnoteRef num="4" /> This is my main, "time to be productive" org-agenda view.
+2.  The other org agenda view shows my "inbox" and "to-review tasks"---*this is where org-review comes in*. A task tagged with "inbox" is in the inbox org-agenda block *until* I call `org-review-insert-next-review` on it, selecting the date on which this task will reappear as a task to review.<FootnoteRef num="5" /> (Alternatively, I can just remove the inbox tag and this task will appear in my first agenda view: it is a task that I am working on now or will work on soon. In these cases, I also call `org-review-insert-next-review`, or `org-review-insert-last-review` which automatically sets the `NEXT_REVIEW` property value if `org-review-sets-next-date` is non-nil. I explain why later.) In this same agenda view, I have another org-agenda block for tasks whose `NEXT_REVIEW` date is today or in the past.<FootnoteRef num="6" /> It is here that I decide what to do with a task. Do I move it to my main, first agenda view by removing the inbox tag? Do I call `org-review-insert-next-review` again to re-defer it? Or do I remove its `NEXT_REVIEW` property because I'm no longer sure whether or when this task should be deferred to.
 
 <h3 id="org-review-immediately-identify-which-tasks-need-addressing"><a href="#org-review-immediately-identify-which-tasks-need-addressing">Org-review: Immediately identify which tasks need addressing</a></h3>
 
@@ -96,7 +96,7 @@ This solves the issue of (ii), that tasks need to be done soon otherwise too man
 
 There are many more details to how I use org-agenda, but I hope this write-up explains my usage of org-review in a way that might've shown you a way to use the package you haven't already thought of.
 
-In the last few months I've revamped my org-agenda workflow to a state I've never been more satisfied with. I'll share here how [org-review](https://github.com/brabalan/org-review)<FootnoteRef name="1" id="1-1" /> made it possible.
+In the last few months I've revamped my org-agenda workflow to a state I've never been more satisfied with. I'll share here how [org-review](https://github.com/brabalan/org-review)<FootnoteRef num="1" id="1-1" /> made it possible.
 
 <h2 id="the-ideal-separating-now-and-very-soon-from-everything-else-1"><a href="#the-ideal-separating-now-and-very-soon-from-everything-else-1">The ideal: Separating "now" and "very soon" from everything else</a></h2>
 
@@ -117,7 +117,7 @@ As such, an ideal org-agenda means **(i) occluding (hiding) or separating tasks 
 There are two common straightforward ways to fulfill (i):
 
 1.  Having an "inbox." An inbox separates tasks which one has already committed to from ones they haven't yet committed to.
-2.  Add scheduling and deadline information to tasks and occlude (hide) them until they approach. This is to delay visibility of tasks until a date more appropriate to attending to that task.<FootnoteRef name="2" id="2-2" />
+2.  Add scheduling and deadline information to tasks and occlude (hide) them until they approach. This is to delay visibility of tasks until a date more appropriate to attending to that task.<FootnoteRef num="2" id="2-2" />
 
 I have used and continue to use both strategies to occlude tasks.
 
@@ -131,7 +131,7 @@ Consequently, I naturally moved to crafting an org-agenda practice reliant on or
 
 My previous org-agenda set up tried to cut down the number of non-inbox todos by abusing the scheduling functionality of org. The functionality of deadlines remained as intended, but I re-tooled scheduling in an atypical way: **a task's scheduled date was the date I wanted to see that task again**. In my org-agenda views, the tasks meant for "now" were the ones whose scheduled date was today or in the past. *There was flexibility in the method, since I could also use the scheduled date as simply a date I wanted to check back in with a todo, deciding whether I should move it to the inbox, do it now, or defer it again.* (Of course, abusing scheduling like this meant there was no longer an equivalent to the typical schedule-deadline difference.)
 
-**Effectively, this was a way to *snooze*<FootnoteRef name="3" id="3-3" /> tasks until later&mdash;that is, I would defer tasks, which is a temporal way to occlude todos.** I ended up sticking with this workflow for over a year.
+**Effectively, this was a way to *snooze*<FootnoteRef num="3" id="3-3" /> tasks until later&mdash;that is, I would defer tasks, which is a temporal way to occlude todos.** I ended up sticking with this workflow for over a year.
 
 But over time, I discovered a significant issue. I realized that (i) wasn't enough: **there was no way to tell how long a todo sat in my agenda, waiting for me to attend to it**. As such, although I could hide a task for another day, once it became visible and I was actively working on it, if I forgot about the task or de-prioritized it, **there was nothing in the system that would tell me that too much time had passed since I was last productive on that task**. Consequently, there were many todos that fell through my workflow because I started work on them, did not complete them, and the time I should've had it completed by had passed. (Strictly speaking, one could use deadlines for this purpose, but I never could find a way for such deadlined todos to be prominent nor distinguished from other deadlines used in the typical "this is an actual deadline" way.)
 
@@ -147,8 +147,8 @@ Retaining (i) while achieving (ii) is what I have made perfect use of org-review
 
 Currently, I have (in outline) two org agenda views.
 
-1.  One org-agenda view for tasks whose scheduled or deadline date is today (or in the past) and other tasks (non-schedule, non-deadline) that I'm either working on now or will work on soon&mdash;the urgency and priority of these tasks are determined using org priorities and effort estimates, although it's ultimately up to me what I choose to work on any given day.<FootnoteRef name="4" id="4-4" /> This is my main, "time to be productive" org-agenda view.
-2.  The other org agenda view shows my "inbox" and "to-review tasks"---*this is where org-review comes in*. A task tagged with "inbox" is in the inbox org-agenda block *until* I call `org-review-insert-next-review` on it, selecting the date on which this task will reappear as a task to review.<FootnoteRef name="5" id="5-5" /> (Alternatively, I can just remove the inbox tag and this task will appear in my first agenda view: it is a task that I am working on now or will work on soon. In these cases, I also call `org-review-insert-next-review`, or `org-review-insert-last-review` which automatically sets the `NEXT_REVIEW` property value if `org-review-sets-next-date` is non-nil. I explain why later.) In this same agenda view, I have another org-agenda block for tasks whose `NEXT_REVIEW` date is today or in the past.<FootnoteRef name="6" id="6-6" /> It is here that I decide what to do with a task. Do I move it to my main, first agenda view by removing the inbox tag? Do I call `org-review-insert-next-review` again to re-defer it? Or do I remove its `NEXT_REVIEW` property because I'm no longer sure whether or when this task should be deferred to.
+1.  One org-agenda view for tasks whose scheduled or deadline date is today (or in the past) and other tasks (non-schedule, non-deadline) that I'm either working on now or will work on soon&mdash;the urgency and priority of these tasks are determined using org priorities and effort estimates, although it's ultimately up to me what I choose to work on any given day.<FootnoteRef num="4" id="4-4" /> This is my main, "time to be productive" org-agenda view.
+2.  The other org agenda view shows my "inbox" and "to-review tasks"---*this is where org-review comes in*. A task tagged with "inbox" is in the inbox org-agenda block *until* I call `org-review-insert-next-review` on it, selecting the date on which this task will reappear as a task to review.<FootnoteRef num="5" id="5-5" /> (Alternatively, I can just remove the inbox tag and this task will appear in my first agenda view: it is a task that I am working on now or will work on soon. In these cases, I also call `org-review-insert-next-review`, or `org-review-insert-last-review` which automatically sets the `NEXT_REVIEW` property value if `org-review-sets-next-date` is non-nil. I explain why later.) In this same agenda view, I have another org-agenda block for tasks whose `NEXT_REVIEW` date is today or in the past.<FootnoteRef num="6" id="6-6" /> It is here that I decide what to do with a task. Do I move it to my main, first agenda view by removing the inbox tag? Do I call `org-review-insert-next-review` again to re-defer it? Or do I remove its `NEXT_REVIEW` property because I'm no longer sure whether or when this task should be deferred to.
 
 <h3 id="org-review-immediately-identify-which-tasks-need-addressing-1"><a href="#org-review-immediately-identify-which-tasks-need-addressing-1">Org-review: Immediately identify which tasks need addressing</a></h3>
 
@@ -166,22 +166,22 @@ for when a lot of todos happen; I mark ones I know I want to put off sometime in
 
 <FootnoteSection>
 Footnotes
-<Footnote name="5" slot="footnotes">
+<Footnote num="1" slot="footnotes">
 I first dismissed org-review over a year ago when I first discovered it, but revisited the package after reading this article from Sacha Chua, where John Weigley briefly mentions his recent experiments with the package: [Excerpts from a conversation with John Wiegley (johnw) and Adam Porter (alphapapa) about p!ersonal information management](https://sachachua.com/blog/2024/11/excerpts-from-a-conversation-with-john-wiegley-johnw-and-adam-porter-alphapapa-about-personal-information-management/).
 </Footnote>
-<Footnote name="6" slot="footnotes">
+<Footnote num="2" slot="footnotes">
 Org-agenda users can specify a global, directory-local, buffer-local, or headline-specific number of days until which scheduled and deadlined todos are shown in the agenda. See the `(org) Deadlines and Scheduling` page in the Org Info manual for more information.
 </Footnote>
-<Footnote name="7" slot="footnotes">
+<Footnote num="3" slot="footnotes">
 Those familiar with Gmail's "snooze" function can think of that as a similar functionality.
 </Footnote>
-<Footnote name="8" slot="footnotes">
+<Footnote num="4" slot="footnotes">
 This is a condition for a successfully flexible task management system: of the tasks presented to me now, I can choose which one(s) I am most suited to doing now and are most suited to my current life-context.
 </Footnote>
-<Footnote name="9" slot="footnotes">
+<Footnote num="5" slot="footnotes">
 Every time I call `org-review-insert-next-review` I also call `org-review-insert-last-review`, since my setting the `NEXT_REVIEW` property is a recognition that I have reviewed the task: hence, I also set the `LAST_REVIEW` property for record-keeping.
 </Footnote>
-<Footnote name="10" slot="footnotes">
+<Footnote num="6" slot="footnotes">
 Org-review provides `org-review-agenda-skip`, a predicate meant to be used as a value of `org-agenda-skip-function`, which I set locally via `org-agenda-custom-commands`.
 </Footnote>
 </FootnoteSection>
