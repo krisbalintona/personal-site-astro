@@ -10,10 +10,7 @@ draft: true
 -   [Final words](#final-words)
 
 
-
-<a id="the-dilemma"></a>
-
-# The dilemma
+<h2 id="the-dilemma"><a href="#the-dilemma">The dilemma</a></h2>
 
 In the last month I've become more and more convinced that I should start migrating from org-roam to org-node. Dealing with org-node's elisp API (as opposed to org-roam's sqlite API) is easier, and I think org-node has even greater potential for future growth
 
@@ -70,10 +67,7 @@ in `org-capture-templates'."
      (when olp 'subtree-at-point))))
 ```
 
-
-<a id="final-result"></a>
-
-# Final result
+<h2 id="final-result"><a href="#final-result">Final result</a></h2>
 
 ```emacs-lisp
 (setopt org-capture-templates
@@ -124,9 +118,6 @@ in `org-capture-templates'."
            :immediate-finish t)))
 ```
 
-
-<a id="final-words"></a>
-
-# Final words
+<h2 id="final-words"><a href="#final-words">Final words</a></h2>
 
 Although this code is written for org-node, since accessing org-node's nodes and org-roam's nodes are practically identical, it could easily be adapted to be used by org-roam.

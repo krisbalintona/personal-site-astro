@@ -11,8 +11,7 @@ import Details from "@components/markup/Details.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
 
-
-# My desired workflow
+<h2 id="my-desired-workflow"><a href="#my-desired-workflow">My desired workflow</a></h2>
 
 Org-export is a means to convert org files into LaTeX files. The question this article explores is how I answer the following question: **How can I write my university essays in org and export them directly into a LaTeX PDF file without any further adjustments?** This means the following:
 
@@ -25,11 +24,9 @@ In short, I simply want to produce my final paper's PDF by calling a single org-
 
 A note for STEM (Science, Technology, Engineering, and Mathematics) students: As a philosophy undergraduate, this article primarily centers on a subset of concerns STEM students would face in formatting their papers, since mathematics, tables, and other LaTeX features will be much more common. This is beyond my use case, but I hope that this article still has a use for those students. Additionally, there are many other resources available that cover similar use cases (link such sources later tk).
 
+<h2 id="basic-formatting-org-latex-classes"><a href="#basic-formatting-org-latex-classes">Basic Formatting: `org-latex-classes`</a></h2>
 
-# Basic Formatting: `org-latex-classes`
-
-
-# Title pages: Creating an Org-export backend
+<h2 id="title-pages-creating-an-org-export-backend"><a href="#title-pages-creating-an-org-export-backend">Title pages: Creating an Org-export backend</a></h2>
 
 The most challenging hurdle is conveniently producing a formatted title page<FootnoteRef name="1" />.
 
@@ -175,23 +172,19 @@ keywords are understood:<br />
 
 You have a few options.
 
-
-## Customize the `org-export` LaTeX backend
+<h3 id="customize-the-org-export-latex-backend"><a href="#customize-the-org-export-latex-backend">Customize the `org-export` LaTeX backend</a></h3>
 
 File properties
 
-
-### Backend
+<h4 id="backend"><a href="#backend">Backend</a></h4>
 
 There is `org-export-define-backend` and `org-export-define-derived-backend`. Defining a backend…
 
 The latter is identical, only in that it inherits the definition of a parent backend. For instance, `beamer` is a derived backend from latex. I won't go in depth into this because you can read the docstrings for them.
 
+<h4 id="template"><a href="#template">Template</a></h4>
 
-### Template
-
-
-## Final title command
+<h3 id="final-title-command"><a href="#final-title-command">Final title command</a></h3>
 
 ```latex
 \renewcommand{\maketitle}{
@@ -206,8 +199,7 @@ The latter is identical, only in that it inherits the definition of a parent bac
 }
 ```
 
-
-# Citations and bibliographies: Org-cite
+<h2 id="citations-and-bibliographies-org-cite"><a href="#citations-and-bibliographies-org-cite">Citations and bibliographies: Org-cite</a></h2>
 
 Nowadays, with the comparatively new `org-cite`, citations and bibliography is the easiest step of this process. Readers should refer to <ContentLink collectionName="articles" id="202206141852--citations_in_org_mode_org_cite_and_citar">Citations in org-mode: Org-cite and Citar</ContentLink> for more information, but once `org-cite` is set up, potentially with `citar`, org-export will seamlessly export citations and bibliographies.
 
@@ -252,8 +244,7 @@ For reference, the following is my `org-cite` configuration (this doesn't includ
 
 </Details>
 
-
-## One way to specify citation style
+<h3 id="one-way-to-specify-citation-style"><a href="#one-way-to-specify-citation-style">One way to specify citation style</a></h3>
 
 The value of `org-cite-export-processors` is most notable. The configuration above instructs org-export to use the `biblatex` export processor to process citations and bibliographies when exporting to LaTeX. This can be overridden, for example, at the file-level with the `#CITE_EXPORT` keyword. See the docstring for `org-cite-export-processors` for more information about valid values.
 
@@ -284,8 +275,7 @@ results in `"bibstyle=mla-new,citestyle=authoryear"` being passed as an option t
 
 Valid styles include those provided by the built-in with biblatex, found in section 3.3.2 of the biblatex CTAN manual (link tk), and those provided by numerous other packages.
 
-
-## My method to specify citation style
+<h3 id="my-method-to-specify-citation-style"><a href="#my-method-to-specify-citation-style">My method to specify citation style</a></h3>
 
 Though the above works, since I'm already using a .sty file to set all the options for the relevant LaTeX packages, I also do so there. For instance, with the MLA citation style:
 
@@ -304,25 +294,23 @@ In this way, I avoid adding a line in my org files to specify the citation style
 </p>
 </div>
 
-
-# Final result and screenshots
+<h2 id="final-result-and-screenshots"><a href="#final-result-and-screenshots">Final result and screenshots</a></h2>
 
 The following org file produces this:
 
 which, compiled into a PDF, looks like this:
 
+<h2 id="extras"><a href="#extras">Extras</a></h2>
 
-# Extras
-
-
-## Section numbers
+<div class="outline-text-2" id="text-extras">
+</div>
+<h3 id="section-numbers"><a href="#section-numbers">Section numbers</a></h3>
 
 ```elisp
 (setq org-export-with-section-numbers nil)
 ```
 
-
-## Hyperref
+<h3 id="hyperref"><a href="#hyperref">Hyperref</a></h3>
 
 ```emacs-lisp
 (setq org-latex-hyperref-template
@@ -337,8 +325,7 @@ colorlinks={true},
 hidelinks={true}}\n")
 ```
 
-
-## Table of contents
+<h3 id="table-of-contents"><a href="#table-of-contents">Table of contents</a></h3>
 
 ```emacs-lisp
 (setq org-latex-toc-command
@@ -351,13 +338,11 @@ hidelinks={true}}\n")
 \\newpage")
 ```
 
-
-## Org links
+<h3 id="org-links"><a href="#org-links">Org links</a></h3>
 
 1.  Custom `org-mode` links (`org-link-set-parameters`)
 
-
-# Full configuration
+<h2 id="full-configuration"><a href="#full-configuration">Full configuration</a></h2>
 
 (Make a note about that there are other stuff in the configuration not referenced or described tk.)
 

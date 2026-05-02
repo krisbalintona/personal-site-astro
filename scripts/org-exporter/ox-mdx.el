@@ -268,6 +268,101 @@ as a plist."
          (result (string-trim deduplicated "-")))
     (if (string-empty-p result) "headline" result)))
 
+(defun org-mdx-headline (headline contents info)
+  "Transcode a HEADLINE element from Org to MDX.
+CONTENTS holds the contents of the headline.  INFO is a plist holding
+contextual information."
+  (unless (org-element-property :footnote-section-p headline)
+    (let* ((numberedp (org-export-numbered-headline-p headline info))
+           (numbers (org-export-get-headline-number headline info))
+           (level (+ (org-export-get-relative-level headline info)
+                     (1- (plist-get info :html-toplevel-hlevel))))
+           (todo (and (plist-get info :with-todo-keywords)
+                      (let ((todo (org-element-property :todo-keyword headline)))
+                        (and todo (org-export-data todo info)))))
+           (todo-type (and todo (org-element-property :todo-type headline)))
+           (priority (and (plist-get info :with-priority)
+                          (org-element-property :priority headline)))
+           (text (org-export-data (org-element-property :title headline) info))
+           (tags (and (plist-get info :with-tags)
+                      (org-export-get-tags headline info)))
+           (full-text (funcall (plist-get info :html-format-headline-function)
+                               todo todo-type priority text tags info))
+           (contents (or contents ""))
+           (id (org-html--reference headline info))
+           (formatted-text (if (plist-get info :html-self-link-headlines)
+                               (format "<a href=\"#%s\">%s</a>" id full-text)
+                             full-text)))
+      (if (org-export-low-level-p headline info)
+          ;; This is a deep subtree: export it as a list item.  (See
+          ;; the :headline-levels export option and
+          ;; `org-export-headline-levels'.)
+          ;;
+          ;; TODO 2026-05-02: This function is based on
+          ;; `org-html-headline'.  But I found that the if branch that
+          ;; handles deep headlines is broken.  Below is my fix.  I
+          ;; should prepare an upstream fix for this at some point.
+          ;; Or at least create a bug report with a working prototype
+          ;; shown, and let someone else (e.g., Ihor) implement an
+          ;; upstream-ready version.
+          (let* ((html-type (if numberedp "ol" "ul"))
+                 (parent (org-export-get-parent headline))
+                 (parent-low-level-p (and parent
+                                          (org-export-low-level-p parent info)))
+                 (children (org-element-contents headline))
+                 (section-contents
+                  (mapconcat (lambda (child)
+                               (if (org-element-type-p child 'section)
+                                   (org-export-data child info)
+                                 ""))
+                             children ""))
+                 (child-headlines
+                  (mapconcat (lambda (child)
+                               (if (org-element-type-p child 'headline)
+                                   (org-export-data child info)
+                                 ""))
+                             children "")))
+            (concat
+             ;; Opening `ol' or `ul' tag
+             (and (not parent-low-level-p)
+                  (format "<%s class=\"org-%s\">\n" html-type html-type))
+             ;; Other headlines and their content as list items
+             (org-html-format-list-item
+              section-contents
+              (if numberedp 'ordered 'unordered)
+              nil info nil
+              ;; 2026-05-02: Prepend with newline since without it
+              ;; MDX's parser complains
+              (concat "\n" (org-html--anchor id nil nil info) formatted-text))
+             child-headlines
+             ;; Closing `ol' or `ul' tag
+             (and (not parent-low-level-p)
+                  (format "</%s>\n" html-type))))
+        ;; Standard headline
+        (let ((headline-class
+               (org-element-property :HTML_HEADLINE_CLASS headline))
+              (first-content (car (org-element-contents headline))))
+          (format "%s\n%s\n"
+                  (format "<h%d id=\"%s\"%s>%s</h%d>\n"
+                          level
+                          id
+                          (if headline-class
+                              (format " class=\"%s\"" headline-class)
+                            "")
+                          (concat (when numberedp
+                                    (format "<span class=\"section-number-%d\">%s</span> "
+                                            level
+                                            (concat (mapconcat #'number-to-string numbers ".") ".")))
+                                  formatted-text)
+                          level)
+                  ;; When there is no section, pretend there is an
+                  ;; empty one to get the correct <div
+                  ;; class="outline-...> which is needed by
+                  ;; `org-info.js'.
+                  (if (org-element-type-p first-content 'section)
+                      contents
+                    (concat (org-html-section first-content "" info) contents))))))))
+
 (defun org-mdx-timestamp (timestamp _contents info)
   "Transcode a TIMESTAMP object from Org to MDX.
 Passes to a Timestamp JSX component.
@@ -912,7 +1007,12 @@ Return the output directory's name."
   '((:mdx-slug "MDX_SLUG" nil nil)
     (:mdx-draft-p "MDX_DRAFT" "mdx-draft" "true")
     (:mdx-tags "MDX_TAGS" nil nil space)
-    ;; REVIEW 2026-04-18: Does this have an effect in the md backend?
+    ;; See `org-export-headline-levels' and
+    ;; `org-export-options-alist'.  Set :headline-levels to 6 since
+    ;; HTML has heading levels up to and including 6
+    (:headline-levels nil "H" 5)
+    ;; Headlines link to themselves, so users can click on them to
+    ;; have an anchor to the headline
     (:html-self-link-headlines nil "html-self-link-headlines" t))
 
   ;; Used to add new transcoders or overwrite those of the parent
@@ -927,7 +1027,8 @@ Return the output directory's name."
     (special-block . org-mdx-special-block)
     (link . org-mdx-link)
     (timestamp . org-mdx-timestamp)
-    (footnote-reference . org-mdx-footnote-reference)))
+    (footnote-reference . org-mdx-footnote-reference)
+    (headline . org-mdx-headline)))
 
 ;;;; Org-publish
 ;; I use org-publish to make it easier to export all my blog posts all

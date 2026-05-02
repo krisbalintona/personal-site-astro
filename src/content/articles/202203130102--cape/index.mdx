@@ -25,10 +25,7 @@ import ContentLink from "@components/markup/ContentLink.astro";
 -   [Changelog](#changelog)
 
 
-
-<a id="what-is-cape"></a>
-
-# What is `cape`?
+<h2 id="what-is-cape"><a href="#what-is-cape">What is `cape`?</a></h2>
 
 I will be going over the basic usages of [Cape](https://github.com/minad/cape), namely how to add completion functions to `completion-at-point-functions` and how to use `cape's` built-in completion utilities (e.g. `cape-company-to-capf` and `cape-capf-buster`) to create backends with desired behavior. (Also see [u/JDRiverRun's informative comment](https://www.reddit.com/r/emacs/comments/td0nth/comment/i0hz6re/?utm_source=share&utm_medium=web2x&context=3) about the advantages of using `completion-at-point-functions` over `company`.)
 
@@ -42,10 +39,7 @@ You can also see the list of built-in `completion-at-point-functions` in [the RE
 
 *Note*: I use `straight.el` for package management and `general.el` to set my keybindings. Both of these packages have integration with `use-package` which come in the form of the `:straight` and `:general` keywords, respectively.
 
-
-<a id="basic-usage-keybinds"></a>
-
-# Basic usage: keybinds
+<h2 id="basic-usage-keybinds"><a href="#basic-usage-keybinds">Basic usage: keybinds</a></h2>
 
 The most basic way to use `cape` is to bind its built-in `completion-at-point-functions` to their own keys. For instance:
 
@@ -71,10 +65,7 @@ The most basic way to use `cape` is to bind its built-in `completion-at-point-fu
 
 Additionally, if having `completion-at-point-functions` readily available through keybinds is desirable, then one can use `cape-interactive-capf` to turn an already existing `completion-at-point-function` into a command (i.e. interactive function) that can be bound.
 
-
-<a id="adding-backends-to-completion-at-point-functions"></a>
-
-# Adding backends to `completion-at-point-functions`
+<h2 id="adding-backends-to-completion-at-point-functions"><a href="#adding-backends-to-completion-at-point-functions">Adding backends to `completion-at-point-functions`</a></h2>
 
 However, `cape` is powerful because these functions can be added to `completion-at-point-functions`, meaning you can configure when each functions is used and where. The simplest way to accomplish this is by adding backends to `completion-at-point-functions` in a hook. Here is a simple example:
 
@@ -105,10 +96,7 @@ There are a few additional things to keep in mind when adding backends to `compl
 2.  `add-to-list` is almost always preferable to `push` because `push` adds an element to a list even if it already in the list, whereas `add-to-list` will not.
 3.  Elements earlier in `dolist` will be added to the list before later elements. This means that elements which should be deeper within `completion-at-point-functions` should be placed first. (Notice how `cape-dabbrev` is added after `cape-symbol`.)
 
-
-<a id="cape-company-to-capf-and-cape-super-capf"></a>
-
-# `Cape-company-to-capf` and `cape-super-capf`
+<h2 id="cape-company-to-capf-and-cape-super-capf"><a href="#cape-company-to-capf-and-cape-super-capf">`Cape-company-to-capf` and `cape-super-capf`</a></h2>
 
 I think the killer feature of `cape` is `cape-company-to-capf`. This function is able to convert *any* `company` backend and convert it into a `completion-at-point-function` which `corfu` can use<FootnoteRef name="4" />. For this reason, I regard `cape` as quite an underrated package since it achieves almost full feature parity with `company`. Here is an example with `company-yasnippet`:
 
@@ -141,10 +129,7 @@ Another useful function is `cape-super-capf`. This function combines multiple `c
 
 For other `cape` transformers, see the [appropriate section of the README](https://github.com/minad/cape#other-capf-transformers).
 
-
-<a id="pcomplete-nicety"></a>
-
-# `pcomplete` nicety
+<h2 id="pcomplete-nicety"><a href="#pcomplete-nicety">`pcomplete` nicety</a></h2>
 
 Finally, I have the following advice to make usage with `pcomplete`, what `eshell` uses for completion:
 
@@ -161,10 +146,7 @@ Finally, I have the following advice to make usage with `pcomplete`, what `eshel
 (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
 ```
 
-
-<a id="my-completion-at-point-functions"></a>
-
-# My `completion-at-point-functions`
+<h2 id="my-completion-at-point-functions"><a href="#my-completion-at-point-functions">My `completion-at-point-functions`</a></h2>
 
 I have very hesitantly included my WIP code which leverages `cape` and `completion-at-point` utilities. I have not described in detail each of the following functions. I have, however, attempted to provide useful docstrings and comments.
 
@@ -312,10 +294,7 @@ Additionally, add `cape-file' as early as possible to the list."
 
 ---
 
-
-<a id="changelog"></a>
-
-# Changelog
+<h2 id="changelog"><a href="#changelog">Changelog</a></h2>
 
 -   <Timestamp date="2022-03-13" />
     -   Fixed typo. Added link to [u/JDRiverRun's informative Reddit comment](https://www.reddit.com/r/emacs/comments/td0nth/comment/i0hz6re/?utm_source=share&utm_medium=web2x&context=3).

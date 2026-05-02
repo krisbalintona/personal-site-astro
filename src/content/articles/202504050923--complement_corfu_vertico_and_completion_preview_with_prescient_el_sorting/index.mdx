@@ -102,8 +102,7 @@ Prescient.el is the core package, and there are several [auxiliary packages](htt
 
 The result is using orderless for completion filtering and prescient for completion sorting everywhere&mdash;for in-line completions with corfu and minibuffer completions with vertico. With this, among the candidates filtered by orderless, the most recent and common ones will be bumped up to the beginning. Try it out!
 
-
-# Bonus: integration with `completion-preview-mode`
+<h2 id="bonus-integration-with-completion-preview-mode"><a href="#bonus-integration-with-completion-preview-mode">Bonus: integration with `completion-preview-mode`</a></h2>
 
 Emacs 30.1 ships with the new `completion-preview-mode`. You can read about it [in this blog post](https://eshelyaron.com/posts/2023-11-17-completion-preview-in-emacs.html) but also in the Emacs 30.1 news (i.e., `C-u 30 C-h n`). Apparently, `completion-preview-mode`
 has its own sorting function&mdash;which makes sense, since it isn't hooked into either corfu nor vertico (which we set up to use prescient above). The relevant user option to modify its sorting is `completion-preview-sort-function`. So we just have to make sure that function matches prescient's. We can do that like this:
@@ -150,8 +149,7 @@ set (i.e., OPERATION is \\='set).  This excludes, e.g., let bindings."
                             (setopt completion-preview-sort-function newval)))))
 ```
 
-
-# Changelog
+<h2 id="changelog"><a href="#changelog">Changelog</a></h2>
 
 -   <Timestamp date="2025-04-07" />
     -   Fixed several typos.
