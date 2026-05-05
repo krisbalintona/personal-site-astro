@@ -10,6 +10,8 @@ closest to conveying meaning of this component -->
 
 <style>
   .alert {
+    --_alert-bg: var(--blue-subtle);
+
     display: flex;
     gap: 0.8em;
     align-items: flex-start;
@@ -18,7 +20,7 @@ closest to conveying meaning of this component -->
     margin-inline: 0;
     font-size: 0.9em;
     line-height: 2.2;
-    background-color: var(--blue-subtle);
+    background-color: var(--_alert-bg);
     border: 1px solid var(--rule);
     border-left: 3px solid var(--blue);
 
@@ -31,16 +33,13 @@ closest to conveying meaning of this component -->
     }
 
     .content {
-      /* Override the flex default of `min-width: auto`, which */
-      /* prevents flex children from shrinking below their content's */
-      /* intrinsic width. Without this, long unbreakable content (e.g. */
-      /* URLs, code) would overflow the container instead of wrapping. */
       min-width: 0;
-    }
+      background-color: var(--_alert-bg);
 
-    /* Special styling for timestamps */
-    :global(.ts) {
-      --ts-bg: var(--background);
+      /* Special styling for timestamps */
+      :global(.ts) {
+        --ts-bg: var(--background);
+      }
     }
   }
 </style>
