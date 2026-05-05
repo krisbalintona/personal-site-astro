@@ -12,13 +12,6 @@ html {
   background-color: var(--background);
 }
 
-body {
-  max-width: 66ch;
-  min-height: 100svh;
-  padding: var(--space-xl) var(--space-s-m) var(--space-2xl);
-  margin: 0 auto;
-}
-
 p {
   margin-block: 1.3em;
 }
