@@ -36,6 +36,8 @@ const timeStr = time
 
 <style>
   time.ts {
+    --_ts-bg: var(--ts-bg, var(--blue-subtle));
+
     display: inline-flex;
     gap: 0.1em;
     align-items: center;
@@ -47,7 +49,7 @@ const timeStr = time
     vertical-align: middle;
     color: var(--ink);
     white-space: nowrap; /* Don't wrap mid-render*/
-    background-color: var(--blue-subtle);
+    background-color: var(--_ts-bg);
     border: 0.1em solid var(--blue);
     border-radius: 0.4em;
 
