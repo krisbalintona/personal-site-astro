@@ -1,11 +1,17 @@
-:root {
-  background: var(--background);
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--background);
 }
 
 body {
   width: 100%;
   max-width: 650px;
-  min-height: 100vh;
+  min-height: 100svh;
   padding: 4rem 2rem 6rem;
   margin: 0 auto;
   font-family: var(--font-primary);
@@ -14,11 +20,8 @@ body {
   color: var(--ink);
 }
 
-h1,
-h2,
-h3 {
-  font-size: 1.8em;
-  line-height: 1.3;
+p {
+  margin-block: 1.3em;
 }
 
 a {
@@ -27,7 +30,7 @@ a {
   border-bottom: 1px solid var(--ink);
 
   &:hover {
-    border-bottom: 0;
+    border-bottom-style: dashed;
   }
 }
 
@@ -52,7 +55,39 @@ figcaption {
   overflow: hidden;
   white-space: nowrap;
   border-width: 0;
-  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+}
+
+/* * Headings */
+
+h1 {
+  font-size: 2.2em;
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: 1.6em;
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 1.2em;
+  line-height: 1.3;
+}
+
+/* FIXME 2026-05-04: Can we avoid repetition of */
+/* border-bottom-style: none here? */
+.heading-self-link {
+  border-bottom-style: none;
+
+  &:hover {
+    border-bottom-style: none;
+
+    &::after {
+      color: var(--accent);
+      content: " §";
+    }
+  }
 }
 
 /* * Code */
@@ -63,30 +98,20 @@ code {
 
 /* Inline code */
 :not(pre) > code {
-  padding: 0.05em 0.5em 0;
+  padding: 0.05em 0.5em;
   font-size: 0.95em;
   background-color: var(--white);
   border: 1px solid var(--faint);
   border-radius: 0.15em;
 }
 
-a :not(pre) > code {
-  border-bottom-color: var(--ink);
-}
+a {
+  & :not(pre) > code {
+    border-bottom-color: var(--ink);
+  }
 
-/* Match the visual appearance of the global `a` and `a:hover` rules */
-
-a:hover :not(pre) > code {
-  border-bottom-color: var(--faint);
-}
-
-/* * Headings */
-
-.heading-self-link {
-  border-bottom: none;
-
-  &:hover::after {
-    color: var(--accent);
-    content: " §";
+  /* Match the visual appearance of the global `a` and `a:hover` rules */
+  &:hover :not(pre) > code {
+    border-bottom-color: var(--faint);
   }
 }
