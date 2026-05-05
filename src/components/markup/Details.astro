@@ -12,7 +12,8 @@
     margin: var(--space-s-m) var(--space-2xs-xs);
 
     summary {
-      display: flex;
+      display: grid;
+      grid-template-columns: auto 1fr;
       gap: 1.5em;
       align-items: baseline;
       padding: var(--space-3xs-2xs) var(--space-s-m);
@@ -23,13 +24,12 @@
     }
 
     summary::before {
-      flex-shrink: 0;
       font-size: 0.8em;
       content: "▶";
       transition: transform 0.2s ease;
     }
 
-    details[open] summary::before {
+    &[open] summary::before {
       transform: rotate(90deg);
     }
 
