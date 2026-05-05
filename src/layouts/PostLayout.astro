@@ -71,12 +71,11 @@ const { Content } = await render(post);
     .post-info-container {
       .post-date {
         font-family: var(--font-ui);
-        font-size: smaller;
+        font-size: var(--font-step--1);
       }
 
       #post-title {
         margin: 0 0 1rem 0;
-        font-size: 3rem;
       }
     }
   }
@@ -85,7 +84,7 @@ const { Content } = await render(post);
     margin-top: 2rem;
 
     :global(#table-of-contents) {
-      font-size: 1.8rem;
+      font-size: var(--font-step-3);
     }
 
     /* "Bleed" effect for code blocks, standalone images, and figures */
@@ -121,7 +120,7 @@ const { Content } = await render(post);
     .post-tags-container {
       display: inline;
       align-items: baseline;
-      font-size: smaller;
+      font-size: var(--font-step--1);
 
       #tags-label {
         font-weight: bold;

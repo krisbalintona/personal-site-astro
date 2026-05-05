@@ -23,7 +23,7 @@ export default defineConfig({
       plugins: [pluginFullscreen()],
       styleOverrides: {
         codeFontFamily: "var(--font-code)",
-        codeFontSize: "0.9rem",
+        codeFontSize: "var(--font-step--1)",
         fullscreen: {
           // Toolbar uses --ink instead of neutral gray to feel
           // intentional on a warm site

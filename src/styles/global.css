@@ -5,18 +5,18 @@
 }
 
 html {
+  font-family: var(--font-primary);
+  font-size: var(--font-step-0);
+  line-height: 2;
+  color: var(--ink);
   background-color: var(--background);
 }
 
 body {
-  max-width: 68ch;
+  max-width: 66ch;
   min-height: 100svh;
   padding: 4rem 2rem 6rem;
   margin: 0 auto;
-  font-family: var(--font-primary);
-  font-size: 1rem;
-  line-height: 2;
-  color: var(--ink);
 }
 
 p {
@@ -40,13 +40,22 @@ a {
   }
 }
 
+small {
+  font-size: var(--font-step--1);
+}
+
 img {
   display: block;
   max-width: 100%;
   height: auto;
 }
 
+caption {
+  font-size: var(--font-step--2);
+}
+
 figcaption {
+  font-size: var(--font-step--2);
   text-align: center;
 }
 
@@ -67,17 +76,17 @@ figcaption {
 /* * Headings */
 
 h1 {
-  font-size: 2.2em;
+  font-size: var(--font-step-3);
   line-height: 1.1;
 }
 
 h2 {
-  font-size: 1.6em;
+  font-size: var(--font-step-2);
   line-height: 1.2;
 }
 
 h3 {
-  font-size: 1.2em;
+  font-size: var(--font-step-1);
   line-height: 1.3;
 }
 
