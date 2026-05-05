@@ -81,10 +81,13 @@ The import statements are like the following
   "Register a component import into INFO.
 If COMPONENT-NAME is already registered, don't duplicate the import
 statement."
-  (let ((imports (plist-get info :mdx-imports)))
-    (unless (assoc component-name imports)
+  (let* ((existing-imports (plist-get info :mdx-imports))
+         (import-statement (assoc component-name org-mdx-import-statement-alist)))
+    (unless import-statement
+      (error "Component \"%s\" has no associated import statement" component-name))
+    (unless (assoc component-name existing-imports)
       (plist-put info :mdx-imports
-                 (cons (assoc component-name org-mdx-import-statement-alist) imports)))))
+                 (cons import-statement existing-imports)))))
 
 (defun org-mdx--escape-special-chars (string)
   "Escape characters in STRING with special significance in MDX.
