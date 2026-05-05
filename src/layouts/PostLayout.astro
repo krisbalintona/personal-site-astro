@@ -40,8 +40,8 @@ const { Content } = await render(post);
       <Breadcrumb breadcrumbs={breadcrumbs} />
 
       <div class="post-info-container">
-        <time datetime={formattedDateTime}
-          ><span class="post-date">{formattedVisibleDate}</span></time
+        <time class="post-date" datetime={formattedDateTime}
+          >{formattedVisibleDate}</time
         >
 
         <h1 id="post-title">{title}</h1>
@@ -70,6 +70,8 @@ const { Content } = await render(post);
 
     .post-info-container {
       .post-date {
+        display: block;
+        margin: var(--space-3xs-2xs) 0;
         font-family: var(--font-ui);
         font-size: var(--font-step--1);
       }
