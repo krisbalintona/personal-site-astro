@@ -7,6 +7,7 @@ tags:
 ---
 import Footnote from "@components/markup/Footnote.astro";
 import FootnoteSection from "@components/markup/FootnoteSection.astro";
+import Heading from "@components/markup/Heading.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
 Having used Emacs for several years now, I somehow hadn't come across the prefix argument and active region behavior for one of the most well-known commands: `occur`.
@@ -64,7 +65,7 @@ Also, searching "NLINES" with `apropos-documentation` brings up a few other buil
 
 Pretty neat!
 
-<h2 id="further-reading"><a class="heading-self-link" href="#further-reading">Further Reading</a></h2>
+<Heading level="2" id="further-reading"selfLink={true}>Further Reading</Heading>
 
 -   [Searching and Editing in Buffers with Occur Mode - Mastering Emacs](https://www.masteringemacs.org/article/searching-buffers-occur-mode)
 -   [What do you use for occur?  - Reddit](https://www.reddit.com/r/emacs/comments/1466y8d/what_do_you_use_for_occur/)

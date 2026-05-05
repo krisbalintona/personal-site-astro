@@ -9,9 +9,10 @@ import FootnoteSection from "@components/markup/FootnoteSection.astro";
 import ContentLink from "@components/markup/ContentLink.astro";
 import Details from "@components/markup/Details.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
+import Heading from "@components/markup/Heading.astro";
 
 
-<h2 id="my-desired-workflow"><a class="heading-self-link" href="#my-desired-workflow">My desired workflow</a></h2>
+<Heading level="2" id="my-desired-workflow"selfLink={true}>My desired workflow</Heading>
 
 Org-export is a means to convert org files into LaTeX files. The question this article explores is how I answer the following question: **How can I write my university essays in org and export them directly into a LaTeX PDF file without any further adjustments?** This means the following:
 
@@ -24,9 +25,9 @@ In short, I simply want to produce my final paper's PDF by calling a single org-
 
 A note for STEM (Science, Technology, Engineering, and Mathematics) students: As a philosophy undergraduate, this article primarily centers on a subset of concerns STEM students would face in formatting their papers, since mathematics, tables, and other LaTeX features will be much more common. This is beyond my use case, but I hope that this article still has a use for those students. Additionally, there are many other resources available that cover similar use cases (link such sources later tk).
 
-<h2 id="basic-formatting-org-latex-classes"><a class="heading-self-link" href="#basic-formatting-org-latex-classes">Basic Formatting: `org-latex-classes`</a></h2>
+<Heading level="2" id="basic-formatting-org-latex-classes"selfLink={true}>Basic Formatting: `org-latex-classes`</Heading>
 
-<h2 id="title-pages-creating-an-org-export-backend"><a class="heading-self-link" href="#title-pages-creating-an-org-export-backend">Title pages: Creating an Org-export backend</a></h2>
+<Heading level="2" id="title-pages-creating-an-org-export-backend"selfLink={true}>Title pages: Creating an Org-export backend</Heading>
 
 The most challenging hurdle is conveniently producing a formatted title page<FootnoteRef num="1" />.
 
@@ -172,19 +173,19 @@ keywords are understood:<br />
 
 You have a few options.
 
-<h3 id="customize-the-org-export-latex-backend"><a class="heading-self-link" href="#customize-the-org-export-latex-backend">Customize the `org-export` LaTeX backend</a></h3>
+<Heading level="3" id="customize-the-org-export-latex-backend"selfLink={true}>Customize the `org-export` LaTeX backend</Heading>
 
 File properties
 
-<h4 id="backend"><a class="heading-self-link" href="#backend">Backend</a></h4>
+<Heading level="4" id="backend"selfLink={true}>Backend</Heading>
 
 There is `org-export-define-backend` and `org-export-define-derived-backend`. Defining a backend…
 
 The latter is identical, only in that it inherits the definition of a parent backend. For instance, `beamer` is a derived backend from latex. I won't go in depth into this because you can read the docstrings for them.
 
-<h4 id="template"><a class="heading-self-link" href="#template">Template</a></h4>
+<Heading level="4" id="template"selfLink={true}>Template</Heading>
 
-<h3 id="final-title-command"><a class="heading-self-link" href="#final-title-command">Final title command</a></h3>
+<Heading level="3" id="final-title-command"selfLink={true}>Final title command</Heading>
 
 ```latex
 \renewcommand{\maketitle}{
@@ -199,7 +200,7 @@ The latter is identical, only in that it inherits the definition of a parent bac
 }
 ```
 
-<h2 id="citations-and-bibliographies-org-cite"><a class="heading-self-link" href="#citations-and-bibliographies-org-cite">Citations and bibliographies: Org-cite</a></h2>
+<Heading level="2" id="citations-and-bibliographies-org-cite"selfLink={true}>Citations and bibliographies: Org-cite</Heading>
 
 Nowadays, with the comparatively new `org-cite`, citations and bibliography is the easiest step of this process. Readers should refer to <ContentLink collectionName="articles" id="202206141852--citations_in_org_mode_org_cite_and_citar">Citations in org-mode: Org-cite and Citar</ContentLink> for more information, but once `org-cite` is set up, potentially with `citar`, org-export will seamlessly export citations and bibliographies.
 
@@ -244,7 +245,7 @@ For reference, the following is my `org-cite` configuration (this doesn't includ
 
 </Details>
 
-<h3 id="one-way-to-specify-citation-style"><a class="heading-self-link" href="#one-way-to-specify-citation-style">One way to specify citation style</a></h3>
+<Heading level="3" id="one-way-to-specify-citation-style"selfLink={true}>One way to specify citation style</Heading>
 
 The value of `org-cite-export-processors` is most notable. The configuration above instructs org-export to use the `biblatex` export processor to process citations and bibliographies when exporting to LaTeX. This can be overridden, for example, at the file-level with the `#CITE_EXPORT` keyword. See the docstring for `org-cite-export-processors` for more information about valid values.
 
@@ -275,7 +276,7 @@ results in `"bibstyle=mla-new,citestyle=authoryear"` being passed as an option t
 
 Valid styles include those provided by the built-in with biblatex, found in section 3.3.2 of the biblatex CTAN manual (link tk), and those provided by numerous other packages.
 
-<h3 id="my-method-to-specify-citation-style"><a class="heading-self-link" href="#my-method-to-specify-citation-style">My method to specify citation style</a></h3>
+<Heading level="3" id="my-method-to-specify-citation-style"selfLink={true}>My method to specify citation style</Heading>
 
 Though the above works, since I'm already using a .sty file to set all the options for the relevant LaTeX packages, I also do so there. For instance, with the MLA citation style:
 
@@ -294,23 +295,23 @@ In this way, I avoid adding a line in my org files to specify the citation style
 </p>
 </div>
 
-<h2 id="final-result-and-screenshots"><a class="heading-self-link" href="#final-result-and-screenshots">Final result and screenshots</a></h2>
+<Heading level="2" id="final-result-and-screenshots"selfLink={true}>Final result and screenshots</Heading>
 
 The following org file produces this:
 
 which, compiled into a PDF, looks like this:
 
-<h2 id="extras"><a class="heading-self-link" href="#extras">Extras</a></h2>
+<Heading level="2" id="extras"selfLink={true}>Extras</Heading>
 
 <div class="outline-text-2" id="text-extras">
 </div>
-<h3 id="section-numbers"><a class="heading-self-link" href="#section-numbers">Section numbers</a></h3>
+<Heading level="3" id="section-numbers"selfLink={true}>Section numbers</Heading>
 
 ```elisp
 (setq org-export-with-section-numbers nil)
 ```
 
-<h3 id="hyperref"><a class="heading-self-link" href="#hyperref">Hyperref</a></h3>
+<Heading level="3" id="hyperref"selfLink={true}>Hyperref</Heading>
 
 ```emacs-lisp
 (setq org-latex-hyperref-template
@@ -325,7 +326,7 @@ colorlinks={true},
 hidelinks={true}}\n")
 ```
 
-<h3 id="table-of-contents"><a class="heading-self-link" href="#table-of-contents">Table of contents</a></h3>
+<Heading level="3" id="table-of-contents"selfLink={true}>Table of contents</Heading>
 
 ```emacs-lisp
 (setq org-latex-toc-command
@@ -338,11 +339,11 @@ hidelinks={true}}\n")
 \\newpage")
 ```
 
-<h3 id="org-links"><a class="heading-self-link" href="#org-links">Org links</a></h3>
+<Heading level="3" id="org-links"selfLink={true}>Org links</Heading>
 
 1.  Custom `org-mode` links (`org-link-set-parameters`)
 
-<h2 id="full-configuration"><a class="heading-self-link" href="#full-configuration">Full configuration</a></h2>
+<Heading level="2" id="full-configuration"selfLink={true}>Full configuration</Heading>
 
 (Make a note about that there are other stuff in the configuration not referenced or described tk.)
 

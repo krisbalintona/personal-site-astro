@@ -9,6 +9,7 @@ import Footnote from "@components/markup/Footnote.astro";
 import FootnoteSection from "@components/markup/FootnoteSection.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 import { Image } from "astro:assets";
+import Heading from "@components/markup/Heading.astro";
 import Alert from "@components/markup/Alert.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
 
@@ -28,7 +29,7 @@ import Timestamp from "@components/markup/Timestamp.astro";
 
 <Alert><Timestamp date="2022-11-28" /> As is noted in the [`corfu-doc` repository](https://github.com/galeo/corfu-doc/issues/25), `corfu-doc` has been deprecated by the built-in `corfu-popupinfo` `corfu` extension. `corfu-popupinfo`'s functionality is roughly identical to `corfu-doc`'s, though its interface and code is naturally more idiomatic to `corfu`.</Alert>
 
-<h2 id="synopsis"><a class="heading-self-link" href="#synopsis">Synopsis</a></h2>
+<Heading level="2" id="synopsis"selfLink={true}>Synopsis</Heading>
 
 I will be going over my personal Emacs' text completion (e.g. `company-mode` and its accessories) configuration, which includes the following packages:
 
@@ -38,11 +39,11 @@ I will be going over my personal Emacs' text completion (e.g. `company-mode` and
 
 *Note*: I use `straight.el` for package management and `general.el` to set my keybindings. Both of these packages have integration with `use-package` which come in the form of the `:straight` and `:general` keywords, respectively.
 
-<h2 id="corfu"><a class="heading-self-link" href="#corfu">Corfu</a></h2>
+<Heading level="2" id="corfu"selfLink={true}>Corfu</Heading>
 
 <div class="outline-text-2" id="text-corfu">
 </div>
-<h3 id="what-is-corfu-how-does-it-differ-from-company"><a class="heading-self-link" href="#what-is-corfu-how-does-it-differ-from-company">What is `corfu`? How does it differ from `company`?</a></h3>
+<Heading level="3" id="what-is-corfu-how-does-it-differ-from-company"selfLink={true}>What is `corfu`? How does it differ from `company`?</Heading>
 
 <figure>
 <Image src={import("assets/gif1.gif")} alt="img" />
@@ -57,7 +58,7 @@ I will be going over my personal Emacs' text completion (e.g. `company-mode` and
 2.  `Corfu` has been more performant (i.e. fewer stutters, smoother cycling of candidates) in my experience.
 3.  `Corfu` can support any `company` backend via `cape-company-to-capf`, provided by the complementary `cape` package. Thus, packages like `company-yasnippet` can be used with `corfu` easily (see the next post in my *Text completion and minibuffer UI* series for more details and examples.)
 
-<h3 id="basic"><a class="heading-self-link" href="#basic">Basic</a></h3>
+<Heading level="3" id="basic"selfLink={true}>Basic</Heading>
 
 The following is a basic `corfu` configuration with my preferred keybinds:
 
@@ -119,7 +120,7 @@ Additionally, the following two variables not under `corfu` but related to `comp
 (completion-cycle-threshold nil)      ; Always show all candidates in popup menu
 ```
 
-<h3 id="working-with-the-recent-changes-to-corfu"><a class="heading-self-link" href="#working-with-the-recent-changes-to-corfu">Working with the recent changes to `corfu`</a></h3>
+<Heading level="3" id="working-with-the-recent-changes-to-corfu"selfLink={true}>Working with the recent changes to `corfu`</Heading>
 
 On [February 7, 2022](https://github.com/minad/corfu/commit/91feb66630eea6f36fee10576760c219896c1d05), `corfu` introduced an important change<FootnoteRef num="2" />, particularly the interaction between `corfu` and `orderless`. You can read more [on their README](https://github.com/minad/corfu#orderless-completion), but, essentially, `orderless` now introduces the `corfu-insert-separator` command that inserts the `corfu-separator` character into the buffer. This character is what delimits `orderless` components (see [this Reddit comment](https://www.reddit.com/r/emacs/comments/t38kkh/comment/hytmcpg/?utm_source=share&utm_medium=web2x&context=3) for a more lengthy description of this behavior.) A `corfu` workflow in which `corfu-auto` is set to `t` leverages this change, *for without it* users could not realistically use `corfu` with a multi-component `completion-style` like `orderless`.
 
@@ -150,7 +151,7 @@ I do not use this workflow<FootnoteRef num="3" />, but if this behavior is desir
 (evil-make-overriding-map corfu-map)
 ```
 
-<h3 id="further-configuration-in-minibuffers-and-with-lsp"><a class="heading-self-link" href="#further-configuration-in-minibuffers-and-with-lsp">Further configuration in minibuffers and with `lsp`</a></h3>
+<Heading level="3" id="further-configuration-in-minibuffers-and-with-lsp"selfLink={true}>Further configuration in minibuffers and with `lsp`</Heading>
 
 `Corfu`'s [README](https://github.com/minad/corfu#completing-with-corfu-in-the-minibuffer) provides a way to be able to use `corfu` completion in the minibuffer:
 
@@ -190,7 +191,7 @@ Additionally, for `lsp-mode` buffers, I have the following lines (this is entire
         '(orderless)))
 ```
 
-<h3 id="end-product"><a class="heading-self-link" href="#end-product">End product</a></h3>
+<Heading level="3" id="end-product"selfLink={true}>End product</Heading>
 
 Putting it together, we end with my actual configuration:
 
@@ -274,7 +275,7 @@ default lsp-passthrough."
           '(orderless))))
 ```
 
-<h2 id="kind-icon"><a class="heading-self-link" href="#kind-icon">Kind-icon</a></h2>
+<Heading level="2" id="kind-icon"selfLink={true}>Kind-icon</Heading>
 
 `Kind-icon` is essentially `company-box-icons` for `corfu`. It adds icons to the left margin of the `corfu` popup that represent the ‘function’ (e.g. variable, method, file) of that candidate.
 
@@ -312,7 +313,7 @@ The following is my configuration:
   (add-hook 'kb/themes-hooks #'(lambda () (interactive) (kind-icon-reset-cache))))
 ```
 
-<h2 id="corfu-doc"><a class="heading-self-link" href="#corfu-doc">Corfu-doc</a></h2>
+<Heading level="2" id="corfu-doc"selfLink={true}>Corfu-doc</Heading>
 
 `Corfu-doc` is basically `company-quickhelp` for `corfu`. It shows the documentation of the selected candidate in an adjacent popup window.
 
@@ -350,7 +351,7 @@ From my experience, `corfu-doc` is perfect for most. However, it should be noted
 
 ---
 
-<h2 id="changelog"><a class="heading-self-link" href="#changelog">Changelog</a></h2>
+<Heading level="2" id="changelog"selfLink={true}>Changelog</Heading>
 
 -   <Timestamp date="2022-02-28" />
     -   Added link to Reddit comment in [Working with the recent changes to `corfu`](#working-with-the-recent-changes-to-corfu) section. Also update description of new `corfu` behavior.

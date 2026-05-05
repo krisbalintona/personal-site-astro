@@ -63,7 +63,8 @@ This variable can be `let'-bound to change the default string.")
     ("ContentLink" . "import ContentLink from \"@components/markup/ContentLink.astro\";")
     ("FootnoteSection" . "import FootnoteSection from \"@components/markup/FootnoteSection.astro\";")
     ("Footnote" . "import Footnote from \"@components/markup/Footnote.astro\";")
-    ("FootnoteRef" . "import FootnoteRef from \"@components/markup/FootnoteRef.astro\";"))
+    ("FootnoteRef" . "import FootnoteRef from \"@components/markup/FootnoteRef.astro\";")
+    ("Heading" . "import Heading from \"@components/markup/Heading.astro\";"))
   "Alist from component name to import statement.
 There are several components specific to this project.  This is an alist
 from component name to the import statement corresponding to that
@@ -293,9 +294,7 @@ contextual information."
                                todo todo-type priority text tags info))
            (contents (or contents ""))
            (id (org-html--reference headline info))
-           (formatted-text (if (plist-get info :html-self-link-headlines)
-                               (format "<a class=\"heading-self-link\" href=\"#%s\">%s</a>" id full-text)
-                             full-text)))
+           (self-link-p (plist-get info :html-self-link-headlines)))
       (if (org-export-low-level-p headline info)
           ;; This is a deep subtree: export it as a list item.  (See
           ;; the :headline-levels export option and
@@ -308,7 +307,11 @@ contextual information."
           ;; Or at least create a bug report with a working prototype
           ;; shown, and let someone else (e.g., Ihor) implement an
           ;; upstream-ready version.
-          (let* ((html-type (if numberedp "ol" "ul"))
+          (let* ((formatted-text
+                  (if self-link-p
+                      (format "<a class=\"heading-self-link\" href=\"#%s\">%s</a>" id full-text)
+                    full-text))
+                 (html-type (if numberedp "ol" "ul"))
                  (parent (org-export-get-parent headline))
                  (parent-low-level-p (and parent
                                           (org-export-low-level-p parent info)))
@@ -345,19 +348,22 @@ contextual information."
         (let ((headline-class
                (org-element-property :HTML_HEADLINE_CLASS headline))
               (first-content (car (org-element-contents headline))))
+          (org-mdx--register-import info "Heading")
           (format "%s\n%s\n"
-                  (format "<h%d id=\"%s\"%s>%s</h%d>\n"
+                  (format "<Heading level=\"%d\" id=\"%s\"%s%s>%s</Heading>\n"
                           level
                           id
                           (if headline-class
                               (format " class=\"%s\"" headline-class)
                             "")
+                          (if self-link-p
+                              "selfLink={true}"
+                            "")
                           (concat (when numberedp
                                     (format "<span class=\"heading-number-%d\">%s</span> "
                                             level
                                             (concat (mapconcat #'number-to-string numbers ".") ".")))
-                                  formatted-text)
-                          level)
+                                  full-text))
                   ;; When there is no section, pretend there is an
                   ;; empty one to get the correct <div
                   ;; class="outline-...> which is needed by

@@ -8,6 +8,7 @@ tags:
 ---
 import Footnote from "@components/markup/Footnote.astro";
 import FootnoteSection from "@components/markup/FootnoteSection.astro";
+import Heading from "@components/markup/Heading.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
 
@@ -31,7 +32,7 @@ import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
 Recently I got around to making steps toward a better mobile-PC workflow. Until now, I've pretty much exclusively been using the community-developed [orgzly-revived](https://github.com/orgzly-revived/orgzly-android-revived) app on Android. My intention was to use orgzly-revived for simple todo management and another app for more note-taking purposes&mdash;but I could never find another app I was happy with on Android. But I happened to remember reading good things about the *native* Emacs app on Android a few months ago. So I tried it out&hellip; and was immediately sold!
 
-<h2 id="the-good-and-bad-what-to-expect-on-android"><a class="heading-self-link" href="#the-good-and-bad-what-to-expect-on-android">The good and bad: what to expect on Android</a></h2>
+<Heading level="2" id="the-good-and-bad-what-to-expect-on-android"selfLink={true}>The good and bad: what to expect on Android</Heading>
 
 First, let's make sure our expectations are tempered: Emacs on Android won't be as pleasant as the full desktop experience.<FootnoteRef num="1" /> Of course. A phone's screen is tiny, and unless you have a physical keyboard connected, you'll have to manage with a virtual one (see [Use a Special virtual keyboard](#virtual-keyboards)). On top of that:
 
@@ -43,9 +44,9 @@ So, really, the situation is pretty good!
 
 And finally: YMMV on other Android devices. My current phone is the OnePlus 7 Pro running Android version 12.
 
-<h2 id="installation"><a class="heading-self-link" href="#installation">Installation</a></h2>
+<Heading level="2" id="installation"selfLink={true}>Installation</Heading>
 
-<h3 id="option-1"><a class="heading-self-link" href="#option-1">Option 1</a></h3>
+<Heading level="3" id="option-1"selfLink={true}>Option 1</Heading>
 
 The first option is as easy as it can get, but you won’t have a way to access other CLI tools:
 
@@ -55,7 +56,7 @@ The first option is as easy as it can get, but you won’t have a way to access 
 
 Using Emacs this way is totally possible if all you need is elisp. But if you need other tools, like git, I recommend the second way to install Emacs.
 
-<h3 id="recommended-installation"><a class="heading-self-link" href="#recommended-installation">Option 2 (recommended)</a></h3>
+<Heading level="3" id="recommended-installation"selfLink={true}>Option 2 (recommended)</Heading>
 
 This option makes other CLI tools accessible to the Emacs Android application container. It is a little bit more of a hassle.
 
@@ -79,9 +80,9 @@ In short,
     ```
 9.  And you’re done! Programs installed through Termux will be made accessible to Emacs.
 
-<h2 id="configuring-an-android-specific-emacs"><a class="heading-self-link" href="#configuring-an-android-specific-emacs">Configuring an Android-specific Emacs</a></h2>
+<Heading level="2" id="configuring-an-android-specific-emacs"selfLink={true}>Configuring an Android-specific Emacs</Heading>
 
-<h3 id="necessary-reading-the-manual"><a class="heading-self-link" href="#necessary-reading-the-manual">Necessary reading: the manual</a></h3>
+<Heading level="3" id="necessary-reading-the-manual"selfLink={true}>Necessary reading: the manual</Heading>
 
 Chances are that you don't know that the Emacs manual has its own section for the Android system: `(info "(emacs) Android")`. Before anything, I highly recommend you peruse this section, returning to and reading more deeply specific parts as you see fit. In particular, I found the following Info nodes essential:
 
@@ -96,7 +97,7 @@ Additionally, I also think reading about Emacs' facilities for touchscreens and 
 
 Moments like these are truly a testament to Emacs' dedication to an accessible editor.
 
-<h3 id="how-to-configure-your-initel-on-a-mobile-device"><a class="heading-self-link" href="#how-to-configure-your-initel-on-a-mobile-device">How to configure your `init.el` on a mobile device?</a></h3>
+<Heading level="3" id="how-to-configure-your-initel-on-a-mobile-device"selfLink={true}>How to configure your `init.el` on a mobile device?</Heading>
 
 Later I’ll explain how you make typing code on a touchscreen device easier by installing [a handy virtual keyboard](#virtual-keyboards). But I highly recommend that until you’ve settled on a configuration you’re willing to type out that you **heavily utilize the customize interface**. This means accessing the Customize interfaces via the tool-bar<FootnoteRef num="3" /> buttons then using your touchscreen to tap the buttons available in `customize-mode` buffers. (Then, if you prefer, after setting many options with Customize, you can refactor the options Customize put in your `init.el` into e.g. use-package forms.)
 
@@ -106,7 +107,7 @@ If you haven’t used Customize much before, you can check out the available Cus
 -   `customize-option`,
 -   `customize-face`,
 
-<h3 id="first-step-a-better-ui-for-touchscreens"><a class="heading-self-link" href="#first-step-a-better-ui-for-touchscreens">First step: A Better UI for touchscreens</a></h3>
+<Heading level="3" id="first-step-a-better-ui-for-touchscreens"selfLink={true}>First step: A Better UI for touchscreens</Heading>
 
 The very first thing I did when I opened Emacs was enable these minor modes:
 
@@ -117,7 +118,7 @@ and set `tool-bar-position` to `‘bottom`, placing it closer to where my finger
 
 Desktop users might have disabled these years ago in favor of keyboard-centric workflow, but they are awesome for touchscreens in my opinion.
 
-<h3 id="android-specific-commands"><a class="heading-self-link" href="#android-specific-commands">Android-specific Commands and Options</a></h3>
+<Heading level="3" id="android-specific-commands"selfLink={true}>Android-specific Commands and Options</Heading>
 
 There are a few built-in Android commands and options you should be aware of. (Pro tip: one can `M-x Info-index` or press `i` in the Emacs Info manual, itself accessible via `C-h r`, or `M-x info-emacs-manual`, then search for the string “android” to find all the specific mentions off “Android.”)
 
@@ -132,7 +133,7 @@ There are a few built-in Android commands and options you should be aware of. (P
 
 Also, don’t forget to let Emacs display over other apps. This is a device setting, not an Emacs one.
 
-<h3 id="virtual-keyboards"><a class="heading-self-link" href="#virtual-keyboards">Use a Special virtual keyboard</a></h3>
+<Heading level="3" id="virtual-keyboards"selfLink={true}>Use a Special virtual keyboard</Heading>
 
 Unless you have a physical keyboard connected to your mobile device, typing will be a pain. For that, we install a virtual keyword that gives us easier access to modifier keys, function keys, arrow keys, and symbols. As far as I know, there are currently two main options:
 
@@ -141,7 +142,7 @@ Unless you have a physical keyboard connected to your mobile device, typing will
 
 Having briefly tried both, I personally prefer the latter. Though the former works just fine if you like it.
 
-<h3 id="fonts"><a class="heading-self-link" href="#fonts">Fonts</a></h3>
+<Heading level="3" id="fonts"selfLink={true}>Fonts</Heading>
 
 You might want a set of fonts not already installed on your Android system. If that’s the case, you should read the `(info "(emacs) Android Fonts")` manual page.
 
@@ -149,11 +150,11 @@ That page explains that if you want to install fonts for your user (in the Emacs
 
 Note: in my experience, *fonts are not recursively checked inside this directory*. That is, you should place your e.g. .ttf files inside that folder, not any subdirectories.
 
-<h3 id="tip-you-can-remap-the-volume-buttons"><a class="heading-self-link" href="#tip-you-can-remap-the-volume-buttons">Tip: You can remap the volume buttons</a></h3>
+<Heading level="3" id="tip-you-can-remap-the-volume-buttons"selfLink={true}>Tip: You can remap the volume buttons</Heading>
 
 Volume buttons are un-mapped by default (see `android-pass-multimedia-buttons-to-system`). That’s find with me, but if you feel inclined, you can rebind them to something else after setting `android-pass-multimedia-buttons-to-system` appropriately. Some possibilities would be for navigation between headings, tk list more.
 
-<h2 id="conclusion"><a class="heading-self-link" href="#conclusion">Conclusion</a></h2>
+<Heading level="2" id="conclusion"selfLink={true}>Conclusion</Heading>
 
 In conclusion,
 
@@ -165,7 +166,7 @@ Right now I’ve achieved a set up I’m happy with. I migrated the portions of 
 
 And finally: YMMV on other Android devices. My current phone is the OnePlus 7 Pro running Android version 12.
 
-<h3 id="bonus-my-wish-list"><a class="heading-self-link" href="#bonus-my-wish-list">Bonus: My wish list</a></h3>
+<Heading level="3" id="bonus-my-wish-list"selfLink={true}>Bonus: My wish list</Heading>
 
 -   **Touchscreen gestures:** There is the built-in strokes.el, but strokes.el, as far as I can tell, does not work for touchscreens. Additionally, significant changes would be required to its code base to make it compatible for touchscreens. So, for now, we have to settle with virtual keyboards&hellip;
 -   **Automatic keyboard/IME switching:** Ideally, I’d have my special virtual keyboard be automatically selected using Emacs and deselected when not using Emacs. Right now, I have to manually switch to it. As far as I know, there is no easy way to accomplish this.

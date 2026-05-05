@@ -9,6 +9,7 @@ tags:
 import Footnote from "@components/markup/Footnote.astro";
 import FootnoteSection from "@components/markup/FootnoteSection.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
+import Heading from "@components/markup/Heading.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
 Vc.el is Emacs's built-in interface for version control CLI tools. With respect to Git, magit has for several years now been the most favored (with respect to popularity) Git<FootnoteRef num="1" /> interface. At least in the r/emacs subreddit, magit is frequently considered a killer-feature&mdash;an irreplaceable feature unique to Emacs.
@@ -17,7 +18,7 @@ For the most part I am inclined to agree. However, in the last few months, I've 
 
 On such insight has been the surprising benefits of calling `vc-dir` instead of `magit-status`.
 
-<h2 id="the-nicety-of-vc-dir-marks"><a class="heading-self-link" href="#the-nicety-of-vc-dir-marks">The nicety of `vc-dir` marks</a></h2>
+<Heading level="2" id="the-nicety-of-vc-dir-marks"selfLink={true}>The nicety of `vc-dir` marks</Heading>
 
 In `magit-status`, I would typically stage various files and hunks and commit them when ready. `vc` does not use Git's "staging" concept (because not all version control systems use such a concept). So instead, to achieve something analogous, a user might call `vc-dir` (or, much more commonly for me, `project-vc-dir`), mark edited files (or entire directories!) using `vc-dir-mark` (`m`), and check out (commit) those changes via `vc-next-action` (`v`) or see a diff of those changes with `vc-diff` (`=`) and commit the changes in that diff-mode buffer (`v`).<FootnoteRef num="3" />
 
@@ -32,11 +33,11 @@ There is a subtle solution in vc.el. The secret lies in the fact that *marks, wh
 
 The latter is unique to vc.el, and a feature I don't think the magit UI can replicate. So while magit can sometimes become visually cluttered, `vc-dir` marks let users focus on their current work by easily excluding *from view* files and directories one is not concerned with currently.
 
-<h2 id="a-caveat"><a class="heading-self-link" href="#a-caveat">A caveat</a></h2>
+<Heading level="2" id="a-caveat"selfLink={true}>A caveat</Heading>
 
 Historically, I've found this especially fruitful when working on my literate Emacs config<FootnoteRef num="4" /> (wherein any "single change" involves changes to the .org file as well as the resulting tangled file(s)) and Emacs packages. Still, I think I prefer magit in cases where the staging functionality of Git is crucial. For instance, I have a repository that houses all my org notes and org-agenda files. There are frequently many changes for this repository, so the convenience of staging/unstaging has been crucial for me. In cases like these, I haven't found an equivalent for vc.el yet.
 
-<h2 id="changelog"><a class="heading-self-link" href="#changelog">Changelog</a></h2>
+<Heading level="2" id="changelog"selfLink={true}>Changelog</Heading>
 
 -   <Timestamp date="2025-03-25" />
     -   Add clarifying prose to paragraph.

@@ -9,6 +9,7 @@ import Footnote from "@components/markup/Footnote.astro";
 import FootnoteSection from "@components/markup/FootnoteSection.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 import { Image } from "astro:assets";
+import Heading from "@components/markup/Heading.astro";
 import Alert from "@components/markup/Alert.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
 
@@ -31,7 +32,7 @@ import Timestamp from "@components/markup/Timestamp.astro";
 -   [Changelog](#changelog)
 
 
-<h2 id="synopsis"><a class="heading-self-link" href="#synopsis">Synopsis</a></h2>
+<Heading level="2" id="synopsis"selfLink={true}>Synopsis</Heading>
 
 <Alert><Timestamp date="2025-04-05" /> Readers should be aware that some of the package-specific information in this article, including configuration options and lines of code, may be outdated. Since publication, those packages have developed significantly. Additionally, my tastes and recommendations as an Emacs user have changed&ndash;if I were to rewrite this package today, I would do so different. For those curious about my current in-line and minibuffer completion configuration, you can the relevant sections in [my Emacs configuration](https://github.com/krisbalintona/emacs-config).</Alert>
 
@@ -44,7 +45,7 @@ I will be walking through my personal Emacs' minibuffer UI (which means packages
 
 *Note*: I use `straight.el` for package management and `general.el` to set my keybindings. Both of these packages have integration with `use-package` which come in the form of the `:straight` and `:general` keywords, respectively.
 
-<h2 id="marginalia"><a class="heading-self-link" href="#marginalia">Marginalia</a></h2>
+<Heading level="2" id="marginalia"selfLink={true}>Marginalia</Heading>
 
 The following is `vertico` with `marginalia` annotations right-aligned in the minibuffer.
 
@@ -72,7 +73,7 @@ Marginalia is painless to set up. Remember, I use `general.el` to set keybinding
   (marginalia-mode))
 ```
 
-<h2 id="all-the-icons-completion"><a class="heading-self-link" href="#all-the-icons-completion">All-the-icons-completion</a></h2>
+<Heading level="2" id="all-the-icons-completion"selfLink={true}>All-the-icons-completion</Heading>
 
 `Marginalia`, `Vertico`, and `Orderless` have already received considerable exposure, but `all-the-icons-completion` has not.
 
@@ -93,11 +94,11 @@ Marginalia is painless to set up. Remember, I use `general.el` to set keybinding
 
 *Note*: `All-the-icons-completion` depends on an already installed `all-the-icons`.
 
-<h2 id="vertico"><a class="heading-self-link" href="#vertico">Vertico</a></h2>
+<Heading level="2" id="vertico"selfLink={true}>Vertico</Heading>
 
 Vertico is a minibuffer interface, that is, it changes the minibuffer looks and how you interact with it.
 
-<h3 id="basic"><a class="heading-self-link" href="#basic">Basic</a></h3>
+<Heading level="3" id="basic"selfLink={true}>Basic</Heading>
 
 This is a very basic Vertico configuration.
 
@@ -130,7 +131,7 @@ Now we can add a few changes to the default keybindings (again, I use `general.e
   (vertico-mode))
 ```
 
-<h3 id="extensions"><a class="heading-self-link" href="#extensions">Extensions</a></h3>
+<Heading level="3" id="extensions"selfLink={true}>Extensions</Heading>
 
 Vertico becomes much more interesting with its extensions. These extensions have to manually be cloned from the repo with a corresponding `require` invocation. However, with `straight.el`, we can do something like this to install and load them:
 
@@ -267,7 +268,7 @@ Additionally, we need to add the following hook for `vertico-repeat`:
 :hook (minibuffer-setup . vertico-repeat-save) ; Make sure vertico state is saved for `vertico-repeat'
 ```
 
-<h4 id="vertico-extension-commands"><a class="heading-self-link" href="#vertico-extension-commands">Vertico extension commands</a></h4>
+<Heading level="4" id="vertico-extension-commands"selfLink={true}>Vertico extension commands</Heading>
 
 If you'd like, you can set up a toggle between two multiforms in the minibuffer. For instance, the following function definition with a corresponding keybind in `vertico-map` toggles between `vertico-flat-mode` and `vertico-reverse-mode`:
 
@@ -291,7 +292,7 @@ The following function uses `vertico-quick-jump` (like `avy` but for minibuffer 
     (embark-act arg)))
 ```
 
-<h3 id="niceties"><a class="heading-self-link" href="#niceties">Niceties</a></h3>
+<Heading level="3" id="niceties"selfLink={true}>Niceties</Heading>
 
 Finally, I add a few niceties.
 
@@ -338,7 +339,7 @@ Finally, the following makes working with remote files via `tramp` easier.
                kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
 ```
 
-<h3 id="end-product"><a class="heading-self-link" href="#end-product">End product</a></h3>
+<Heading level="3" id="end-product"selfLink={true}>End product</Heading>
 
 In the end, we have this<FootnoteRef num="3" />:
 
@@ -446,11 +447,11 @@ In the end, we have this<FootnoteRef num="3" />:
                  cand))))
 ```
 
-<h2 id="orderless"><a class="heading-self-link" href="#orderless">Orderless</a></h2>
+<Heading level="2" id="orderless"selfLink={true}>Orderless</Heading>
 
 `Orderless` is an alternative and powerful completion style, that is, it is an alternative to Emacs's basic candidate-filtering capacities.
 
-<h3 id="basic-1"><a class="heading-self-link" href="#basic-1">Basic</a></h3>
+<Heading level="3" id="basic-1"selfLink={true}>Basic</Heading>
 
 To use `orderless` you simply need the following.
 
@@ -481,7 +482,7 @@ However, we want to be more interesting! The following configures the matching s
    ))
 ```
 
-<h3 id="style-dispatchers"><a class="heading-self-link" href="#style-dispatchers">Style dispatchers</a></h3>
+<Heading level="3" id="style-dispatchers"selfLink={true}>Style dispatchers</Heading>
 
 <figure>
 <Image src={import("assets/2022-02-22_15-18-54_screenshot.png")} alt="img" />
@@ -556,7 +557,7 @@ Finally, rather than using the default  “+ “ to separate components, I use a
 (orderless-component-separator 'orderless-escapable-split-on-space) ; Use backslash for literal space
 ```
 
-<h3 id="end-product-1"><a class="heading-self-link" href="#end-product-1">End product</a></h3>
+<Heading level="3" id="end-product-1"selfLink={true}>End product</Heading>
 
 The end result is this<FootnoteRef num="4" />:
 
@@ -638,7 +639,7 @@ parses its input."
 
 ---
 
-<h2 id="changelog"><a class="heading-self-link" href="#changelog">Changelog</a></h2>
+<Heading level="2" id="changelog"selfLink={true}>Changelog</Heading>
 
 -   <Timestamp date="2025-04-05" />
     -   Add a note at the beginning of the post alerting users of potentially outdated information as well as referencing my personal Emacs configuration.

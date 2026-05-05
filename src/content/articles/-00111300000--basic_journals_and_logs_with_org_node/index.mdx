@@ -2,6 +2,8 @@
 title: "Basic journals and logs with org-node"
 draft: true
 ---
+import Heading from "@components/markup/Heading.astro";
+
 
 # Table of Contents
 
@@ -10,7 +12,7 @@ draft: true
 -   [Final words](#final-words)
 
 
-<h2 id="the-dilemma"><a class="heading-self-link" href="#the-dilemma">The dilemma</a></h2>
+<Heading level="2" id="the-dilemma"selfLink={true}>The dilemma</Heading>
 
 In the last month I've become more and more convinced that I should start migrating from org-roam to org-node. Dealing with org-node's elisp API (as opposed to org-roam's sqlite API) is easier, and I think org-node has even greater potential for future growth
 
@@ -67,7 +69,7 @@ in `org-capture-templates'."
      (when olp 'subtree-at-point))))
 ```
 
-<h2 id="final-result"><a class="heading-self-link" href="#final-result">Final result</a></h2>
+<Heading level="2" id="final-result"selfLink={true}>Final result</Heading>
 
 ```emacs-lisp
 (setopt org-capture-templates
@@ -118,6 +120,6 @@ in `org-capture-templates'."
            :immediate-finish t)))
 ```
 
-<h2 id="final-words"><a class="heading-self-link" href="#final-words">Final words</a></h2>
+<Heading level="2" id="final-words"selfLink={true}>Final words</Heading>
 
 Although this code is written for org-node, since accessing org-node's nodes and org-roam's nodes are practically identical, it could easily be adapted to be used by org-roam.

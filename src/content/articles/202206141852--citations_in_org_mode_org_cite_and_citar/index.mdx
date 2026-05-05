@@ -10,6 +10,7 @@ import FootnoteSection from "@components/markup/FootnoteSection.astro";
 import ContentLink from "@components/markup/ContentLink.astro";
 import { Image } from "astro:assets";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
+import Heading from "@components/markup/Heading.astro";
 import Alert from "@components/markup/Alert.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
 
@@ -37,7 +38,7 @@ import Timestamp from "@components/markup/Timestamp.astro";
 -   [Changelog](#changelog)
 
 
-<h2 id="summary"><a class="heading-self-link" href="#summary">Summary</a></h2>
+<Heading level="2" id="summary"selfLink={true}>Summary</Heading>
 
 <Alert><Timestamp date="2023-07-20" /> Readers should be aware that some package-specific information in this article may be outdated. Thus, readers are advised from outright copying code in this article without verifying (e.g. reading docstrings) the intended behavior. Nevertheless, the concepts related to `org-cite` and citation management should remain relevant and insightful.</Alert>
 
@@ -45,14 +46,14 @@ First, I'll outline the broadest components to producing files in `org-mode` wit
 
 My goal is to plot the landscape, preparing you to understand other available sources which are more suited for a user already familiar with the landscape.
 
-<h2 id="helpful-sources"><a class="heading-self-link" href="#helpful-sources">Helpful sources</a></h2>
+<Heading level="2" id="helpful-sources"selfLink={true}>Helpful sources</Heading>
 
 I recommend the following reading for more information regarding how `org-cite` works:
 
 -   **[Citation handling (The Org Manual)](https://orgmode.org/manual/Citation-handling.html#Citation-handling):** The first source you should visit should almost always be the manual (available within Emacs via `info`, i.e. `M-x info`). It covers the fundamentals to understanding how to use `org-cite`. Isn't well documented currently, but that will change in the future.
 -   **[Org-cite guide by tecosaur](https://blog.tecosaur.com/tmio/2021-07-31-citations.html):** I'll be referencing this frequently, for good reason.
 
-<h2 id="what-are-citation-systems"><a class="heading-self-link" href="#what-are-citation-systems">What are citation systems?</a></h2>
+<Heading level="2" id="what-are-citation-systems"selfLink={true}>What are citation systems?</Heading>
 
 There are roughly three moving parts to citation management.
 
@@ -65,11 +66,11 @@ There are roughly three moving parts to citation management.
 
 `org-cite` lies closer to (3) because it is responsible for exporting citations, whereas `citar` is closer to (2) because it is an interface for inserting citations into the buffer. A software like Zotero is responsible for (1).
 
-<h2 id="org-cite"><a class="heading-self-link" href="#org-cite">Org-cite</a></h2>
+<Heading level="2" id="org-cite"selfLink={true}>Org-cite</Heading>
 
 In around July of 2021, `org-cite` was publicly released. `org-cite` a library packaged with `org-mode` that processes `org` citations (e.g. `[cite:@wittgensteinTractatusLogicoPhilosophicus2021]`). To those not familiar with another citation workflow (e.g. `biblatex` in LaTeX), it is quite daunting to leap into citations in Emacs. This was certainly the case for me: I leapt into `org-mode` citation integration with Zotero and LaTeX with no experience in `org`, Zotero, or LaTeX! Nonetheless, `org-cite` is quite simple once laid out. After reading this post or section, I recommend taking a look at tecosaur's [fabulous guide](https://blog.tecosaur.com/tmio/2021-07-31-citations.html) to using `org-cite`. His explanation of [the citation styles of org-cite and their variants](https://blog.tecosaur.com/tmio/2021-07-31-citations.html#cite-syntax) is particularly useful.
 
-<h3 id="understanding-org-cite-export-processors"><a class="heading-self-link" href="#understanding-org-cite-export-processors">Understanding `org-cite` export processors</a></h3>
+<Heading level="3" id="understanding-org-cite-export-processors"selfLink={true}>Understanding `org-cite` export processors</Heading>
 
 The most crucial concept to `org-cite` are “export processors.” Take a look at the following passage from the documentation for `org-cite-export-processors` (as it is at the time of writing):
 
@@ -140,7 +141,7 @@ org-export -> bibtex.latex: {style.stroke-width: 4}
 org-export -> csl.latex: {style.stroke-width: 4}
 ```
 
-<h3 id="which-processor-should-i-use"><a class="heading-self-link" href="#which-processor-should-i-use">Which processor should I use?</a></h3>
+<Heading level="3" id="which-processor-should-i-use"selfLink={true}>Which processor should I use?</Heading>
 
 The most common confusion comes from realizing that CSL can also export to LaTeX. So, when exporting to LaTeX: *should you use the `csl` or `bibtex/natbib` processor?* The difference lies in whether or not you want to rely on the `biblatex` package to manage exports.
 
@@ -159,7 +160,7 @@ I will give an example. Basic MLA in-text citations following a `(AUTHOR PAGE)` 
 
 Finally, it should be noted that **the `csl` and `bibtex` processors use different locators in citations**. As explained in [tecosaur's guide](https://blog.tecosaur.com/tmio/2021-07-31-citations.html#cite-syntax), the `csl` processor uses locators like `bk.` and `vol.`, so citations may look like `[cite/noauthor:See@mollisonNietzscheContraStoicism2018 pp. 28–9;@priestWhyItIrrational2001 pp. 14;]`​—CSL processes these locators. On the other hand, a citation key's suffix is *directly passed as an option to BibLaTeX commands*, so an equivalent to the above would be `[cite/noauthor:See@mollisonNietzscheContraStoicism2018 28–9;@priestWhyItIrrational2001 14;]`, which doesn't have CSL locators.
 
-<h3 id="configuration"><a class="heading-self-link" href="#configuration">Configuration</a></h3>
+<Heading level="3" id="configuration"selfLink={true}>Configuration</Heading>
 
 Luckily, the difficulty in `org-cite` is only conceptually: configuring it is incredibly straightforward. There are two main variables that affect functionality. The first is crucial, and the second is useful to be aware of:
 
@@ -201,14 +202,14 @@ I also choose to customize faces—I prefer the green faces that `org-ref` uses:
 (org-cite-key ((t (:foreground "forest green" :slant italic))))
 ```
 
-<h3 id="usage"><a class="heading-self-link" href="#usage">Usage</a></h3>
+<Heading level="3" id="usage"selfLink={true}>Usage</Heading>
 
 Using `org-cite` is incredibly simple:
 
 1.  `org-cite-insert` to insert citations in `org` files, and
 2.  `#+PRINT_BIBLIOGRAPHY:` within a document to mark where the bibliography/references/works cited should be.<FootnoteRef num="6" />
 
-<h2 id="citar"><a class="heading-self-link" href="#citar">Citar</a></h2>
+<Heading level="2" id="citar"selfLink={true}>Citar</Heading>
 
 Using `org-cite` is really simple. But many users will find the interface… too bare. [Citar](https://github.com/emacs-citar/citar) is, roughly, the foremost attempt to provide a pleasing frontend to `org-cite`. It adds the `citar` citation-insert processor. The following is the **minimum** to start using `citar`:
 
@@ -255,7 +256,7 @@ If you use `embark` and `org-roam` you can also set these variables:
 (citar-at-point-function 'embark-act)           ; Use `embark'
 ```
 
-<h3 id="capturing-outdated"><a class="heading-self-link" href="#capturing-outdated">Capturing (Outdated)</a></h3>
+<Heading level="3" id="capturing-outdated"selfLink={true}>Capturing (Outdated)</Heading>
 
 <Alert><Timestamp date="2023-08-19" /> The [citar-org-roam](https://github.com/emacs-citar/citar-org-roam) package provides all that is mentioned in this section and more. That package should be used instead in any instance of a desired integration between `org-roam` and `citar`.</Alert>
 
@@ -292,7 +293,7 @@ I add it to an accessible keybinding:<FootnoteRef num="9" />
  "C" '(kb/org-roam-node-from-cite :wk "Citar-capture"))
 ```
 
-<h3 id="h:20241106T044538.716623"><a class="heading-self-link" href="#h:20241106T044538.716623">Advising `citar-org-update-pre-suffix` (Outdated)</a></h3>
+<Heading level="3" id="h:20241106T044538.716623"selfLink={true}>Advising `citar-org-update-pre-suffix` (Outdated)</Heading>
 
 <Alert><Timestamp date="2023-07-20" /> [Upstream has recently merged](https://github.com/emacs-citar/citar/commit/648ef552283fd9de18e6ccdf088d55fa26fe3cd8) changes to `citar-org-update-pre-suffix`, renaming it to `citar-org-update-prefix-suffix` and ensuring that a single space is left between citekeys and their suffixes. Therefore, the code directly below is now unnecessary.</Alert>
 
@@ -359,7 +360,7 @@ to manually add one myself."
 
 One can also add this command to `citar-citation-map`.<FootnoteRef num="11" />
 
-<h3 id="aesthetics"><a class="heading-self-link" href="#aesthetics">Aesthetics</a></h3>
+<Heading level="3" id="aesthetics"selfLink={true}>Aesthetics</Heading>
 
 Finally, we can change the way the `citar` interface appears. The most relevant variables are `citar-templates` and `citar-symbols`. Below is my configuration for these variables. Notably, my definition for `citar-symbols` utilizes `all-the-icons` icons to fancify the candidates (`all-the-icons` must be installed in order to have the faces below available):
 
@@ -401,11 +402,11 @@ Here's the end-result:
 <figcaption>Visual improvements to `citar`'s minibuffer interface.</figcaption>
 </figure>
 
-<h2 id="other-interesting-packages"><a class="heading-self-link" href="#other-interesting-packages">Other interesting packages</a></h2>
+<Heading level="2" id="other-interesting-packages"selfLink={true}>Other interesting packages</Heading>
 
 <div class="outline-text-2" id="text-other-interesting-packages">
 </div>
-<h3 id="zotero"><a class="heading-self-link" href="#zotero">Zotero</a></h3>
+<Heading level="3" id="zotero"selfLink={true}>Zotero</Heading>
 
 [Zotero](https://www.zotero.org/support/) isn't an Emacs package, but it is crucial to most users' workflow, so it deserves attention. Zotero makes gathering, storing, and exporting bibliographic data infinitely easier. For instance, an ISBN or DOI of a source is all that is necessary for an entry's fields to be populated. There are two things to note about my setup:
 
@@ -422,25 +423,25 @@ Finally, a *very handy* tip is to **use the CSL files that Zotero already provid
  (expand-file-name "~/Documents/Zotero/styles/"))
 ```
 
-<h3 id="embark"><a class="heading-self-link" href="#embark">Embark</a></h3>
+<Heading level="3" id="embark"selfLink={true}>Embark</Heading>
 
 [Embark](https://github.com/oantolin/embark/) provides menus (essentially keymaps) based on “context,” that is, the type of thing the point is on. As a result, `embark` has immense potential. `Citar` is built to exploit `embark` without requiring it—for instance, see `citar-citation-map`.
 
-<h3 id="org-roam-bibtex"><a class="heading-self-link" href="#org-roam-bibtex">Org-roam-bibtex</a></h3>
+<Heading level="3" id="org-roam-bibtex"selfLink={true}>Org-roam-bibtex</Heading>
 
 [Org-roam-bibtex](https://github.com/org-roam/org-roam-bibtex) integrates [org-roam](https://github.com/org-roam/org-roam) with citation systems, such as `org-cite`. This packages allows `org-roam` to recognize particular nodes as bibliographic (i.e. associated with a particular `.bib` entry).
 
 Additionally, as [as `citar`'s author, u/bdarcus, shares here](https://www.reddit.com/r/orgmode/comments/vchefn/comment/icg0sha/?utm_source=share&utm_medium=web2x&context=3), there is work being done on `citar`'s end to more tightly integrate `org-roam` with `citar`, in the form of `citar-org-roam`.
 
-<h3 id="citar-capf"><a class="heading-self-link" href="#citar-capf">Citar-capf</a></h3>
+<Heading level="3" id="citar-capf"selfLink={true}>Citar-capf</Heading>
 
 [Citar-capf](https://github.com/mclear-tools/citar-capf) provides a `complation-at-point-function`<FootnoteRef num="12" /> for citations. However, if you're reading this in the future, there's a likely chance that [this commit](https://github.com/emacs-citar/citar/commit/784791a090f9a2ed293f8b3ebd5636c690b718bc) would have been merged. The commit merges `citar-capf` with `citar`.
 
-<h3 id="org-ref"><a class="heading-self-link" href="#org-ref">Org-ref</a></h3>
+<Heading level="3" id="org-ref"selfLink={true}>Org-ref</Heading>
 
 [Org-ref](https://github.com/jkitchin/org-ref) has historically been the dominant citation system for `org-mode`. I elect to use `org-cite` instead because (i) it comes with `org-mode`, meaning there is one less conceptual- and configuration-layer to navigate, (ii) Moreover, `org-ref` uses a format that follows `org` conventions less closely, and (iii) I have read that is arguably more robust and future-proof. Nevertheless, some users still prefer it.
 
-<h2 id="changelog"><a class="heading-self-link" href="#changelog">Changelog</a></h2>
+<Heading level="2" id="changelog"selfLink={true}>Changelog</Heading>
 
 -   <Timestamp date="2022-06-15" />
     -   Better clarity in [Advising `citar-org-update-pre-suffix` (Outdated)](#h:20241106T044538.716623).
