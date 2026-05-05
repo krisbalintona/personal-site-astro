@@ -57,13 +57,17 @@ export default defineConfig({
   ],
   fonts: [
     {
-      name: "Libre Baskerville",
+      // Other good choices:
+      // Source Serif 4
+      name: "Lora",
       cssVariable: "--font-primary",
       provider: fontProviders.fontsource(),
       fallbacks: ["Georgia", "serif"],
     },
     {
-      name: "Instrument Sans",
+      // Other good choices:
+      // Jost
+      name: "Nunito",
       cssVariable: "--font-ui",
       provider: fontProviders.fontsource(),
       fallbacks: ["sans-serif"],
