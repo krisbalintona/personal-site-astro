@@ -22,6 +22,8 @@ export default defineConfig({
       themes: ["material-theme-lighter"],
       plugins: [pluginFullscreen()],
       styleOverrides: {
+        codeFontFamily: "var(--font-code)",
+        codeFontSize: "0.9rem",
         fullscreen: {
           // Toolbar uses --ink instead of neutral gray to feel
           // intentional on a warm site
@@ -65,6 +67,12 @@ export default defineConfig({
       cssVariable: "--font-ui",
       provider: fontProviders.fontsource(),
       fallbacks: ["sans-serif"],
+    },
+    {
+      name: "Iosevka Charon Mono",
+      cssVariable: "--font-code",
+      provider: fontProviders.fontsource(),
+      fallbacks: ["Consolas", "Liberation Mono", "Courier New", "monospace"],
     },
   ],
 });

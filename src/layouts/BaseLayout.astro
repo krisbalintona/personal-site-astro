@@ -24,8 +24,13 @@ const { pageTitle } = Astro.props;
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width">
     <meta name="generator" content={Astro.generator}>
+
+    <!-- Astro fonts -->
     <Font cssVariable="--font-primary" />
     <Font cssVariable="--font-ui" />
+    <Font cssVariable="--font-code" />
+
+    <!-- astrojs/sitemap -->
     <link rel="sitemap" href="/sitemap-index.xml">
 
     <!-- RSS autodiscovery. See

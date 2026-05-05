@@ -14,6 +14,10 @@ body {
   color: var(--ink);
 }
 
+code {
+  font-family: var(--font-code);
+}
+
 img {
   display: block;
   max-width: 100%;
