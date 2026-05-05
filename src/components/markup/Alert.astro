@@ -13,18 +13,18 @@ closest to conveying meaning of this component -->
     display: flex;
     gap: 0.8em;
     align-items: flex-start;
-    padding: 0.75rem 1rem;
-    margin-block: 1rem;
+    padding: var(--space-2xs-xs) var(--space-xs-s);
+    margin-block: var(--space-xs-s);
     margin-inline: 0;
     font-size: 0.9em;
     line-height: 2.2;
     background-color: var(--blue-subtle);
     border: 1px solid var(--rule);
     border-left: 3px solid var(--blue);
-
+    
     &::before {
       flex-shrink: 0;
-      margin-top: 0.125rem;
+      margin-top: 0.125em;
       font-size: var(--font-step-0);
       color: var(--blue);
       content: "ℹ";
@@ -36,8 +36,16 @@ closest to conveying meaning of this component -->
       /* intrinsic width. Without this, long unbreakable content (e.g. */
       /* URLs, code) would overflow the container instead of wrapping. */
       min-width: 0;
-    }
 
+      & > :global(:first-child) {
+        margin-block-start: 0;
+      }
+
+      & > :global(:last-child) {
+        margin-block-end: 0;
+      }
+    }
+    
     /* Special styling for timestamps */
     :global(.ts) {
       --ts-bg: var(--background);
