@@ -25,9 +25,11 @@ p {
 }
 
 a {
+  --_a-border-style: var(--a-border-style, solid);
+
   color: var(--ink);
   text-decoration: none;
-  border-bottom: 1px solid var(--ink);
+  border-bottom: 1px var(--_a-border-style) var(--ink);
 
   &:visited {
     color: var(--visited);
@@ -35,7 +37,7 @@ a {
   }
 
   &:hover {
-    border-bottom-style: dashed;
+    --a-border-style: dashed;
   }
 }
 
@@ -80,16 +82,15 @@ h3 {
   line-height: 1.3;
 }
 
-/* FIXME 2026-05-04: Can we avoid repetition below? */
 .heading-self-link {
-  border-bottom-style: none;
+  --a-border-style: none;
 
   &:visited {
     color: inherit;
   }
 
   &:hover {
-    border-bottom-style: none;
+    --a-border-style: none;
 
     &::after {
       color: var(--accent);
