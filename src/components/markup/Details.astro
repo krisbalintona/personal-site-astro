@@ -2,9 +2,9 @@
 ---
 
 <details>
-  <summary><slot name="summary" /></summary>
+  <summary class="interior-container"><slot name="summary" /></summary>
 
-  <div class="content"><slot /></div>
+  <div class="content interior-container"><slot /></div>
 </details>
 
 <style>
@@ -20,14 +20,6 @@
       background-color: var(--surface);
       border-radius: 0.3rem;
       box-shadow: 0 2px 4px var(--blue-subtle);
-
-      & > :global(:first-child) {
-        margin-block-start: 0;
-      }
-
-      & > :global(:last-child) {
-        margin-block-end: 0;
-      }
     }
 
     summary::before {

@@ -66,6 +66,20 @@ figcaption {
   clip-path: inset(50%);
 }
 
+/* Ensure the top margin of the first child of an element and the
+   bottom margin of the last child of an element are removed.  Means
+   those margins do not battle with the padding and margins of their
+   container. */
+.interior-container {
+  & > :first-child {
+    margin-block-start: 0;
+  }
+
+  & > :last-child {
+    margin-block-end: 0;
+  }
+}
+
 /* * Headings */
 
 h1 {

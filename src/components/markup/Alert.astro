@@ -5,7 +5,7 @@
 feed readers: after sanitizing the HTML, the blockquote tag is the
 closest to conveying meaning of this component -->
 <blockquote class="alert" role="note">
-  <div class="alert-body"><slot /></div>
+  <div class="content interior-container"><slot /></div>
 </blockquote>
 
 <style>
@@ -21,7 +21,7 @@ closest to conveying meaning of this component -->
     background-color: var(--blue-subtle);
     border: 1px solid var(--rule);
     border-left: 3px solid var(--blue);
-    
+
     &::before {
       flex-shrink: 0;
       margin-top: 0.125em;
@@ -30,22 +30,14 @@ closest to conveying meaning of this component -->
       content: "ℹ";
     }
 
-    .alert-body {
+    .content {
       /* Override the flex default of `min-width: auto`, which */
       /* prevents flex children from shrinking below their content's */
       /* intrinsic width. Without this, long unbreakable content (e.g. */
       /* URLs, code) would overflow the container instead of wrapping. */
       min-width: 0;
-
-      & > :global(:first-child) {
-        margin-block-start: 0;
-      }
-
-      & > :global(:last-child) {
-        margin-block-end: 0;
-      }
     }
-    
+
     /* Special styling for timestamps */
     :global(.ts) {
       --ts-bg: var(--background);
