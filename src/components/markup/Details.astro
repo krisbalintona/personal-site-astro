@@ -9,28 +9,38 @@
 
 <style>
   details {
-    margin: var(--space-s-m) var(--space-2xs-xs);
+    margin-top: var(--space-s);
+    margin-bottom: var(--space-s-m);
+    background-color: var(--color-bg-surface);
+    border-radius: 5px;
+    box-shadow: 0 0.1rem 1rem -0.5rem var(--color-bg-accent);
 
     summary {
       display: grid;
       grid-template-columns: auto 1fr;
-      gap: 1.5em;
+      gap: var(--space-xs);
       align-items: baseline;
-      padding: var(--space-3xs-2xs) var(--space-s-m);
+      padding: var(--space-2xs-xs) var(--space-2xs-xs);
       cursor: pointer;
-      background-color: var(--color-bg-surface);
-      border-radius: 0.3rem;
-      box-shadow: 0 2px 4px var(--color-bg-accent);
+
+      &::before {
+        display: inline-block;
+        margin-left: var(--space-xs);
+        font-size: 0.8em;
+        content: "▶";
+        transform-origin: center center;
+        transition: transform 0.2s ease;
+      }
+
+      &::-webkit-details-marker {
+        display: none;
+      }
     }
 
-    summary::before {
-      font-size: 0.8em;
-      content: "▶";
-      transition: transform 0.2s ease;
-    }
-
-    &[open] summary::before {
-      transform: rotate(90deg);
+    &[open] {
+      summary::before {
+        transform: rotate(90deg);
+      }
     }
 
     summary:focus-visible {
@@ -39,11 +49,7 @@
 
     .content {
       padding: var(--space-3xs) var(--space-xs-s) var(--space-s);
-      background-color: color-mix(
-        in srgb,
-        var(--color-bg-elevated) 90%,
-        var(--color-text)
-      );
+      background-color: var(--color-bg-elevated);
       border-radius: 0.2rem;
     }
   }
