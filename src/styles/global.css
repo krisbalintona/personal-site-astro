@@ -8,8 +8,8 @@ html {
   font-family: var(--font-primary);
   font-size: var(--font-step-0);
   line-height: 2;
-  color: var(--ink);
-  background-color: var(--background);
+  color: var(--color-text);
+  background-color: var(--color-bg);
 }
 
 p {
@@ -19,14 +19,9 @@ p {
 a {
   --_a-border-style: var(--a-border-style, solid);
 
-  color: var(--ink);
+  color: var(--color-text);
   text-decoration: none;
-  border-bottom: 1px var(--_a-border-style) var(--ink);
-
-  &:visited {
-    color: var(--visited);
-    border-bottom-color: var(--visited);
-  }
+  border-bottom: 1px var(--_a-border-style) var(--color-text);
 
   &:hover {
     --a-border-style: dashed;
@@ -59,18 +54,20 @@ figcaption {
 
   a {
     --a-border-style: solid;
-
     text-decoration: none;
     border-bottom-color: transparent;
     transition:
       color 0.15s,
       border-bottom-color 0.15s;
 
-    &:hover {
-      --a-border-style: solid;
+    &:visited {
+      color: currentColor;
+      border-bottom-color: currentColor;
+    }
 
-      color: var(--ink);
-      border-bottom-color: var(--ink);
+    &:hover {
+      color: var(--ruby-red);
+      border-bottom-color: var(--ruby-red);
     }
   }
 }
@@ -103,8 +100,8 @@ figcaption {
 
 .no-visited a:visited,
 a.no-visited:visited {
-  color: var(--ink);
-  border-bottom-color: var(--ink);
+  color: var(--color-text);
+  border-bottom-color: var(--color-text);
 }
 
 /* * Headings */
@@ -135,18 +132,18 @@ code {
 :not(pre) > code {
   padding: 0.05em 0.5em;
   font-size: 0.95em;
-  background-color: var(--white);
-  border: 1px solid var(--faint);
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-subtle);
   border-radius: 0.15em;
 }
 
 a {
   & :not(pre) > code {
-    border-bottom-color: var(--ink);
+    border-bottom-color: var(--color-text);
   }
 
   /* Match the visual appearance of the global `a` and `a:hover` rules */
   &:hover :not(pre) > code {
-    border-bottom-color: var(--faint);
+    border-bottom-color: var(--color-text-muted);
   }
 }

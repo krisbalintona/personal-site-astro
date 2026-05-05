@@ -18,9 +18,9 @@
       align-items: baseline;
       padding: var(--space-3xs-2xs) var(--space-s-m);
       cursor: pointer;
-      background-color: var(--surface);
+      background-color: var(--color-bg-surface);
       border-radius: 0.3rem;
-      box-shadow: 0 2px 4px var(--blue-subtle);
+      box-shadow: 0 2px 4px var(--color-bg-accent);
     }
 
     summary::before {
@@ -34,12 +34,16 @@
     }
 
     summary:focus-visible {
-      outline: 2px solid var(--blue);
+      outline: 2px solid var(--color-border);
     }
 
     .content {
       padding: var(--space-3xs) var(--space-xs-s) var(--space-s);
-      background-color: color-mix(in srgb, var(--white) 90%, var(--black));
+      background-color: color-mix(
+        in srgb,
+        var(--color-bg-elevated) 90%,
+        var(--color-text)
+      );
       border-radius: 0.2rem;
     }
   }

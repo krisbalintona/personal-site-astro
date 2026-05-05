@@ -66,7 +66,7 @@ const { Content } = await render(post);
 <style>
   .post-header {
     margin-bottom: var(--space-xl);
-    border-bottom: 2px solid var(--rule);
+    border-bottom: 2px solid var(--color-border);
 
     .post-info-container {
       .post-date {
@@ -113,7 +113,7 @@ const { Content } = await render(post);
 
   .post-footer {
     margin-top: var(--space-xs-s);
-    border-top: 2px solid var(--rule);
+    border-top: 2px solid var(--color-border);
 
     .post-tags-container {
       display: inline;
@@ -125,13 +125,13 @@ const { Content } = await render(post);
 
       .tag {
         font-style: italic;
-        color: var(--muted);
+        color: var(--color-text-secondary);
         border-bottom: 0;
         transition: color 0.15s;
       }
 
       .tag:hover {
-        color: var(--ink);
+        color: var(--color-text);
       }
     }
   }

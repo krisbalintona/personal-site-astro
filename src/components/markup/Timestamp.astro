@@ -36,7 +36,7 @@ const timeStr = time
 
 <style>
   time.ts {
-    --_ts-bg: var(--ts-bg, var(--blue-subtle));
+    --_ts-bg: var(--ts-bg, var(--color-bg-surface));
 
     display: inline-flex;
     gap: 0.1em;
@@ -47,10 +47,10 @@ const timeStr = time
     font-variant-numeric: tabular-nums; /* Make all digits same horizontal width */
     line-height: 1.8;
     vertical-align: middle;
-    color: var(--ink);
+    color: var(--color-text);
     white-space: nowrap; /* Don't wrap mid-render*/
     background-color: var(--_ts-bg);
-    border: 0.1em solid var(--blue);
+    border: 0.1em solid var(--color-border);
     border-radius: 0.4em;
 
     .ts-date {
@@ -58,7 +58,7 @@ const timeStr = time
     }
 
     .ts-sep {
-      color: var(--faint);
+      color: var(--color-text-muted);
     }
   }
 </style>

@@ -9,7 +9,9 @@
   --font-step-3: clamp(1.62rem, 1.5758rem + 0.1964vw, 1.728rem);
   --font-step-4: clamp(1.944rem, 1.891rem + 0.2356vw, 2.0736rem);
   --font-step-5: clamp(2.3328rem, 2.2692rem + 0.2828vw, 2.4883rem);
+}
 
+:root {
   /* Fluid spacing */
   /* @link https://utopia.fyi/space/calculator?c=360,15,1.2,1240,16,1.25,5,2,1440&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s%2Cl%2Cxl%2C12%2Cl%2Cxl%2C12%2Cl%2Cxl%2C12%2Cl%2Cxl%2C12,l,xl,12 */
   --space-3xs: clamp(0.25rem, 0.25rem + 0vw, 0.25rem);
@@ -34,20 +36,64 @@
 
   /* Custom pairs */
   --space-s-l: clamp(0.9375rem, 0.5028rem + 1.9318vw, 2rem);
+}
 
-  /* Colors */
-  --white: #ffffff;
-  --black: #152030;
-  --background: #f7f5f0;
-  --rule: #ddd9d0;
-  --surface: #d4e0d4;
+/* Color palette: these should be used directly only when defining
+   semantic color tokens */
+:root {
+  /* Generic neutrals */
+  --off-white: #f7f5f0; /* page canvas */
+  --off-black: #152030; /* primary text color */
 
-  --ink: #1a1814;
-  --visited: #7a6a8a;
-  --faint: #c8c3b8;
-  --muted: #8a857a;
-  --accent: #c84b2f;
+  /* Brand colors */
+  --ruby-red: #a31621;
+  --pale-sky: #bfdbf7;
+  --yale-blue: #053c5e;
+  --teal: #1f7a8c;
+  --primary-scarlet: #db222a;
+}
 
-  --blue: #4a7fa5;
-  --blue-subtle: #edf3f7;
+/* Semantic color tokens: these should ideally be used instead of
+   palette colors or raw color specifications */
+:root {
+  /* Backgrounds: ordered by elevation, lowest to highest */
+  --color-bg: var(--off-white); /* page background, the outermost layer */
+  --color-bg-surface: oklch(
+    from var(--teal) 95% 0.03 h
+  ); /* cards, code blocks, blockquotes */
+  --color-bg-elevated: white; /* tooltips, modals, dropdowns */
+  --color-bg-accent: oklch(
+    from var(--pale-sky) 55% 0.1 h
+  ); /* tinted callout boxes, highlighted sections */
+
+  /* Text: ordered by hierarchy, most to least prominent */
+  --color-text: var(--off-black); /* body copy, headings */
+  --color-text-secondary: oklch(
+    from var(--color-text) 35% c h
+  ); /* supporting text, subheadings, labels */
+  --color-link-muted: oklch(
+    from var(--yale-blue) 45% 0.05 h
+  ); /* captions, timestamps, metadata */
+  --color-text-disabled: oklch(
+    from var(--color-text) 65% 0.03 h
+  ); /* disabled UI elements */
+  --color-text-on-accent: white; /* text placed on --color-accent backgrounds */
+
+  /* Accent — use sparingly for emphasis and primary interactive elements */
+  --color-accent: var(
+    --primary-scarlet
+  ); /* buttons, badges, active indicators, pull quotes */
+
+  /* Borders: ordered by prominence, most to least visible */
+  --color-border: oklch(
+    from var(--pale-sky) 80% 0.03 h
+  ); /* standard dividers, input outlines, section rules */
+  --color-border-subtle: oklch(
+    from var(--pale-sky) 90% 0.015 h
+  ); /* softer separators, table rows, secondary outlines */
+
+  /* Focus */
+  --color-focus-ring: var(
+    --primary-scarlet
+  ); /* keyboard navigation outline, applied via outline property */
 }

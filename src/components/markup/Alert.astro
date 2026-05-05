@@ -10,7 +10,8 @@ closest to conveying meaning of this component -->
 
 <style>
   .alert {
-    --_alert-bg: var(--blue-subtle);
+    --_alert-bg: var(--color-bg-surface);
+    --_alert-accent: var(--color-bg-accent);
 
     display: grid;
     grid-template-columns: auto 1fr;
@@ -22,13 +23,13 @@ closest to conveying meaning of this component -->
     font-size: 0.9em;
     line-height: 2.2;
     background-color: var(--_alert-bg);
-    border: 1px solid var(--rule);
-    border-left: 3px solid var(--blue);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--_alert-accent);
 
     &::before {
       margin-top: 0.125em;
       font-size: var(--font-step-0);
-      color: var(--blue);
+      color: var(--_alert-accent);
       content: "ℹ";
     }
 
@@ -38,7 +39,7 @@ closest to conveying meaning of this component -->
 
       /* Special styling for timestamps */
       :global(.ts) {
-        --ts-bg: var(--background);
+        --ts-bg: var(--color-bg);
       }
     }
   }
