@@ -101,6 +101,12 @@ figcaption {
   }
 }
 
+.no-visited a:visited,
+a.no-visited:visited {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
 /* * Headings */
 
 h1 {

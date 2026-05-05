@@ -2,21 +2,23 @@
 ---
 
 <footer class="ui">
-  <span class="component" id="copyright"
-    >© 2021–2026 kristofferbalintona.me</span
-  >
+  <span id="copyright">© 2021–2026 kristofferbalintona.me</span>
   <span class="sep">—</span>
-  <span class="component"><a href="/#rss-feeds">RSS</a></span>
+  <span class="no-visited" id="rss"><a href="/#rss-feeds">RSS</a></span>
 </footer>
 
 <style>
   footer {
     display: flex;
-    gap: var(--space-s-m);
+    gap: var(--space-2xs-xs);
     align-items: center;
     justify-content: center;
     margin-top: var(--space-m-l);
     margin-bottom: var(--space-s-m);
     font-size: var(--font-step--1);
+
+    .sep {
+      color: var(--muted);
+    }
   }
 </style>
