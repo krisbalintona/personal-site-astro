@@ -3,7 +3,7 @@ import Link from "astro-typesafe-routes/link";
 ---
 
 <header>
-  <nav>
+  <nav class="ui">
     <ul>
       <li><Link to="/">Home</Link></li>
       <li><Link to="/articles">Articles</Link></li>
@@ -22,7 +22,6 @@ import Link from "astro-typesafe-routes/link";
     justify-content: flex-end;
     width: 100%;
     padding: 0 var(--space-s-m);
-    font-family: var(--font-ui);
   }
 
   nav ul {
@@ -31,22 +30,5 @@ import Link from "astro-typesafe-routes/link";
     text-transform: lowercase;
     letter-spacing: 0.05em;
     list-style: none;
-
-    li {
-      a {
-        font-size: 0.9em;
-        color: var(--muted);
-        text-decoration: none;
-        border-bottom: 1px solid transparent;
-        transition:
-          color 0.15s,
-          border-bottom-color 0.15s;
-      }
-
-      a:hover {
-        color: var(--ink);
-        border-bottom-color: var(--ink);
-      }
-    }
   }
 </style>
