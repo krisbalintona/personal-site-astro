@@ -71,7 +71,7 @@ However, I recently returned to check if there had been any updates to the repo.
 
 Of course, transparency in Emacs (alongside any other application on your system) is only possible if you are using a compositor (e.g. Picom). Regarding build flags, Håkon's patch supported transparency only with Emacs compiled with GTK3 and cairo support. I do not know for certain if this is still the case. If it is, then an Emacs built with the `--with-cairo` and `--with-x-toolkit=gtk3` flags is necessary (meaning this feature is only available on machines using `X Window`). However, [according to this Reddit comment thread](https://www.reddit.com/r/emacs/comments/v72tu6/comment/ibioym9/?utm_source=share&utm_medium=web2x&context=3), it seems like only cairo is necessary, while GTK3 is not necessary. That is, `--with-x-toolkit=no` works as well.
 
-<h2 id="changelog"><a href="#changelog">Changelog</a></h2>
+<h2 id="changelog"><a class="heading-self-link" href="#changelog">Changelog</a></h2>
 
 -   <Timestamp date="2022-06-08" />
     -   Note that a compositor is necessary for transparency.

@@ -291,7 +291,7 @@ contextual information."
            (contents (or contents ""))
            (id (org-html--reference headline info))
            (formatted-text (if (plist-get info :html-self-link-headlines)
-                               (format "<a href=\"#%s\">%s</a>" id full-text)
+                               (format "<a class=\"heading-self-link\" href=\"#%s\">%s</a>" id full-text)
                              full-text)))
       (if (org-export-low-level-p headline info)
           ;; This is a deep subtree: export it as a list item.  (See
@@ -350,7 +350,7 @@ contextual information."
                               (format " class=\"%s\"" headline-class)
                             "")
                           (concat (when numberedp
-                                    (format "<span class=\"section-number-%d\">%s</span> "
+                                    (format "<span class=\"heading-number-%d\">%s</span> "
                                             level
                                             (concat (mapconcat #'number-to-string numbers ".") ".")))
                                   formatted-text)

@@ -39,3 +39,12 @@ figcaption {
   border-width: 0;
   clip: rect(0, 0, 0, 0);
 }
+
+.heading-self-link {
+  border-bottom: none;
+
+  &:hover::after {
+    color: var(--accent);
+    content: " §";
+  }
+}
