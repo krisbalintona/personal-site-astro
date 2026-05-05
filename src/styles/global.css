@@ -15,7 +15,7 @@ html {
 body {
   max-width: 66ch;
   min-height: 100svh;
-  padding: 4rem 2rem 6rem;
+  padding: var(--space-xl) var(--space-s-m) var(--space-2xl);
   margin: 0 auto;
 }
 
@@ -76,6 +76,7 @@ figcaption {
 /* * Headings */
 
 h1 {
+  margin-block-end: var(--space-s);
   font-size: var(--font-step-3);
   line-height: 1.1;
 }

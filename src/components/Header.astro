@@ -22,13 +22,13 @@ import Link from "astro-typesafe-routes/link";
     align-items: baseline;
     justify-content: flex-end;
     width: 100%;
-    padding: 0 2rem;
+    padding: 0 var(--space-s-m);
     font-family: var(--font-ui);
   }
 
   nav ul {
     display: flex;
-    gap: 0.8rem;
+    gap: var(--space-xs);
     text-transform: lowercase;
     letter-spacing: 0.05em;
     list-style: none;
@@ -38,13 +38,15 @@ import Link from "astro-typesafe-routes/link";
         font-size: 0.9em;
         color: var(--muted);
         text-decoration: none;
-        border-bottom: none;
-        transition: color 0.15s;
+        border-bottom: 1px solid transparent;
+        transition:
+          color 0.15s,
+          border-bottom-color 0.15s;
       }
 
       a:hover {
         color: var(--ink);
-        border-bottom: 1px solid var(--ink);
+        border-bottom-color: var(--ink);
       }
     }
   }
