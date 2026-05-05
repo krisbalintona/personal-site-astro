@@ -14,9 +14,13 @@ import Alert from "@components/markup/Alert.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
 
 
-<Alert><Timestamp date="2025-04-07" /> With several commits made on April 6, 2025, vertico spun off its sorting functionality into an extension: [vertico-sort](https://github.com/minad/vertico/blob/main/extensions/vertico-sort.el). As explained in vertico-sort.el's commentary section, it includes a new feature: when `history-delete-duplicates` is nil, all sorting functions defined in vertico-sort.el now rank *recently* selected candidates above frequently selected candidates. This approximates the sorting strategy of prescient.el. I think I'll stick with prescient.el sorting because I like `history-delete-duplicates` set to non-nil, but try it out yourself!</Alert>
+<Alert>
+<Timestamp date="2025-04-07" /> With several commits made on April 6, 2025, vertico spun off its sorting functionality into an extension: [vertico-sort](https://github.com/minad/vertico/blob/main/extensions/vertico-sort.el). As explained in vertico-sort.el's commentary section, it includes a new feature: when `history-delete-duplicates` is nil, all sorting functions defined in vertico-sort.el now rank *recently* selected candidates above frequently selected candidates. This approximates the sorting strategy of prescient.el. I think I'll stick with prescient.el sorting because I like `history-delete-duplicates` set to non-nil, but try it out yourself!
+</Alert>
 
-<Alert><Timestamp date="2025-04-22" /> Corfu now offers a similar functionality as vertic-sort does for vertico with the new [corfu-sort](https://github.com/minad/corfu/blob/main/extensions/corfu-history.el) extension. Like vertico-sort, corfu-sort requires `history-delete-duplicates` to be nil.</Alert>
+<Alert>
+<Timestamp date="2025-04-22" /> Corfu now offers a similar functionality as vertic-sort does for vertico with the new [corfu-sort](https://github.com/minad/corfu/blob/main/extensions/corfu-history.el) extension. Like vertico-sort, corfu-sort requires `history-delete-duplicates` to be nil.
+</Alert>
 
 [Prescient.el](https://github.com/radian-software/prescient.el) is a package that was popular during the era of ivy and helm. Nowadays, I don't see it mentioned much because of the very popular corfu + vertico + marginalia + orderless combination which enhance built-in Emacs completion and overtaken ivy and helm in terms of popularity. (And it's deserved! I use this combination, too.)<FootnoteRef num="1" /> But I've found prescient.el a noticeable convenience that complements this set of packages.
 

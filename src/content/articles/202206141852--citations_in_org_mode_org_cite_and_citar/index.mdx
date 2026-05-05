@@ -40,7 +40,9 @@ import Timestamp from "@components/markup/Timestamp.astro";
 
 <Heading level="2" id="summary"selfLink={true}>Summary</Heading>
 
-<Alert><Timestamp date="2023-07-20" /> Readers should be aware that some package-specific information in this article may be outdated. Thus, readers are advised from outright copying code in this article without verifying (e.g. reading docstrings) the intended behavior. Nevertheless, the concepts related to `org-cite` and citation management should remain relevant and insightful.</Alert>
+<Alert>
+<Timestamp date="2023-07-20" /> Readers should be aware that some package-specific information in this article may be outdated. Thus, readers are advised from outright copying code in this article without verifying (e.g. reading docstrings) the intended behavior. Nevertheless, the concepts related to `org-cite` and citation management should remain relevant and insightful.
+</Alert>
 
 First, I'll outline the broadest components to producing files in `org-mode` with a citation system (e.g. `org-cite`, `org-ref`). Then I'll introduce `org-cite` and the differences between its `bibtex`, `csl`, and `basic` export processors. Then, I will walk through my configuration for `org-cite` and `citar` (formerly `bibtex-actions`). You can see a [gist/snippet of all the code present in this post here (alongside other additions of mine)](https://gitlab.com/PreciousPudding/main-emacs/-/snippets/2351789).
 
@@ -258,7 +260,9 @@ If you use `embark` and `org-roam` you can also set these variables:
 
 <Heading level="3" id="capturing-outdated"selfLink={true}>Capturing (Outdated)</Heading>
 
-<Alert><Timestamp date="2023-08-19" /> The [citar-org-roam](https://github.com/emacs-citar/citar-org-roam) package provides all that is mentioned in this section and more. That package should be used instead in any instance of a desired integration between `org-roam` and `citar`.</Alert>
+<Alert>
+<Timestamp date="2023-08-19" /> The [citar-org-roam](https://github.com/emacs-citar/citar-org-roam) package provides all that is mentioned in this section and more. That package should be used instead in any instance of a desired integration between `org-roam` and `citar`.
+</Alert>
 
 If you use `org-roam`, then the following is how you select bibliographic source and create an `org-roam` node from it. All credit goes to [Jethro Kuan](https://www.jethro.dev/), the creator of `org-roam`, though I've made a few of my own customizations:<FootnoteRef num="8" />
 
@@ -295,7 +299,9 @@ I add it to an accessible keybinding:<FootnoteRef num="9" />
 
 <Heading level="3" id="h:20241106T044538.716623"selfLink={true}>Advising `citar-org-update-pre-suffix` (Outdated)</Heading>
 
-<Alert><Timestamp date="2023-07-20" /> [Upstream has recently merged](https://github.com/emacs-citar/citar/commit/648ef552283fd9de18e6ccdf088d55fa26fe3cd8) changes to `citar-org-update-pre-suffix`, renaming it to `citar-org-update-prefix-suffix` and ensuring that a single space is left between citekeys and their suffixes. Therefore, the code directly below is now unnecessary.</Alert>
+<Alert>
+<Timestamp date="2023-07-20" /> [Upstream has recently merged](https://github.com/emacs-citar/citar/commit/648ef552283fd9de18e6ccdf088d55fa26fe3cd8) changes to `citar-org-update-pre-suffix`, renaming it to `citar-org-update-prefix-suffix` and ensuring that a single space is left between citekeys and their suffixes. Therefore, the code directly below is now unnecessary.
+</Alert>
 
 A useful command is `citar-org-update-pre-suffix`. This command sets the prefix and suffix of a citation key (a single citation can have multiple keys). This is notable since a citation's suffix is where you provide a locator (e.g. a page number). The command is bound to `M-p` when the point is on a citation key.
 

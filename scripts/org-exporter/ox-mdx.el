@@ -224,7 +224,7 @@ channel for the export process."
   (pcase (org-element-property :type special-block)
     ("alert"
      (org-mdx--register-import info "Alert")
-     (format "<Alert>%s</Alert>" (string-trim contents)))
+     (format "<Alert>\n%s\n</Alert>" (string-trim contents)))
     ;; Handle both the summary and details blocks here.  A neat side
     ;; effect is that a summary block without a details block falls to
     ;; the fallback case (which is what we want)
