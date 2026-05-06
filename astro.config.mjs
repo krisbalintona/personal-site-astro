@@ -24,6 +24,8 @@ export default defineConfig({
       styleOverrides: {
         codeFontFamily: "var(--font-code)",
         codeFontSize: "var(--font-step--1)",
+        codeBackground: "var(--color-bg-elevated)",
+        borderColor: "var(--color-border)",
         fullscreen: {
           // Toolbar uses --color-text instead of neutral gray to feel
           // intentional on a warm site

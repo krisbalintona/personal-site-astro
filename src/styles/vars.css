@@ -61,7 +61,9 @@
   --color-bg-surface: oklch(
     from var(--teal) 95% 0.03 h
   ); /* cards, code blocks, blockquotes */
-  --color-bg-elevated: white; /* tooltips, modals, dropdowns */
+  --color-bg-elevated: oklch(
+    from var(--off-white) 99% 0 h
+  ); /* tooltips, modals, dropdowns */
   --color-bg-accent: oklch(
     from var(--pale-sky) 55% 0.1 h
   ); /* tinted callout boxes, highlighted sections */

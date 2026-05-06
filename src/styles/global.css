@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-@layer defaults;                /* Cascading layer declarations */
+@layer defaults; /* Cascading layer declarations */
 
 html {
   font-family: var(--font-primary);
@@ -87,24 +87,26 @@ figcaption {
 }
 
 .interior-container {
-    /* Undo breakout effect */
-    figure, img, .expressive-code {
-        width: revert;
-        max-width: revert;
-        margin-left: revert;
-    }
+  /* Undo breakout effect */
+  figure,
+  img,
+  .expressive-code {
+    width: revert;
+    max-width: revert;
+    margin-left: revert;
+  }
 
-    /* Ensure the top margin of the first child of an element and the
+  /* Ensure the top margin of the first child of an element and the
        bottom margin of the last child of an element are removed.
        Means those margins do not battle with the padding and margins
        of their container. */
-    & > :first-child {
-        margin-block-start: 0;
-    }
+  & > :first-child {
+    margin-block-start: 0;
+  }
 
-    & > :last-child {
-        margin-block-end: 0;
-    }
+  & > :last-child {
+    margin-block-end: 0;
+  }
 }
 
 .no-visited a,
@@ -149,7 +151,7 @@ code {
   border-radius: 0.15em;
 }
 
-a {
+a {                             /* Inline code embedded in links */
   & :not(pre) > code {
     border-bottom-color: var(--color-text);
   }
