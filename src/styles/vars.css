@@ -1,6 +1,6 @@
+/* Fluid typography calculated from Uptopia.fyi */
+/* @link https://utopia.fyi/type/calculator?c=360,15,1.2,1240,16,1.2,5,2,&s=0.75|0.5|2|3|2|3|4,1.5|2|3|4|6,s-l&g=s%2Cl%2Cxl%2C12%2Cl%2Cxl%2C12,l,xl,12 */
 :root {
-  /* Fluid typography calculated from Uptopia.fyi */
-  /* @link https://utopia.fyi/type/calculator?c=360,15,1.2,1240,16,1.2,5,2,&s=0.75|0.5|2|3|2|3|4,1.5|2|3|4|6,s-l&g=s%2Cl%2Cxl%2C12%2Cl%2Cxl%2C12,l,xl,12 */
   --font-step--2: clamp(0.651rem, 0.6333rem + 0.0789vw, 0.6944rem);
   --font-step--1: clamp(0.7813rem, 0.7599rem + 0.0947vw, 0.8333rem);
   --font-step-0: clamp(0.9375rem, 0.9119rem + 0.1136vw, 1rem);
@@ -11,9 +11,9 @@
   --font-step-5: clamp(2.3328rem, 2.2692rem + 0.2828vw, 2.4883rem);
 }
 
+/* Fluid spacing */
+/* @link https://utopia.fyi/space/calculator?c=360,15,1.2,1240,16,1.25,5,2,1440&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s%2Cl%2Cxl%2C12%2Cl%2Cxl%2C12%2Cl%2Cxl%2C12%2Cl%2Cxl%2C12,l,xl,12 */
 :root {
-  /* Fluid spacing */
-  /* @link https://utopia.fyi/space/calculator?c=360,15,1.2,1240,16,1.25,5,2,1440&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s%2Cl%2Cxl%2C12%2Cl%2Cxl%2C12%2Cl%2Cxl%2C12%2Cl%2Cxl%2C12,l,xl,12 */
   --space-3xs: clamp(0.25rem, 0.25rem + 0vw, 0.25rem);
   --space-2xs: clamp(0.5rem, 0.5rem + 0vw, 0.5rem);
   --space-xs: clamp(0.6875rem, 0.6619rem + 0.1136vw, 0.75rem);
@@ -38,64 +38,31 @@
   --space-s-l: clamp(0.9375rem, 0.5028rem + 1.9318vw, 2rem);
 }
 
-/* Color palette: these should be used directly only when defining
-   semantic color tokens */
-:root {
-  /* Generic neutrals */
-  --off-white: #f7f5f0; /* page canvas */
-  --off-black: #152030; /* primary text color */
+/* Color palette and semantic color tokens */
+:root[data-theme="light"] {
+  --neutral-0: #f7f5f0;
+  --neutral-1000: #152030;
 
-  /* Brand colors */
-  --ruby-red: #a31621;
-  --pale-sky: #bfdbf7;
-  --yale-blue: #053c5e;
-  --teal: #1f7a8c;
-  --primary-scarlet: #db222a;
-}
+  --brand-primary: #a31621;
+  --brand-primary-strong: #db222a;
 
-/* Semantic color tokens: these should ideally be used instead of
-   palette colors or raw color specifications */
-:root {
+  --brand-secondary: #308db6;
+  --brand-secondary-soft: #bfdbf7;
+
+  /* Text: ordered by hierarchy, least to most prominent */
+  --color-text-muted: oklch(from var(--color-text) 45% 0.05 h);
+  --color-text: var(--neutral-1000);
+
   /* Backgrounds: ordered by elevation, lowest to highest */
-  --color-bg: var(--off-white); /* page background, the outermost layer */
-  --color-bg-surface: oklch(
-    from var(--teal) 95% 0.03 h
-  ); /* cards, code blocks, blockquotes */
-  --color-bg-elevated: oklch(
-    from var(--off-white) 99% 0 h
-  ); /* tooltips, modals, dropdowns */
-  --color-bg-accent: oklch(
-    from var(--pale-sky) 55% 0.1 h
-  ); /* tinted callout boxes, highlighted sections */
+  --color-bg: var(--neutral-0);
+  --color-bg-elevated: oklch(from var(--color-bg) 99% 0 h);
+  --color-bg-surface: oklch(from var(--brand-secondary) 0.8613 0.0579 h);
+  --color-bg-surface-accent: oklch(from var(--color-bg-surface) 55% 0.1 h);
 
-  /* Text: ordered by hierarchy, most to least prominent */
-  --color-text: var(--off-black); /* body copy, headings */
-  --color-text-secondary: oklch(
-    from var(--color-text) 35% c h
-  ); /* supporting text, subheadings, labels */
-  --color-link-muted: oklch(
-    from var(--yale-blue) 45% 0.05 h
-  ); /* captions, timestamps, metadata */
-  --color-text-disabled: oklch(
-    from var(--color-text) 65% 0.03 h
-  ); /* disabled UI elements */
-  --color-text-on-accent: white; /* text placed on --color-accent backgrounds */
+  /* Borders: ordered by prominence, least to most visible */
+  --color-border: oklch(from var(--brand-secondary-soft) 80% 0.03 h);
+  --color-border-soft: oklch(from var(--color-border) 90% 0.015 h);
 
-  /* Accent — use sparingly for emphasis and primary interactive elements */
-  --color-accent: var(
-    --primary-scarlet
-  ); /* buttons, badges, active indicators, pull quotes */
-
-  /* Borders: ordered by prominence, most to least visible */
-  --color-border: oklch(
-    from var(--pale-sky) 80% 0.03 h
-  ); /* standard dividers, input outlines, section rules */
-  --color-border-subtle: oklch(
-    from var(--pale-sky) 90% 0.015 h
-  ); /* softer separators, table rows, secondary outlines */
-
-  /* Focus */
-  --color-focus-ring: var(
-    --primary-scarlet
-  ); /* keyboard navigation outline, applied via outline property */
+  /* Accent */
+  --color-accent: var(--brand-primary-strong);
 }

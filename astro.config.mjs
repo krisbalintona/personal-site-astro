@@ -35,7 +35,7 @@ export default defineConfig({
 
           // Button styling
           buttonBgHover:
-            "color-mix(in srgb, var(--color-text-secondary) 30%, transparent)",
+            "color-mix(in srgb, var(--color-text) 30%, transparent)",
           buttonBgActive:
             "color-mix(in srgb, var(--color-text) 95%, transparent)",
           buttonText: "var(--color-bg)", // warmer than pure white
