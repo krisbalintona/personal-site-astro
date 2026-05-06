@@ -27,6 +27,8 @@ a {
 
   &:hover {
     --a-border-style: dashed;
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
   }
 }
 
@@ -65,11 +67,6 @@ figcaption {
     &:visited {
       color: currentColor;
       border-bottom-color: currentColor;
-    }
-
-    &:hover {
-      color: var(--ruby-red);
-      border-bottom-color: var(--ruby-red);
     }
   }
 }
@@ -151,7 +148,8 @@ code {
   border-radius: 0.15em;
 }
 
-a {                             /* Inline code embedded in links */
+a {
+  /* Inline code embedded in links */
   & :not(pre) > code {
     border-bottom-color: var(--color-text);
   }

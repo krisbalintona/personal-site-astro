@@ -83,7 +83,7 @@
 
   /* Accent — use sparingly for emphasis and primary interactive elements */
   --color-accent: var(
-    --ruby-red
+    --primary-scarlet
   ); /* buttons, badges, active indicators, pull quotes */
 
   /* Borders: ordered by prominence, most to least visible */
