@@ -84,30 +84,32 @@ const { Content } = await render(post);
 
   .post-content {
     margin-top: var(--space-l);
+  }
 
-    /* "Bleed" effect for code blocks, standalone images, and figures */
-    .bleed,
-    figure,
-    img {
-      --bleed: 2rem;
-      width: calc(100% + var(--bleed) * 2);
-      max-width: calc(100% + var(--bleed) * 2);
-      margin-left: calc(-1 * var(--bleed));
-    }
+  /* "Breakout" effect for code blocks, standalone images, and figures */
+  @layer defaults {
+    :where(.post-content) {
+      .expressive-code {
+        --breakout: 1rem;
+        width: calc(100% + var(--breakout) * 2);
+        max-width: calc(100% + var(--breakout) * 2);
+        margin-left: calc(-1 * var(--breakout));
+      }
+    
+      figure, img {
+        --breakout: 2rem;
+        width: calc(100% + var(--breakout) * 2);
+        max-width: calc(100% + var(--breakout) * 2);
+        margin-left: calc(-1 * var(--breakout));
+      }
 
-    /* For images in figures: images fill their container and */
-    /* the container itself has the bleed effect */
-    figure img {
-      width: 100%;
-      max-width: 100%;
-      margin-left: 0;
-    }
-
-    .expressive-code {
-      --bleed: 1rem;
-      width: calc(100% + var(--bleed) * 2);
-      max-width: calc(100% + var(--bleed) * 2);
-      margin-left: calc(-1 * var(--bleed));
+      /* For images in figures: images fill their container and */
+      /* the container itself has the bleed effect */
+      figure img {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+      }
     }
   }
 
