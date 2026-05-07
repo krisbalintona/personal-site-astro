@@ -9,10 +9,12 @@
 
 <style>
   details {
+    --_border-radius: 5px;
+
     margin-top: var(--space-s);
     margin-bottom: var(--space-s-m);
     background-color: var(--color-bg-surface);
-    border-radius: 5px;
+    border-radius: var(--_border-radius);
     box-shadow: 0 0.1rem 1rem -0.5rem var(--color-bg-surface-accent);
 
     summary {
@@ -50,7 +52,7 @@
     .content {
       padding: var(--space-3xs) var(--space-xs-s) var(--space-s);
       background-color: var(--color-bg-elevated);
-      border-radius: 0.2rem;
+      border-radius: 0 0 var(--_border-radius) var(--_border-radius);
     }
   }
 </style>
