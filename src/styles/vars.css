@@ -92,6 +92,7 @@
     --_color-bg-surface-accent: oklch(from var(--color-bg-surface) 0.8 0.101 h);
 
     --_color-border-soft: oklch(from var(--color-border) 35% 0.015 h);
+
     color-scheme: dark;
   }
 }

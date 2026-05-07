@@ -75,9 +75,13 @@ export default defineConfig({
       fallbacks: ["Georgia", "serif"],
     },
     {
-      // Other good choices:
+      // Other good choices (almost all "humanist sans serif"):
       // Jost
-      name: "Nunito",
+      // Nunito
+      // Alegreya Sans
+      // Source Sans 3
+      // Fira Sans
+      name: "Source Sans 3",
       cssVariable: "--font-ui",
       provider: fontProviders.fontsource(),
       fallbacks: ["sans-serif"],
