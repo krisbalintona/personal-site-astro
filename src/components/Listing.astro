@@ -21,9 +21,7 @@ const hasItems = items.length > 0;
   {hasItems && items.map((item: ListingItem) => (
     <li class="listing-item">
       <a class="title" href={item.href}>{item.title}</a>
-      <time class="date" datetime={toDateTimeAttribute(item.pubDate)}>
-        {formatDate(item.pubDate)}
-      </time>
+      <a class="date" href={item.href}><time class="no-visited" datetime={toDateTimeAttribute(item.pubDate)}>{formatDate(item.pubDate)}</time></a>
     </li>
   ))}
 </ul>
@@ -35,25 +33,28 @@ const hasItems = items.length > 0;
     list-style: none;
 
     .listing-item {
-      display: flex;
+      display: inline-flex;
       flex-direction: column;
-      margin-bottom: 1em;
+      padding-bottom: 1em;
 
       a {
-        color: var(--color-text);
-      }
-
-      a:hover {
-        color: var(--color-accent);
-      }
-
-      a,
-      time {
         border-bottom: none;
       }
 
-      time {
+      .title {
+        color: var(--color-text);
+
+        &:hover {
+          color: var(--color-accent);
+        }
+      }
+
+      .date {
         color: var(--color-text-muted);
+
+        &:hover {
+          color: currentColor;
+        }
       }
     }
   }
