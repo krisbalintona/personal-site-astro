@@ -19,7 +19,8 @@ export default defineConfig({
     faviconRss(),
     typesafeRoutes(),
     expressiveCode({
-      themes: ["material-theme-lighter"],
+      themes: ["material-theme-lighter", "material-theme-darker"],
+      useDarkModeMediaQuery: true,
       plugins: [pluginFullscreen()],
       styleOverrides: {
         codeFontFamily: "var(--font-code)",

@@ -39,30 +39,59 @@
 }
 
 /* Color palette and semantic color tokens */
-:root[data-theme="light"] {
-  --neutral-0: #f7f5f0;
-  --neutral-1000: #152030;
-
-  --brand-primary: #a31621;
-  --brand-primary-strong: #db222a;
-
-  --brand-secondary: #308db6;
-  --brand-secondary-soft: #bfdbf7;
-
+:root {
   /* Text: ordered by hierarchy, least to most prominent */
-  --color-text-muted: oklch(from var(--color-text) 45% 0.05 h);
+  --color-text-muted: var(--_color-text-muted);
   --color-text: var(--neutral-1000);
 
   /* Backgrounds: ordered by elevation, lowest to highest */
   --color-bg: var(--neutral-0);
-  --color-bg-elevated: oklch(from var(--color-bg) 99% 0 h);
-  --color-bg-surface: oklch(from var(--brand-secondary) 0.8613 0.0579 h);
-  --color-bg-surface-accent: oklch(from var(--color-bg-surface) 55% 0.1 h);
+  --color-bg-elevated: var(--_color-bg-elevated);
+  --color-bg-surface: var(--brand-secondary);
+  --color-bg-surface-accent: var(--_color-bg-surface-accent);
 
   /* Borders: ordered by prominence, least to most visible */
-  --color-border: oklch(from var(--brand-secondary-soft) 80% 0.03 h);
-  --color-border-soft: oklch(from var(--color-border) 90% 0.015 h);
+  --color-border: var(--brand-secondary-soft);
+  --color-border-soft: var(--_color-border-soft);
 
   /* Accent */
   --color-accent: var(--brand-primary-strong);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --neutral-0: #f7f5f0;
+    --neutral-1000: #152030;
+
+    --brand-primary: #a31621;
+
+    --brand-secondary: #acd9f1;
+    --brand-secondary-soft: #3e76a9;
+
+    --_color-text-muted: oklch(from var(--color-text) 45% 0.05 h);
+
+    --_color-bg-elevated: oklch(from var(--color-bg) 99% 0 h);
+    --_color-bg-surface-accent: oklch(from var(--color-bg-surface) 55% 0.1 h);
+
+    --_color-border-soft: oklch(from var(--color-border) 90% 0.015 h);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --neutral-0: #110e09;
+    --neutral-1000: #d7dbe0;
+
+    --brand-primary: #e95d69;
+
+    --brand-secondary: #2c799b;
+    --brand-secondary-soft: #3c4958;
+
+    --_color-text-muted: oklch(from var(--color-text) 0.7757 0.0216 h);
+
+    --_color-bg-elevated: oklch(from var(--color-bg) 5% 0 h);
+    --_color-bg-surface-accent: oklch(from var(--color-bg-surface) 0.8 0.101 h);
+
+    --_color-border-soft: oklch(from var(--color-border) 35% 0.015 h);
+  }
 }
