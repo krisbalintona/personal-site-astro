@@ -1,4 +1,4 @@
-@mixin breakout($size: 1rem) {
+@mixin breakout($size: var(--space-s)) {
   --_breakout: #{$size};
   width: calc(100% + var(--_breakout) * 2);
   max-width: calc(100% + var(--_breakout) * 2);

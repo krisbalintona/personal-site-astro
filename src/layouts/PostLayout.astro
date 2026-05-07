@@ -119,12 +119,12 @@ const { Content } = await render(post);
   @layer defaults {
     :where(.post-content) {
       .expressive-code {
-        @include mixins.breakout(1rem);
+        @include mixins.breakout(var(--space-xs-s));
       }
 
       figure,
       img {
-        @include mixins.breakout(2rem);
+        @include mixins.breakout(var(--space-s-m));
       }
 
       /* For images in figures: images fill their container and */
