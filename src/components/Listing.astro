@@ -21,20 +21,28 @@ const hasItems = items.length > 0;
   {hasItems && items.map((item: ListingItem) => (
     <li class="listing-item">
       <a class="title" href={item.href}>{item.title}</a>
-      <a class="date" href={item.href}><time class="no-visited" datetime={toDateTimeAttribute(item.pubDate)}>{formatDate(item.pubDate)}</time></a>
+      <a class="date" href={item.href}>
+        <time class="no-visited" datetime={toDateTimeAttribute(item.pubDate)}>
+          {formatDate(item.pubDate)}
+        </time>
+      </a>
     </li>
   ))}
 </ul>
 
-<style>
+<style lang="scss">
+  @use "mixins";
+
   .listing {
     padding: 30px 0;
     margin: 0;
     list-style: none;
+    @include mixins.breakout();
 
     .listing-item {
-      display: inline-flex;
+      display: flex;
       flex-direction: column;
+      align-items: flex-start;
       padding-bottom: 1em;
 
       a {
