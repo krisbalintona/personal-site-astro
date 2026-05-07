@@ -63,11 +63,6 @@ figcaption {
     transition:
       color 0.15s,
       border-bottom-color 0.15s;
-
-    &:visited {
-      color: currentColor;
-      border-bottom-color: currentColor;
-    }
   }
 }
 
@@ -106,12 +101,14 @@ figcaption {
   }
 }
 
-.no-visited a,
-a.no-visited {
-  &:visited,
-  &:hover {
-    color: currentColor;
-    border-bottom-color: currentColor;
+@layer defaults {
+  .ui a,
+  .no-visited a,
+  a.no-visited {
+    &:visited:not(:hover) {
+      color: currentColor;
+      border-bottom-color: currentColor;
+    }
   }
 }
 

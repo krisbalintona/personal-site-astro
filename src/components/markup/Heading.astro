@@ -10,7 +10,7 @@ const { level, id, class: className, selfLink } = Astro.props;
 const HeadingLevel = `h${level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 ---
 
-<HeadingLevel id={id} class={className}
+<HeadingLevel id={id} class:list={["no-visited", className]}
   ><slot />
   {selfLink && <a aria-label="Link to this section" href={`#${id}`}> §</a>}</HeadingLevel
 >
