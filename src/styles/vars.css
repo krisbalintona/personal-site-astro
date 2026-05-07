@@ -55,7 +55,7 @@
   --color-border-soft: var(--_color-border-soft);
 
   /* Accent */
-  --color-accent: var(--brand-primary-strong);
+  --color-accent: var(--brand-primary);
 }
 
 @media (prefers-color-scheme: light) {
