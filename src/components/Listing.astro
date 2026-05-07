@@ -8,15 +8,16 @@ export interface ListingItem {
 }
 
 interface Props {
+  classes: string[];
   items: ListingItem[];
 }
 
-const { items } = Astro.props;
+const { items, classes } = Astro.props;
 const hasItems = items.length > 0;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
-<ul class="listing">
+<ul class:list={[...classes, "listing"]}>
   {hasItems && items.map((item: ListingItem) => (
     <li class="listing-item">
       <a class="title" href={item.href}>{item.title}</a>
