@@ -86,34 +86,6 @@ const { Content } = await render(post);
     margin-top: var(--space-l);
   }
 
-  /* "Breakout" effect for code blocks, standalone images, and figures */
-  @layer defaults {
-    :where(.post-content) {
-      .expressive-code {
-        --breakout: 1rem;
-        width: calc(100% + var(--breakout) * 2);
-        max-width: calc(100% + var(--breakout) * 2);
-        margin-left: calc(-1 * var(--breakout));
-      }
-
-      figure,
-      img {
-        --breakout: 2rem;
-        width: calc(100% + var(--breakout) * 2);
-        max-width: calc(100% + var(--breakout) * 2);
-        margin-left: calc(-1 * var(--breakout));
-      }
-
-      /* For images in figures: images fill their container and */
-      /* the container itself has the bleed effect */
-      figure img {
-        width: 100%;
-        max-width: 100%;
-        margin-left: 0;
-      }
-    }
-  }
-
   .post-footer {
     margin-top: var(--space-xs-s);
     border-top: 2px solid var(--color-border);
@@ -135,6 +107,32 @@ const { Content } = await render(post);
 
       .tag:hover {
         color: var(--color-text);
+      }
+    }
+  }
+</style>
+
+<style is:global lang="scss">
+  @use "mixins";
+
+  /* "Breakout" effect for code blocks, standalone images, and figures */
+  @layer defaults {
+    :where(.post-content) {
+      .expressive-code {
+        @include mixins.breakout(1rem);
+      }
+
+      figure,
+      img {
+        @include mixins.breakout(2rem);
+      }
+
+      /* For images in figures: images fill their container and */
+      /* the container itself has the breakout effect */
+      figure img {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
       }
     }
   }

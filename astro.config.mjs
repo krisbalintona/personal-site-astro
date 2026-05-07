@@ -93,4 +93,13 @@ export default defineConfig({
       fallbacks: ["Consolas", "Liberation Mono", "Courier New", "monospace"],
     },
   ],
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          loadPaths: ["./src/styles/"],
+        },
+      },
+    },
+  },
 });
