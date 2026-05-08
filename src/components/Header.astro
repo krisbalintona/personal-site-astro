@@ -1,6 +1,6 @@
 ---
-import MenuIconOpen from "@src/assets/menu-open.svg";
 import MenuIconClose from "@src/assets/menu-close.svg";
+import MenuIconOpen from "@src/assets/menu-open.svg";
 import Link from "astro-typesafe-routes/link";
 
 const menuIconHeight = "1.2rem";
@@ -46,7 +46,7 @@ const menuIconHeight = "1.2rem";
       display: none;
       width: 100%;
       padding: var(--space-s) var(--space-s) 0 0;
-      text-align: right;
+      color: inherit;
       cursor: pointer;
       background: none;
       border: none;
@@ -67,15 +67,27 @@ const menuIconHeight = "1.2rem";
       right: 0;
       z-index: 9999;
       display: block;
-      width: 40vw;
-      height: 100vh;
 
       #nav-toggle {
-        position: relative;
-        display: block;
+        display: grid;
+        justify-content: end;
+
+        #icon-open,
+        #icon-close {
+          grid-area: 1 / 1;
+          transition:
+            opacity 0.2s ease,
+            transform 0.2s ease;
+        }
+
+        #icon-open {
+          opacity: 1;
+          transform: scale(1) rotate(0deg);
+        }
 
         #icon-close {
-          display: none;
+          opacity: 0;
+          transform: scale(0.5) rotate(-90deg);
         }
       }
 
@@ -91,6 +103,8 @@ const menuIconHeight = "1.2rem";
 
     #nav-container:has(#nav-toggle[aria-expanded="true"]) {
       position: fixed;
+      width: 40vw;
+      height: 100vh;
       background-color: oklch(from var(--color-bg-elevated) l c h / 80%);
       @supports (backdrop-filter: blur(4px)) {
         backdrop-filter: blur(4px);
@@ -98,11 +112,13 @@ const menuIconHeight = "1.2rem";
 
       #nav-toggle {
         #icon-open {
-          display: none;
+          opacity: 0;
+          transform: scale(0.5) rotate(90deg);
         }
-        
+
         #icon-close {
-          display: revert;
+          opacity: 1;
+          transform: scale(1) rotate(0deg);
         }
       }
 
@@ -115,15 +131,31 @@ const menuIconHeight = "1.2rem";
 
 <script>
   const toggle = document.getElementById("nav-toggle");
+  const navPages = document.getElementById("nav-pages");
 
   toggle?.addEventListener("click", () => {
     const isOpen = toggle.getAttribute("aria-expanded") === "true";
     toggle.setAttribute("aria-expanded", String(!isOpen));
+
+    if (!isOpen) {
+      navPages?.querySelector("a")?.focus();
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!(e.target instanceof Node)) {
+      return;
+    }
+
+    if (!(toggle?.contains(e.target) || navPages?.contains(e.target))) {
+      toggle?.setAttribute("aria-expanded", "false");
+    }
   });
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       toggle?.setAttribute("aria-expanded", "false");
+      toggle?.focus();
     }
   });
 </script>
