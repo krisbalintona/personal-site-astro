@@ -19,7 +19,11 @@ const menuIconHeight = "1.2rem";
       type="button"
     >
       <MenuIconOpen aria-hidden="true" id="icon-open" width={menuIconHeight} />
-      <MenuIconClose aria-hidden="true" id="icon-close" width={menuIconHeight} />
+      <MenuIconClose
+        aria-hidden="true"
+        id="icon-close"
+        width={menuIconHeight}
+      />
     </button>
     <div id="nav-panel">
       <ul id="nav-pages">
@@ -71,7 +75,7 @@ const menuIconHeight = "1.2rem";
       top: 0;
       right: 0;
       display: block;
-              
+
       #nav-toggle {
         --_transition-duration: 0.2s;
 
@@ -84,6 +88,10 @@ const menuIconHeight = "1.2rem";
           transition:
             opacity var(--_transition-duration) ease,
             transform var(--_transition-duration) ease;
+
+          @media (prefers-reduced-motion: reduce) {
+            transition: none;
+          }
         }
 
         #icon-open {
@@ -99,29 +107,34 @@ const menuIconHeight = "1.2rem";
 
       #nav-panel {
         --_transition-duration: 0.3s;
-
-        display: flex;
-        justify-content: center;
         position: fixed;
         top: 0;
         right: 0;
+
+        display: flex;
+        justify-content: center;
         width: 40vw;
         height: 100vh;
+        background-color: oklch(from var(--color-bg-elevated) l c h / 80%);
         transform: translateX(100%);
         transition: transform var(--_transition-duration) ease;
-        background-color: oklch(from var(--color-bg-elevated) l c h / 80%);
+
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
+
         @supports (backdrop-filter: blur(4px)) {
           backdrop-filter: blur(4px);
         }
 
         #nav-pages {
           display: flex;
+          visibility: hidden;
           flex-direction: column;
           width: 60%;
           padding: 0;
           margin: auto;
           font-size: var(--font-step-2);
-          visibility: hidden;
           transition: visibility 0s var(--_transition-duration);
         }
       }
@@ -144,7 +157,7 @@ const menuIconHeight = "1.2rem";
           transform: scale(1) rotate(0deg);
         }
       }
-      
+
       #nav-panel {
         z-index: 1000;
         transform: translateX(0);
@@ -154,16 +167,6 @@ const menuIconHeight = "1.2rem";
           transition: visibility 0s 0s;
         }
       }
-    }
-  }
-  
-  @media (prefers-reduced-motion: reduce) {
-    #nav-panel {
-      transition: none;
-    }
-  
-    #icon-open, #icon-close {
-      transition: none;
     }
   }
 </style>
