@@ -3,4 +3,6 @@
   width: calc(100% + var(--_breakout) * 2);
   max-width: calc(100% + var(--_breakout) * 2);
   margin-left: calc(-1 * var(--_breakout));
+  padding-left: var(--page-side-padding);
+  padding-right: var(--page-side-padding);
 }
