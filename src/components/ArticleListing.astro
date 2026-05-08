@@ -59,10 +59,10 @@ const hasItems = articleItems.length > 0;
   @use "mixins";
 
   .article-listing {
-    margin: 0;
-    margin-top: var(--space-l);
+    margin: var(--space-l) 0 0 0;
+    padding: 0;
     list-style: none;
-    @include mixins.breakout(var(--space-m-l));
+    @include mixins.breakout(var(--space-s-m));
 
     .listing-item {
       display: flex;

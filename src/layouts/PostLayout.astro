@@ -127,12 +127,8 @@ const { Content } = await render(post);
         @include mixins.breakout(var(--space-s-m));
       }
 
-      /* For images in figures: images fill their container and */
-      /* the container itself has the breakout effect */
       figure img {
-        width: 100%;
-        max-width: 100%;
-        margin-left: 0;
+        margin: auto;
       }
     }
   }
