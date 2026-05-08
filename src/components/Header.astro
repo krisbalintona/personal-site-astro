@@ -109,14 +109,13 @@ const menuIconHeight = "1.2rem";
         --_transition-duration: 0.3s;
         position: fixed;
         top: 0;
-        right: 0;
+        left: 100%;
 
         display: flex;
         justify-content: center;
         width: 40vw;
         height: 100vh;
         background-color: oklch(from var(--color-bg-elevated) l c h / 80%);
-        transform: translateX(100%);
         transition: transform var(--_transition-duration) ease;
 
         @media (prefers-reduced-motion: reduce) {
@@ -160,7 +159,7 @@ const menuIconHeight = "1.2rem";
 
       #nav-panel {
         z-index: 1000;
-        transform: translateX(0);
+        transform: translateX(-100%);
 
         #nav-pages {
           visibility: visible;
