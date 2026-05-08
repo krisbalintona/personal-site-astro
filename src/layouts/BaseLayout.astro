@@ -60,11 +60,14 @@ const { pageTitle } = Astro.props;
 </html>
 
 <style>
-  .content {
+  body {
     --page-side-padding: var(--space-s-m);
-    max-width: 70ch;
-    min-height: 100svh;
     padding: 0 var(--page-side-padding);
-    margin: var(--space-xs-s) auto 0;
+
+    .content {
+      max-width: 70ch;
+      min-height: 100svh;
+      margin: var(--space-xs-s) auto 0;
+    }
   }
 </style>
