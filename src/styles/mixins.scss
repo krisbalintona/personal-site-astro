@@ -1,7 +1,7 @@
 @mixin breakout($size: var(--space-s)) {
   --_breakout: #{$size};
-  width: calc(100% + var(--_breakout) * 2);
   max-width: calc(100% + var(--_breakout) * 2);
+  width: 100%;
   margin-left: calc(-1 * var(--_breakout));
   padding-left: var(--page-side-padding);
   padding-right: var(--page-side-padding);
