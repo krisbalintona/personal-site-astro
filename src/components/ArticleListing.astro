@@ -1,9 +1,15 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
-import Listing, { type ListingItem } from "@components/Listing.astro";
+import { formatDate, toDateTimeAttribute } from "@lib/date";
 import isPublished from "@lib/isPublished";
 import type { PostEntry } from "@lib/posts";
 import { $path } from "astro-typesafe-routes/path";
+
+export interface ListingItem {
+  href: string;
+  pubDate: Date;
+  title: string;
+}
 
 interface Props {
   descending?: boolean;
@@ -31,6 +37,58 @@ const articleItems: ListingItem[] = articles
     const diff = a.pubDate.getTime() - b.pubDate.getTime();
     return descending ? -diff : diff;
   });
+const hasItems = articleItems.length > 0;
 ---
 
-<Listing classes={["article-listing"]} items={articleItems} />
+{!hasItems && <p>Nothing yet...</p>}
+{hasItems &&
+  <ul class="article-listing">
+    {hasItems && articleItems.map((item: ListingItem) => (
+      <li class="listing-item">
+        <a class="title" href={item.href}>{item.title}</a>
+        <a class="date" href={item.href}>
+          <time class="no-visited" datetime={toDateTimeAttribute(item.pubDate)}>
+            {formatDate(item.pubDate)}
+          </time>
+        </a>
+      </li>
+    ))}
+  </ul>}
+
+<style lang="scss">
+  @use "mixins";
+
+  .article-listing {
+    margin: 0;
+    margin-top: var(--space-l);
+    list-style: none;
+    @include mixins.breakout(var(--space-m-l));
+
+    .listing-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding-bottom: var(--space-s);
+
+      a {
+        border-bottom: none;
+      }
+
+      .title {
+        color: var(--color-text);
+
+        &:hover {
+          color: var(--color-accent);
+        }
+      }
+
+      .date {
+        color: var(--color-text-muted);
+
+        &:hover {
+          color: currentColor;
+        }
+      }
+    }
+  }
+</style>
