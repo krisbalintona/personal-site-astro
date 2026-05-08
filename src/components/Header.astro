@@ -6,7 +6,10 @@ import Link from "astro-typesafe-routes/link";
 const menuIconHeight = "1.2rem";
 ---
 
-<header>
+<div id="site-header">
+  <!-- Structure `header`,`nav`, and `button` according to: -->
+  <!-- https://dev.to/masakudamatsu/don-t-nest-nav-inside-header-do-nest-the-hamburger-menu-button-inside-nav-6cp -->
+  <header></header>
   <nav id="nav-container" class="ui">
     <button
       id="nav-toggle"
@@ -24,10 +27,10 @@ const menuIconHeight = "1.2rem";
       <li><Link to="/tags">tags</Link></li>
     </ul>
   </nav>
-</header>
+</div>
 
 <style>
-  header {
+  #site-header {
     top: 0;
     left: 0;
     z-index: 1000;
@@ -125,6 +128,16 @@ const menuIconHeight = "1.2rem";
       #nav-pages {
         display: flex;
       }
+    }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    #nav-panel {
+      transition: none;
+    }
+  
+    #icon-open, #icon-close {
+      transition: none;
     }
   }
 </style>
