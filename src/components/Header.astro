@@ -1,13 +1,27 @@
 ---
+import MenuIconOpen from "@src/assets/menu-open.svg";
+import MenuIconClose from "@src/assets/menu-close.svg";
 import Link from "astro-typesafe-routes/link";
+
+const menuIconHeight = "1.2rem";
 ---
 
 <header>
-  <nav class="ui">
-    <ul>
-      <li><Link to="/">Home</Link></li>
-      <li><Link to="/articles">Articles</Link></li>
-      <li><Link to="/tags">Tags</Link></li>
+  <nav id="nav-container" class="ui">
+    <button
+      id="nav-toggle"
+      aria-expanded="false"
+      aria-controls="nav-pages"
+      aria-label="Toggle navigation menu"
+      type="button"
+    >
+      <MenuIconOpen id="icon-open" width={menuIconHeight} />
+      <MenuIconClose id="icon-close" width={menuIconHeight} />
+    </button>
+    <ul id="nav-pages">
+      <li><Link to="/">home</Link></li>
+      <li><Link to="/articles">articles</Link></li>
+      <li><Link to="/tags">tags</Link></li>
     </ul>
   </nav>
 </header>
@@ -16,7 +30,7 @@ import Link from "astro-typesafe-routes/link";
   header {
     top: 0;
     left: 0;
-    box-sizing: border-box;
+    z-index: 1000;
     display: flex;
     align-items: baseline;
     justify-content: flex-end;
@@ -24,11 +38,92 @@ import Link from "astro-typesafe-routes/link";
     padding: 0 var(--space-s-m);
   }
 
-  nav ul {
-    display: flex;
-    gap: var(--space-xs);
-    text-transform: lowercase;
-    letter-spacing: 0.05em;
-    list-style: none;
+  #nav-container {
+    padding: 0;
+    margin: 0;
+
+    #nav-toggle {
+      display: none;
+      width: 100%;
+      padding: var(--space-s) var(--space-s) 0 0;
+      text-align: right;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    #nav-pages {
+      display: flex;
+      gap: var(--space-2xs-xs);
+      letter-spacing: 0.05em;
+      list-style: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    #nav-container {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 9999;
+      display: block;
+      width: 40vw;
+      height: 100vh;
+
+      #nav-toggle {
+        position: relative;
+        display: block;
+
+        #icon-close {
+          display: none;
+        }
+      }
+
+      #nav-pages {
+        display: none;
+        flex-direction: column;
+        width: 60%;
+        padding: 1.5em 0 0 0;
+        margin: auto;
+        font-size: var(--font-step-2);
+      }
+    }
+
+    #nav-container:has(#nav-toggle[aria-expanded="true"]) {
+      position: fixed;
+      background-color: oklch(from var(--color-bg-elevated) l c h / 80%);
+      @supports (backdrop-filter: blur(4px)) {
+        backdrop-filter: blur(4px);
+      }
+
+      #nav-toggle {
+        #icon-open {
+          display: none;
+        }
+        
+        #icon-close {
+          display: revert;
+        }
+      }
+
+      #nav-pages {
+        display: flex;
+      }
+    }
   }
 </style>
+
+<script>
+  const toggle = document.getElementById("nav-toggle");
+
+  toggle?.addEventListener("click", () => {
+    const isOpen = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", String(!isOpen));
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      toggle?.setAttribute("aria-expanded", "false");
+    }
+  });
+</script>
