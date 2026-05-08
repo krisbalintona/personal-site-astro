@@ -18,22 +18,24 @@ const menuIconHeight = "1.2rem";
       aria-label="Toggle navigation menu"
       type="button"
     >
-      <MenuIconOpen id="icon-open" width={menuIconHeight} />
-      <MenuIconClose id="icon-close" width={menuIconHeight} />
+      <MenuIconOpen aria-hidden="true" id="icon-open" width={menuIconHeight} />
+      <MenuIconClose aria-hidden="true" id="icon-close" width={menuIconHeight} />
     </button>
-    <ul id="nav-pages">
-      <li><Link to="/">home</Link></li>
-      <li><Link to="/articles">articles</Link></li>
-      <li><Link to="/tags">tags</Link></li>
-    </ul>
+    <div id="nav-panel">
+      <ul id="nav-pages">
+        <li><Link to="/">home</Link></li>
+        <li><Link to="/articles">articles</Link></li>
+        <li><Link to="/tags">tags</Link></li>
+      </ul>
+    </div>
   </nav>
 </div>
 
 <style>
   #site-header {
+    position: block;
     top: 0;
     left: 0;
-    z-index: 1000;
     display: flex;
     align-items: baseline;
     justify-content: flex-end;
@@ -68,10 +70,11 @@ const menuIconHeight = "1.2rem";
       position: absolute;
       top: 0;
       right: 0;
-      z-index: 9999;
       display: block;
-
+              
       #nav-toggle {
+        --_transition-duration: 0.2s;
+
         display: grid;
         justify-content: end;
 
@@ -79,8 +82,8 @@ const menuIconHeight = "1.2rem";
         #icon-close {
           grid-area: 1 / 1;
           transition:
-            opacity 0.2s ease,
-            transform 0.2s ease;
+            opacity var(--_transition-duration) ease,
+            transform var(--_transition-duration) ease;
         }
 
         #icon-open {
@@ -94,26 +97,41 @@ const menuIconHeight = "1.2rem";
         }
       }
 
-      #nav-pages {
-        display: none;
-        flex-direction: column;
-        width: 60%;
-        padding: 1.5em 0 0 0;
-        margin: auto;
-        font-size: var(--font-step-2);
+      #nav-panel {
+        --_transition-duration: 0.3s;
+
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 40vw;
+        height: 100vh;
+        transform: translateX(100%);
+        transition: transform var(--_transition-duration) ease;
+        background-color: oklch(from var(--color-bg-elevated) l c h / 80%);
+        @supports (backdrop-filter: blur(4px)) {
+          backdrop-filter: blur(4px);
+        }
+
+        #nav-pages {
+          display: flex;
+          flex-direction: column;
+          width: 60%;
+          padding: 1.5em 0 0 0;
+          margin: auto;
+          font-size: var(--font-step-2);
+          visibility: hidden;
+          transition: visibility 0s var(--_transition-duration);
+        }
       }
     }
 
     #nav-container:has(#nav-toggle[aria-expanded="true"]) {
-      position: fixed;
-      width: 40vw;
-      height: 100vh;
-      background-color: oklch(from var(--color-bg-elevated) l c h / 80%);
-      @supports (backdrop-filter: blur(4px)) {
-        backdrop-filter: blur(4px);
-      }
-
       #nav-toggle {
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 1001; /* Above #nav-panel */
+
         #icon-open {
           opacity: 0;
           transform: scale(0.5) rotate(90deg);
@@ -124,9 +142,15 @@ const menuIconHeight = "1.2rem";
           transform: scale(1) rotate(0deg);
         }
       }
+      
+      #nav-panel {
+        z-index: 1000;
+        transform: translateX(0);
 
-      #nav-pages {
-        display: flex;
+        #nav-pages {
+          visibility: visible;
+          transition: visibility 0s 0s;
+        }
       }
     }
   }
