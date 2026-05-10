@@ -2,21 +2,18 @@
 title: "What I learned starting web dev with Astro"
 draft: true
 ---
-import Footnote from "@components/markup/Footnote.astro";
-import FootnoteSection from "@components/markup/FootnoteSection.astro";
 import Heading from "@components/markup/Heading.astro";
-import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
 
 <Heading level="2" id="html-best-practices"selfLink={true}>HTML best practices</Heading>
 
 see [BROKEN LINK: 20260406T155358.633044]
 
-This is a<FootnoteRef num="1" /> sentence.<FootnoteRef num="1" id="1-1" hasSeparator={true} /> <FootnoteRef num="2" />
+This is a sentence.
 
 <Heading level="2" id="components-are-awesome"selfLink={true}>Components are awesome</Heading>
 
--   scoped <FootnoteRef num="3" />CSS (selectors, see [BROKEN LINK: h:20260421T031520.230702])
+-   scoped CSS (selectors, see [BROKEN LINK: h:20260421T031520.230702])
 
 <Heading level="2" id="css"selfLink={true}>CSS</Heading>
 
@@ -26,18 +23,3 @@ This is a<FootnoteRef num="1" /> sentence.<FootnoteRef num="1" id="1-1" hasSepar
 
 [Markdoc | Frequently asked questions](https://markdoc.dev/docs/faq)
 [Markdoc | The Markdoc syntax](https://markdoc.dev/docs/syntax)
-
-<FootnoteSection>
-Footnotes
-<Footnote num="1" slot="footnotes">
-This is a footnote. Aliquam erat volutpat.  Nunc eleifend leo vitae magna.  In id erat non orci commodo lobortis.  Proin neque massa, cursus ut, gravida ut, lobortis eget, lacus.  Sed diam.  Praesent fermentum tempor tellus.  Nullam tempus.  Mauris ac felis vel velit tristique imperdiet.
-
-Donec at pede.  Etiam vel neque nec dui dignissim bibendum.  Vivamus id enim.  Phasellus neque orci, porta a, aliquet quis, semper a, massa.  Phasellus purus.  Pellentesque tristique imperdiet tortor.  Nam euismod tellus id erat.
-</Footnote>
-<Footnote num="2" slot="footnotes">
-Foo bar
-</Footnote>
-<Footnote num="3" slot="footnotes">
-This is another footnote
-</Footnote>
-</FootnoteSection>
