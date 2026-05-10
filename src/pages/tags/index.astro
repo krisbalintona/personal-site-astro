@@ -5,10 +5,11 @@ import Link from "astro-typesafe-routes/link";
 import slugify from "slugify";
 
 const tags = await getAllTags();
+const tagsOrdered = tags?.sort();
 ---
 
 <BaseLayout pageTitle="Tags">
-  {tags.length > 0 && tags.map((tag: string) => (
+  {tags.length > 0 && tagsOrdered.map((tag: string) => (
     <li>
       <Link params={{ tag: slugify(tag) }} to="/tags/[tag]">{tag}</Link>
     </li>
