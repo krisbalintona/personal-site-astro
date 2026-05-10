@@ -1,17 +1,36 @@
 ---
 import { getAllTags } from "@lib/getTags";
+import { allPostEntries } from "@lib/posts";
 import BaseLayout from "@src/layouts/BaseLayout.astro";
 import Link from "astro-typesafe-routes/link";
 import slugify from "slugify";
 
 const tags = await getAllTags();
 const tagsOrdered = tags?.sort();
+
+const tagCounts: Map<string, number> = new Map();
+const entries = await allPostEntries();
+
+for (const entry of entries) {
+  for (const tag of entry.data.tags ?? []) {
+    if (tagCounts.has(tag)) {
+      tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+    } else {
+      tagCounts.set(tag, 1);
+    }
+  }
+}
 ---
 
 <BaseLayout pageTitle="Tags">
-  {tags.length > 0 && tagsOrdered.map((tag: string) => (
-    <li>
-      <Link params={{ tag: slugify(tag) }} to="/tags/[tag]">{tag}</Link>
-    </li>
-  ))}
+  {tags.length > 0 && tagsOrdered.map((tag: string) => {
+    const count = tagCounts.get(tag) ?? 0;
+
+    return (
+      <li>
+        <Link params={{ tag: slugify(tag) }} to="/tags/[tag]"
+        >{tag}</Link>, {count} {count === 1 ? "post" : "posts"}
+      </li>
+    );
+  })}
 </BaseLayout>
