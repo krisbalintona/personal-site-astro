@@ -3,7 +3,7 @@ import MenuIconClose from "@src/assets/menu-close.svg";
 import MenuIconOpen from "@src/assets/menu-open.svg";
 import Link from "astro-typesafe-routes/link";
 
-const menuIconWidth = "1.2rem";
+const menuIconWidth = "var(--font-step-3)";
 ---
 
 <div id="site-header">
@@ -90,7 +90,7 @@ const menuIconWidth = "1.2rem";
           #icon-close {
             z-index: 1001; /* Above #nav-mobile-fixed */
             grid-area: 1 / 1;
-            margin: var(--space-s) var(--space-s) 0 0;
+            margin-top: var(--space-s);
             transition:
               opacity var(--_transition-duration) ease,
               transform var(--_transition-duration) ease;
@@ -120,7 +120,7 @@ const menuIconWidth = "1.2rem";
 
           display: flex;
           justify-content: center;
-          width: 40vw;
+          width: min(60vw, 280px);
           height: 100vh;
           background-color: oklch(from var(--color-bg-elevated) l c h / 80%);
           transition: transform var(--_transition-duration) ease;
@@ -138,7 +138,7 @@ const menuIconWidth = "1.2rem";
             visibility: hidden;
             flex-direction: column;
             width: 60%;
-            padding: 0;
+            padding-bottom: 33%;
             margin: auto;
             font-size: var(--font-step-2);
             transition: visibility 0s var(--_transition-duration);
@@ -153,7 +153,8 @@ const menuIconWidth = "1.2rem";
       #nav-toggle {
         #icon-open,
         #icon-close {
-          margin: var(--space-m) var(--space-m) 0 0;
+          margin-top: var(--space-m-l);
+          margin-right: calc(var(--space-m-l) + var(--page-side-padding));
         }
 
         #icon-open {
