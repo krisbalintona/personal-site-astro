@@ -1,11 +1,10 @@
 ---
-import { getCollection, render } from "astro:content";
+import { type CollectionEntry, getCollection, render } from "astro:content";
 import ArticleListing from "@components/ArticleListing.astro";
 import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { getAllTags } from "@lib/getTags";
 import type { PostEntry } from "@lib/posts";
 import { createRoute } from "astro-typesafe-routes/create-route";
 import { $path } from "astro-typesafe-routes/path";
@@ -16,42 +15,37 @@ export const Route = createRoute({
 });
 
 export const getStaticPaths = Route.createGetStaticPaths(async () =>
-  (await getAllTags()).map((tag) => ({
-    params: { tag: slugify(tag) },
+  (await getCollection("tags")).map((tag) => ({
+    params: { tag: slugify(tag.data.name) },
     props: { tag },
   }))
 );
 
 interface Props {
-  tag: string;
+  tag: CollectionEntry<"tags">;
 }
 
 const { tag } = Astro.props;
+const tagName = tag.data.name;
 
 function hasThisTag(entry: PostEntry): boolean {
   const entryTags: string[] = entry.data.tags ?? [];
 
-  return entryTags.includes(tag);
+  return entryTags.includes(tagName);
 }
 
-// I opt to retrieve all the entries in the "tags" collection then
-// using `find` on the resulting array instead of just using
-// `getEntry` directly because upon not finding an entry emits a
-// message in the build output.  The build will continue and succeed
-// because I guard against an undefined `tagEntry`, but it is
-// preferable to not emit messages during the build process on
-// success.
-const allTagEntries = await getCollection("tags");
-const tagEntry = allTagEntries.find((e) => e.id === tag);
+const tagEntry = (await getCollection("tags")).find(
+  (e) => e.data.name === tag.data.name
+);
 const { Content } = tagEntry ? await render(tagEntry) : { Content: null };
 
 const breadcrumbs: BreadcrumbComponent[] = [
   { label: "tags", href: $path({ to: "/tags" }) },
-  { label: tag, styleNormal: true },
+  { label: tagName, styleNormal: true },
 ];
 ---
 
-<BaseLayout pageTitle={tag}>
+<BaseLayout pageTitle={tagName}>
   <Breadcrumb breadcrumbs={breadcrumbs} />
 
   {Content && <article><Content /></article>}

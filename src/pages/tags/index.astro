@@ -1,35 +1,37 @@
 ---
-import { getAllTags } from "@lib/getTags";
+import { type CollectionEntry, getCollection } from "astro:content";
+import { isPublished } from "@lib/entries";
 import { allPostEntries } from "@lib/posts";
 import BaseLayout from "@src/layouts/BaseLayout.astro";
 import Link from "astro-typesafe-routes/link";
 import slugify from "slugify";
 
-const tags = await getAllTags();
-const tagsOrdered = tags?.sort();
+const tags = await getCollection("tags");
+const tagsOrdered: CollectionEntry<"tags">[] = tags?.sort((a, b) =>
+  a.data.name.localeCompare(b.data.name)
+);
 
+// TODO 2026-05-12: Once I reference tags in other content
+// collections' schema, then I can just find which post entries reference
+// a given tag (content collection) entry without using a Map
 const tagCounts: Map<string, number> = new Map();
 const entries = await allPostEntries();
 
 for (const entry of entries) {
-  for (const tag of entry.data.tags ?? []) {
-    if (tagCounts.has(tag)) {
-      tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
-    } else {
-      tagCounts.set(tag, 1);
-    }
+  for (const t of entry.data.tags ?? []) {
+    tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
   }
 }
 ---
 
 <BaseLayout pageTitle="Tags">
-  {tags.length > 0 && tagsOrdered.map((tag: string) => {
-    const count = tagCounts.get(tag) ?? 0;
+  {tags.length > 0 && tagsOrdered.map((tag) => {
+    const count = tagCounts.get(tag.data.name) ?? 0;
 
     return (
       <li>
-        <Link params={{ tag: slugify(tag) }} to="/tags/[tag]"
-        >{tag}</Link>, {count} {count === 1 ? "post" : "posts"}
+        <Link params={{ tag: slugify(tag.data.name) }} to="/tags/[tag]"
+        >{tag.data.name}</Link>, {count} {count === 1 ? "post" : "posts"}
       </li>
     );
   })}
