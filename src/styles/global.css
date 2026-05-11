@@ -11,6 +11,8 @@ html {
   font-size: var(--font-step-0);
   color: var(--color-text);
   background-color: var(--color-bg);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -29,14 +31,13 @@ a {
   text-decoration: underline;
   text-decoration-style: var(--_link-underline-style);
   text-decoration-color: var(--_link-underline-color);
-  text-underline-offset: 0.15em;
+  text-underline-offset: 0.25em;
 
   &:hover {
     --link-underline-style: dashed;
     --_link-underline-color: var(--link-underline-color, var(--color-accent));
 
     color: var(--color-accent);
-    text-decoration-color: var(--_link-underline-color);
   }
 }
 
