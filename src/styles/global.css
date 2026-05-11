@@ -9,9 +9,12 @@
 html {
   font-family: var(--font-primary);
   font-size: var(--font-step-0);
-  line-height: 2;
   color: var(--color-text);
   background-color: var(--color-bg);
+}
+
+body {
+  line-height: 1.7;
 }
 
 p {
@@ -120,24 +123,23 @@ h3,
 h4,
 h5,
 h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
   font-family: var(--font-ui);
   font-weight: bold;
+  line-height: 1.1;
 }
 
 h1 {
-  margin-block-end: var(--space-s);
   font-size: var(--font-step-3);
-  line-height: 1.1;
 }
 
 h2 {
   font-size: var(--font-step-2);
-  line-height: 1.2;
 }
 
 h3 {
   font-size: var(--font-step-1);
-  line-height: 1.3;
 }
 
 /* * Code */
