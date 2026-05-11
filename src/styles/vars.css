@@ -52,59 +52,41 @@
 
 /* Color palette and semantic color tokens */
 :root {
+  --neutral-0: light-dark(#f7f5f0, #110e09);
+  --neutral-1000: light-dark(#152030, #d7dbe0);
+  --brand-primary: light-dark(#a31621, #e95d69);
+  --brand-secondary: light-dark(#acd9f1, #2c799b);
+  --brand-secondary-soft: light-dark(#3e76a9, #3c4958);
+
   /* Text: ordered by hierarchy, least to most prominent */
-  --color-text-muted: var(--_color-text-muted);
   --color-text: var(--neutral-1000);
+  --color-text-muted: light-dark(
+    oklch(from var(--color-text) 45% 0.05 h),
+    oklch(from var(--color-text) 77.57% 0.0216 h)
+  );
 
   /* Backgrounds: ordered by elevation, lowest to highest */
   --color-bg: var(--neutral-0);
-  --color-bg-elevated: var(--_color-bg-elevated);
+  --color-bg-elevated: light-dark(
+    oklch(from var(--color-bg) 99% 0 h),
+    oklch(from var(--color-bg) 5% 0 h)
+  );
   --color-bg-surface: var(--brand-secondary);
-  --color-bg-surface-accent: var(--_color-bg-surface-accent);
+  --color-bg-surface-accent: light-dark(
+    oklch(from var(--color-bg-surface) 55% 0.1 h),
+    oklch(from var(--color-bg-surface) 80% 0.101 h)
+  );
 
   /* Borders: ordered by prominence, least to most visible */
   --color-border: var(--brand-secondary-soft);
-  --color-border-soft: var(--_color-border-soft);
+  --color-border-soft: light-dark(
+    oklch(from var(--color-border) 90% 0.015 h),
+    oklch(from var(--color-border) 35% 0.015 h)
+  );
 
   /* Accent */
   --color-accent: var(--brand-primary);
 
-  /* Base (light) theme */
-  --neutral-0: #f7f5f0;
-  --neutral-1000: #152030;
-
-  --brand-primary: #a31621;
-
-  --brand-secondary: #acd9f1;
-  --brand-secondary-soft: #3e76a9;
-
-  --_color-text-muted: oklch(from var(--color-text) 45% 0.05 h);
-
-  --_color-bg-elevated: oklch(from var(--color-bg) 99% 0 h);
-  --_color-bg-surface-accent: oklch(from var(--color-bg-surface) 55% 0.1 h);
-
-  --_color-border-soft: oklch(from var(--color-border) 90% 0.015 h);
-
-  color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --neutral-0: #110e09;
-    --neutral-1000: #d7dbe0;
-
-    --brand-primary: #e95d69;
-
-    --brand-secondary: #2c799b;
-    --brand-secondary-soft: #3c4958;
-
-    --_color-text-muted: oklch(from var(--color-text) 0.7757 0.0216 h);
-
-    --_color-bg-elevated: oklch(from var(--color-bg) 5% 0 h);
-    --_color-bg-surface-accent: oklch(from var(--color-bg-surface) 0.8 0.101 h);
-
-    --_color-border-soft: oklch(from var(--color-border) 35% 0.015 h);
-
-    color-scheme: dark;
-  }
+  /* Declare color schemes */
+  color-scheme: light dark;
 }
