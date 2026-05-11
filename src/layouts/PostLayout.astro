@@ -4,8 +4,8 @@ import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { toDateTimeAttribute } from "@lib/entries";
 import type { PostEntry } from "@lib/posts";
-import { toDateTimeAttribute } from "@src/lib/date";
 import Link from "astro-typesafe-routes/link";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";

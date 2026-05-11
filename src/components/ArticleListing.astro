@@ -1,7 +1,6 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
-import { formatDate, toDateTimeAttribute } from "@lib/date";
-import isPublished from "@lib/isPublished";
+import { formatDate, isPublished, toDateTimeAttribute } from "@lib/entries";
 import type { PostEntry } from "@lib/posts";
 import { $path } from "astro-typesafe-routes/path";
 
