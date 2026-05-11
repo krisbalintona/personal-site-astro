@@ -54,9 +54,9 @@
 :root {
   --neutral-0: light-dark(#f7f5f0, #110e09);
   --neutral-1000: light-dark(#152030, #d7dbe0);
-  --brand-primary: light-dark(#a31621, #e95d69);
-  --brand-secondary: light-dark(#acd9f1, #2c799b);
-  --brand-secondary-soft: light-dark(#3e76a9, #3c4958);
+  --brand-primary: light-dark(#acd9f1, #2c799b);
+  --brand-primary-soft: light-dark(#3e76a9, #3c4958);
+  --brand-secondary: light-dark(#a31621, #e95d69);
 
   /* Text: ordered by hierarchy, least to most prominent */
   --color-text: var(--neutral-1000);
@@ -71,22 +71,22 @@
     oklch(from var(--color-bg) 99% 0 h),
     oklch(from var(--color-bg) 5% 0 h)
   );
-  --color-bg-surface: var(--brand-secondary);
+  --color-bg-surface: var(--brand-primary);
   --color-bg-surface-accent: light-dark(
     oklch(from var(--color-bg-surface) 55% 0.1 h),
     oklch(from var(--color-bg-surface) 80% 0.101 h)
   );
 
   /* Borders: ordered by prominence, least to most visible */
-  --color-border: var(--brand-secondary-soft);
+  --color-border: var(--brand-primary-soft);
   --color-border-soft: light-dark(
     oklch(from var(--color-border) 90% 0.015 h),
     oklch(from var(--color-border) 35% 0.015 h)
   );
 
   /* Accent */
-  --color-accent: var(--brand-primary);
+  --color-accent: var(--brand-secondary);
 
-  /* Declare color schemes */
+  /* Declare color themes */
   color-scheme: light dark;
 }
