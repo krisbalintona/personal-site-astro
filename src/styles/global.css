@@ -22,16 +22,21 @@ p {
 }
 
 a {
-  --_a-border-style: var(--a-border-style, solid);
+  --_link-underline-style: var(--link-underline-style, solid);
+  --_link-underline-color: var(--link-underline-color, var(--color-text));
 
   color: var(--color-text);
-  text-decoration: none;
-  border-bottom: 1px var(--_a-border-style) var(--color-text);
+  text-decoration: underline;
+  text-decoration-style: var(--_link-underline-style);
+  text-decoration-color: var(--_link-underline-color);
+  text-underline-offset: 0.15em;
 
   &:hover {
-    --a-border-style: dashed;
+    --link-underline-style: dashed;
+    --_link-underline-color: var(--link-underline-color, var(--color-accent));
+
     color: var(--color-accent);
-    border-bottom-color: var(--color-accent);
+    text-decoration-color: var(--_link-underline-color);
   }
 }
 
@@ -60,12 +65,11 @@ figcaption {
   font-family: var(--font-ui);
 
   a {
-    --a-border-style: solid;
-    text-decoration: none;
-    border-bottom-color: transparent;
+    --link-underline-style: solid;
+    --link-underline-color: transparent;
     transition:
       color 0.15s,
-      border-bottom-color 0.15s;
+      text-decoration-color 0.15s;
   }
 }
 
@@ -110,7 +114,7 @@ figcaption {
   a.no-visited {
     &:visited:not(:hover) {
       color: currentColor;
-      border-bottom-color: currentColor;
+      text-decoration-color: currentColor;
     }
   }
 }
