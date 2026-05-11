@@ -38,6 +38,18 @@
   --space-s-l: clamp(0.9375rem, 0.5028rem + 1.9318vw, 2rem);
 }
 
+/* Transitions and animations */
+
+:root {
+  --transition-ui: color 0.15s, text-decoration-color 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-ui: color 0s, text-decoration-color 0s;
+  }
+}
+
 /* Color palette and semantic color tokens */
 :root {
   /* Text: ordered by hierarchy, least to most prominent */

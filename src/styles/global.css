@@ -67,9 +67,7 @@ figcaption {
   a {
     --link-underline-style: solid;
     --link-underline-color: transparent;
-    transition:
-      color 0.15s,
-      text-decoration-color 0.15s;
+    transition: var(--transition-ui);
   }
 }
 
