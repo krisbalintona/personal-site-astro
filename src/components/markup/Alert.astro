@@ -4,7 +4,9 @@
 <!-- We use a blockquote instead of e.g. a div for the sake of RSS
 feed readers: after sanitizing the HTML, the blockquote tag is the
 closest to conveying meaning of this component -->
-<blockquote class="alert interior-container" role="note"><slot /></blockquote>
+<blockquote class="special-blockquote alert interior-container" role="note">
+  <slot />
+</blockquote>
 
 <style>
   .alert {
