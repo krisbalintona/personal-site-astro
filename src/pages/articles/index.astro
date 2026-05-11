@@ -1,12 +1,18 @@
 ---
 import ArticleListing from "@components/ArticleListing.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-
-const pageTitle: string = "Articles";
 ---
 
-<BaseLayout pageTitle={pageTitle}>
+<BaseLayout pageTitle="Articles">
   All my articles:
 
   <ArticleListing />
 </BaseLayout>
+
+<style is:global lang="scss">
+  @use "mixins";
+
+  .article-listing {
+    @include mixins.breakout(var(--space-s-m));
+  }
+</style>

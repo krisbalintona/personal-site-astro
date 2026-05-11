@@ -54,14 +54,11 @@ const hasItems = articleItems.length > 0;
     ))}
   </ul>}
 
-<style lang="scss">
-  @use "mixins";
-
-  .article-listing {
-    margin: var(--space-l) 0 0 0;
+<style>
+  :where(.article-listing) {
     padding: 0;
+    margin: var(--space-l) 0 0 0;
     list-style: none;
-    @include mixins.breakout(var(--space-s-m));
 
     .listing-item {
       display: flex;
@@ -70,7 +67,7 @@ const hasItems = articleItems.length > 0;
       padding-bottom: var(--space-s);
 
       a {
-          --link-underline-color: transparent;
+        --link-underline-color: transparent;
       }
 
       .title {
