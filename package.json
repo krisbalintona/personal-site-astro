@@ -23,8 +23,11 @@
     "astro-d2": "^0.10.0",
     "astro-expressive-code": "^0.41.7",
     "astro-typesafe-routes": "^5.1.0",
+    "gray-matter": "^4.0.3",
+    "picomatch": "^4.0.4",
     "sanitize-html": "^2.17.3",
     "sass": "^1.99.0",
+    "tinyglobby": "^0.2.16",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
@@ -32,6 +35,7 @@
     "@astrojs/ts-plugin": "^1.10.7",
     "@biomejs/biome": "^2.4.11",
     "@types/node": "^25.6.0",
+    "@types/picomatch": "^4.0.3",
     "@types/sanitize-html": "^2.16.1",
     "cheerio": "^1.2.0",
     "expressive-code-fullscreen": "^1.1.0",
