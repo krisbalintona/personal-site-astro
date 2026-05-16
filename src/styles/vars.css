@@ -58,6 +58,7 @@
   --brand-primary-soft: light-dark(#3e76a9, #3c4958);
   --brand-secondary: light-dark(#a31621, #e95d69);
   --brand-secondary-soft: light-dark(#7a1019, #f0404e);
+  --brand-secondary-hard: light-dark(#c94455, #ff8a93);
 
   /* Text: ordered by hierarchy, least to most prominent */
   --color-text: var(--neutral-1000);
@@ -88,6 +89,7 @@
   /* Accent */
   --color-accent: var(--brand-secondary);
   --color-accent-subtle: var(--brand-secondary-soft);
+  --color-accent-emphasis: var(--brand-secondary-hard);
 
   /* Declare color themes */
   color-scheme: light dark;
