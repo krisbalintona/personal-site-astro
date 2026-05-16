@@ -44,8 +44,12 @@ export const PostCollectionNames = ["articles"] as const;
 export type PostCollection = (typeof PostCollectionNames)[number];
 export type PostEntry = CollectionEntry<PostCollection>;
 
-export async function allPostEntries(): Promise<PostEntry[]> {
+export async function allPostEntries(
+  filter?: (entry: CollectionEntry<PostCollection>) => boolean
+): Promise<PostEntry[]> {
   return (
-    await Promise.all(PostCollectionNames.map((name) => getCollection(name)))
+    await Promise.all(
+      PostCollectionNames.map((name) => getCollection(name, filter))
+    )
   ).flat();
 }

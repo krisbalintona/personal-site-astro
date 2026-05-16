@@ -9,7 +9,7 @@ const tags = await getAllTags();
 const tagsOrdered = tags?.sort();
 
 const tagCounts: Map<string, number> = new Map();
-const entries = await allPostEntries();
+const entries = await allPostEntries(isPublished);
 
 for (const entry of entries) {
   for (const tag of entry.data.tags ?? []) {
