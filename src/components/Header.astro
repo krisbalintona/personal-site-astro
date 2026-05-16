@@ -1,9 +1,37 @@
 ---
+import { trailingSlash } from "astro:config/server";
 import MenuIconClose from "@src/assets/menu-close.svg";
 import MenuIconOpen from "@src/assets/menu-open.svg";
 import Link from "astro-typesafe-routes/link";
+import { $path, type RouteId, type Routes } from "astro-typesafe-routes/path";
+
+type StaticRouteId = {
+  [K in RouteId]: Routes[K]["params"] extends null ? K : never;
+}[RouteId];
 
 const menuIconWidth = "var(--font-step-3)";
+const TRAILING_SLASH = /\/$/;
+const normalizeUrlPathname = (p: string): string => {
+  if (trailingSlash === "always") {
+    return p.endsWith("/") ? p : `${p}/`;
+  }
+  if (trailingSlash === "never") {
+    return p.replace(TRAILING_SLASH, "") || "/";
+  }
+  // "ignore" - strip both sides for comparison
+  return p.replace(TRAILING_SLASH, "") || "/";
+};
+const navItemCurrent = (to: StaticRouteId) => {
+  return normalizeUrlPathname(Astro.url.pathname) ===
+    normalizeUrlPathname($path({ to }))
+    ? "nav-page-current"
+    : undefined;
+};
+const navItems: { to: StaticRouteId; label: string }[] = [
+  { to: "/", label: "home" },
+  { to: "/articles", label: "articles" },
+  { to: "/tags", label: "tags" },
+];
 ---
 
 <div id="site-header">
@@ -38,9 +66,9 @@ const menuIconWidth = "var(--font-step-3)";
       </button>
       <div id="nav-panel">
         <ul id="nav-pages">
-          <li><Link to="/">home</Link></li>
-          <li><Link to="/articles">articles</Link></li>
-          <li><Link to="/tags">tags</Link></li>
+          {navItems.map(({ to, label }) => (
+            <li><Link id={navItemCurrent(to)} to={to}>{label}</Link></li>
+          ))}
         </ul>
       </div>
     </div>
@@ -77,6 +105,13 @@ const menuIconWidth = "var(--font-step-3)";
       letter-spacing: 0.05em;
       list-style: none;
     }
+  }
+
+  /* Must stay at top level because nesting inside any ID selector */
+  /* (e.g. #nav-pages) would add specificity, preventing `a:hover` */
+  /* in global.css from taking effect. */
+  :where(#nav-page-current) {
+    color: var(--color-accent-subtle);
   }
 
   @media (max-width: 768px) {

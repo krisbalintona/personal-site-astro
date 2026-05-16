@@ -14,6 +14,7 @@ import { faviconRss } from "./src/lib/faviconRss.ts";
 // https://astro.build/config
 export default defineConfig({
   site: SITE_URL,
+  trailingSlash: "always",
   prerenderConflictBehavior: "error",
   integrations: [
     faviconRss(),
