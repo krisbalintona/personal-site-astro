@@ -2,6 +2,7 @@ import { existsSync, promises as fs } from "node:fs";
 import { relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import type { Loader } from "astro/loaders";
+import { z } from "astro/zod";
 import matter from "gray-matter";
 import pLimit from "p-limit";
 import picomatch from "picomatch";
@@ -40,6 +41,9 @@ export default function (loaderOptions: {
 }): Loader {
   return {
     name: "md-frontmatter-glob-loader",
+    schema: z.object({
+      name: z.string(),
+    }),
     load: async ({
       store,
       config,

@@ -2,7 +2,6 @@ import { type CollectionEntry, defineCollection } from "astro:content";
 import mdFrontmatterLoader from "@lib/mdFrontmatterGlob.ts";
 import { postSchema } from "@lib/posts.ts";
 import { glob } from "astro/loaders";
-import { z } from "astro/zod";
 
 const articles = defineCollection({
   loader: glob({
@@ -27,9 +26,6 @@ const tags = defineCollection({
     sourceField: "tags",
     contentPattern: "*/index.mdx",
     contentBase: "./src/content/tags",
-  }),
-  schema: z.object({
-    name: z.string(),
   }),
 });
 
