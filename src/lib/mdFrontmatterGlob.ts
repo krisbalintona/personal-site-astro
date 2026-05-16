@@ -29,6 +29,56 @@ import { glob as tinyglobby } from "tinyglobby";
 //   the content file's frontmatter, and their body is the content
 //   file's body.
 
+/**
+ * An Astro content loader that creates one collection entry per
+ * unique value of a frontmatter field found across a set of source
+ * files, optionally enriching those entries with content from
+ * dedicated MD/MDX files.
+ *
+ * ## How it works
+ *
+ * **Source files** (`sources`) are MD/MDX files whose frontmatter is
+ * scanned for values of `sourceField`. Each unique value becomes a
+ * stub entry with `{ name: value }` as its data and no renderable
+ * body.
+ *
+ * **Content files** (`contentBase` / `contentPattern`) are MD/MDX
+ * files that can enrich or create entries. A content file is
+ * associated with an existing stub entry when its `name` frontmatter
+ * field matches a stub entry ID. If no match is found, a new entry is
+ * created. Content entries have the content file's full frontmatter
+ * as their data, and their body is available via `render()` /
+ * `<Content />`.
+ *
+ * The entry ID for a content file is determined as follows:
+ * - If the file has a `name` frontmatter field, that value is used.
+ * - Otherwise, the parent directory name is slugified (useful for
+ *   collections where files follow a `my-entry/index.mdx` pattern).
+ *
+ * ## Default schema
+ *
+ * The default schema guarantees `name: string` on every entry. You
+ * can extend it in your collection definition to cover additional
+ * frontmatter fields present in your content files.
+ *
+ * @example
+ * ```ts
+ * const tags = defineCollection({
+ *   loader: mdFrontmatterLoader({
+ *     sources: [
+ *       { pattern: "**\/index.mdx", base: "src/content/articles" },
+ *     ],
+ *     sourceField: "tags",
+ *     contentPattern: "**\/index.mdx",
+ *     contentBase: "src/content/tags",
+ *   }),
+ *   schema: z.object({
+ *     name: z.string(),
+ *     description: z.string().optional(),
+ *   }),
+ * });
+ * ```
+ */
 export default function (loaderOptions: {
   sources: {
     // Files whose frontmatter will be scanned
