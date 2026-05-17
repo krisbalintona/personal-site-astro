@@ -18,27 +18,42 @@ export function dateToPostId(date: Date): string {
 // for all properties of `rssSchema`.  Although all the properties in
 // `rssSchema` are typed as optional, RSS feeds themselves to have
 // required XML fields.
-export const postSchema = rssSchema
-  .extend({
-    title: z.string().default("Untitled"),
-    pubDate: z.coerce.date().default(new Date("1970-01-01")),
-    draft: z.boolean().default(true),
-    tags: z.array(z.string()).optional(),
-  })
-  .transform((data) => {
-    const slug = slugify(
-      data.title,
+export const basePostSchema = rssSchema.extend({
+  title: z.string().default("Untitled"),
+  pubDate: z.coerce.date().default(new Date("1970-01-01")),
+  draft: z.boolean().default(true),
+  tags: z.array(z.string()).optional(),
+});
+
+// Zod does not support .extend() on transformed schemas.  Since we
+// need to apply a transform to compute `titleSlug` and
+// `permalinkSlug`, we expose this function instead to allow extending
+// the base schema shape (`basePostSchema`) while reapplying the
+// transform.
+export function extendPostSchema<T extends z.ZodRawShape>(shape: T) {
+  return basePostSchema.extend(shape).transform((data) => {
+    // `data` is typed as the extended schema's output, which
+    // Typescript cannot resolve to a concrete type through the
+    // generic.  We cast to the base type since we know
+    // basePostSchema's fields are always present after .extend() to
+    // make Typescript happy.
+    const base = data as z.infer<typeof basePostSchema>;
+    const titleSlug = slugify(
+      base.title,
       { strict: true } // Strips special characters like colons
     );
     return {
       ...data,
-      titleSlug: slug,
+      titleSlug,
       permalinkSlug:
-        data.pubDate && data.draft === false
-          ? dateToPostId(data.pubDate as Date)
-          : slug,
+        base.pubDate && base.draft === false
+          ? dateToPostId(base.pubDate as Date)
+          : titleSlug,
     };
   });
+}
+
+export const postSchema = extendPostSchema({});
 
 export const PostCollectionNames = ["articles"] as const;
 export type PostCollection = (typeof PostCollectionNames)[number];
