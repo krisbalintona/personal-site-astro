@@ -6,6 +6,7 @@ import Breadcrumb, {
 import Heading from "@components/markup/Heading.astro";
 import PostListing from "@components/PostListing.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { isPublished } from "@lib/entries";
 import type { PostEntry } from "@lib/posts";
 import { createRoute } from "astro-typesafe-routes/create-route";
 import { $path } from "astro-typesafe-routes/path";
@@ -49,7 +50,7 @@ const breadcrumbs: BreadcrumbComponent[] = [
 <BaseLayout pageTitle={tagName}>
   <Heading class="sr-only" level="1">Posts tagged with "{tagName}"</Heading>
   <Breadcrumb breadcrumbs={breadcrumbs} />
-  {Content && <Content />}
+  {tagEntry && isPublished(tagEntry) && Content && <Content />}
   <hr>
 
   <PostListing collection="articles" extraFilter={hasThisTag} />
