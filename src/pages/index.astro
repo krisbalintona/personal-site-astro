@@ -1,6 +1,5 @@
 ---
 import { getEntry, render } from "astro:content";
-import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { isPublished } from "@lib/entries";
 
@@ -8,9 +7,9 @@ const bio = await getEntry("standalone", "bio");
 const { Content } = bio ? await render(bio) : { Content: null };
 ---
 
-<BaseLayout pageTitle="Home">
-  <Heading class="sr-only" level="1"
-    >Kristoffer Balintona &mdash; Personal site</Heading
-  >
+<BaseLayout
+  pageTitle="Home"
+  displayTitle="Kristoffer Balintona &mdash; Personal site"
+>
   {bio && isPublished(bio) && Content && <article><Content /></article>}
 </BaseLayout>

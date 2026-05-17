@@ -1,6 +1,5 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
-import Heading from "@components/markup/Heading.astro";
 import { isPublished } from "@lib/entries";
 import { allPostEntries } from "@lib/posts";
 import BaseLayout from "@src/layouts/BaseLayout.astro";
@@ -25,9 +24,7 @@ for (const entry of entries) {
 }
 ---
 
-<BaseLayout pageTitle="Tags">
-  <Heading class="sr-only" level="1">Tags</Heading>
-
+<BaseLayout pageTitle="Tags" displayTitle="Tags">
   {tags.length > 0 && (
     <ul>
       {tagsOrdered.map((tag) => {

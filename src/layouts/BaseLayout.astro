@@ -5,14 +5,16 @@ import "@styles/global.css";
 import { Font } from "astro:assets";
 import Footer from "@components/Footer.astro";
 import Header from "@components/Header.astro";
+import Heading from "@components/markup/Heading.astro";
 import { RSSFeeds } from "@lib/rss";
 import { $path } from "astro-typesafe-routes/path";
 
 interface Props {
+  displayTitle?: string;
   pageTitle: string;
 }
 
-const { pageTitle } = Astro.props;
+const { pageTitle, displayTitle } = Astro.props;
 ---
 
 <html lang="en">
@@ -53,7 +55,10 @@ const { pageTitle } = Astro.props;
   <body>
     <Header />
     <div class="content">
-      <main><slot /></main>
+      <main>
+        {displayTitle && <Heading class="sr-only" level="1">{displayTitle}</Heading>}
+        <slot />
+      </main>
       <Footer />
     </div>
   </body>

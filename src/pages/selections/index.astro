@@ -20,9 +20,7 @@ function inThisSeries(seriesName: string) {
 }
 ---
 
-<BaseLayout pageTitle="Selections">
-  <!-- `h1` for screen readers only -->
-  <Heading class="sr-only" level="1">Selections</Heading>
+<BaseLayout pageTitle="Selections" displayTitle="Selections">
   {preamble && isPublished(preamble) && Content && <Content />}
   <hr>
 

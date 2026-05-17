@@ -3,7 +3,6 @@ import { type CollectionEntry, getCollection, render } from "astro:content";
 import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
-import Heading from "@components/markup/Heading.astro";
 import PostListing from "@components/PostListing.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { isPublished } from "@lib/entries";
@@ -47,8 +46,7 @@ const breadcrumbs: BreadcrumbComponent[] = [
 ];
 ---
 
-<BaseLayout pageTitle={tagName}>
-  <Heading class="sr-only" level="1">Posts tagged with "{tagName}"</Heading>
+<BaseLayout pageTitle={tagName} displayTitle={`Posts tagged with "${tagName}"`}>
   <Breadcrumb breadcrumbs={breadcrumbs} />
   {tagEntry && isPublished(tagEntry) && Content && <Content />}
   <hr>
