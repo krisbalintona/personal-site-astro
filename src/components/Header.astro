@@ -55,7 +55,7 @@ const navItems: { to: StaticRouteId; label: string }[] = [
         id="nav-toggle"
         aria-expanded="false"
         aria-controls="nav-pages"
-        aria-label="Toggle navigation menu"
+        aria-label="Open navigation menu"
         type="button"
       >
         <MenuIconOpen aria-hidden="true" id="icon-open" width={menuIconWidth} />
@@ -261,6 +261,10 @@ const navItems: { to: StaticRouteId; label: string }[] = [
   toggle?.addEventListener("click", () => {
     const isOpen = toggle.getAttribute("aria-expanded") === "true";
     toggle.setAttribute("aria-expanded", String(!isOpen));
+    toggle.setAttribute(
+      "aria-label",
+      isOpen ? "Open navigation menu" : "Close navigation menu"
+    );
 
     if (!isOpen) {
       navPages?.querySelector("a")?.focus();
