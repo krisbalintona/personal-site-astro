@@ -25,14 +25,18 @@ for (const entry of entries) {
 ---
 
 <BaseLayout pageTitle="Tags">
-  {tags.length > 0 && tagsOrdered.map((tag) => {
-    const count = tagCounts.get(tag.data.name) ?? 0;
+  {tags.length > 0 && (
+    <ul>
+      {tagsOrdered.map((tag) => {
+        const count = tagCounts.get(tag.data.name) ?? 0;
 
-    return (
-      <li>
-        <Link params={{ tag: slugify(tag.data.name) }} to="/tags/[tag]"
-        >{tag.data.name}</Link>, {count} {count === 1 ? "post" : "posts"}
-      </li>
-    );
-  })}
+        return (
+          <li>
+            <Link params={{ tag: slugify(tag.data.name) }} to="/tags/[tag]"
+            >{tag.data.name}</Link>, {count} {count === 1 ? "post" : "posts"}
+          </li>
+        );
+      })}
+    </ul>
+  )}
 </BaseLayout>
