@@ -280,7 +280,7 @@ contextual information."
     (let* ((numberedp (org-export-numbered-headline-p headline info))
            (numbers (org-export-get-headline-number headline info))
            (level (+ (org-export-get-relative-level headline info)
-                     (1- (plist-get info :html-toplevel-hlevel))))
+                     (1- (plist-get info :md-toplevel-hlevel))))
            (todo (and (plist-get info :with-todo-keywords)
                       (let ((todo (org-element-property :todo-keyword headline)))
                         (and todo (org-export-data todo info)))))
@@ -1045,6 +1045,7 @@ Return the output directory's name."
     (:mdx-draft-p "MDX_DRAFT" "mdx-draft" "true")
     (:mdx-tags "MDX_TAGS" nil nil space)
     (:mdx-series "MDX_SERIES" nil nil space)
+    (:md-toplevel-hlevel nil nil 2) ; The title is h1; headings must be lower
     ;; See `org-export-headline-levels' and
     ;; `org-export-options-alist'.  Set :headline-levels to 5 since
     ;; HTML has heading levels up to and including 6 ("h1" is the
