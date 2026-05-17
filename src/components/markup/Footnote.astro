@@ -43,14 +43,15 @@ const { num } = Astro.props;
   }
 
   li:target {
-    animation: slow-flash 1.5s ease;
+    animation: highlight-fade 6s ease;
   }
 
-  @keyframes slow-flash {
-    from {
+  @keyframes highlight-fade {
+    0%,
+    80% {
       border-left: var(--border-left) solid var(--color-accent);
     }
-    to {
+    100% {
       border-left: var(--border-left) solid transparent;
     }
   }
