@@ -1,0 +1,105 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import {
+  formatDate,
+  getEntryUrl,
+  isPublished,
+  toDateTimeAttribute,
+} from "@lib/entries";
+import type { PostCollection, PostEntry } from "@lib/posts";
+
+export interface ListingItem {
+  href: string;
+  pubDate: Date;
+  title: string;
+}
+
+interface Props {
+  collection: PostCollection;
+  descending?: boolean;
+  extraFilter?: (entry: PostEntry) => boolean;
+}
+
+const { collection, extraFilter = () => true, descending = true } = Astro.props;
+
+const finalFilter = (entry: PostEntry): boolean =>
+  isPublished(entry) && extraFilter(entry);
+
+const posts = await getCollection(collection, finalFilter);
+const postItems: ListingItem[] = posts
+  .map(
+    (post: CollectionEntry<PostCollection>): ListingItem => ({
+      title: post.data.title,
+      pubDate: post.data.pubDate,
+      href: getEntryUrl(post),
+    })
+  )
+  .sort((a, b) => {
+    const diff = a.pubDate.getTime() - b.pubDate.getTime();
+    return descending ? -diff : diff;
+  });
+const hasItems = postItems.length > 0;
+---
+
+{!hasItems && <p>Nothing yet...</p>}
+{hasItems &&
+  <ol class="post-listing">
+    {hasItems && postItems.map((item: ListingItem) => (
+      <li class="listing-item no-visited">
+        <a class="title" href={item.href}>{item.title}</a>
+        <a class="date" href={item.href}>
+          <time datetime={toDateTimeAttribute(item.pubDate)}>
+            {formatDate(item.pubDate)}
+          </time>
+        </a>
+      </li>
+    ))}
+  </ol>}
+
+<style>
+  :where(.post-listing) {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    padding: 0 var(--space-l) 0 var(--space-m);
+    margin: var(--space-m) 0 0 0;
+    counter-reset: post-counter;
+
+    .listing-item {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
+      column-gap: var(--space-2xs);
+      align-items: center;
+      padding-bottom: var(--space-xs);
+      list-style: none;
+      counter-increment: post-counter;
+
+      &::before {
+        align-self: center;
+        font-size: small;
+        color: var(--color-text-muted);
+        content: counter(post-counter) ".";
+      }
+
+      a {
+        --link-underline-color: transparent;
+      }
+
+      .title {
+        color: var(--color-text);
+
+        &:hover {
+          color: var(--color-accent);
+        }
+      }
+
+      .date {
+        color: var(--color-text-muted);
+
+        &:hover {
+          color: currentColor;
+        }
+      }
+    }
+  }
+</style>
