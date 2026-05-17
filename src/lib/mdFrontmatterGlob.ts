@@ -206,26 +206,29 @@ export default function (loaderOptions: LoaderOptions): Loader {
       // to a stub entry ID), or create new content entries if no
       // match is found.
 
+      const contentBase = loaderOptions.contentBase ?? null;
+      const contentPattern = loaderOptions.contentPattern ?? null;
       const contentBasePath =
-        loaderOptions.contentBase == null
+        contentBase == null
           ? null
-          : fileURLToPath(
-              new URL(loaderOptions.contentBase, pathToFileURL(`${rootPath}/`))
-            );
+          : fileURLToPath(new URL(contentBase, pathToFileURL(`${rootPath}/`)));
 
       // Used by the watcher to filter change events to files matching
       // the pattern; only defined when content options are provided.
       const contentMatcher =
-        loaderOptions.contentPattern == null
-          ? null
-          : picomatch(loaderOptions.contentPattern);
+        contentPattern == null ? null : picomatch(contentPattern);
 
-      if (contentBasePath != null && contentMatcher != null) {
+      if (
+        contentBase != null &&
+        contentPattern != null &&
+        contentBasePath != null &&
+        contentMatcher != null
+      ) {
         await processContentFiles({
           contentBasePath,
           contentMatcher,
-          contentPattern: loaderOptions.contentPattern,
-          contentBase: loaderOptions.contentBase,
+          contentPattern,
+          contentBase,
           limit,
           store,
           generateDigest,
