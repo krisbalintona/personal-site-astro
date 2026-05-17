@@ -735,6 +735,14 @@ an MDX file whose type is a string."
                        (replace-regexp-in-string "\t" "\\\\t")) ; tab -> \t
           "\""))
 
+(defun org-mdx--frontmatter-build-list (name items)
+  "Build a YAML frontmatter list.
+NAME is the string used as the top-level listing item content.  ITEMS is
+a list of strings whose elements will be the sub-items in the built
+list."
+  (concat name ":\n"
+          (mapconcat (lambda (item) (format "  - %s" item)) items "\n")))
+
 (defun org-mdx-template (contents info)
   "Return complete document string after Markdown conversion.
 CONTENTS is the transcoded contents string (returned by the
@@ -765,6 +773,7 @@ communication channel for the export process."
                    (mapconcat #'cdr (plist-get info :mdx-imports) "\n")))
          frontmatter)
 
+    ;; Emit different frontmatter depending on :mdx-entry-type
     (pcase entry-type
       ("standalone"
        (setq frontmatter (string-join (delq nil (list title slug date draft)) "\n")))
@@ -776,10 +785,35 @@ communication channel for the export process."
                          (split-string-and-unquote (string-trim raw-tags)))))
               (tags
                (when parsed-tags
-                 (concat "tags:\n"
-                         (mapconcat (lambda (tag) (format "  - %s" tag))
-                                    parsed-tags "\n")))))
-         (setq frontmatter (string-join (delq nil (list title date draft tags)) "\n"))))
+                 (org-mdx--frontmatter-build-list "tags" parsed-tags)))
+              (raw-series (plist-get info :mdx-series))
+              (transformed-series ; Convert entry IDs to their corresponding title
+               (when raw-series
+                 (mapcar (lambda (s)
+                           ;; FIXME 2026-05-17: Should we call
+                           ;; something like
+                           ;; (org-id-update-id-locations nil t)
+                           ;; before publishing to ensure the cache is
+                           ;; up to date before export?  Or are we
+                           ;; okay settling with a potentially stale
+                           ;; cache
+                           ;;
+                           ;; When S is an (unquoted) ID, then return
+                           ;; the title of the entry corresponding to
+                           ;; that ID.  Otherwise return S.
+                           (if (not (and org-id-locations (gethash s org-id-locations)))
+                               s
+                             (org-with-point-at (org-id-find s 'marker)
+                               (or (org-element-property :title (org-element-at-point))
+                                   (org-get-title)))))
+                         (split-string-and-unquote (string-trim raw-series)))))
+              (parsed-series
+               (when (org-string-nw-p raw-series)
+                 (mapcar #'org-mdx--frontmatter-quote-string transformed-series)))
+              (series
+               (when parsed-series
+                 (org-mdx--frontmatter-build-list "series" parsed-series))))
+         (setq frontmatter (string-join (delq nil (list title date draft tags series)) "\n"))))
       ("tags"
        (let* ((name (when raw-title (concat "name: " escaped-title))))
          (setq frontmatter (string-join (delq nil (list name draft)) "\n")))))
@@ -1010,9 +1044,11 @@ Return the output directory's name."
   '((:mdx-slug "MDX_SLUG" nil nil)
     (:mdx-draft-p "MDX_DRAFT" "mdx-draft" "true")
     (:mdx-tags "MDX_TAGS" nil nil space)
+    (:mdx-series "MDX_SERIES" nil nil space)
     ;; See `org-export-headline-levels' and
-    ;; `org-export-options-alist'.  Set :headline-levels to 6 since
-    ;; HTML has heading levels up to and including 6
+    ;; `org-export-options-alist'.  Set :headline-levels to 5 since
+    ;; HTML has heading levels up to and including 6 ("h1" is the
+    ;; title, heading level one is "h2")
     (:headline-levels nil "H" 5)
     ;; Headlines link to themselves, so users can click on them to
     ;; have an anchor to the headline
