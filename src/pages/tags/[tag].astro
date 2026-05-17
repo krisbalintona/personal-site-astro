@@ -3,6 +3,7 @@ import { type CollectionEntry, getCollection, render } from "astro:content";
 import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
+import Heading from "@components/markup/Heading.astro";
 import PostListing from "@components/PostListing.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import type { PostEntry } from "@lib/posts";
@@ -46,15 +47,10 @@ const breadcrumbs: BreadcrumbComponent[] = [
 ---
 
 <BaseLayout pageTitle={tagName}>
+  <Heading class="sr-only" level="1">Posts tagged with "{tagName}"</Heading>
   <Breadcrumb breadcrumbs={breadcrumbs} />
-
-  {Content && <article><Content /></article>}
+  {Content && <Content />}
+  <hr>
 
   <PostListing collection="articles" extraFilter={hasThisTag} />
 </BaseLayout>
-
-<style>
-  article {
-    margin-top: 50px;
-  }
-</style>

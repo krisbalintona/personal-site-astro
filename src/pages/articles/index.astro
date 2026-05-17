@@ -1,10 +1,13 @@
 ---
+import Heading from "@components/markup/Heading.astro";
 import PostListing from "@components/PostListing.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 ---
 
 <BaseLayout pageTitle="Articles">
-  All my articles:
+  <Heading class="sr-only" level="1">Articles</Heading>
+  <p>All my articles:</p>
+  <hr>
 
   <PostListing collection="articles" />
 </BaseLayout>
