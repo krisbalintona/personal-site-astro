@@ -1,7 +1,7 @@
 import { existsSync, promises as fs } from "node:fs";
 import { relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import type { Loader } from "astro/loaders";
+import type { Loader, LoaderContext } from "astro/loaders";
 import { z } from "astro/zod";
 import matter from "gray-matter";
 import pLimit from "p-limit";
@@ -187,67 +187,18 @@ export default function (loaderOptions: LoaderOptions): Loader {
         ...new Set(filesBySource.flat().map((sourceFile) => sourceFile.path)),
       ];
 
-      // Scrape all desired frontmatter field values from a source file
-      async function extractFieldValues(file: string): Promise<string[]> {
-        const fileUrl = pathToFileURL(file);
-        const contents = await fs.readFile(fileUrl, "utf-8").catch((err) => {
-          logger.error(`Error reading ${file}: ${err.message}`);
-          return;
+      const { stubEntryIds, extractFieldValues, syncStubEntry } =
+        await processStubEntries({
+          resolvedSourceFiles,
+          limit,
+          sourceField: loaderOptions.sourceField,
+          sourceFileValuesMap,
+          store,
+          generateDigest,
+          parseData,
+          untouchedEntries,
+          logger,
         });
-        if (!contents && contents !== "") {
-          logger.warn(`No contents found for ${file}`);
-          return [];
-        }
-        const { data } = matter(contents);
-        const fieldValue = data[loaderOptions.sourceField];
-        if (!fieldValue) {
-          return [];
-        }
-        const values = Array.isArray(fieldValue) ? fieldValue : [fieldValue];
-        // Coerce all values into strings
-        return values.flatMap((v) => {
-          switch (typeof v) {
-            case "string":
-              return [v];
-            case "number":
-            case "boolean":
-              return [String(v)];
-            default:
-              logger.warn(
-                `Unexpected value type "${typeof v}" for field "${loaderOptions.sourceField}" in ${file}, skipping`
-              );
-              return [];
-          }
-        });
-      }
-
-      // Store a single stub entry for a field value
-      async function syncStubEntry(value: string): Promise<void> {
-        const id = value;
-        const digest = generateDigest(value);
-        const existingEntry = store.get(id);
-        if (existingEntry?.digest === digest) {
-          return;
-        }
-        const parsedData = await parseData({ id, data: { name: value } });
-        store.set({ id, data: parsedData, digest });
-      }
-
-      // Store one stub entry per unique field value
-      const nestedFieldValues = await Promise.all(
-        resolvedSourceFiles.map((file) =>
-          limit(async () => {
-            const values = await extractFieldValues(file);
-            sourceFileValuesMap.set(file, new Set(values));
-            return values;
-          })
-        )
-      );
-      const stubEntryIds = new Set(nestedFieldValues.flat());
-      for (const value of stubEntryIds) {
-        await syncStubEntry(value);
-        untouchedEntries.delete(value);
-      }
 
       //// Process content files (optional)
       // Associate content files with stub entries (by matching the
@@ -270,177 +221,23 @@ export default function (loaderOptions: LoaderOptions): Loader {
           : picomatch(loaderOptions.contentPattern);
 
       if (contentBasePath != null && contentMatcher != null) {
-        // Capture narrowed non-null values so TypeScript can see them
-        // as `string` (not `string | null`) inside async watcher
-        // callbacks, where control-flow narrowing does not propagate.
-        const narrowedContentBasePath: string = contentBasePath;
-        const narrowedContentMatcher: (f: string) => boolean = contentMatcher;
-
-        const contentFiles = await tinyglobby(loaderOptions.contentPattern, {
-          cwd: narrowedContentBasePath,
-          expandDirectories: false,
+        await processContentFiles({
+          contentBasePath,
+          contentMatcher,
+          contentPattern: loaderOptions.contentPattern,
+          contentBase: loaderOptions.contentBase,
+          limit,
+          store,
+          generateDigest,
+          parseData,
+          rootPath,
+          stubEntryIds,
+          contentFileIdMap,
+          untouchedEntries,
+          watcher,
+          syncStubEntry,
+          logger,
         });
-        if (contentFiles.length === 0) {
-          logger.warn(
-            `No content files found matching "${loaderOptions.contentPattern}" in "${loaderOptions.contentBase}"`
-          );
-        }
-
-        // Process a single content file and update the store.
-        // Returns the resolved entry ID, or undefined if the file
-        // could not be processed.  The caller is responsible for
-        // updating `untouchedEntries` if relevant.
-        async function syncContentEntry(
-          file: string
-        ): Promise<string | undefined> {
-          const fileUrl = new URL(
-            encodeURI(file),
-            pathToFileURL(`${narrowedContentBasePath}/`)
-          );
-          const absPath = fileURLToPath(fileUrl);
-
-          const contents = await fs.readFile(fileUrl, "utf-8").catch((err) => {
-            logger.error(`Error reading ${file}: ${err.message}`);
-            return;
-          });
-          if (!contents && contents !== "") {
-            logger.warn(`No contents found for ${absPath}`);
-            return;
-          }
-          const { data: frontmatter } = matter(contents);
-
-          // Determine the entry ID: use `name` frontmatter field if
-          // present (and a string), otherwise slugify the parent
-          // directory name
-          let id: string;
-          if (frontmatter.name && typeof frontmatter.name === "string") {
-            id = frontmatter.name;
-          } else {
-            // Use the parent directory name as the slug, since
-            // content files like `foo-bar/index.mdx` may share the
-            // same filename
-            const dirname = file.split("/").at(-2) ?? file;
-            id = slugify(dirname, { lower: true, strict: true });
-          }
-          contentFileIdMap.set(absPath, id);
-
-          const digest = generateDigest(contents);
-          const existingEntry = store.get(id);
-          if (existingEntry?.digest === digest) {
-            return id;
-          }
-          const parsedData = await parseData({
-            id,
-            // `name` is kept in the data so the schema is consistent
-            // across stub entries and content entries
-            data: frontmatter,
-            filePath: absPath,
-          });
-          store.set({
-            id,
-            data: parsedData,
-            filePath: relative(rootPath, absPath).replace(/\\/g, "/"),
-            digest,
-            deferredRender: true,
-          });
-          return id;
-        }
-
-        if (existsSync(narrowedContentBasePath)) {
-          await Promise.all(
-            contentFiles.map((file) =>
-              limit(async () => {
-                const id = await syncContentEntry(file);
-                if (id) {
-                  untouchedEntries.delete(id);
-                }
-              })
-            )
-          );
-        } else {
-          logger.warn(
-            `The content base directory "${narrowedContentBasePath}" does not exist.`
-          );
-        }
-
-        //// Watcher handlers for content files
-        // Defined inside the content block so `syncContentEntry` and
-        // `narrowedContentBasePath` are in scope, and so they are
-        // only registered when content options are provided.
-
-        if (watcher) {
-          // Always add the watcher even if the directory doesn't
-          // currently exist
-          watcher.add(narrowedContentBasePath);
-
-          async function onContentChangeOrAdd(absPath: string) {
-            // Convert absolute path back to the relative form that
-            // syncContentEntry expects (relative to
-            // narrowedContentBasePath, posix-style)
-            try {
-              await syncContentEntry(
-                relative(narrowedContentBasePath, absPath).replace(/\\/g, "/")
-              );
-              logger.info(`Reloaded data from ${relative(rootPath, absPath)}`);
-            } catch (e) {
-              logger.error(
-                `Failed to reload ${relative(rootPath, absPath)}: ${(e as Error).message}`
-              );
-            }
-          }
-
-          async function onContentUnlink(absPath: string) {
-            const id = contentFileIdMap.get(absPath);
-            if (!id) {
-              return;
-            }
-            try {
-              contentFileIdMap.delete(absPath);
-              logger.info(`Removed entry for ${relative(rootPath, absPath)}`);
-              if (stubEntryIds.has(id)) {
-                // Revert to a stub entry rather than deleting outright
-                await syncStubEntry(id);
-              } else {
-                store.delete(id);
-              }
-            } catch (e) {
-              logger.error(
-                `Failed to remove entry for ${relative(rootPath, absPath)}: ${(e as Error).message}`
-              );
-            }
-          }
-
-          watcher.on("change", (absPath) => {
-            if (
-              absPath.startsWith(narrowedContentBasePath) &&
-              narrowedContentMatcher(
-                relative(narrowedContentBasePath, absPath).replace(/\\/g, "/")
-              )
-            ) {
-              onContentChangeOrAdd(absPath);
-            }
-          });
-          watcher.on("add", (absPath) => {
-            if (
-              absPath.startsWith(narrowedContentBasePath) &&
-              narrowedContentMatcher(
-                relative(narrowedContentBasePath, absPath).replace(/\\/g, "/")
-              )
-            ) {
-              onContentChangeOrAdd(absPath);
-            }
-          });
-          watcher.on("unlink", (absPath) => {
-            if (
-              absPath.startsWith(narrowedContentBasePath) &&
-              narrowedContentMatcher(
-                relative(narrowedContentBasePath, absPath).replace(/\\/g, "/")
-              )
-            ) {
-              onContentUnlink(absPath);
-            }
-          });
-        }
       }
 
       //// Cleanup
@@ -544,4 +341,287 @@ export default function (loaderOptions: LoaderOptions): Loader {
       });
     },
   } satisfies Loader;
+}
+
+// Store one stub entry per unique field value, returning the full set
+// of stub entry IDs, along with `extractFieldValues` and
+// `syncStubEntry` for use by the caller's watcher handlers.
+async function processStubEntries({
+  resolvedSourceFiles,
+  limit,
+  sourceField,
+  sourceFileValuesMap,
+  store,
+  generateDigest,
+  parseData,
+  untouchedEntries,
+  logger,
+}: {
+  resolvedSourceFiles: string[];
+  limit: ReturnType<typeof pLimit>;
+  sourceField: string;
+  sourceFileValuesMap: Map<string, Set<string>>;
+  store: LoaderContext["store"];
+  generateDigest: LoaderContext["generateDigest"];
+  parseData: LoaderContext["parseData"];
+  untouchedEntries: Set<string>;
+  logger: LoaderContext["logger"];
+}): Promise<{
+  stubEntryIds: Set<string>;
+  extractFieldValues: (file: string) => Promise<string[]>;
+  syncStubEntry: (value: string) => Promise<void>;
+}> {
+  // Scrape all desired frontmatter field values from a source file
+  async function extractFieldValues(file: string): Promise<string[]> {
+    const fileUrl = pathToFileURL(file);
+    const contents = await fs.readFile(fileUrl, "utf-8").catch((err) => {
+      logger.error(`Error reading ${file}: ${err.message}`);
+      return;
+    });
+    if (!contents && contents !== "") {
+      logger.warn(`No contents found for ${file}`);
+      return [];
+    }
+    const { data } = matter(contents);
+    const fieldValue = data[sourceField];
+    if (!fieldValue) {
+      return [];
+    }
+    const values = Array.isArray(fieldValue) ? fieldValue : [fieldValue];
+    // Coerce all values into strings
+    return values.flatMap((v) => {
+      switch (typeof v) {
+        case "string":
+          return [v];
+        case "number":
+        case "boolean":
+          return [String(v)];
+        default:
+          logger.warn(
+            `Unexpected value type "${typeof v}" for field "${sourceField}" in ${file}, skipping`
+          );
+          return [];
+      }
+    });
+  }
+
+  // Store a single stub entry for a field value
+  async function syncStubEntry(value: string): Promise<void> {
+    const id = value;
+    const digest = generateDigest(value);
+    const existingEntry = store.get(id);
+    if (existingEntry?.digest === digest) {
+      return;
+    }
+    const parsedData = await parseData({ id, data: { name: value } });
+    store.set({ id, data: parsedData, digest });
+  }
+
+  const nestedFieldValues = await Promise.all(
+    resolvedSourceFiles.map((file) =>
+      limit(async () => {
+        const values = await extractFieldValues(file);
+        sourceFileValuesMap.set(file, new Set(values));
+        return values;
+      })
+    )
+  );
+  const stubEntryIds = new Set(nestedFieldValues.flat());
+  for (const value of stubEntryIds) {
+    await syncStubEntry(value);
+    untouchedEntries.delete(value);
+  }
+  return { stubEntryIds, extractFieldValues, syncStubEntry };
+}
+
+// Process content files, associating them with stub entries or
+// creating new entries, and registering watcher handlers.
+async function processContentFiles({
+  contentBasePath,
+  contentMatcher,
+  contentPattern,
+  contentBase,
+  limit,
+  store,
+  generateDigest,
+  parseData,
+  rootPath,
+  stubEntryIds,
+  contentFileIdMap,
+  untouchedEntries,
+  watcher,
+  syncStubEntry,
+  logger,
+}: {
+  contentBasePath: string;
+  contentMatcher: (f: string) => boolean;
+  contentPattern: string;
+  contentBase: string;
+  limit: ReturnType<typeof pLimit>;
+  store: LoaderContext["store"];
+  generateDigest: LoaderContext["generateDigest"];
+  parseData: LoaderContext["parseData"];
+  rootPath: string;
+  stubEntryIds: Set<string>;
+  contentFileIdMap: Map<string, string>;
+  untouchedEntries: Set<string>;
+  watcher: LoaderContext["watcher"];
+  syncStubEntry: (value: string) => Promise<void>;
+  logger: LoaderContext["logger"];
+}): Promise<void> {
+  const contentFiles = await tinyglobby(contentPattern, {
+    cwd: contentBasePath,
+    expandDirectories: false,
+  });
+  if (contentFiles.length === 0) {
+    logger.warn(
+      `No content files found matching "${contentPattern}" in "${contentBase}"`
+    );
+  }
+
+  // Process a single content file and update the store.  Returns the
+  // resolved entry ID, or undefined if the file could not be
+  // processed.  The caller is responsible for updating
+  // `untouchedEntries` if relevant.
+  async function syncContentEntry(file: string): Promise<string | undefined> {
+    const fileUrl = new URL(
+      encodeURI(file),
+      pathToFileURL(`${contentBasePath}/`)
+    );
+    const absPath = fileURLToPath(fileUrl);
+
+    const contents = await fs.readFile(fileUrl, "utf-8").catch((err) => {
+      logger.error(`Error reading ${file}: ${err.message}`);
+      return;
+    });
+    if (!contents && contents !== "") {
+      logger.warn(`No contents found for ${absPath}`);
+      return;
+    }
+    const { data: frontmatter } = matter(contents);
+
+    // Determine the entry ID: use `name` frontmatter field if present
+    // (and a string), otherwise slugify the parent directory name
+    let id: string;
+    if (frontmatter.name && typeof frontmatter.name === "string") {
+      id = frontmatter.name;
+    } else {
+      // Use the parent directory name as the slug, since content
+      // files like `foo-bar/index.mdx` may share the same filename
+      const dirname = file.split("/").at(-2) ?? file;
+      id = slugify(dirname, { lower: true, strict: true });
+    }
+    contentFileIdMap.set(absPath, id);
+
+    const digest = generateDigest(contents);
+    const existingEntry = store.get(id);
+    if (existingEntry?.digest === digest) {
+      return id;
+    }
+    const parsedData = await parseData({
+      id,
+      // `name` is kept in the data so the schema is consistent across
+      // stub entries and content entries
+      data: frontmatter,
+      filePath: absPath,
+    });
+    store.set({
+      id,
+      data: parsedData,
+      filePath: relative(rootPath, absPath).replace(/\\/g, "/"),
+      digest,
+      deferredRender: true,
+    });
+    return id;
+  }
+
+  if (existsSync(contentBasePath)) {
+    await Promise.all(
+      contentFiles.map((file) =>
+        limit(async () => {
+          const id = await syncContentEntry(file);
+          if (id) {
+            untouchedEntries.delete(id);
+          }
+        })
+      )
+    );
+  } else {
+    logger.warn(
+      `The content base directory "${contentBasePath}" does not exist.`
+    );
+  }
+
+  //// Watcher handlers for content files
+  // Defined inside the content block so `syncContentEntry` and
+  // `contentBasePath` are in scope, and so they are only registered
+  // when content options are provided.
+
+  if (watcher) {
+    // Always add the watcher even if the directory doesn't currently
+    // exist
+    watcher.add(contentBasePath);
+
+    async function onContentChangeOrAdd(absPath: string) {
+      // Convert absolute path back to the relative form that
+      // `syncContentEntry` expects (relative to `contentBasePath`,
+      // posix-style)
+      try {
+        await syncContentEntry(
+          relative(contentBasePath, absPath).replace(/\\/g, "/")
+        );
+        logger.info(`Reloaded data from ${relative(rootPath, absPath)}`);
+      } catch (e) {
+        logger.error(
+          `Failed to reload ${relative(rootPath, absPath)}: ${(e as Error).message}`
+        );
+      }
+    }
+
+    async function onContentUnlink(absPath: string) {
+      const id = contentFileIdMap.get(absPath);
+      if (!id) {
+        return;
+      }
+      try {
+        contentFileIdMap.delete(absPath);
+        logger.info(`Removed entry for ${relative(rootPath, absPath)}`);
+        if (stubEntryIds.has(id)) {
+          // Revert to a stub entry rather than deleting outright
+          await syncStubEntry(id);
+        } else {
+          store.delete(id);
+        }
+      } catch (e) {
+        logger.error(
+          `Failed to remove entry for ${relative(rootPath, absPath)}: ${(e as Error).message}`
+        );
+      }
+    }
+
+    watcher.on("change", (absPath) => {
+      if (
+        absPath.startsWith(contentBasePath) &&
+        contentMatcher(relative(contentBasePath, absPath).replace(/\\/g, "/"))
+      ) {
+        onContentChangeOrAdd(absPath);
+      }
+    });
+    watcher.on("add", (absPath) => {
+      if (
+        absPath.startsWith(contentBasePath) &&
+        contentMatcher(relative(contentBasePath, absPath).replace(/\\/g, "/"))
+      ) {
+        onContentChangeOrAdd(absPath);
+      }
+    });
+    watcher.on("unlink", (absPath) => {
+      if (
+        absPath.startsWith(contentBasePath) &&
+        contentMatcher(relative(contentBasePath, absPath).replace(/\\/g, "/"))
+      ) {
+        onContentUnlink(absPath);
+      }
+    });
+  }
 }
