@@ -1,15 +1,51 @@
 ---
-import { getEntry, render } from "astro:content";
-import PostListing from "@components/PostListing.astro";
+import { getCollection, getEntry, render } from "astro:content";
+import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { isPublished } from "@lib/entries";
+import type { PostEntry } from "@lib/posts";
+import PostListingCompact from "@src/components/PostListingCompact.astro";
+import slugify from "slugify";
 
 const preamble = await getEntry("standalone", "selections");
 const { Content } = preamble ? await render(preamble) : { Content: null };
+
+const allSeries = await getCollection("series");
+
+function inThisSeries(seriesName: string) {
+  return (entry: PostEntry): boolean => {
+    const entrySeries: string[] = entry.data.series ?? [];
+    return entrySeries.includes(seriesName);
+  };
+}
 ---
 
 <BaseLayout pageTitle="Selections">
-  {preamble && isPublished(preamble) && Content && <section><Content /></section>}
+  <!-- `h1` for screen readers only -->
+  <Heading class="sr-only" level="1">Selections</Heading>
+  {preamble && isPublished(preamble) && Content && <Content />}
+  <hr>
 
-  <PostListing collection="articles" />
+  <Heading id="series" class="subdivision-heading" level="2" selfLink={true}
+    >Series</Heading
+  >
+  {allSeries.map((s) => (
+    <section>
+      <Heading
+        id={slugify(s.data.name, { lower: true, strict: true})}
+        level="3"
+        selfLink={true}
+      >{s.data.name}</Heading>
+      <PostListingCompact
+        collection="articles"
+        descending={false}
+        extraFilter={inThisSeries(s.data.name)} />
+    </section>
+  ))}
 </BaseLayout>
+
+<style>
+  .subdivision-heading {
+    text-align: center;
+  }
+</style>

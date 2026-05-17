@@ -45,10 +45,10 @@ const hasItems = postItems.length > 0;
 {hasItems &&
   <ul class="post-listing">
     {hasItems && postItems.map((item: ListingItem) => (
-      <li class="listing-item">
+      <li class="listing-item no-visited">
         <a class="title" href={item.href}>{item.title}</a>
         <a class="date" href={item.href}>
-          <time class="no-visited" datetime={toDateTimeAttribute(item.pubDate)}>
+          <time datetime={toDateTimeAttribute(item.pubDate)}>
             {formatDate(item.pubDate)}
           </time>
         </a>
