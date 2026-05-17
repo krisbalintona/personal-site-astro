@@ -56,9 +56,15 @@
   --neutral-1000: light-dark(#152030, #d7dbe0);
   --brand-primary: light-dark(#acd9f1, #2c799b);
   --brand-primary-soft: light-dark(#3e76a9, #3c4958);
-  --brand-secondary: light-dark(#a31621, #e95d69);
-  --brand-secondary-soft: light-dark(#7a1019, #f0404e);
-  --brand-secondary-hard: light-dark(#c94455, #ff8a93);
+  --brand-secondary: light-dark(#a31621, #d34957);
+  --brand-secondary-soft: light-dark(
+    oklch(from var(--brand-secondary) calc(l + 0.05) c h),
+    oklch(from var(--brand-secondary) calc(l - 0.03) c h)
+  );
+  --brand-secondary-hard: light-dark(
+    oklch(from var(--brand-secondary) calc(l - 0.07) c h),
+    oklch(from var(--brand-secondary) calc(l + 0.07) c h)
+  );
 
   /* Text: ordered by hierarchy, least to most prominent */
   --color-text: var(--neutral-1000);
