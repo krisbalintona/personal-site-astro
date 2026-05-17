@@ -45,8 +45,6 @@ const series = defineCollection({
       },
     ],
     sourceField: "series",
-    contentPattern: "*/index.mdx",
-    contentBase: "./src/content/series",
   }),
 });
 

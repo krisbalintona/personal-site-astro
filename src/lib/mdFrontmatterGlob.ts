@@ -29,6 +29,28 @@ import { glob as tinyglobby } from "tinyglobby";
 //   the content file's frontmatter, and their body is the content
 //   file's body.
 
+interface SourceOptions {
+  base?: string;
+  // Files whose frontmatter will be scanned
+  pattern: string;
+}
+
+interface LoaderOptionsWithContent {
+  contentBase: string; // Base directory for content files
+  contentPattern: string; // Glob pattern for content files, relative to `contentBase`
+  sourceField: string;
+  sources: SourceOptions[];
+}
+
+interface LoaderOptionsWithoutContent {
+  contentBase?: never;
+  contentPattern?: never;
+  sourceField: string;
+  sources: SourceOptions[];
+}
+
+type LoaderOptions = LoaderOptionsWithContent | LoaderOptionsWithoutContent;
+
 /**
  * An Astro content loader that creates one collection entry per
  * unique value of a frontmatter field found across a set of source
@@ -43,12 +65,17 @@ import { glob as tinyglobby } from "tinyglobby";
  * body.
  *
  * **Content files** (`contentBase` / `contentPattern`) are MD/MDX
- * files that can enrich or create entries. A content file is
+ * files that can enrich or create entries. Both options must be
+ * provided together, or neither. When provided, a content file is
  * associated with an existing stub entry when its `name` frontmatter
  * field matches a stub entry ID. If no match is found, a new entry is
  * created. Content entries have the content file's full frontmatter
  * as their data, and their body is available via `render()` /
  * `<Content />`.
+ *
+ * When `contentBase` and `contentPattern` are omitted, the loader
+ * produces stub-only entries: every unique value of `sourceField`
+ * becomes an entry with `{ name: value }` and no renderable body.
  *
  * The entry ID for a content file is determined as follows:
  * - If the file has a `name` frontmatter field, that value is used.
@@ -63,6 +90,7 @@ import { glob as tinyglobby } from "tinyglobby";
  *
  * @example
  * ```ts
+ * // With content enrichment
  * const tags = defineCollection({
  *   loader: mdFrontmatterLoader({
  *     sources: [
@@ -77,18 +105,19 @@ import { glob as tinyglobby } from "tinyglobby";
  *     description: z.string().optional(),
  *   }),
  * });
+ *
+ * // Stub entries only (no content files)
+ * const tags = defineCollection({
+ *   loader: mdFrontmatterLoader({
+ *     sources: [
+ *       { pattern: "**\/index.mdx", base: "src/content/articles" },
+ *     ],
+ *     sourceField: "tags",
+ *   }),
+ * });
  * ```
  */
-export default function (loaderOptions: {
-  sources: {
-    // Files whose frontmatter will be scanned
-    pattern: string;
-    base?: string;
-  }[];
-  sourceField: string; // Frontmatter field
-  contentPattern: string; // Pattern for content files
-  contentBase: string; // Base for content files
-}): Loader {
+export default function (loaderOptions: LoaderOptions): Loader {
   return {
     name: "md-frontmatter-glob-loader",
     schema: z.object({
@@ -129,7 +158,6 @@ export default function (loaderOptions: {
         base: source.base,
         match: picomatch(source.pattern),
       }));
-      const contentMatcher = picomatch(loaderOptions.contentPattern);
 
       //// Process source files
 
@@ -221,102 +249,198 @@ export default function (loaderOptions: {
         untouchedEntries.delete(value);
       }
 
-      //// Process content files
+      //// Process content files (optional)
       // Associate content files with stub entries (by matching the
       // content file's `name` frontmatter field or slugified filename
       // to a stub entry ID), or create new content entries if no
       // match is found.
 
-      const contentBaseUrl = new URL(
-        loaderOptions.contentBase,
-        pathToFileURL(`${rootPath}/`)
-      );
-      const contentBasePath = fileURLToPath(contentBaseUrl);
-      const contentFiles = await tinyglobby(loaderOptions.contentPattern, {
-        cwd: contentBasePath,
-        expandDirectories: false,
-      });
-      if (contentFiles.length === 0) {
-        logger.warn(
-          `No content files found matching "${loaderOptions.contentPattern}" in "${loaderOptions.contentBase}"`
-        );
-      }
+      const contentBasePath =
+        loaderOptions.contentBase == null
+          ? null
+          : fileURLToPath(
+              new URL(loaderOptions.contentBase, pathToFileURL(`${rootPath}/`))
+            );
 
-      // Process a single content file and update the store.  Returns
-      // the resolved entry ID, or undefined if the file could not be
-      // processed.  The caller is responsible for updating
-      // `untouchedEntries` if relevant.
-      async function syncContentEntry(
-        file: string
-      ): Promise<string | undefined> {
-        const fileUrl = new URL(
-          encodeURI(file),
-          pathToFileURL(`${contentBasePath}/`)
-        );
-        const absPath = fileURLToPath(fileUrl);
+      // Used by the watcher to filter change events to files matching
+      // the pattern; only defined when content options are provided.
+      const contentMatcher =
+        loaderOptions.contentPattern == null
+          ? null
+          : picomatch(loaderOptions.contentPattern);
 
-        const contents = await fs.readFile(fileUrl, "utf-8").catch((err) => {
-          logger.error(`Error reading ${file}: ${err.message}`);
-          return;
+      if (contentBasePath != null && contentMatcher != null) {
+        // Capture narrowed non-null values so TypeScript can see them
+        // as `string` (not `string | null`) inside async watcher
+        // callbacks, where control-flow narrowing does not propagate.
+        const narrowedContentBasePath: string = contentBasePath;
+        const narrowedContentMatcher: (f: string) => boolean = contentMatcher;
+
+        const contentFiles = await tinyglobby(loaderOptions.contentPattern, {
+          cwd: narrowedContentBasePath,
+          expandDirectories: false,
         });
-        if (!contents && contents !== "") {
-          logger.warn(`No contents found for ${absPath}`);
-          return;
+        if (contentFiles.length === 0) {
+          logger.warn(
+            `No content files found matching "${loaderOptions.contentPattern}" in "${loaderOptions.contentBase}"`
+          );
         }
-        const { data: frontmatter } = matter(contents);
 
-        // Determine the entry ID: use `name` frontmatter field if
-        // present (and a string), otherwise slugify the parent
-        // directory name
-        let id: string;
-        if (frontmatter.name && typeof frontmatter.name === "string") {
-          id = frontmatter.name;
-        } else {
-          // Use the parent directory name as the slug, since content
-          // files like `foo-bar/index.mdx` may share the same
-          // filename
-          const dirname = file.split("/").at(-2) ?? file;
-          id = slugify(dirname, { lower: true, strict: true });
-        }
-        contentFileIdMap.set(absPath, id);
+        // Process a single content file and update the store.
+        // Returns the resolved entry ID, or undefined if the file
+        // could not be processed.  The caller is responsible for
+        // updating `untouchedEntries` if relevant.
+        async function syncContentEntry(
+          file: string
+        ): Promise<string | undefined> {
+          const fileUrl = new URL(
+            encodeURI(file),
+            pathToFileURL(`${narrowedContentBasePath}/`)
+          );
+          const absPath = fileURLToPath(fileUrl);
 
-        const digest = generateDigest(contents);
-        const existingEntry = store.get(id);
-        if (existingEntry?.digest === digest) {
+          const contents = await fs.readFile(fileUrl, "utf-8").catch((err) => {
+            logger.error(`Error reading ${file}: ${err.message}`);
+            return;
+          });
+          if (!contents && contents !== "") {
+            logger.warn(`No contents found for ${absPath}`);
+            return;
+          }
+          const { data: frontmatter } = matter(contents);
+
+          // Determine the entry ID: use `name` frontmatter field if
+          // present (and a string), otherwise slugify the parent
+          // directory name
+          let id: string;
+          if (frontmatter.name && typeof frontmatter.name === "string") {
+            id = frontmatter.name;
+          } else {
+            // Use the parent directory name as the slug, since
+            // content files like `foo-bar/index.mdx` may share the
+            // same filename
+            const dirname = file.split("/").at(-2) ?? file;
+            id = slugify(dirname, { lower: true, strict: true });
+          }
+          contentFileIdMap.set(absPath, id);
+
+          const digest = generateDigest(contents);
+          const existingEntry = store.get(id);
+          if (existingEntry?.digest === digest) {
+            return id;
+          }
+          const parsedData = await parseData({
+            id,
+            // `name` is kept in the data so the schema is consistent
+            // across stub entries and content entries
+            data: frontmatter,
+            filePath: absPath,
+          });
+          store.set({
+            id,
+            data: parsedData,
+            filePath: relative(rootPath, absPath).replace(/\\/g, "/"),
+            digest,
+            deferredRender: true,
+          });
           return id;
         }
-        const parsedData = await parseData({
-          id,
-          // `name` is kept in the data so the schema is
-          // consistent across stub entries and content entries
-          data: frontmatter,
-          filePath: absPath,
-        });
-        store.set({
-          id,
-          data: parsedData,
-          filePath: relative(rootPath, absPath).replace(/\\/g, "/"),
-          digest,
-          deferredRender: true,
-        });
-        return id;
-      }
 
-      if (existsSync(contentBasePath)) {
-        await Promise.all(
-          contentFiles.map((file) =>
-            limit(async () => {
-              const id = await syncContentEntry(file);
-              if (id) {
-                untouchedEntries.delete(id);
+        if (existsSync(narrowedContentBasePath)) {
+          await Promise.all(
+            contentFiles.map((file) =>
+              limit(async () => {
+                const id = await syncContentEntry(file);
+                if (id) {
+                  untouchedEntries.delete(id);
+                }
+              })
+            )
+          );
+        } else {
+          logger.warn(
+            `The content base directory "${narrowedContentBasePath}" does not exist.`
+          );
+        }
+
+        //// Watcher handlers for content files
+        // Defined inside the content block so `syncContentEntry` and
+        // `narrowedContentBasePath` are in scope, and so they are
+        // only registered when content options are provided.
+
+        if (watcher) {
+          // Always add the watcher even if the directory doesn't
+          // currently exist
+          watcher.add(narrowedContentBasePath);
+
+          async function onContentChangeOrAdd(absPath: string) {
+            // Convert absolute path back to the relative form that
+            // syncContentEntry expects (relative to
+            // narrowedContentBasePath, posix-style)
+            try {
+              await syncContentEntry(
+                relative(narrowedContentBasePath, absPath).replace(/\\/g, "/")
+              );
+              logger.info(`Reloaded data from ${relative(rootPath, absPath)}`);
+            } catch (e) {
+              logger.error(
+                `Failed to reload ${relative(rootPath, absPath)}: ${(e as Error).message}`
+              );
+            }
+          }
+
+          async function onContentUnlink(absPath: string) {
+            const id = contentFileIdMap.get(absPath);
+            if (!id) {
+              return;
+            }
+            try {
+              contentFileIdMap.delete(absPath);
+              logger.info(`Removed entry for ${relative(rootPath, absPath)}`);
+              if (stubEntryIds.has(id)) {
+                // Revert to a stub entry rather than deleting outright
+                await syncStubEntry(id);
+              } else {
+                store.delete(id);
               }
-            })
-          )
-        );
-      } else {
-        logger.warn(
-          `The content base directory "${contentBasePath}" does not exist.`
-        );
+            } catch (e) {
+              logger.error(
+                `Failed to remove entry for ${relative(rootPath, absPath)}: ${(e as Error).message}`
+              );
+            }
+          }
+
+          watcher.on("change", (absPath) => {
+            if (
+              absPath.startsWith(narrowedContentBasePath) &&
+              narrowedContentMatcher(
+                relative(narrowedContentBasePath, absPath).replace(/\\/g, "/")
+              )
+            ) {
+              onContentChangeOrAdd(absPath);
+            }
+          });
+          watcher.on("add", (absPath) => {
+            if (
+              absPath.startsWith(narrowedContentBasePath) &&
+              narrowedContentMatcher(
+                relative(narrowedContentBasePath, absPath).replace(/\\/g, "/")
+              )
+            ) {
+              onContentChangeOrAdd(absPath);
+            }
+          });
+          watcher.on("unlink", (absPath) => {
+            if (
+              absPath.startsWith(narrowedContentBasePath) &&
+              narrowedContentMatcher(
+                relative(narrowedContentBasePath, absPath).replace(/\\/g, "/")
+              )
+            ) {
+              onContentUnlink(absPath);
+            }
+          });
+        }
       }
 
       //// Cleanup
@@ -326,7 +450,7 @@ export default function (loaderOptions: {
         store.delete(id);
       }
 
-      //// Watchers (for dev server only)
+      //// Watchers for source files (dev server only)
       if (!watcher) {
         return;
       }
@@ -336,13 +460,13 @@ export default function (loaderOptions: {
         // resolved on the first run
         watcher.add(source.base);
       }
-      watcher.add(contentBasePath);
 
       //// Source file watcher handlers
 
       // Delete a stub entry only if no source file still references
       // its value, and only if it doesn't have an associated content
-      // file (content entries have filePath set; stub entries don't)
+      // file (content entries have `filePath` set; stub entries
+      // don't)
       function deleteStubEntryMaybe(value: string) {
         const stillExists = [...sourceFileValuesMap.values()].some(
           (fileValues) => fileValues.has(value)
@@ -394,98 +518,28 @@ export default function (loaderOptions: {
         }
       }
 
-      //// Content file watcher handlers
-
-      async function onContentChangeOrAdd(absPath: string) {
-        // Convert absolute path back to the relative form that
-        // syncContentEntry expects (relative to contentBasePath,
-        // posix-style)
-        try {
-          await syncContentEntry(
-            relative(contentBasePath, absPath).replace(/\\/g, "/")
-          );
-          logger.info(`Reloaded data from ${relative(rootPath, absPath)}`);
-        } catch (e) {
-          logger.error(
-            `Failed to reload ${relative(rootPath, absPath)}: ${(e as Error).message}`
-          );
-        }
-      }
-
-      async function onContentUnlink(absPath: string) {
-        const id = contentFileIdMap.get(absPath);
-        if (!id) {
-          return;
-        }
-        try {
-          contentFileIdMap.delete(absPath);
-          logger.info(`Removed entry for ${relative(rootPath, absPath)}`);
-          if (stubEntryIds.has(id)) {
-            // Revert to a stub entry rather than deleting outright
-            await syncStubEntry(id);
-          } else {
-            store.delete(id);
-          }
-        } catch (e) {
-          logger.error(
-            `Failed to remove entry for ${relative(rootPath, absPath)}: ${(e as Error).message}`
-          );
-        }
-      }
-
-      //// Route watcher events to the correct handler
       watcher.on("change", (absPath) => {
-        if (absPath.startsWith(contentBasePath)) {
-          if (
-            contentMatcher(
-              relative(contentBasePath, absPath).replace(/\\/g, "/")
-            )
-          ) {
-            onContentChangeOrAdd(absPath);
-          }
-        } else {
-          const matchingSource = sourceMatchers.find(({ base, match }) =>
-            match(relative(base, absPath).replace(/\\/g, "/"))
-          );
-          if (matchingSource) {
-            onSourceChangeOrAdd(absPath);
-          }
+        const matchingSource = sourceMatchers.find(({ base, match }) =>
+          match(relative(base, absPath).replace(/\\/g, "/"))
+        );
+        if (matchingSource) {
+          onSourceChangeOrAdd(absPath);
         }
       });
       watcher.on("add", (absPath) => {
-        if (absPath.startsWith(contentBasePath)) {
-          if (
-            contentMatcher(
-              relative(contentBasePath, absPath).replace(/\\/g, "/")
-            )
-          ) {
-            onContentChangeOrAdd(absPath);
-          }
-        } else {
-          const matchingSource = sourceMatchers.find(({ base, match }) =>
-            match(relative(base, absPath).replace(/\\/g, "/"))
-          );
-          if (matchingSource) {
-            onSourceChangeOrAdd(absPath);
-          }
+        const matchingSource = sourceMatchers.find(({ base, match }) =>
+          match(relative(base, absPath).replace(/\\/g, "/"))
+        );
+        if (matchingSource) {
+          onSourceChangeOrAdd(absPath);
         }
       });
       watcher.on("unlink", (absPath) => {
-        if (absPath.startsWith(contentBasePath)) {
-          if (
-            contentMatcher(
-              relative(contentBasePath, absPath).replace(/\\/g, "/")
-            )
-          ) {
-            onContentUnlink(absPath);
-          }
-        } else {
-          const matchingSource = sourceMatchers.find(({ base, match }) =>
-            match(relative(base, absPath).replace(/\\/g, "/"))
-          );
-          if (matchingSource) {
-            onSourceUnlink(absPath);
-          }
+        const matchingSource = sourceMatchers.find(({ base, match }) =>
+          match(relative(base, absPath).replace(/\\/g, "/"))
+        );
+        if (matchingSource) {
+          onSourceUnlink(absPath);
         }
       });
     },
