@@ -1,12 +1,12 @@
 ---
-import ArticleListing from "@components/ArticleListing.astro";
+import PostListing from "@components/PostListing.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 ---
 
 <BaseLayout pageTitle="Articles">
   All my articles:
 
-  <ArticleListing />
+  <PostListing collection="articles" />
 </BaseLayout>
 
 <style is:global lang="scss">

@@ -1,8 +1,12 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
-import { formatDate, isPublished, toDateTimeAttribute } from "@lib/entries";
-import type { PostEntry } from "@lib/posts";
-import { $path } from "astro-typesafe-routes/path";
+import {
+  formatDate,
+  getEntryUrl,
+  isPublished,
+  toDateTimeAttribute,
+} from "@lib/entries";
+import type { PostCollection, PostEntry } from "@lib/posts";
 
 export interface ListingItem {
   href: string;
@@ -11,38 +15,36 @@ export interface ListingItem {
 }
 
 interface Props {
+  collection: PostCollection;
   descending?: boolean;
   extraFilter?: (entry: PostEntry) => boolean;
 }
 
-const { extraFilter = () => true, descending = true } = Astro.props;
+const { collection, extraFilter = () => true, descending = true } = Astro.props;
 
 const finalFilter = (entry: PostEntry): boolean =>
   isPublished(entry) && extraFilter(entry);
 
-const articles = await getCollection("articles", finalFilter);
-const articleItems: ListingItem[] = articles
+const posts = await getCollection(collection, finalFilter);
+const postItems: ListingItem[] = posts
   .map(
-    (article: CollectionEntry<"articles">): ListingItem => ({
-      title: article.data.title,
-      pubDate: article.data.pubDate,
-      href: $path({
-        to: "/articles/[titleSlug]",
-        params: { titleSlug: article.data.titleSlug },
-      }),
+    (post: CollectionEntry<PostCollection>): ListingItem => ({
+      title: post.data.title,
+      pubDate: post.data.pubDate,
+      href: getEntryUrl(post),
     })
   )
   .sort((a, b) => {
     const diff = a.pubDate.getTime() - b.pubDate.getTime();
     return descending ? -diff : diff;
   });
-const hasItems = articleItems.length > 0;
+const hasItems = postItems.length > 0;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
 {hasItems &&
-  <ul class="article-listing">
-    {hasItems && articleItems.map((item: ListingItem) => (
+  <ul class="post-listing">
+    {hasItems && postItems.map((item: ListingItem) => (
       <li class="listing-item">
         <a class="title" href={item.href}>{item.title}</a>
         <a class="date" href={item.href}>
@@ -55,7 +57,7 @@ const hasItems = articleItems.length > 0;
   </ul>}
 
 <style>
-  :where(.article-listing) {
+  :where(.post-listing) {
     padding: 0;
     margin: var(--space-l) 0 0 0;
     list-style: none;

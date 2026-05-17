@@ -1,9 +1,9 @@
 ---
 import { type CollectionEntry, getCollection, render } from "astro:content";
-import ArticleListing from "@components/ArticleListing.astro";
 import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
+import PostListing from "@components/PostListing.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import type { PostEntry } from "@lib/posts";
 import { createRoute } from "astro-typesafe-routes/create-route";
@@ -50,7 +50,7 @@ const breadcrumbs: BreadcrumbComponent[] = [
 
   {Content && <article><Content /></article>}
 
-  <ArticleListing extraFilter={hasThisTag} />
+  <PostListing collection="articles" extraFilter={hasThisTag} />
 </BaseLayout>
 
 <style>
