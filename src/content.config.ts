@@ -26,10 +26,6 @@ const tags = defineCollection({
         pattern: "*/index.mdx",
         base: "src/content/articles/",
       },
-      {
-        pattern: "*/index.mdx",
-        base: "src/content/standalone",
-      },
     ],
     sourceField: "tags",
     contentPattern: "*/index.mdx",
