@@ -48,6 +48,9 @@ This option is used to define the value of other relevant paths.")
 (defconst org-mdx-tags-dir (expand-file-name "tags/" org-mdx-content-dir)
   "Directory where custom tag pages will be exported to.")
 
+(defconst org-mdx-series-dir (expand-file-name "series/" org-mdx-content-dir)
+  "Directory where custom series pages will be exported to.")
+
 (defconst org-mdx-standalone-dir (expand-file-name "standalone/" org-mdx-content-dir)
   "Directory where standalone content will be exported to.")
 
@@ -814,7 +817,7 @@ communication channel for the export process."
                (when parsed-series
                  (org-mdx--frontmatter-build-list "series" parsed-series))))
          (setq frontmatter (string-join (delq nil (list title date draft tags series)) "\n"))))
-      ("tags"
+      ((or "tags" "series")
        (let* ((name (when raw-title (concat "name: " escaped-title))))
          (setq frontmatter (string-join (delq nil (list name draft)) "\n")))))
 
@@ -1135,6 +1138,12 @@ This function is used as the :publishing-function in
       :publishing-directory ,org-mdx-tags-dir
       :recursive t
       :mdx-entry-type "tags"
+      ,@base-options)
+     ("series"
+      :base-directory ,(expand-file-name "series" krisb-manuscript-blog-directory)
+      :publishing-directory ,org-mdx-series-dir
+      :recursive t
+      :mdx-entry-type "series"
       ,@base-options))))
 
 ;;; Provide

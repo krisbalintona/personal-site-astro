@@ -27,23 +27,35 @@ function inThisSeries(seriesName: string) {
   <Heading id="series" class="subdivision-heading" level="2" selfLink={true}
     >Series</Heading
   >
-  {allSeries.map((s) => (
-    <section>
-      <Heading
-        id={slugify(s.data.name, { lower: true, strict: true})}
-        level="3"
-        selfLink={true}
-      >{s.data.name}</Heading>
-      <PostListingCompact
-        collection="articles"
-        descending={false}
-        extraFilter={inThisSeries(s.data.name)} />
-    </section>
-  ))}
+  {allSeries.map(async (s) => {
+     const seriesEntry = (await getCollection("series")).find((e) => e.data.name === s.data.name);
+     const { Content } = seriesEntry ? await render(seriesEntry) : { Content: null };
+
+     return (
+       <section>
+         <Heading
+           id={slugify(s.data.name, { lower: true, strict: true})}
+           level="3"
+           selfLink={true}
+         >{s.data.name}</Heading>
+         {seriesEntry && isPublished(seriesEntry) && Content && <Content />}
+         
+         <div class="listing-container">
+           <PostListingCompact
+             collection="articles"
+             descending={false}
+             extraFilter={inThisSeries(s.data.name)} />
+         </div>
+       </section>
+       )})}
 </BaseLayout>
 
 <style>
   .subdivision-heading {
     text-align: center;
+  }
+
+  .listing.container {
+    padding: 0 var(--space-m) 0 var(--space-m);
   }
 </style>
