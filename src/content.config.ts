@@ -1,4 +1,8 @@
-import { type CollectionEntry, defineCollection } from "astro:content";
+import {
+  type CollectionEntry,
+  defineCollection,
+  reference,
+} from "astro:content";
 import mdFrontmatterLoader from "@lib/mdFrontmatterGlob.ts";
 import { extendPostSchema, postSchema } from "@lib/posts.ts";
 import { glob } from "astro/loaders";
@@ -10,7 +14,8 @@ const articles = defineCollection({
     base: "./src/content/articles",
   }),
   schema: extendPostSchema({
-    series: z.array(z.string()).optional(),
+    tags: z.array(reference("tags")).optional(),
+    series: z.array(reference("series")).optional(),
   }),
 });
 

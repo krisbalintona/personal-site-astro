@@ -15,11 +15,11 @@ const tagsOrdered: CollectionEntry<"tags">[] = tags?.sort((a, b) =>
 // collections' schema, then I can just find which post entries reference
 // a given tag (content collection) entry without using a Map
 const tagCounts: Map<string, number> = new Map();
-const entries = await allPostEntries(isPublished);
+const posts = await allPostEntries(isPublished);
 
-for (const entry of entries) {
-  for (const t of entry.data.tags ?? []) {
-    tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
+for (const post of posts) {
+  for (const tag of post.data.tags ?? []) {
+    tagCounts.set(tag.id, (tagCounts.get(tag.id) ?? 0) + 1);
   }
 }
 ---

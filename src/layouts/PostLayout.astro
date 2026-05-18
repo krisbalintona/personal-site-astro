@@ -1,5 +1,5 @@
 ---
-import { render } from "astro:content";
+import { getEntry, render } from "astro:content";
 import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
@@ -53,11 +53,17 @@ const { Content } = await render(post);
     <footer class="post-footer">
       <div class="post-tags-container">
         {tags && <span id="tags-label">tagged: </span>}
-        {tags?.map((tag, i) =>
-        <>{i > 0 && ", "}
-          <Link class="tag" params={{ tag: slugify(tag) }} to="/tags/[tag]">{tag}</Link>
-        </>
-      )}
+        {tags?.map(async (t, i) => {
+          const tag = await getEntry(t);
+
+          return (
+            <>
+              {i > 0 && ", "}
+              <Link class="tag" params={{ tag: slugify(tag.data.name) }} to="/tags/[tag]"
+              >{tag.data.name}</Link>
+            </>
+          )}
+        )}
       </div>
     </footer>
   </article>

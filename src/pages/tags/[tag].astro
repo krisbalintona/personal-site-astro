@@ -6,7 +6,6 @@ import Breadcrumb, {
 import PostListing from "@components/PostListing.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { isPublished } from "@lib/entries";
-import type { PostEntry } from "@lib/posts";
 import { createRoute } from "astro-typesafe-routes/create-route";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
@@ -26,18 +25,13 @@ interface Props {
   tag: CollectionEntry<"tags">;
 }
 
-const { tag } = Astro.props;
-const tagName = tag.data.name;
+const { tag: tagEntry } = Astro.props;
+const tagName = tagEntry.data.name;
 
-function hasThisTag(entry: PostEntry): boolean {
-  const entryTags: string[] = entry.data.tags ?? [];
-
-  return entryTags.includes(tagName);
+function hasThisTag(article: CollectionEntry<"articles">): boolean {
+  return article.data.tags?.some((t) => t.id === tagEntry.id) ?? false;
 }
 
-const tagEntry = (await getCollection("tags")).find(
-  (e) => e.data.name === tag.data.name
-);
 const { Content } = tagEntry ? await render(tagEntry) : { Content: null };
 
 const breadcrumbs: BreadcrumbComponent[] = [

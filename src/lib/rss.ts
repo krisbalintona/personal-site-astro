@@ -1,4 +1,4 @@
-import { render } from "astro:content";
+import { getEntries, render } from "astro:content";
 import mdxRenderer from "@astrojs/mdx/server.js";
 import generateRssFeed, { type RSSFeedItem } from "@astrojs/rss";
 import { SITE_TITLE, SITE_URL } from "@lib/consts.ts";
@@ -122,7 +122,9 @@ export const rssArticleItems: RSSFeedItem[] = await Promise.all(
     return {
       title: post.data.title,
       pubDate: post.data.pubDate,
-      categories: post.data.tags,
+      categories: (await getEntries(post.data.tags ?? []))?.map(
+        (p) => p.data.name
+      ),
       link: $path({
         to: "/posts/[permalinkSlug]",
         params: { permalinkSlug: post.data.permalinkSlug },

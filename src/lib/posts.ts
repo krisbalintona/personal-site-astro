@@ -22,7 +22,6 @@ export const basePostSchema = rssSchema.extend({
   title: z.string().default("Untitled"),
   pubDate: z.coerce.date().default(new Date("1970-01-01")),
   draft: z.boolean().default(true),
-  tags: z.array(z.string()).optional(),
 });
 
 // Zod does not support .extend() on transformed schemas.  Since we

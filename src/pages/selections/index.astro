@@ -1,4 +1,5 @@
 ---
+import type { CollectionEntry } from "astro:content";
 import { getCollection, getEntry, render } from "astro:content";
 import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
@@ -10,13 +11,11 @@ import slugify from "slugify";
 const preamble = await getEntry("standalone", "selections");
 const { Content } = preamble ? await render(preamble) : { Content: null };
 
-const allSeries = await getCollection("series");
+const allSeriesEntries = await getCollection("series");
 
-function inThisSeries(seriesName: string) {
-  return (entry: PostEntry): boolean => {
-    const entrySeries: string[] = entry.data.series ?? [];
-    return entrySeries.includes(seriesName);
-  };
+function inThisSeries(seriesEntry: CollectionEntry<"series">) {
+  return (post: PostEntry): boolean =>
+    post.data.series?.some((s) => s.id === seriesEntry.id) ?? false;
 }
 ---
 
@@ -27,7 +26,7 @@ function inThisSeries(seriesName: string) {
   <Heading id="series" class="subdivision-heading" level="2" selfLink={true}
     >Series</Heading
   >
-  {allSeries.map(async (s) => {
+  {allSeriesEntries.map(async (s) => {
      const seriesEntry = (await getCollection("series")).find((e) => e.data.name === s.data.name);
      const { Content } = seriesEntry ? await render(seriesEntry) : { Content: null };
 
@@ -44,7 +43,7 @@ function inThisSeries(seriesName: string) {
            <PostListingCompact
              collection="articles"
              descending={false}
-             extraFilter={inThisSeries(s.data.name)} />
+             extraFilter={inThisSeries(s)} />
          </div>
        </section>
        )})}
