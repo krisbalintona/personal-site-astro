@@ -6,7 +6,6 @@ import { z } from "astro/zod";
 import matter from "gray-matter";
 import pLimit from "p-limit";
 import picomatch from "picomatch";
-import slugify from "slugify";
 import { glob as tinyglobby } from "tinyglobby";
 
 // Notes on terminology:
@@ -531,16 +530,13 @@ async function processContentFiles({
     const { data: frontmatter } = matter(contents);
 
     // Determine the entry ID: use `title` frontmatter field if
-    // present (and a string), otherwise slugify the parent directory
-    // name
+    // present (and a string), otherwise error
     let id: string;
     if (frontmatter.title && typeof frontmatter.title === "string") {
       id = frontmatter.title;
     } else {
-      // Use the parent directory name as the slug, since content
-      // files like `foo-bar/index.mdx` may share the same filename
-      const dirname = file.split("/").at(-2) ?? file;
-      id = slugify(dirname, { lower: true, strict: true });
+      logger.error(`File ${file} should have title in the frontmatter`);
+      return;
     }
     contentFileIdMap.set(absPath, id);
 
