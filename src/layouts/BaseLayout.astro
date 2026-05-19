@@ -25,38 +25,27 @@ const { pageTitle, displayTitle } = Astro.props;
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width">
     <meta name="generator" content={Astro.generator}>
+    <title>{`${pageTitle} - ${SITE_TITLE}`}</title>
 
-    <!-- Astro fonts -->
+    {/* Astro fonts */}
     <Font cssVariable="--font-primary" />
     <Font cssVariable="--font-ui" />
     <Font cssVariable="--font-code" />
 
-    <!-- astrojs/sitemap -->
+    {/* astrojs/sitemap */}
     <link rel="sitemap" href="/sitemap-index.xml">
 
-    <!-- RSS autodiscovery. See
+    {/* RSS autodiscovery. See
     https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery
-    for more information -->
+    for more information */}
+    {Object.entries(RSSFeeds).map(([feedName, channel]) =>
     <link
       rel="alternate"
       type="application/rss+xml"
-      title={RSSFeeds.all.title}
-      href={$path({ to: "/feeds/[feed].xml", params: { feed: "all" } })}
+      title={channel.title}
+      href={$path({ to: "/feeds/[feed].xml", params: { feed: feedName } })}
     >
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title={RSSFeeds.articles.title}
-      href={$path({ to: "/feeds/[feed].xml", params: { feed: "articles" } })}
-    >
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title={RSSFeeds.notes.title}
-      href={$path({ to: "/feeds/[feed].xml", params: { feed: "notes" } })}
-    >
-
-    <title>{`${pageTitle} - ${SITE_TITLE}`}</title>
+    )}
   </head>
 
   <body>
