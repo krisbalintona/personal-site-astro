@@ -4,6 +4,19 @@ import mdFrontmatterLoader from "@lib/mdFrontmatterGlob.ts";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
+// * Expressions
+
+const expressionSources = [
+  {
+    pattern: "*/index.mdx",
+    base: "src/content/articles/",
+  },
+  {
+    pattern: "*/index.mdx",
+    base: "src/content/notes/",
+  },
+];
+
 const articles = defineCollection({
   loader: glob({
     pattern: "*/index.mdx",
@@ -20,18 +33,11 @@ const notes = defineCollection({
   schema: expressionSchema,
 });
 
+// * Taxonomy
+
 const tags = defineCollection({
   loader: mdFrontmatterLoader({
-    sources: [
-      {
-        pattern: "*/index.mdx",
-        base: "src/content/articles/",
-      },
-      {
-        pattern: "*/index.mdx",
-        base: "src/content/notes/",
-      },
-    ],
+    sources: expressionSources,
     sourceField: "tags",
     contentPattern: "*/index.mdx",
     contentBase: "./src/content/tags",
@@ -41,22 +47,15 @@ const tags = defineCollection({
 
 const threads = defineCollection({
   loader: mdFrontmatterLoader({
-    sources: [
-      {
-        pattern: "*/index.mdx",
-        base: "src/content/articles/",
-      },
-      {
-        pattern: "*/index.mdx",
-        base: "src/content/standalone",
-      },
-    ],
+    sources: expressionSources,
     sourceField: "threads",
     contentPattern: "*/index.mdx",
     contentBase: "./src/content/threads",
   }),
   schema: z.object(baseContentShape),
 });
+
+// * Other
 
 const standalone = defineCollection({
   loader: glob({
@@ -65,6 +64,8 @@ const standalone = defineCollection({
   }),
   schema: z.object(baseContentShape),
 });
+
+// * Export variables
 
 export type AnyCollectionName = keyof typeof collections;
 export type AnyCollectionEntry = CollectionEntry<AnyCollectionName>;
