@@ -30,8 +30,8 @@ const HeadingLevel = headingOptions[level] as HeadingTag;
   class:list={["heading", level, "no-visited", classSpecified]}
   {...rest}
   ><slot />
-  {selfLink && <a aria-label="Link to this section" href={`#${id}`}> §</a>}</HeadingLevel
->
+  {selfLink && <a class="self-link" aria-label="Link to this section" href={`#${id}`}> §</a>}
+</HeadingLevel>
 
 <style>
   :where(.heading) {
@@ -39,6 +39,9 @@ const HeadingLevel = headingOptions[level] as HeadingTag;
 
     a {
       --link-underline-color: transparent;
+    }
+    
+    .self-link {
       color: var(--color-accent);
       opacity: 0;
 
@@ -47,7 +50,7 @@ const HeadingLevel = headingOptions[level] as HeadingTag;
       }
     }
 
-    &:hover > a {
+    &:hover > .self-link {
       opacity: 1;
     }
   }
