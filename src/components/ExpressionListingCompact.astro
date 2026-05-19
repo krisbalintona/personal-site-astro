@@ -49,11 +49,18 @@ const expressionItems: ListingItem[] = expressions
     return descending ? -diff : diff;
   });
 const hasItems = expressionItems.length > 0;
+const itemCount = expressionItems.length;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
 {hasItems &&
-  <ol class="expression-listing">
+/* Note: `reversed={descending}` has no visual effect (we set
+`list-style: none` below, removing the native markers), but preserves
+semantics for screen readers that announce list order */
+  <ol
+    class="expression-listing"
+    reversed={descending}
+    style={`--counter-start: ${descending ? itemCount + 1 : 0}; --counter-increment: ${descending ? -1 : 1}`}>
     {hasItems && expressionItems.map((item: ListingItem) => (
       <li class="listing-item no-visited">
         <a class="title" href={item.href}>{item.title}</a>
@@ -72,7 +79,7 @@ const hasItems = expressionItems.length > 0;
     grid-template-columns: auto 1fr auto;
     padding: 0 var(--space-s) 0 0;
     margin: var(--space-m) 0 0 0;
-    counter-reset: expression-counter;
+    counter-reset: expression-counter var(--counter-start);
 
     .listing-item {
       display: grid;
@@ -82,7 +89,7 @@ const hasItems = expressionItems.length > 0;
       align-items: center;
       padding-bottom: var(--space-xs);
       list-style: none;
-      counter-increment: expression-counter;
+      counter-increment: expression-counter var(--counter-increment);
 
       &::before {
         align-self: center;
