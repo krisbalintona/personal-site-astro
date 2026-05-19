@@ -2,7 +2,7 @@ import { getEntries, render } from "astro:content";
 import mdxRenderer from "@astrojs/mdx/server.js";
 import generateRssFeed, { type RSSFeedItem } from "@astrojs/rss";
 import { SITE_TITLE, SITE_URL } from "@lib/consts.ts";
-import { allPostEntries } from "@lib/posts.ts";
+import { allExpressions } from "@lib/expressions.ts";
 import type { APIContext } from "astro";
 import { experimental_AstroContainer } from "astro/container";
 import { $path } from "astro-typesafe-routes/path";
@@ -49,7 +49,7 @@ const container = await experimental_AstroContainer.create();
 container.addServerRenderer({ renderer: mdxRenderer });
 
 export const rssArticleItems: RSSFeedItem[] = await Promise.all(
-  (await allPostEntries()).map(async (post) => {
+  (await allExpressions()).map(async (post) => {
     const { Content } = await render(post);
     const rawHTML: string = await container.renderToString(Content);
 

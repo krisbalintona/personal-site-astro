@@ -1,5 +1,5 @@
 import { getCollection } from "astro:content";
-import type { PostEntry } from "@lib/posts.ts";
+import type { ExpressionEntry } from "@lib/expressions.ts";
 import type { APIContext } from "astro";
 import { createRoute } from "astro-typesafe-routes/create-route";
 import { $path } from "astro-typesafe-routes/path";
@@ -17,7 +17,10 @@ export const getStaticPaths = Route.createGetStaticPaths(async () => {
   }));
 });
 
-export const GET = ({ props, redirect }: APIContext<{ post: PostEntry }>) => {
+export const GET = ({
+  props,
+  redirect,
+}: APIContext<{ post: ExpressionEntry }>) => {
   const { post } = props;
 
   return redirect(

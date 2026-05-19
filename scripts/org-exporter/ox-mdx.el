@@ -894,21 +894,21 @@ INFO is a plist holding export information."
 
 (defun org-mdx--title-to-subdirectory-name (title)
   "Transform TITLE into a slug.
-This slug is used as the directory name associated with a post."
+This slug is used as the directory name associated with an entry."
   (thread-last (downcase title)
                (replace-regexp-in-string "[^a-z0-9]+" "_")
                (replace-regexp-in-string
                 "-+" "-")))
 
 (defun org-mdx--output-directory (output-dir &optional subtreep)
-  "Return the output directory path of the current post.
+  "Return the output directory path of the current entry.
 Return a directory path relative to OUTPUT-DIR.  If OUTPUT-DIR is nil,
 then the output path is relative to `default-directory'.
 
 
 The returned path takes the form of \"TIMESTAMP--SLUG\", where TIMESTAMP
-is based on the date property of the post and SLUG is the return value
-of the post title passed to `org-mdx--title-to-subdirectory-name'.
+is based on the date property of the entry and SLUG is the return value
+of the entry title passed to `org-mdx--title-to-subdirectory-name'.
 
 This function is called from the point in org buffer to-be exported.
 
@@ -943,8 +943,8 @@ directory."
     (expand-file-name directory output-dir)))
 
 (defun org-mdx--copy-attachments (path info)
-  "Copy asset at PATH to the post subdirectory.
-Return the path of the asset relative to the post subdirectory.  Uses
+  "Copy asset at PATH to the entry subdirectory.
+Return the path of the asset relative to the entry subdirectory.  Uses
 the value of the `:personal-site-output-directory' property in INFO to
 do so.
 
@@ -990,13 +990,13 @@ and `org-mdx-publish-to-site'."
 ;; Export to file
 (defun org-mdx-export-to-mdx
     (&optional async subtreep visible-only body-only ext-plist)
-  "Export current buffer to a post subdirectory.
-The post subdirectory is one calculated by `org-mdx--output-directory'.
+  "Export current buffer to a entry subdirectory.
+The entry subdirectory is one calculated by `org-mdx--output-directory'.
 Several files may be created in this directory:
-- An \"index.mdx\", containing the post in MDX form.
+- An \"index.mdx\", containing the entry in MDX form.
 - An \"assets/\" subdirectory, containing all attachments (see
   `org-mdx--copy-attachments').
-These files constitute all the files needed for the post page.
+These files constitute all the files needed for the entry page.
 
 If narrowing is active in the current buffer, only export its narrowed
 part.
@@ -1074,12 +1074,12 @@ Return the output directory's name."
     (headline . org-mdx-headline)))
 
 ;;;; Org-publish
-;; I use org-publish to make it easier to export all my blog posts all
-;; together.  The export function `org-mdx-export-to-mdx' does all
+;; I use org-publish to make it easier to export all my blog entries
+;; all together.  The export function `org-mdx-export-to-mdx' does all
 ;; the heavy lifting for export.
 
 (defun org-mdx-publish-to-site (plist filename pub-dir)
-  "Publish an org file to a post subdirectory.
+  "Publish an org file to an entry subdirectory.
 PLIST is the property list for the current project.  FILENAME is the
 filename of the org file to be published.  PUB-DIR is the publishing
 directory.

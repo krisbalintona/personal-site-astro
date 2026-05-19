@@ -18,7 +18,7 @@ export function dateToPostId(date: Date): string {
 // for all properties of `rssSchema`.  Although all the properties in
 // `rssSchema` are typed as optional, RSS feeds themselves to have
 // required XML fields.
-export const basePostSchema = rssSchema.extend({
+export const baseExpressionSchema = rssSchema.extend({
   title: z.string().default("Untitled"),
   pubDate: z.coerce.date().default(new Date("1970-01-01")),
   draft: z.boolean().default(true),
@@ -27,16 +27,16 @@ export const basePostSchema = rssSchema.extend({
 // Zod does not support .extend() on transformed schemas.  Since we
 // need to apply a transform to compute `titleSlug` and
 // `permalinkSlug`, we expose this function instead to allow extending
-// the base schema shape (`basePostSchema`) while reapplying the
+// the base schema shape (`baseExpressionSchema`) while reapplying the
 // transform.
-export function extendPostSchema<T extends z.ZodRawShape>(shape: T) {
-  return basePostSchema.extend(shape).transform((data) => {
+export function extendExpressionSchema<T extends z.ZodRawShape>(shape: T) {
+  return baseExpressionSchema.extend(shape).transform((data) => {
     // `data` is typed as the extended schema's output, which
     // Typescript cannot resolve to a concrete type through the
     // generic.  We cast to the base type since we know
-    // basePostSchema's fields are always present after .extend() to
-    // make Typescript happy.
-    const base = data as z.infer<typeof basePostSchema>;
+    // `baseExpressionSchema`'s fields are always present after
+    // .extend() to make Typescript happy.
+    const base = data as z.infer<typeof baseExpressionSchema>;
     const titleSlug = slugify(
       base.title,
       { strict: true } // Strips special characters like colons
@@ -52,18 +52,18 @@ export function extendPostSchema<T extends z.ZodRawShape>(shape: T) {
   });
 }
 
-export const postSchema = extendPostSchema({});
+export const expressionSchema = extendExpressionSchema({});
 
-export const PostCollectionNames = ["articles"] as const;
-export type PostCollection = (typeof PostCollectionNames)[number];
-export type PostEntry = CollectionEntry<PostCollection>;
+export const ExpressionCollectionNames = ["articles"] as const;
+export type ExpressionCollection = (typeof ExpressionCollectionNames)[number];
+export type ExpressionEntry = CollectionEntry<ExpressionCollection>;
 
-export async function allPostEntries(
-  filter?: (entry: CollectionEntry<PostCollection>) => boolean
-): Promise<PostEntry[]> {
+export async function allExpressions(
+  filter?: (entry: CollectionEntry<ExpressionCollection>) => boolean
+): Promise<ExpressionEntry[]> {
   return (
     await Promise.all(
-      PostCollectionNames.map((name) => getCollection(name, filter))
+      ExpressionCollectionNames.map((name) => getCollection(name, filter))
     )
   ).flat();
 }

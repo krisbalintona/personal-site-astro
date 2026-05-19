@@ -4,16 +4,16 @@ import {
   reference,
 } from "astro:content";
 import mdFrontmatterLoader from "@lib/mdFrontmatterGlob.ts";
-import { extendPostSchema, postSchema } from "@lib/posts.ts";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
+import { expressionSchema, extendExpressionSchema } from "./lib/expressions.ts";
 
 const articles = defineCollection({
   loader: glob({
     pattern: "*/index.mdx",
     base: "./src/content/articles",
   }),
-  schema: extendPostSchema({
+  schema: extendExpressionSchema({
     tags: z.array(reference("tags")).optional(),
     threads: z.array(reference("threads")).optional(),
   }),
@@ -56,7 +56,7 @@ const standalone = defineCollection({
     pattern: "*/index.mdx",
     base: "./src/content/standalone",
   }),
-  schema: postSchema,
+  schema: expressionSchema,
 });
 
 export type AnyCollectionName = keyof typeof collections;

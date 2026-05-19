@@ -1,6 +1,6 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
-import PostLayout from "@layouts/PostLayout.astro";
+import ExpressionLayout from "@layouts/ExpressionLayout.astro";
 import { isPublished } from "@lib/entries";
 import { createRoute } from "astro-typesafe-routes/create-route";
 
@@ -22,4 +22,4 @@ interface Props {
 const { article } = Astro.props;
 ---
 
-<PostLayout post={article}></PostLayout>
+<ExpressionLayout expression={article}></ExpressionLayout>

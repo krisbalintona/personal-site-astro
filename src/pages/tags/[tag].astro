@@ -3,7 +3,7 @@ import { type CollectionEntry, getCollection, render } from "astro:content";
 import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
-import PostListing from "@components/PostListing.astro";
+import ExpressionListing from "@components/ExpressionListing.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { isPublished } from "@lib/entries";
 import { createRoute } from "astro-typesafe-routes/create-route";
@@ -40,10 +40,13 @@ const breadcrumbs: BreadcrumbComponent[] = [
 ];
 ---
 
-<BaseLayout pageTitle={tagName} displayTitle={`Posts tagged with "${tagName}"`}>
+<BaseLayout
+  pageTitle={tagName}
+  displayTitle={`Entries tagged with "${tagName}"`}
+>
   <Breadcrumb breadcrumbs={breadcrumbs} />
   {tagEntry && isPublished(tagEntry) && Content && <Content />}
   <hr>
 
-  <PostListing collection="articles" extraFilter={hasThisTag} />
+  <ExpressionListing collection="articles" extraFilter={hasThisTag} />
 </BaseLayout>

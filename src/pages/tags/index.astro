@@ -1,7 +1,7 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
 import { isPublished } from "@lib/entries";
-import { allPostEntries } from "@lib/posts";
+import { allExpressions } from "@lib/expressions";
 import BaseLayout from "@src/layouts/BaseLayout.astro";
 import Link from "astro-typesafe-routes/link";
 import slugify from "slugify";
@@ -15,10 +15,10 @@ const tagsOrdered: CollectionEntry<"tags">[] = tags?.sort((a, b) =>
 // collections' schema, then I can just find which post entries reference
 // a given tag (content collection) entry without using a Map
 const tagCounts: Map<string, number> = new Map();
-const posts = await allPostEntries(isPublished);
+const expressions = await allExpressions(isPublished);
 
-for (const post of posts) {
-  for (const tag of post.data.tags ?? []) {
+for (const expression of expressions) {
+  for (const tag of expression.data.tags ?? []) {
     tagCounts.set(tag.id, (tagCounts.get(tag.id) ?? 0) + 1);
   }
 }
@@ -33,7 +33,7 @@ for (const post of posts) {
         return (
           <li>
             <Link params={{ tag: slugify(tag.data.name) }} to="/tags/[tag]"
-            >{tag.data.name}</Link>, {count} {count === 1 ? "post" : "posts"}
+            >{tag.data.name}</Link>, {count} {count === 1 ? "entry" : "entries"}
           </li>
         );
       })}

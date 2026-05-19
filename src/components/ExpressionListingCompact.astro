@@ -6,7 +6,7 @@ import {
   isPublished,
   toDateTimeAttribute,
 } from "@lib/entries";
-import type { PostCollection, PostEntry } from "@lib/posts";
+import type { ExpressionCollection, ExpressionEntry } from "@lib/expressions";
 
 export interface ListingItem {
   href: string;
@@ -15,36 +15,36 @@ export interface ListingItem {
 }
 
 interface Props {
-  collection: PostCollection;
+  collection: ExpressionCollection;
   descending?: boolean;
-  extraFilter?: (entry: PostEntry) => boolean;
+  extraFilter?: (expression: ExpressionEntry) => boolean;
 }
 
 const { collection, extraFilter = () => true, descending = true } = Astro.props;
 
-const finalFilter = (entry: PostEntry): boolean =>
-  isPublished(entry) && extraFilter(entry);
+const finalFilter = (expression: ExpressionEntry): boolean =>
+  isPublished(expression) && extraFilter(expression);
 
-const posts = await getCollection(collection, finalFilter);
-const postItems: ListingItem[] = posts
+const expressions = await getCollection(collection, finalFilter);
+const expressionItems: ListingItem[] = expressions
   .map(
-    (post: CollectionEntry<PostCollection>): ListingItem => ({
-      title: post.data.title,
-      pubDate: post.data.pubDate,
-      href: getEntryUrl(post),
+    (expression: CollectionEntry<ExpressionCollection>): ListingItem => ({
+      title: expression.data.title,
+      pubDate: expression.data.pubDate,
+      href: getEntryUrl(expression),
     })
   )
   .sort((a, b) => {
     const diff = a.pubDate.getTime() - b.pubDate.getTime();
     return descending ? -diff : diff;
   });
-const hasItems = postItems.length > 0;
+const hasItems = expressionItems.length > 0;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
 {hasItems &&
-  <ol class="post-listing">
-    {hasItems && postItems.map((item: ListingItem) => (
+  <ol class="expression-listing">
+    {hasItems && expressionItems.map((item: ListingItem) => (
       <li class="listing-item no-visited">
         <a class="title" href={item.href}>{item.title}</a>
         <a class="date" href={item.href}>
@@ -57,12 +57,12 @@ const hasItems = postItems.length > 0;
   </ol>}
 
 <style>
-  :where(.post-listing) {
+  :where(.expression-listing) {
     display: grid;
     grid-template-columns: auto 1fr auto;
     padding: 0 var(--space-s) 0 0;
     margin: var(--space-m) 0 0 0;
-    counter-reset: post-counter;
+    counter-reset: expression-counter;
 
     .listing-item {
       display: grid;
@@ -72,13 +72,13 @@ const hasItems = postItems.length > 0;
       align-items: center;
       padding-bottom: var(--space-xs);
       list-style: none;
-      counter-increment: post-counter;
+      counter-increment: expression-counter;
 
       &::before {
         align-self: center;
         font-size: small;
         color: var(--color-text-muted);
-        content: counter(post-counter) ".";
+        content: counter(expression-counter) ".";
       }
 
       a {

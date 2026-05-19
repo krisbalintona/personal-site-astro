@@ -5,22 +5,25 @@ import Breadcrumb, {
 } from "@components/Breadcrumb.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { toDateTimeAttribute } from "@lib/entries";
-import type { PostEntry } from "@lib/posts";
+import type { ExpressionEntry } from "@lib/expressions";
 import Link from "astro-typesafe-routes/link";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
 
 interface Props {
-  post: PostEntry;
+  expression: ExpressionEntry;
 }
 
-const { post } = Astro.props;
+const { expression } = Astro.props;
 
-const pubDate = post.data.pubDate;
-const title = post.data.title;
+const pubDate = expression.data.pubDate;
+const title = expression.data.title;
 
 const breadcrumbs: BreadcrumbComponent[] = [
-  { label: post.collection, href: $path({ to: `/${post.collection}` }) },
+  {
+    label: expression.collection,
+    href: $path({ to: `/${expression.collection}` }),
+  },
 ];
 
 const formattedDateTime = toDateTimeAttribute(pubDate);
@@ -30,28 +33,28 @@ const formattedVisibleDate = pubDate.toLocaleDateString("en-US", {
   day: "numeric",
 });
 
-const tags = post.data.tags;
-const { Content } = await render(post);
+const tags = expression.data.tags;
+const { Content } = await render(expression);
 ---
 
 <BaseLayout pageTitle={title}>
   <article>
-    <header class="post-header">
+    <header class="expression-header">
       <Breadcrumb breadcrumbs={breadcrumbs} />
 
-      <div class="post-info-container">
-        <time class="post-date" datetime={formattedDateTime}
+      <div class="expression-info-container">
+        <time class="expression-date" datetime={formattedDateTime}
           >{formattedVisibleDate}</time
         >
 
-        <h1 id="post-title">{title}</h1>
+        <h1 id="expression-title">{title}</h1>
       </div>
     </header>
 
-    <div class="post-content"><Content /></div>
+    <div class="expression-content"><Content /></div>
 
-    <footer class="post-footer">
-      <div class="post-tags-container">
+    <footer class="expression-footer">
+      <div class="expression-tags-container">
         {tags && <span id="tags-label">tagged: </span>}
         {tags?.map(async (t, i) => {
           const tag = await getEntry(t);
@@ -70,33 +73,33 @@ const { Content } = await render(post);
 </BaseLayout>
 
 <style>
-  .post-header {
+  .expression-header {
     margin-bottom: var(--space-xl);
     border-bottom: 2px solid var(--color-border);
 
-    .post-info-container {
-      .post-date {
+    .expression-info-container {
+      .expression-date {
         display: block;
         margin: var(--space-3xs-2xs) 0;
         font-family: var(--font-ui);
         font-size: var(--font-step--1);
       }
 
-      #post-title {
+      #expression-title {
         margin: 0 0 var(--space-s) 0;
       }
     }
   }
 
-  .post-content {
+  .expression-content {
     margin-top: var(--space-l);
   }
 
-  .post-footer {
+  .expression-footer {
     margin-top: var(--space-xs-s);
     border-top: 2px solid var(--color-border);
 
-    .post-tags-container {
+    .expression-tags-container {
       display: inline;
       font-size: var(--font-step--1);
 
@@ -123,7 +126,7 @@ const { Content } = await render(post);
 
   /* "Breakout" effect for code blocks, standalone images, and figures */
   @layer defaults {
-    :where(.post-content) {
+    :where(.expression-content) {
       .expressive-code {
         @include mixins.breakout(var(--space-xs-s));
       }

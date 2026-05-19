@@ -4,15 +4,15 @@ import { getCollection, render } from "astro:content";
 import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { isPublished } from "@lib/entries";
-import type { PostEntry } from "@lib/posts";
-import PostListingCompact from "@src/components/PostListingCompact.astro";
+import type { ExpressionEntry } from "@lib/expressions";
+import ExpressionListingCompact from "@src/components/ExpressionListingCompact.astro";
 import slugify from "slugify";
 
 const allThreadEntries = await getCollection("threads");
 
 function inThisThread(thread: CollectionEntry<"threads">) {
-  return (post: PostEntry): boolean =>
-    post.data.threads?.some((s) => s.id === thread.id) ?? false;
+  return (expression: ExpressionEntry): boolean =>
+    expression.data.threads?.some((s) => s.id === thread.id) ?? false;
 }
 ---
 
@@ -34,7 +34,7 @@ function inThisThread(thread: CollectionEntry<"threads">) {
          {thread && isPublished(thread) && Content && <Content />}
          
          <div class="listing-container">
-           <PostListingCompact
+           <ExpressionListingCompact
              collection="articles"
              descending={false}
              extraFilter={inThisThread(s)} />
