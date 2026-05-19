@@ -1,5 +1,4 @@
 ---
-import { footnoteSectionHeadingId } from "@lib/consts";
 import type { HTMLTag } from "astro/types";
 
 interface Props {
@@ -10,6 +9,7 @@ const { headingLevel } = Astro.props;
 const FootnoteHeading = (
   headingLevel ? headingLevel.toString() : "h2"
 ) as HTMLTag;
+const footnoteSectionHeadingId = "footnotes-heading";
 ---
 
 <footer aria-labelledby={footnoteSectionHeadingId}>
