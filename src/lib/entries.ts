@@ -53,6 +53,11 @@ function getEntryBasePath(entry: AnyCollectionEntry): string {
         to: "/articles/[titleSlug]",
         params: { titleSlug: entry.data.titleSlug },
       });
+    case "notes":
+      return $path({
+        to: "/notes/[titleSlug]",
+        params: { titleSlug: entry.data.titleSlug },
+      });
     case "tags":
       return $path({ to: "/tags/[tag]", params: { tag: entry.data.title } });
     default:

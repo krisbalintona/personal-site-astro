@@ -48,6 +48,12 @@ const { pageTitle, displayTitle } = Astro.props;
       title={RSSFeeds.articles.title}
       href={$path({ to: "/feeds/[feed].xml", params: { feed: "articles" } })}
     >
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={RSSFeeds.notes.title}
+      href={$path({ to: "/feeds/[feed].xml", params: { feed: "notes" } })}
+    >
 
     <title>{`${pageTitle} - Kristoffer Balintona`}</title>
   </head>

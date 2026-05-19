@@ -45,6 +45,9 @@ This option is used to define the value of other relevant paths.")
 (defconst org-mdx-articles-dir (expand-file-name "articles/" org-mdx-content-dir)
   "Directory where articles will be exported to.")
 
+(defconst org-mdx-notes-dir (expand-file-name "notes/" org-mdx-content-dir)
+  "Directory where notes will be exported to.")
+
 (defconst org-mdx-tags-dir (expand-file-name "tags/" org-mdx-content-dir)
   "Directory where custom tag pages will be exported to.")
 
@@ -780,7 +783,7 @@ communication channel for the export process."
     (pcase entry-type
       ("standalone"
        (setq frontmatter (string-join (delq nil (list title slug date draft)) "\n")))
-      ("articles"
+      ((or "articles" "notes")          ; Prose type entries
        (let* ((raw-tags (plist-get info :mdx-tags))
               (parsed-tags
                (when (org-string-nw-p raw-tags)
@@ -817,7 +820,7 @@ communication channel for the export process."
                (when parsed-threads
                  (org-mdx--frontmatter-build-list "threads" parsed-threads))))
          (setq frontmatter (string-join (delq nil (list title date draft tags threads)) "\n"))))
-      ((or "tags" "threads")
+      ((or "tags" "threads")            ; Taxonomy type entries
        (let* ((name (when raw-title (concat "title: " escaped-title))))
          (setq frontmatter (string-join (delq nil (list name draft)) "\n")))))
 
@@ -1132,6 +1135,12 @@ This function is used as the :publishing-function in
       :publishing-directory ,org-mdx-articles-dir
       :recursive t
       :mdx-entry-type "articles"
+      ,@base-options)
+     ("notes"
+      :base-directory ,(expand-file-name "notes" krisb-manuscript-blog-directory)
+      :publishing-directory ,org-mdx-notes-dir
+      :recursive t
+      :mdx-entry-type "notes"
       ,@base-options)
      ("tags"
       :base-directory ,(expand-file-name "tags" krisb-manuscript-blog-directory)

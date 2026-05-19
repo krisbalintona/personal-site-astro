@@ -15,17 +15,27 @@ export interface ListingItem {
 }
 
 interface Props {
-  collection: ExpressionCollection;
+  collections: ExpressionCollection[];
   descending?: boolean;
   extraFilter?: (expression: ExpressionEntry) => boolean;
 }
 
-const { collection, extraFilter = () => true, descending = true } = Astro.props;
+const {
+  collections,
+  extraFilter = () => true,
+  descending = true,
+} = Astro.props;
 
 const finalFilter = (expression: ExpressionEntry): boolean =>
   isPublished(expression) && extraFilter(expression);
 
-const expressions = await getCollection(collection, finalFilter);
+const expressions = (
+  await Promise.all(
+    (Array.isArray(collections) ? collections : [collections]).map((c) =>
+      getCollection(c, finalFilter)
+    )
+  )
+).flat();
 const expressionItems: ListingItem[] = expressions
   .map(
     (expression: CollectionEntry<ExpressionCollection>): ListingItem => ({

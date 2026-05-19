@@ -5,21 +5,21 @@ import { isPublished } from "@lib/entries";
 import { createRoute } from "astro-typesafe-routes/create-route";
 
 export const Route = createRoute({
-  routeId: "/articles/[titleSlug]",
+  routeId: "/notes/[titleSlug]",
 });
 
 export const getStaticPaths = Route.createGetStaticPaths(async () =>
-  (await getCollection("articles", isPublished)).map((articleEntry) => ({
-    params: { titleSlug: articleEntry.data.titleSlug },
-    props: { articleEntry },
+  (await getCollection("notes", isPublished)).map((noteEntry) => ({
+    params: { titleSlug: noteEntry.data.titleSlug },
+    props: { noteEntry },
   }))
 );
 
 interface Props {
-  articleEntry: CollectionEntry<"articles">;
+  noteEntry: CollectionEntry<"notes">;
 }
 
-const { articleEntry } = Astro.props;
+const { noteEntry } = Astro.props;
 ---
 
-<ExpressionLayout expression={articleEntry}></ExpressionLayout>
+<ExpressionLayout expression={noteEntry}></ExpressionLayout>

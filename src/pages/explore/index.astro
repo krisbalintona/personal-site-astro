@@ -35,7 +35,7 @@ function inThisThread(thread: CollectionEntry<"threads">) {
          
          <div class="listing-container">
            <ExpressionListingCompact
-             collection="articles"
+             collections={["articles", "notes"]}
              descending={false}
              extraFilter={inThisThread(s)} />
          </div>

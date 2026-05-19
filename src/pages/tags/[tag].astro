@@ -6,6 +6,7 @@ import Breadcrumb, {
 import ExpressionListing from "@components/ExpressionListing.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { isPublished } from "@lib/entries";
+import type { ExpressionEntry } from "@src/lib/expressions";
 import { createRoute } from "astro-typesafe-routes/create-route";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
@@ -28,8 +29,8 @@ interface Props {
 const { tag: tagEntry } = Astro.props;
 const tagName = tagEntry.data.title;
 
-function hasThisTag(article: CollectionEntry<"articles">): boolean {
-  return article.data.tags?.some((t) => t.id === tagEntry.id) ?? false;
+function hasThisTag(expression: ExpressionEntry): boolean {
+  return expression.data.tags?.some((t) => t.id === tagEntry.id) ?? false;
 }
 
 const { Content } = tagEntry ? await render(tagEntry) : { Content: null };
@@ -48,5 +49,8 @@ const breadcrumbs: BreadcrumbComponent[] = [
   {tagEntry && isPublished(tagEntry) && Content && <Content />}
   <hr>
 
-  <ExpressionListing collection="articles" extraFilter={hasThisTag} />
+  <ExpressionListing
+    collections={["articles", "notes"]}
+    extraFilter={hasThisTag}
+  />
 </BaseLayout>

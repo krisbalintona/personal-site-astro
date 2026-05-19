@@ -1,4 +1,4 @@
-import { type CollectionEntry, getCollection } from "astro:content";
+import { type CollectionEntry, getCollection, reference } from "astro:content";
 import { rssSchema } from "@astrojs/rss";
 import { z } from "astro/zod";
 import slugify from "slugify";
@@ -20,40 +20,33 @@ export const baseContentShape = {
   draft: z.boolean().default(true),
 };
 
-// Zod does not support .extend() on transformed schemas.  Since we
-// need to apply a transform to compute `titleSlug` and
-// `permalinkSlug`, we expose this function instead to allow extending
-// the base schema shape (`baseExpressionSchema`) while reapplying the
-// transform.
-export function extendExpressionSchema<T extends z.ZodRawShape>(shape: T) {
-  // See
-  // https://github.com/withastro/astro/tree/main/packages/astro-rss
-  // for all properties of `rssSchema`.  Although all the properties
-  // in `rssSchema` are typed as optional, RSS feeds themselves to
-  // have required XML fields.
-  return rssSchema
-    .extend(baseContentShape)
-    .extend({ pubDate: z.coerce.date().default(new Date("1970-01-01")) })
-    .extend(shape)
-    .transform((data) => {
-      const d = data as zType.infer<typeof rssSchema> &
-        zType.infer<zType.ZodObject<typeof baseContentShape>>;
-      const titleSlug = slugify(
-        d.title ?? "",
-        { strict: true } // Strips special characters like colons
-      );
-      return {
-        ...data,
-        titleSlug,
-        permalinkSlug:
-          d.pubDate && d.draft === false ? dateToPostId(d.pubDate) : titleSlug,
-      };
-    });
-}
+// See https://github.com/withastro/astro/tree/main/packages/astro-rss
+// for all properties of `rssSchema`.  Although all the properties in
+// `rssSchema` are typed as optional, RSS feeds themselves to have
+// required XML fields.
+export const expressionSchema = rssSchema
+  .extend(baseContentShape)
+  .extend({
+    pubDate: z.coerce.date().default(new Date("1970-01-01")),
+    tags: z.array(reference("tags")).optional(),
+    threads: z.array(reference("threads")).optional(),
+  })
+  .transform((data) => {
+    const d = data as zType.infer<typeof rssSchema> &
+      zType.infer<zType.ZodObject<typeof baseContentShape>>;
+    const titleSlug = slugify(
+      d.title ?? "",
+      { strict: true } // Strips special characters like colons
+    );
+    return {
+      ...data,
+      titleSlug,
+      permalinkSlug:
+        d.pubDate && d.draft === false ? dateToPostId(d.pubDate) : titleSlug,
+    };
+  });
 
-export const expressionSchema = extendExpressionSchema({});
-
-export const ExpressionCollectionNames = ["articles"] as const;
+export const ExpressionCollectionNames = ["articles", "notes"] as const;
 export type ExpressionCollection = (typeof ExpressionCollectionNames)[number];
 export type ExpressionEntry = CollectionEntry<ExpressionCollection>;
 
