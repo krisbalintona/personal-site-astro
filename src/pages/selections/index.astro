@@ -11,11 +11,11 @@ import slugify from "slugify";
 const preamble = await getEntry("standalone", "selections");
 const { Content } = preamble ? await render(preamble) : { Content: null };
 
-const allSeriesEntries = await getCollection("series");
+const allThreadEntries = await getCollection("threads");
 
-function inThisSeries(seriesEntry: CollectionEntry<"series">) {
+function inThisThread(thread: CollectionEntry<"threads">) {
   return (post: PostEntry): boolean =>
-    post.data.series?.some((s) => s.id === seriesEntry.id) ?? false;
+    post.data.threads?.some((s) => s.id === thread.id) ?? false;
 }
 ---
 
@@ -23,12 +23,12 @@ function inThisSeries(seriesEntry: CollectionEntry<"series">) {
   {preamble && isPublished(preamble) && Content && <Content />}
   <hr>
 
-  <Heading id="series" class="subdivision-heading" level="2" selfLink={true}
-    >Series</Heading
+  <Heading id="threads" class="subdivision-heading" level="2" selfLink={true}
+    >Threads</Heading
   >
-  {allSeriesEntries.map(async (s) => {
-     const seriesEntry = (await getCollection("series")).find((e) => e.data.name === s.data.name);
-     const { Content } = seriesEntry ? await render(seriesEntry) : { Content: null };
+  {allThreadEntries.map(async (s) => {
+     const thread = (await getCollection("threads")).find((e) => e.data.name === s.data.name);
+     const { Content } = thread ? await render(thread) : { Content: null };
 
      return (
        <section>
@@ -37,13 +37,13 @@ function inThisSeries(seriesEntry: CollectionEntry<"series">) {
            level="3"
            selfLink={true}
          >{s.data.name}</Heading>
-         {seriesEntry && isPublished(seriesEntry) && Content && <Content />}
+         {thread && isPublished(thread) && Content && <Content />}
          
          <div class="listing-container">
            <PostListingCompact
              collection="articles"
              descending={false}
-             extraFilter={inThisSeries(s)} />
+             extraFilter={inThisThread(s)} />
          </div>
        </section>
        )})}

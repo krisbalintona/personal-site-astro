@@ -48,8 +48,8 @@ This option is used to define the value of other relevant paths.")
 (defconst org-mdx-tags-dir (expand-file-name "tags/" org-mdx-content-dir)
   "Directory where custom tag pages will be exported to.")
 
-(defconst org-mdx-series-dir (expand-file-name "series/" org-mdx-content-dir)
-  "Directory where custom series pages will be exported to.")
+(defconst org-mdx-threads-dir (expand-file-name "threads/" org-mdx-content-dir)
+  "Directory where custom thread pages will be exported to.")
 
 (defconst org-mdx-standalone-dir (expand-file-name "standalone/" org-mdx-content-dir)
   "Directory where standalone content will be exported to.")
@@ -789,9 +789,9 @@ communication channel for the export process."
               (tags
                (when parsed-tags
                  (org-mdx--frontmatter-build-list "tags" parsed-tags)))
-              (raw-series (plist-get info :mdx-series))
-              (transformed-series ; Convert entry IDs to their corresponding title
-               (when raw-series
+              (raw-threads (plist-get info :mdx-threads))
+              (transformed-threads ; Convert entry IDs to their corresponding title
+               (when raw-threads
                  (mapcar (lambda (s)
                            ;; FIXME 2026-05-17: Should we call
                            ;; something like
@@ -809,15 +809,15 @@ communication channel for the export process."
                              (org-with-point-at (org-id-find s 'marker)
                                (or (org-element-property :title (org-element-at-point))
                                    (org-get-title)))))
-                         (split-string-and-unquote (string-trim raw-series)))))
-              (parsed-series
-               (when (org-string-nw-p raw-series)
-                 (mapcar #'org-mdx--frontmatter-quote-string transformed-series)))
-              (series
-               (when parsed-series
-                 (org-mdx--frontmatter-build-list "series" parsed-series))))
-         (setq frontmatter (string-join (delq nil (list title date draft tags series)) "\n"))))
-      ((or "tags" "series")
+                         (split-string-and-unquote (string-trim raw-threads)))))
+              (parsed-threads
+               (when (org-string-nw-p raw-threads)
+                 (mapcar #'org-mdx--frontmatter-quote-string transformed-threads)))
+              (threads
+               (when parsed-threads
+                 (org-mdx--frontmatter-build-list "threads" parsed-threads))))
+         (setq frontmatter (string-join (delq nil (list title date draft tags threads)) "\n"))))
+      ((or "tags" "threads")
        (let* ((name (when raw-title (concat "name: " escaped-title))))
          (setq frontmatter (string-join (delq nil (list name draft)) "\n")))))
 
@@ -1047,7 +1047,7 @@ Return the output directory's name."
   '((:mdx-slug "MDX_SLUG" nil nil)
     (:mdx-draft-p "MDX_DRAFT" "mdx-draft" "true")
     (:mdx-tags "MDX_TAGS" nil nil space)
-    (:mdx-series "MDX_SERIES" nil nil space)
+    (:mdx-threads "MDX_THREADS" nil nil space)
     (:md-toplevel-hlevel nil nil 2) ; The title is h1; headings must be lower
     ;; See `org-export-headline-levels' and
     ;; `org-export-options-alist'.  Set :headline-levels to 5 since
@@ -1139,11 +1139,11 @@ This function is used as the :publishing-function in
       :recursive t
       :mdx-entry-type "tags"
       ,@base-options)
-     ("series"
-      :base-directory ,(expand-file-name "series" krisb-manuscript-blog-directory)
-      :publishing-directory ,org-mdx-series-dir
+     ("threads"
+      :base-directory ,(expand-file-name "threads" krisb-manuscript-blog-directory)
+      :publishing-directory ,org-mdx-threads-dir
       :recursive t
-      :mdx-entry-type "series"
+      :mdx-entry-type "threads"
       ,@base-options))))
 
 ;;; Provide

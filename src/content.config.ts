@@ -15,7 +15,7 @@ const articles = defineCollection({
   }),
   schema: extendPostSchema({
     tags: z.array(reference("tags")).optional(),
-    series: z.array(reference("series")).optional(),
+    threads: z.array(reference("threads")).optional(),
   }),
 });
 
@@ -33,7 +33,7 @@ const tags = defineCollection({
   }),
 });
 
-const series = defineCollection({
+const threads = defineCollection({
   loader: mdFrontmatterLoader({
     sources: [
       {
@@ -45,9 +45,9 @@ const series = defineCollection({
         base: "src/content/standalone",
       },
     ],
-    sourceField: "series",
+    sourceField: "threads",
     contentPattern: "*/index.mdx",
-    contentBase: "./src/content/series",
+    contentBase: "./src/content/threads",
   }),
 });
 
@@ -61,4 +61,4 @@ const standalone = defineCollection({
 
 export type AnyCollectionName = keyof typeof collections;
 export type AnyCollectionEntry = CollectionEntry<AnyCollectionName>;
-export const collections = { articles, tags, series, standalone };
+export const collections = { articles, tags, threads, standalone };
