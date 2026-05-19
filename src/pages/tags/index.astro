@@ -1,5 +1,6 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
+import { isProd } from "@lib/consts";
 import { isPublished } from "@lib/entries";
 import { allExpressions } from "@lib/expressions";
 import BaseLayout from "@src/layouts/BaseLayout.astro";

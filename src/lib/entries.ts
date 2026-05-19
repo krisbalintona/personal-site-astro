@@ -1,3 +1,4 @@
+import { isProd } from "@lib/consts.ts";
 import type { AnyCollectionEntry } from "@src/content.config.ts";
 import { $path } from "astro-typesafe-routes/path";
 
@@ -31,9 +32,7 @@ export function formatDate(date: Date): string {
  * @returns True if `entry` is published, false otherwise.
  */
 export function isPublished(entry: AnyCollectionEntry) {
-  return (
-    import.meta.env.DEV || ("draft" in entry.data ? !entry.data.draft : true)
-  );
+  return isProd || ("draft" in entry.data ? !entry.data.draft : true);
 }
 
 // * URLs
