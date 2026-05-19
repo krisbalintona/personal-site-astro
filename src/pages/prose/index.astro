@@ -1,0 +1,36 @@
+---
+import Heading from "@components/markup/Heading.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import ExpressionListingCompact from "@src/components/ExpressionListingCompact.astro";
+import Link from "astro-typesafe-routes/link";
+---
+
+<BaseLayout pageTitle="Prose" displayTitle="Prose">
+  <Heading id="Articles" class="subdivision-heading" level="2" selfLink={true}
+    ><Link to="/articles">Articles</Link></Heading
+  >
+  <p>Essays and long-form writing</p>
+  <ExpressionListingCompact collections={["articles"]} />
+
+  <hr>
+
+  <Heading id="Notes" class="subdivision-heading" level="2" selfLink={true}
+    ><Link to="/notes">Notes</Link></Heading
+  >
+  <p>Unrefined reflections and ongoing thinking</p>
+  <ExpressionListingCompact collections={["notes"]} />
+</BaseLayout>
+
+<style>
+  .subdivision-heading {
+    text-align: center;
+  }
+</style>
+
+<style is:global lang="scss">
+  @use "mixins";
+
+  .expression-listing {
+    @include mixins.breakout(var(--space-s-m));
+  }
+</style>
