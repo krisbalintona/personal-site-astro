@@ -26,10 +26,53 @@ I follow the conventions laid out in the Astro documentation on [[https://docs.a
 
 * Architecture and Design
 
+** MDX files and Org-mode exporter
+
 The content of this site is written in [[https://orgmode.org/][Org-mode]]. Org-mode documents are exported to =.mdx= via [[file:src/lib/org-exporter/ox-mdx.el][ox-mdx.el]]. The reasoning behind this decision is thus:
 + With content in org-mode, an export backend could be created to make that content readable to Astro.
 + Initially, an HTML exporter was used. However, HTML files do not work as smoothly with many of the niceties that Astro offers (see [[https://devdocs.io/astro/basics/astro-components/index#html-components][this brief summary]]). In particular, [[https://docs.astro.build/en/reference/astro-syntax/#jsx-like-expressions][JSX-like dynamic expressions]], references to assets (not in =/public/=), and content collections. The HTML route involves more manual and ad-hoc work.
 + On the other hand, MDX is a format very well supported by Astro. Astro has many features and plugins for MDX content and Astro components can easily be used, as opposed to post-processing HTML. It's hassle-free and fully expressive.
+
+** Site taxonomy and terminology
+
+*** Core Distinctions
+
+Two distinctions underpin the entire taxonomy:
++ Released vs. maintained :: Some content has a publication moment---its identity is tied to /when/ it was made. Other content has no publication moment---its identity is tied to its /current state/. This is the most important distinction on the site.
++ Made vs. encountered :: Some content is authored by the site owner. Other content (media entities) represents things consumed and recorded---films, shows, comics. The owner didn't make them; they encountered them and attached reactions to them.
+
+*** Conceptual Tiers
+
+**** Tier 1: Expressions
+
+The umbrella term for all authored, non-taxonomy content the site owner puts out. Everything that is not taxonomy, not a media entity, and not standalone site UI copy is an expression.
+
+Expressions divide into two sub-types:
++ Published expressions---released, time-stamped :: Content with a publication date whose identity is tied to the moment it was made. Appears in feeds and RSS. Currently: =articles=, =notes= (forthcoming).
+  - *Articles:* long-form writing.
+  -*Notes:* often shorter, more immediate pieces. Same base schema as articles; divergence possible in future.
++ Documents---maintained, ongoing :: Content with no definitive publication moment whose identity is tied to its current state. Polished, not rough. Examples: Emacs literate config, wiki/compendium pages. Not feed-eligible in the same way as published expressions.
+
+Reviews, meditations, and annotations /about/ media are expressions (i.e., notes or articles) that reference a media entity---not a separate content type.
+
+**** Tier 2: Taxonomy
+
+Cross-cuts expressions. Taxonomy terms classify and group expressions across the site. All taxonomy types can potentially apply to any expression type, including documents.
++ Tags :: keyword labels freely applied to expressions. Broad, non-hierarchical.
++ Threads :: deliberate, named thematic groupings. A thread is a curated line of thought running across multiple expressions. Loose, not necessarily sequential; the connection is thematic and organic.
++ Selections :: hand-assembled cross-type groupings of expressions, editorially curated after the fact. Distinguished from threads: a thread is a line of thought the owner *pursued*; a selection is something assembled /retrospectively/. Can span articles and notes.
+
+**** Tier 3: Media Entities
+
+Reference objects representing consumed media (films, shows, comics). Not authored by the site owner; encountered and recorded. Architecturally closer to taxonomy than to expressions---a media entity gathers all expressions that reference it, the way a thread gathers expressions.
+
+Distinguished from taxonomy in that media entities: (a) have rich metadata (title, year, medium, rating), (b) represent things consumed rather than categories invented, and (c) carry a brief annotation as page content.
+
+Future collection names: likely =films=, =shows=, =comics= or similar, each with their own schema sharing a base.
+
+**** Tier 4: Standalone
+
+MDX content belonging to specific site pages---home page prose, preambles for section pages (e.g. the Selections page intro), tag descriptions. Not authored content in the public sense; site UI copy. Collection name: =standalone= (internal only; readers never see this term).
 
 * Development
 
