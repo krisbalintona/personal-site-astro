@@ -1,15 +1,12 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { getCollection, getEntry, render } from "astro:content";
+import { getCollection, render } from "astro:content";
 import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { isPublished } from "@lib/entries";
 import type { PostEntry } from "@lib/posts";
 import PostListingCompact from "@src/components/PostListingCompact.astro";
 import slugify from "slugify";
-
-const preamble = await getEntry("standalone", "selections");
-const { Content } = preamble ? await render(preamble) : { Content: null };
 
 const allThreadEntries = await getCollection("threads");
 
@@ -19,10 +16,7 @@ function inThisThread(thread: CollectionEntry<"threads">) {
 }
 ---
 
-<BaseLayout pageTitle="Selections" displayTitle="Selections">
-  {preamble && isPublished(preamble) && Content && <Content />}
-  <hr>
-
+<BaseLayout pageTitle="Explore" displayTitle="Explore">
   <Heading id="threads" class="subdivision-heading" level="2" selfLink={true}
     >Threads</Heading
   >
