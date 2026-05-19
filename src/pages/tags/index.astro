@@ -8,18 +8,26 @@ import Link from "astro-typesafe-routes/link";
 import slugify from "slugify";
 
 const tags = await getCollection("tags");
-const tagsOrdered: CollectionEntry<"tags">[] = tags?.sort((a, b) =>
-  a.data.title.localeCompare(b.data.title)
-);
-
 const tagCounts: Map<string, number> = new Map();
 const expressions = await allExpressions(isPublished);
-
 for (const expression of expressions) {
   for (const tag of expression.data.tags ?? []) {
     tagCounts.set(tag.id, (tagCounts.get(tag.id) ?? 0) + 1);
   }
 }
+
+// TODO 2026-05-19: Right now we omit listing tags that have 0
+// associated expressions. (These are tags that have a content entry but
+// no stub entry.) However, those pages still end up getting generated at
+// `src/pages/tags/[tag].astro`. I'm not sure if they should not be
+// generated at all or if it's okay to list 0-count tags.
+const tagsFiltered = isProd
+  ? tags.filter((tag) => (tagCounts.get(tag.id) ?? 0) > 0)
+  : tags;
+
+const tagsOrdered: CollectionEntry<"tags">[] = tagsFiltered.sort((a, b) =>
+  a.data.title.localeCompare(b.data.title)
+);
 ---
 
 <BaseLayout pageTitle="Tags" displayTitle="Tags">
