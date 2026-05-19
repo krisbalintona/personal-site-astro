@@ -1,10 +1,13 @@
 ---
+import Link from "astro-typesafe-routes/link";
 ---
 
-<footer class="ui">
+<footer class="ui no-visited">
   <span id="copyright">© 2021–2026 kristofferbalintona.me</span>
   <span class="sep">—</span>
-  <span class="no-visited" id="rss"><a href="/#rss-feeds">RSS</a></span>
+  <Link to="/tags">Tags</Link>
+  <span class="sep">—</span>
+  <span id="rss"><a href="/#rss-feeds">RSS</a></span>
 </footer>
 
 <style>
