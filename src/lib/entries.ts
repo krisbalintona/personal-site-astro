@@ -42,24 +42,25 @@ export function getEntryUrl(
   entry: AnyCollectionEntry,
   anchor?: string
 ): string {
-  const base = getEntryBasePath(entry);
-  return anchor ? `${base}#${anchor}` : base;
-}
-
-function getEntryBasePath(entry: AnyCollectionEntry): string {
   switch (entry.collection) {
     case "articles":
       return $path({
         to: "/articles/[titleSlug]",
         params: { titleSlug: entry.data.titleSlug },
+        hash: anchor,
       });
     case "notes":
       return $path({
         to: "/notes/[titleSlug]",
         params: { titleSlug: entry.data.titleSlug },
+        hash: anchor,
       });
     case "tags":
-      return $path({ to: "/tags/[tag]", params: { tag: entry.data.title } });
+      return $path({
+        to: "/tags/[tag]",
+        params: { tag: entry.data.title },
+        hash: anchor,
+      });
     default:
       throw new Error(`No URL mapping for collection "${entry.collection}"`);
   }
