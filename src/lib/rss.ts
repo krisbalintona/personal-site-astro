@@ -123,7 +123,7 @@ export const rssArticleItems: RSSFeedItem[] = await Promise.all(
       title: post.data.title,
       pubDate: post.data.pubDate,
       categories: (await getEntries(post.data.tags ?? []))?.map(
-        (p) => p.data.name
+        (p) => p.data.title
       ),
       link: $path({
         to: "/posts/[permalinkSlug]",

@@ -818,7 +818,7 @@ communication channel for the export process."
                  (org-mdx--frontmatter-build-list "threads" parsed-threads))))
          (setq frontmatter (string-join (delq nil (list title date draft tags threads)) "\n"))))
       ((or "tags" "threads")
-       (let* ((name (when raw-title (concat "name: " escaped-title))))
+       (let* ((name (when raw-title (concat "title: " escaped-title))))
          (setq frontmatter (string-join (delq nil (list name draft)) "\n")))))
 
     ;; Final result

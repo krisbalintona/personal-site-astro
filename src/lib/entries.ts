@@ -54,7 +54,7 @@ function getEntryBasePath(entry: AnyCollectionEntry): string {
         params: { titleSlug: entry.data.titleSlug },
       });
     case "tags":
-      return $path({ to: "/tags/[tag]", params: { tag: entry.data.name } });
+      return $path({ to: "/tags/[tag]", params: { tag: entry.data.title } });
     default:
       throw new Error(`No URL mapping for collection "${entry.collection}"`);
   }

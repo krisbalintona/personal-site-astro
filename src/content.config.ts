@@ -3,10 +3,10 @@ import {
   defineCollection,
   reference,
 } from "astro:content";
+import { baseContentShape, extendExpressionSchema } from "@lib/expressions.ts";
 import mdFrontmatterLoader from "@lib/mdFrontmatterGlob.ts";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
-import { expressionSchema, extendExpressionSchema } from "./lib/expressions.ts";
 
 const articles = defineCollection({
   loader: glob({
@@ -31,6 +31,7 @@ const tags = defineCollection({
     contentPattern: "*/index.mdx",
     contentBase: "./src/content/tags",
   }),
+  schema: z.object(baseContentShape),
 });
 
 const threads = defineCollection({
@@ -49,6 +50,7 @@ const threads = defineCollection({
     contentPattern: "*/index.mdx",
     contentBase: "./src/content/threads",
   }),
+  schema: z.object(baseContentShape),
 });
 
 const standalone = defineCollection({
@@ -56,7 +58,7 @@ const standalone = defineCollection({
     pattern: "*/index.mdx",
     base: "./src/content/standalone",
   }),
-  schema: expressionSchema,
+  schema: z.object(baseContentShape),
 });
 
 export type AnyCollectionName = keyof typeof collections;

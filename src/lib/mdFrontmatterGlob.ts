@@ -23,7 +23,7 @@ import { glob as tinyglobby } from "tinyglobby";
 //
 // Stub entries - Entries created from source file frontmatter values
 //   alone, with no associated content file. Their data is just `{
-//   name: value }` and they have no renderable body.
+//   title: value }` and they have no renderable body.
 //
 // Content entries - Entries backed by a content file. Their data is
 //   the content file's frontmatter, and their body is the content
@@ -61,7 +61,7 @@ type LoaderOptions = LoaderOptionsWithContent | LoaderOptionsWithoutContent;
  *
  * **Source files** (`sources`) are MD/MDX files whose frontmatter is
  * scanned for values of `sourceField`. Each unique value becomes a
- * stub entry with `{ name: value }` as its data and no renderable
+ * stub entry with `{ title: value }` as its data and no renderable
  * body.
  *
  * **Content files** (`contentBase` / `contentPattern`) are MD/MDX
@@ -75,18 +75,31 @@ type LoaderOptions = LoaderOptionsWithContent | LoaderOptionsWithoutContent;
  *
  * When `contentBase` and `contentPattern` are omitted, the loader
  * produces stub-only entries: every unique value of `sourceField`
- * becomes an entry with `{ name: value }` and no renderable body.
+ * becomes an entry with `{ title: value }` and no renderable body.
  *
  * The entry ID for a content file is determined as follows:
  * - If the file has a `name` frontmatter field, that value is used.
  * - Otherwise, the parent directory name is slugified (useful for
  *   collections where files follow a `my-entry/index.mdx` pattern).
  *
- * ## Default schema
+ * ## Schema
  *
- * The default schema guarantees `name: string` on every entry. You
- * can extend it in your collection definition to cover additional
- * frontmatter fields present in your content files.
+ * The loader's **default schema** guarantees `title: string` on every
+ * entry. This is sufficient when no collection schema is provided.
+ *
+ * You can extend it by defining a `schema` in your collection in
+ * `src/content.config.ts`. Per Astro's Content Loader API, a
+ * user-provided schema **completely replaces** the loader's default -
+ * there is no automatic merging. If you supply your own schema, it
+ * applies to **all** entries (both stub and content), so:
+ *
+ * - You **must** include `title: z.string()`, since the loader uses it
+ *   internally for stub entries.
+ * - Every field beyond `name` **must** be `.optional()` or have a
+ *   `.default()` value, because stub entries are synthesized from a
+ *   scraped field value alone and only ever carry `{ title: value }`.
+ *   Content entries populate additional fields from their file's
+ *   frontmatter.
  *
  * @example
  * ```ts
@@ -100,8 +113,11 @@ type LoaderOptions = LoaderOptionsWithContent | LoaderOptionsWithoutContent;
  *     contentPattern: "**\/index.mdx",
  *     contentBase: "src/content/tags",
  *   }),
+ *   // User-provided schema replaces the loader default entirely.
+ *   // `name` is required; all other fields must be optional/defaulted
+ *   // because stub entries only carry `{ name }`.
  *   schema: z.object({
- *     name: z.string(),
+ *     title: z.string(),
  *     description: z.string().optional(),
  *   }),
  * });
@@ -114,14 +130,19 @@ type LoaderOptions = LoaderOptionsWithContent | LoaderOptionsWithoutContent;
  *     ],
  *     sourceField: "tags",
  *   }),
+ *   // No schema needed - the loader's default `{ title: string }`
+ *   // is used automatically.
  * });
  * ```
  */
 export default function (loaderOptions: LoaderOptions): Loader {
   return {
     name: "md-frontmatter-glob-loader",
+    // Default schema: guarantees `title: string` on every entry.
+    // Replaced entirely by any schema defined in the collection - see
+    // JSDoc above for the contract user-provided schemas must follow.
     schema: z.object({
-      name: z.string(),
+      title: z.string(),
     }),
     load: async ({
       store,
@@ -202,9 +223,9 @@ export default function (loaderOptions: LoaderOptions): Loader {
 
       //// Process content files (optional)
       // Associate content files with stub entries (by matching the
-      // content file's `name` frontmatter field or slugified filename
-      // to a stub entry ID), or create new content entries if no
-      // match is found.
+      // content file's `title` frontmatter field or slugified
+      // filename to a stub entry ID), or create new content entries
+      // if no match is found.
 
       const contentBase = loaderOptions.contentBase ?? null;
       const contentPattern = loaderOptions.contentPattern ?? null;
@@ -408,7 +429,13 @@ async function processStubEntries({
     });
   }
 
-  // Store a single stub entry for a field value
+  // Store a single stub entry for a field value.
+  //
+  // Stub entries only carry `{ title: value }` - the scraped field
+  // value is all we have.  `parseData` validates this against
+  // whichever schema is active (the loader's default or the user's
+  // override), so any user-provided schema must declare all fields
+  // beyond `name` as `.optional()` or supply a `.default()`.
   async function syncStubEntry(value: string): Promise<void> {
     const id = value;
     const digest = generateDigest(value);
@@ -416,7 +443,7 @@ async function processStubEntries({
     if (existingEntry?.digest === digest) {
       return;
     }
-    const parsedData = await parseData({ id, data: { name: value } });
+    const parsedData = await parseData({ id, data: { title: value } });
     store.set({ id, data: parsedData, digest });
   }
 
@@ -503,11 +530,12 @@ async function processContentFiles({
     }
     const { data: frontmatter } = matter(contents);
 
-    // Determine the entry ID: use `name` frontmatter field if present
-    // (and a string), otherwise slugify the parent directory name
+    // Determine the entry ID: use `title` frontmatter field if
+    // present (and a string), otherwise slugify the parent directory
+    // name
     let id: string;
-    if (frontmatter.name && typeof frontmatter.name === "string") {
-      id = frontmatter.name;
+    if (frontmatter.title && typeof frontmatter.title === "string") {
+      id = frontmatter.title;
     } else {
       // Use the parent directory name as the slug, since content
       // files like `foo-bar/index.mdx` may share the same filename
@@ -523,8 +551,8 @@ async function processContentFiles({
     }
     const parsedData = await parseData({
       id,
-      // `name` is kept in the data so the schema is consistent across
-      // stub entries and content entries
+      // `title` is kept in the data so the schema is consistent
+      // across stub entries and content entries
       data: frontmatter,
       filePath: absPath,
     });

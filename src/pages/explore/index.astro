@@ -21,16 +21,16 @@ function inThisThread(thread: CollectionEntry<"threads">) {
     >Threads</Heading
   >
   {allThreadEntries.map(async (s) => {
-     const thread = (await getCollection("threads")).find((e) => e.data.name === s.data.name);
+     const thread = (await getCollection("threads")).find((e) => e.data.title === s.data.title);
      const { Content } = thread ? await render(thread) : { Content: null };
 
      return (
        <section>
          <Heading
-           id={slugify(s.data.name, { lower: true, strict: true})}
+           id={slugify(s.data.title, { lower: true, strict: true})}
            level="3"
            selfLink={true}
-         >{s.data.name}</Heading>
+         >{s.data.title}</Heading>
          {thread && isPublished(thread) && Content && <Content />}
          
          <div class="listing-container">
