@@ -1,10 +1,14 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
+import Breadcrumb, {
+  type BreadcrumbComponent,
+} from "@components/Breadcrumb.astro";
 import { isProd } from "@lib/consts";
 import { isPublished } from "@lib/entries";
 import { allExpressions } from "@lib/expressions";
 import BaseLayout from "@src/layouts/BaseLayout.astro";
 import Link from "astro-typesafe-routes/link";
+import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
 
 const tags = await getCollection("tags");
@@ -28,9 +32,16 @@ const tagsFiltered = isProd
 const tagsOrdered: CollectionEntry<"tags">[] = tagsFiltered.sort((a, b) =>
   a.data.title.localeCompare(b.data.title)
 );
+
+const breadcrumbs: BreadcrumbComponent[] = [
+  { label: "explore", href: $path({ to: "/explore" }) },
+  { label: "Tags", styleNormal: true },
+];
 ---
 
 <BaseLayout pageTitle="Tags" displayTitle="Tags">
+  <Breadcrumb breadcrumbs={breadcrumbs} />
+  <hr>
   {tags.length > 0 && (
     <ul>
       {tagsOrdered.map((tag) => {

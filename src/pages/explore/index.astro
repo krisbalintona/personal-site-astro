@@ -1,54 +1,42 @@
 ---
-import type { CollectionEntry } from "astro:content";
-import { getCollection, render } from "astro:content";
+import { getCollection } from "astro:content";
+import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
+import Breadcrumb from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { isPublished } from "@lib/entries";
-import type { ExpressionEntry } from "@lib/expressions";
-import ExpressionListingCompact from "@src/components/ExpressionListingCompact.astro";
+import Link from "astro-typesafe-routes/link";
+import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
 
 const allThreadEntries = await getCollection("threads");
-
-function inThisThread(thread: CollectionEntry<"threads">) {
-  return (expression: ExpressionEntry): boolean =>
-    expression.data.threads?.some((s) => s.id === thread.id) ?? false;
-}
+const breadcrumbs: BreadcrumbComponent[] = [
+  { label: "explore", href: $path({ to: "/explore" }) },
+];
 ---
 
 <BaseLayout pageTitle="Explore" displayTitle="Explore">
-  <Heading id="threads" class="subdivision-heading" level="2" selfLink={true}
-    >Threads</Heading
-  >
-  {allThreadEntries.map(async (s) => {
-     const thread = (await getCollection("threads")).find((e) => e.data.title === s.data.title);
-     const { Content } = thread ? await render(thread) : { Content: null };
-
-     return (
-       <section>
-         <Heading
-           id={slugify(s.data.title, { lower: true, strict: true})}
-           level="3"
-           selfLink={true}
-         >{s.data.title}</Heading>
-         {thread && isPublished(thread) && Content && <Content />}
-         
-         <div class="listing-container">
-           <ExpressionListingCompact
-             collections={["articles", "notes"]}
-             descending={false}
-             extraFilter={inThisThread(s)} />
-         </div>
-       </section>
-       )})}
+  <Breadcrumb breadcrumbs={breadcrumbs} />
+  <hr>
+  <Heading level="2"><Link to="/tags">Tags</Link></Heading>
+  <p>See all tags <Link to="/tags">here</Link>.</p>
+  <hr>
+  <Heading level="2"><Link to="/threads">Threads</Link></Heading>
+  <p>
+    See all threads <Link to="/threads">here</Link>
+    . There is a list of them below
+  </p>
+  {!allThreadEntries
+    ? <p>"Nothing yet..."</p>
+    : <ul>
+        {allThreadEntries.map((s) => {
+          return (
+            /* The `hash` has to match the anchors in
+            `src/pages/threads/index.astro`*/
+            <li><Link
+              hash={slugify(s.data.title, { lower: true, strict: true })}
+              to="/threads"
+            >{s.data.title}</Link></li>
+            )}
+        )}
+      </ul>}
 </BaseLayout>
-
-<style>
-  .subdivision-heading {
-    text-align: center;
-  }
-
-  .listing.container {
-    padding: 0 var(--space-m) 0 var(--space-m);
-  }
-</style>
