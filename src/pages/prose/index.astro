@@ -1,36 +1,35 @@
 ---
+import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
+import Breadcrumb from "@components/Breadcrumb.astro";
+import ExpressionListingCompact from "@components/ExpressionListingCompact.astro";
 import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import ExpressionListingCompact from "@src/components/ExpressionListingCompact.astro";
 import Link from "astro-typesafe-routes/link";
+import { $path } from "astro-typesafe-routes/path";
+
+const breadcrumbs: BreadcrumbComponent[] = [
+  { label: "prose", href: $path({ to: "/explore" }) },
+];
 ---
 
 <BaseLayout pageTitle="Prose" displayTitle="Prose">
-  <Heading id="Articles" class="subdivision-heading" level="2" selfLink={true}
-    ><Link to="/articles">Articles</Link></Heading
-  >
-  <p>Essays and long-form writing</p>
-  <ExpressionListingCompact collections={["articles"]} />
-
+  <Breadcrumb breadcrumbs={breadcrumbs} />
   <hr>
-
-  <Heading id="Notes" class="subdivision-heading" level="2" selfLink={true}
-    ><Link to="/notes">Notes</Link></Heading
-  >
-  <p>Unrefined reflections and ongoing thinking</p>
-  <ExpressionListingCompact collections={["notes"]} />
+  <Heading level="2"><Link to="/articles">Articles</Link></Heading>
+  <p>
+    Essays and long-form writing. See all articles <Link to="/articles"
+      >here</Link
+    >
+    .
+  </p>
+  <ExpressionListingCompact collections={["articles"]} limit={5} />
+  <hr>
+  <Heading level="2"><Link to="/notes">Notes</Link></Heading>
+  <p>
+    Unrefined reflections and ongoing thinking. See all notes <Link to="/notes"
+      >here</Link
+    >
+    .
+  </p>
+  <ExpressionListingCompact collections={["notes"]} limit={5} />
 </BaseLayout>
-
-<style>
-  .subdivision-heading {
-    text-align: center;
-  }
-</style>
-
-<style is:global lang="scss">
-  @use "mixins";
-
-  .expression-listing {
-    @include mixins.breakout(var(--space-s-m));
-  }
-</style>
