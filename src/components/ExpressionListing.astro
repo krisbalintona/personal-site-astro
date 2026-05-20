@@ -6,7 +6,11 @@ import {
   isPublished,
   toDateTimeAttribute,
 } from "@lib/entries";
-import type { ExpressionCollection, ExpressionEntry } from "@lib/expressions";
+import {
+  allExpressions,
+  type ExpressionCollection,
+  type ExpressionEntry,
+} from "@lib/expressions";
 
 export interface ListingItem {
   href: string;
@@ -15,7 +19,7 @@ export interface ListingItem {
 }
 
 interface Props {
-  collections: ExpressionCollection[];
+  collections?: ExpressionCollection[];
   descending?: boolean;
   extraFilter?: (expression: ExpressionEntry) => boolean;
 }
@@ -29,13 +33,15 @@ const {
 const finalFilter = (expression: ExpressionEntry): boolean =>
   isPublished(expression) && extraFilter(expression);
 
-const expressions = (
-  await Promise.all(
-    (Array.isArray(collections) ? collections : [collections]).map((c) =>
-      getCollection(c, finalFilter)
-    )
-  )
-).flat();
+const expressions = collections
+  ? (
+      await Promise.all(
+        (Array.isArray(collections) ? collections : [collections]).map((c) =>
+          getCollection(c, finalFilter)
+        )
+      )
+    ).flat()
+  : await allExpressions(finalFilter);
 const expressionItems: ListingItem[] = expressions
   .map(
     (expression: CollectionEntry<ExpressionCollection>): ListingItem => ({

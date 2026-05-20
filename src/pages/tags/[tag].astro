@@ -49,8 +49,5 @@ const breadcrumbs: BreadcrumbComponent[] = [
   {tagEntry && isPublished(tagEntry) && Content && <Content />}
   <hr>
 
-  <ExpressionListing
-    collections={["articles", "notes"]}
-    extraFilter={hasThisTag}
-  />
+  <ExpressionListing extraFilter={hasThisTag} />
 </BaseLayout>
