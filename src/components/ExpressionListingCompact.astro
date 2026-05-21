@@ -55,13 +55,13 @@ const itemCount = expressionItems.length;
 
 {!hasItems && <p>Nothing yet...</p>}
 {hasItems && (
-  <div class="expression-listing-wrapper">
+  <div class="listing-wrapper expression-listing-wrapper">
     {/* Note: `reversed={descending}` has no visual effect (we set
     `list-style: none` below, removing the native markers), but
     preserves semantics for screen readers that announce list order
     */}
     <ol
-      class="expression-listing"
+      class="compact-listing expression-listing"
       reversed={descending}
       style={`--counter-start: ${descending ? itemCount + 1 : 0}; --counter-increment: ${descending ? -1 : 1}`}>
       {displayItems.map((item: ListingItem) => (
@@ -85,6 +85,7 @@ const itemCount = expressionItems.length;
 
 <style>
   :where(.expression-listing-wrapper) {
+    padding: 0 var(--space-3xs-2xs) 0 var(--space-s);
     margin-bottom: var(--space-m);
   }
 

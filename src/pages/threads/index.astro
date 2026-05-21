@@ -35,21 +35,13 @@ const breadcrumbs: BreadcrumbComponent[] = [
            selfLink={true}
          >{thread.data.title}</Heading>
          
-         <div class="listing-container">
-           <ExpressionListingCompact
-             browseAllLink={getEntryUrl(thread)}
-             collections={["articles", "notes"]}
-             descending={false}
-             extraFilter={inThisThread(thread)}
-             limit={5} />
-         </div>
+         <ExpressionListingCompact
+           browseAllLink={getEntryUrl(thread)}
+           collections={["articles", "notes"]}
+           descending={false}
+           extraFilter={inThisThread(thread)}
+           limit={5} />
        </section>
        )
      })}
 </BaseLayout>
-
-<style>
-  .listing-container {
-    padding: 0 var(--space-2xs) 0 var(--space-s);
-  }
-</style>
