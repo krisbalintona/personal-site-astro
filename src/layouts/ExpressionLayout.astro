@@ -49,46 +49,41 @@ const { Content } = await render(expression);
           >{formattedVisibleDate}</time
         >
 
-        <h1 id="expression-title">{title}</h1>
+        <h1 class="expression-title">{title}</h1>
       </div>
     </header>
 
     <div class="expression-content"><Content /></div>
 
     <footer class="expression-footer">
-      <div class="expression-taxonomy-container">
+      <dl class="expression-taxonomy">
         {tags && (
-          <>
-            <span class="label">tagged: </span>
-            {await Promise.all((await getEntries(tags)).map((tag, i) => {
+          <div class="expression-taxonomy-container">
+            <dt>tagged</dt>
+            <dd>{await Promise.all((await getEntries(tags)).map((tag) => {
               return (
-                <>{i > 0 && ", "}<Link
-                  class="entry"
+                <span><Link
                   params={{ tag: slugify(tag.data.title) }}
                   to="/tags/[tag]"
-                >{tag.data.title}</Link></>
+                >{tag.data.title}</Link></span>
               );
-            }))}
-          </>
+            }))}</dd>
+          </div>
         )}
-      </div>
-      <br>
-      <div class="expression-taxonomy-container">
         {threads && (
-          <>
-            <span class="label">in threads: </span>
-            {await Promise.all((await getEntries(threads)).map((thread, i) => {
+          <div class="expression-taxonomy-container">
+            <dt>in threads</dt>
+            <dd>{await Promise.all((await getEntries(threads)).map((thread) => {
               return (
-                <>{i > 0 && ", "}<Link
-                  class="entry"
+                <span><Link
                   params={{ thread: slugify(thread.data.title) }}
                   to="/threads/[thread]"
-                >{thread.data.title}</Link></>
+                >{thread.data.title}</Link></span>
               );
-            }))}
-          </>
+            }))}</dd>
+          </div>
         )}
-      </div>
+      </dl>
     </footer>
   </article>
 </BaseLayout>
@@ -106,7 +101,7 @@ const { Content } = await render(expression);
         font-size: var(--font-step--1);
       }
 
-      #expression-title {
+      .expression-title {
         margin: 0 0 var(--space-s) 0;
       }
     }
@@ -121,22 +116,40 @@ const { Content } = await render(expression);
     border-top: 2px solid var(--color-border);
 
     .expression-taxonomy-container {
-      display: inline;
+      display: block;
       font-size: var(--font-step--1);
 
-      .label {
+      dt,
+      dd {
+        display: inline;
+        margin: 0;
+      }
+
+      /* Space after colon is added via margin rather than a content
+         string, as trailing spaces in pseudo-element content can be
+         collapsed inconsistently across browsers */
+      dt::after {
+        margin-right: 0.25em;
+        content: ":";
+      }
+
+      dt {
         font-weight: bold;
       }
 
-      .entry {
+      span + span::before {
+        content: ", ";
+      }
+
+      a {
         --link-underline-color: transparent;
         font-style: italic;
         color: var(--color-text-muted);
         transition: color 0.15s;
-      }
 
-      .entry:hover {
-        color: var(--color-text);
+        &:hover {
+          color: var(--color-text);
+        }
       }
     }
   }
