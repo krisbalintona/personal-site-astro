@@ -1,18 +1,15 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { getCollection, render } from "astro:content";
+import { getCollection } from "astro:content";
 import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { isPublished } from "@lib/entries";
 import type { ExpressionEntry } from "@lib/expressions";
 import ExpressionListingCompact from "@src/components/ExpressionListingCompact.astro";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
-
-const allThreadEntries = await getCollection("threads");
 
 function inThisThread(thread: CollectionEntry<"threads">) {
   return (expression: ExpressionEntry): boolean =>
@@ -28,27 +25,25 @@ const breadcrumbs: BreadcrumbComponent[] = [
 <BaseLayout pageTitle="Threads" displayTitle="All threads">
   <Breadcrumb breadcrumbs={breadcrumbs} />
   <hr>
-  {allThreadEntries.map(async (s) => {
-     const thread = (await getCollection("threads")).find((e) => e.data.title === s.data.title);
-     const { Content } = thread ? await render(thread) : { Content: null };
-
+  {(await getCollection("threads")).map((thread) => {
      return (
        <section>
          <Heading
-           id={slugify(s.data.title, { lower: true, strict: true })}
+           id={slugify(thread.data.title, { lower: true, strict: true })}
            level="3"
            selfLink={true}
-         >{s.data.title}</Heading>
-         {thread && isPublished(thread) && Content && <Content />}
+         >{thread.data.title}</Heading>
          
          <div class="listing-container">
            <ExpressionListingCompact
              collections={["articles", "notes"]}
              descending={false}
-             extraFilter={inThisThread(s)} />
+             extraFilter={inThisThread(thread)}
+             limit={5} />
          </div>
        </section>
-       )})}
+       )
+     })}
 </BaseLayout>
 
 <style>
