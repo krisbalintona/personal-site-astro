@@ -1,9 +1,11 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
-import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
+import Breadcrumb, {
+  type BreadcrumbComponent,
+} from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
-import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
 import { getEntryUrl } from "@lib/entries";
 import type { ExpressionEntry } from "@lib/expressions";
 import ExpressionListingCompact from "@src/components/ExpressionListingCompact.astro";
@@ -21,16 +23,14 @@ const breadcrumbs: BreadcrumbComponent[] = [
 ];
 ---
 
-<TaxonomyListingLayout
-  pageTitle="Threads"
-  displayTitle="All threads"
-  breadcrumbs={breadcrumbs}
->
+<BaseLayout pageTitle="Threads" displayTitle="All threads">
+  <Breadcrumb breadcrumbs={breadcrumbs} />
   {(await getCollection("threads")).map((thread) => {
+     const headingId = slugify(thread.data.title, { lower: true, strict: true });
      return (
-       <section>
+       <section aria-labelledby={headingId}>
          <Heading
-           id={slugify(thread.data.title, { lower: true, strict: true })}
+           id={headingId}
            level="3"
            selfLink={true}
          >{thread.data.title}</Heading>
@@ -44,4 +44,11 @@ const breadcrumbs: BreadcrumbComponent[] = [
        </section>
        )
      })}
-</TaxonomyListingLayout>
+</BaseLayout>
+
+<style>
+  section + section {
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--color-border);
+  }
+</style>

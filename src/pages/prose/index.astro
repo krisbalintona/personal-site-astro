@@ -1,9 +1,8 @@
 ---
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
-import Breadcrumb from "@components/Breadcrumb.astro";
 import ExpressionListingCompact from "@components/ExpressionListingCompact.astro";
 import Heading from "@components/markup/Heading.astro";
-import BaseLayout from "@layouts/BaseLayout.astro";
+import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
 import Link from "astro-typesafe-routes/link";
 import { $path } from "astro-typesafe-routes/path";
 
@@ -16,8 +15,11 @@ const breadcrumbs: BreadcrumbComponent[] = [
 ];
 ---
 
-<BaseLayout pageTitle="Prose" displayTitle="Prose">
-  <Breadcrumb breadcrumbs={breadcrumbs} />
+<TaxonomyListingLayout
+  pageTitle="Prose"
+  displayTitle="Prose"
+  breadcrumbs={breadcrumbs}
+>
   <section aria-labelledby="articles-heading">
     <Heading id="articles-heading" level="2"
       ><Link to="/articles">Articles</Link></Heading
@@ -29,7 +31,6 @@ const breadcrumbs: BreadcrumbComponent[] = [
       limit={5}
     />
   </section>
-  <hr>
   <section aria-labelledby="notes-heading">
     <Heading id="notes-heading" level="2"
       ><Link to="/notes">Notes</Link></Heading
@@ -41,4 +42,4 @@ const breadcrumbs: BreadcrumbComponent[] = [
       limit={5}
     />
   </section>
-</BaseLayout>
+</TaxonomyListingLayout>

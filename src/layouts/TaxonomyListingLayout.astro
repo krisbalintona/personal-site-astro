@@ -1,0 +1,25 @@
+---
+import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
+import Breadcrumb from "@components/Breadcrumb.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+interface Props {
+  breadcrumbs: BreadcrumbComponent[];
+  displayTitle?: string;
+  pageTitle: string;
+}
+
+const { displayTitle, pageTitle, breadcrumbs } = Astro.props;
+---
+
+<BaseLayout displayTitle={displayTitle} pageTitle={pageTitle}>
+  <Breadcrumb breadcrumbs={breadcrumbs} />
+  <slot />
+</BaseLayout>
+
+<style>
+  :global(section + section) {
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--color-border);
+  }
+</style>

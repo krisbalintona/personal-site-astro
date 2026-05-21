@@ -1,11 +1,8 @@
 ---
-import { getCollection } from "astro:content";
-import Breadcrumb, {
-  type BreadcrumbComponent,
-} from "@components/Breadcrumb.astro";
+import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
 import TaxonomyListingCompact from "@components/TaxonomyListingCompact.astro";
-import BaseLayout from "@layouts/BaseLayout.astro";
+import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
 import Link from "astro-typesafe-routes/link";
 import { $path } from "astro-typesafe-routes/path";
 
@@ -18,8 +15,11 @@ const breadcrumbs: BreadcrumbComponent[] = [
 ];
 ---
 
-<BaseLayout pageTitle="Explore" displayTitle="Explore">
-  <Breadcrumb breadcrumbs={breadcrumbs} />
+<TaxonomyListingLayout
+  pageTitle="Explore"
+  displayTitle="Explore"
+  breadcrumbs={breadcrumbs}
+>
   <section aria-labelledby="tags-heading">
     <Heading id="tags-heading" level="2"><Link to="/tags">Tags</Link></Heading>
     <TaxonomyListingCompact
@@ -29,7 +29,6 @@ const breadcrumbs: BreadcrumbComponent[] = [
       sortBy="count"
     />
   </section>
-  <hr>
   <section aria-labelledby="threads-heading">
     <Heading id="threads-heading" level="2"
       ><Link to="/threads">Threads</Link></Heading
@@ -41,4 +40,4 @@ const breadcrumbs: BreadcrumbComponent[] = [
       sortBy="title"
     />
   </section>
-</BaseLayout>
+</TaxonomyListingLayout>
