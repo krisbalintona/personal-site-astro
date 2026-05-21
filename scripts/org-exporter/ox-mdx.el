@@ -661,6 +661,53 @@ INFO is a plist holding contextual information.  See
      (t (if (not desc) (format "<%s>" path)
           (format "[%s](%s)" desc path))))))
 
+(defun org-mdx-item (item contents info)
+  "Transcode an ITEM element for MDX export.
+Ordered and unordered list items are handled by `org-md-item'.
+Descriptive list items are emitted as HTML `dt'/`dd' pairs, since
+Markdown has no equivalent construct.  In both cases CONTENTS has
+already been transcoded to MDX, so footnote references, emphasis, etc.
+are preserved correctly.
+
+ITEM is the org element.  CONTENTS holds the transcoded item body.  INFO
+is a plist used as a communication channel."
+  (let* ((plain-list (org-element-parent item))
+         (type (org-element-property :type plain-list)))
+    (if (eq type 'descriptive)
+        ;; Markdown has no definition list syntax, so in such cases we
+        ;; emit HTML
+        (let* ((tag (org-element-property :tag item))
+               (tag-str (if tag (org-export-data tag info) "(no term)"))
+               (checkbox (org-element-property :checkbox item))
+               (checkbox-str
+                (concat (pcase checkbox
+                          (`on  "[X] ")
+                          (`trans "[-] ")
+                          (`off "[ ] ")
+                          (_ ""))
+                        tag-str))
+               (body (if (org-string-nw-p contents)
+                         (org-trim contents)
+                       "")))
+          (concat (format "<dt>%s</dt>\n" checkbox-str)
+                  (format "<dd>%s</dd>" body)))
+      ;; Ordered and unordered lists: delegate to the MD transcoder
+      (org-md-item item contents info))))
+
+(defun org-mdx-plain-list (plain-list contents _info)
+  "Transcode PLAIN-LIST for MDX export.
+Descriptive lists are wrapped in `<dl>'; ordered and unordered lists
+fall through to the Markdown plain-list transcoder.
+
+CONTENTS is the plain-list contents.  INFO is a plist used as a
+communication channel."
+  (if (eq (org-element-property :type plain-list) 'descriptive)
+      ;; Markdown has no definition list syntax, so in such cases we
+      ;; emit HTML
+      (format "<dl>\n%s\n</dl>" (org-trim contents))
+    ;; Ordered and unordered lists: delegate to the MD transcoder
+    (org-md-plain-list plain-list contents _info)))
+
 (defun org-mdx-footnote-reference (footnote-reference _contents info)
   "Transcode a FOOTNOTE-REFERENCE element from Org to MDX.
 CONTENTS is nil.  INFO is a plist holding contextual information."
@@ -1074,7 +1121,9 @@ Return the output directory's name."
     (link . org-mdx-link)
     (timestamp . org-mdx-timestamp)
     (footnote-reference . org-mdx-footnote-reference)
-    (headline . org-mdx-headline)))
+    (headline . org-mdx-headline)
+    (item . org-mdx-item)
+    (plain-list . org-mdx-plain-list)))
 
 ;;;; Org-publish
 ;; I use org-publish to make it easier to export all my blog entries
