@@ -50,7 +50,7 @@ const { pageTitle, displayTitle } = Astro.props;
 
   <body>
     <Header />
-    <div class="content">
+    <div class="page-content">
       <main>
         {displayTitle && <Heading class="sr-only" level="1">{displayTitle}</Heading>}
         <slot />
@@ -65,9 +65,8 @@ const { pageTitle, displayTitle } = Astro.props;
     --page-side-padding: var(--space-s-m);
     padding: 0 var(--page-side-padding);
 
-    .content {
+    .page-content {
       max-width: 70ch;
-      min-height: 100svh;
       margin: var(--space-xs-s) auto 0;
     }
   }
