@@ -27,10 +27,11 @@ const breadcrumbs: BreadcrumbComponent[] = [
   breadcrumbs={breadcrumbs}
 >
   {(await getCollection("threads")).map((thread) => {
+     const headingId = slugify(thread.data.title, { lower: true, strict: true });
      return (
-       <section>
+       <section aria-labelledby={headingId}>
          <Heading
-           id={slugify(thread.data.title, { lower: true, strict: true })}
+           id={headingId}
            level="3"
            selfLink={true}
          >{thread.data.title}</Heading>
