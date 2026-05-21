@@ -28,18 +28,19 @@ const { Content: PreambleContent } = preambleEntry
 ---
 
 <BaseLayout displayTitle={displayTitle} pageTitle={pageTitle}>
-  <header class="taxonomy-header">
+  <header>
     <Breadcrumb
       breadcrumbs={breadcrumbs}
       description={breadcrumbsDescription}
     />
-    {preambleEntry && isPublished(preambleEntry) && PreambleContent && <PreambleContent />}
+    {preambleEntry && isPublished(preambleEntry)
+      && PreambleContent && <div class="taxonomy-preamble"><PreambleContent /></div>}
   </header>
   <slot />
 </BaseLayout>
 
 <style>
-  .taxonomy-header {
+  .taxonomy-preamble {
     border-bottom: 1px solid var(--color-border);
   }
 
