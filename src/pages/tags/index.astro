@@ -1,12 +1,10 @@
 ---
-import { getEntry, render } from "astro:content";
-import Breadcrumb, {
-  type BreadcrumbComponent,
-} from "@components/Breadcrumb.astro";
+import { getEntry } from "astro:content";
+import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import TaxonomyListingCompact from "@components/TaxonomyListingCompact.astro";
+import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
 import { isPublished } from "@lib/entries";
 import { allExpressions } from "@lib/expressions";
-import BaseLayout from "@src/layouts/BaseLayout.astro";
 import { $path } from "astro-typesafe-routes/path";
 
 const tagCounts: Map<string, number> = new Map();
@@ -23,17 +21,14 @@ const breadcrumbs: BreadcrumbComponent[] = [
 ];
 
 const tagsEntry = await getEntry("standalone", "taxonomyTags");
-const { Content: TagsContent } = tagsEntry
-  ? await render(tagsEntry)
-  : { Content: undefined };
 ---
 
-<BaseLayout pageTitle="Tags" displayTitle="All tags">
-  <Breadcrumb
-    breadcrumbs={breadcrumbs}
-    description={tagsEntry?.data.description}
-  />
-  {TagsContent && <TagsContent />}
-  <hr>
+<TaxonomyListingLayout
+  pageTitle="Tags"
+  displayTitle="All tags"
+  breadcrumbs={breadcrumbs}
+  breadcrumbsDescription={tagsEntry?.data.description}
+  preambleEntry={tagsEntry}
+>
   <TaxonomyListingCompact collections={["tags"]} sortBy="title" />
-</BaseLayout>
+</TaxonomyListingLayout>

@@ -16,9 +16,6 @@ const breadcrumbs: BreadcrumbComponent[] = [
 ];
 
 const proseEntry = await getEntry("standalone", "prose");
-const { Content: ProseContent } = proseEntry
-  ? await render(proseEntry)
-  : { Content: undefined };
 const articlesEntry = await getEntry("standalone", "taxonomyArticles");
 const { Content: ArticlesContent } = articlesEntry
   ? await render(articlesEntry)
@@ -34,7 +31,7 @@ const { Content: NotesContent } = notesEntry
   displayTitle="Prose"
   breadcrumbs={breadcrumbs}
   breadcrumbsDescription={proseEntry?.data.description}
-  preamble={ProseContent}
+  preambleEntry={proseEntry}
 >
   <section aria-labelledby="articles-heading">
     <Heading id="articles-heading" level="2"

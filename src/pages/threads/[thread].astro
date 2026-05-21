@@ -1,11 +1,8 @@
 ---
-import { type CollectionEntry, getCollection, render } from "astro:content";
-import Breadcrumb, {
-  type BreadcrumbComponent,
-} from "@components/Breadcrumb.astro";
+import { type CollectionEntry, getCollection } from "astro:content";
+import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import ExpressionListing from "@components/ExpressionListing.astro";
-import BaseLayout from "@layouts/BaseLayout.astro";
-import { isPublished } from "@lib/entries";
+import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
 import type { ExpressionEntry } from "@lib/expressions";
 import { createRoute } from "astro-typesafe-routes/create-route";
 import { $path } from "astro-typesafe-routes/path";
@@ -27,9 +24,6 @@ interface Props {
 }
 
 const { thread: threadEntry } = Astro.props;
-const { Content } = threadEntry
-  ? await render(threadEntry)
-  : { Content: undefined };
 const threadTitle: string = threadEntry.data.title;
 
 function hasThisThread(expression: ExpressionEntry): boolean {
@@ -43,13 +37,12 @@ const breadcrumbs: BreadcrumbComponent[] = [
 ];
 ---
 
-<BaseLayout
+<TaxonomyListingLayout
   pageTitle={threadTitle}
   displayTitle={`Entries belonging to the thread "${threadTitle}"`}
+  breadcrumbs={breadcrumbs}
+  breadcrumbsDescription={threadEntry?.data.description}
+  preambleEntry={threadEntry}
 >
-  <Breadcrumb breadcrumbs={breadcrumbs} />
-  {threadEntry && isPublished(threadEntry) && Content && <Content />}
-  <hr>
-
   <ExpressionListing extraFilter={hasThisThread} />
-</BaseLayout>
+</TaxonomyListingLayout>

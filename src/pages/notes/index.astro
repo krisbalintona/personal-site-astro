@@ -1,10 +1,8 @@
 ---
-import { getEntry, render } from "astro:content";
-import Breadcrumb, {
-  type BreadcrumbComponent,
-} from "@components/Breadcrumb.astro";
+import { getEntry } from "astro:content";
+import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import ExpressionListing from "@components/ExpressionListing.astro";
-import BaseLayout from "@layouts/BaseLayout.astro";
+import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
 import { $path } from "astro-typesafe-routes/path";
 
 const breadcrumbs: BreadcrumbComponent[] = [
@@ -13,17 +11,14 @@ const breadcrumbs: BreadcrumbComponent[] = [
 ];
 
 const notesEntry = await getEntry("standalone", "taxonomyNotes");
-const { Content: NotesContent } = notesEntry
-  ? await render(notesEntry)
-  : { Content: undefined };
 ---
 
-<BaseLayout pageTitle="Notes" displayTitle="All notes">
-  <Breadcrumb
-    breadcrumbs={breadcrumbs}
-    description={notesEntry?.data.description}
-  />
-  {NotesContent && <NotesContent />}
-  <hr>
+<TaxonomyListingLayout
+  pageTitle="Notes"
+  displayTitle="All notes"
+  breadcrumbs={breadcrumbs}
+  breadcrumbsDescription={notesEntry?.data.description}
+  preambleEntry={notesEntry}
+>
   <ExpressionListing collections={["notes"]} />
-</BaseLayout>
+</TaxonomyListingLayout>

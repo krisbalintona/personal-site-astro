@@ -16,9 +16,6 @@ const breadcrumbs: BreadcrumbComponent[] = [
 ];
 
 const exploreEntry = await getEntry("standalone", "explore");
-const { Content: ExploreContent } = exploreEntry
-  ? await render(exploreEntry)
-  : { Content: undefined };
 const tagsEntry = await getEntry("standalone", "taxonomyTags");
 const { Content: TagsContent } = tagsEntry
   ? await render(tagsEntry)
@@ -34,7 +31,7 @@ const { Content: ThreadsContent } = ThreadsEntry
   displayTitle="Explore"
   breadcrumbs={breadcrumbs}
   breadcrumbsDescription={exploreEntry?.data.description}
-  preamble={ExploreContent}
+  preambleEntry={exploreEntry}
 >
   <section aria-labelledby="tags-heading">
     <Heading id="tags-heading" level="2"><Link to="/tags">Tags</Link></Heading>

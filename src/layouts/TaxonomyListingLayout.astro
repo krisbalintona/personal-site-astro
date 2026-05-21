@@ -1,15 +1,17 @@
 ---
+import { render } from "astro:content";
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+import { isPublished } from "@lib/entries";
+import type { AnyCollectionEntry } from "@src/content.config";
 
 interface Props {
   breadcrumbs: BreadcrumbComponent[];
   breadcrumbsDescription?: string;
   displayTitle?: string;
   pageTitle: string;
-  preamble?: AstroComponentFactory;
+  preambleEntry?: AnyCollectionEntry;
 }
 
 const {
@@ -17,14 +19,21 @@ const {
   pageTitle,
   breadcrumbs,
   breadcrumbsDescription,
-  preamble: Preamble,
+  preambleEntry,
 } = Astro.props;
+
+const { Content: PreambleContent } = preambleEntry
+  ? await render(preambleEntry)
+  : { Content: undefined };
 ---
 
 <BaseLayout displayTitle={displayTitle} pageTitle={pageTitle}>
   <header class="taxonomy-header">
-    <Breadcrumb breadcrumbs={breadcrumbs} description={breadcrumbsDescription} />
-    {Preamble && <Preamble />}
+    <Breadcrumb
+      breadcrumbs={breadcrumbs}
+      description={breadcrumbsDescription}
+    />
+    {preambleEntry && isPublished(preambleEntry) && PreambleContent && <PreambleContent />}
   </header>
   <slot />
 </BaseLayout>
