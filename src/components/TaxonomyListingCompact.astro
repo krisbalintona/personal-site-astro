@@ -1,0 +1,140 @@
+---
+import { getCollection } from "astro:content";
+import { getEntryUrl, isPublished } from "@lib/entries";
+import { allExpressions } from "@lib/expressions";
+import type { TaxonomyCollection, TaxonomyEntry } from "@lib/taxonomies";
+
+interface TaxonomyListingItem {
+  count: number;
+  href: string;
+  title: string;
+}
+
+interface Props {
+  browseAllLink?: string;
+  collections: TaxonomyCollection[];
+  descending?: boolean;
+  extraFilter?: (taxonomy: TaxonomyEntry) => boolean;
+  limit?: number;
+}
+
+const {
+  browseAllLink,
+  collections,
+  descending = true,
+  extraFilter = () => true,
+  limit,
+} = Astro.props;
+
+const taxonomyEntries = (
+  await Promise.all(collections.map((c) => getCollection(c, extraFilter)))
+).flat();
+const expressions = await allExpressions(isPublished);
+const taxonomyItems: TaxonomyListingItem[] = taxonomyEntries
+  .map((taxonomy: TaxonomyEntry) => ({
+    title: taxonomy.data.title,
+    href: getEntryUrl(taxonomy),
+    count: expressions.filter((expression) =>
+      collections.some((c) =>
+        (expression.data[c] ?? []).some((t) => t.id === taxonomy.id)
+      )
+    ).length,
+  }))
+  .sort((a, b) => (descending ? b.count - a.count : a.count - b.count));
+
+const displayItems = limit ? taxonomyItems.slice(0, limit) : taxonomyItems;
+const hasItems = displayItems.length > 0;
+const itemCount = taxonomyItems.length;
+---
+
+{!hasItems && <p>Nothing yet...</p>}
+{hasItems && (
+  <div class="taxonomy-listing-wrapper">
+    {/* Note: `reversed={descending}` has no visual effect (we set
+    `list-style: none` below, removing the native markers), but
+    preserves semantics for screen readers that announce list order
+      */}
+    <ol
+      class="taxonomy-listing"
+      reversed={descending}
+      style={`--counter-start: ${descending ? itemCount + 1 : 0}; --counter-increment: ${descending ? -1 : 1}`}>
+      {displayItems.map((item) => (
+        <li class="listing-item no-visited">
+          <span class="listing-content">
+            <a class="title" href={item.href}>{item.title}</a>
+            <span class="count">{item.count}{item.count === 1 ? " entry" : " entries"}</span>
+          </span>
+        </li>
+      ))}
+    </ol>
+    {browseAllLink && (
+      <div class="browse-all">
+        <small>
+          <a href={browseAllLink}>Browse all {itemCount} {collections.length === 1 && ` ${collections[0]}`}</a>
+        </small>
+      </div>
+    )}
+  </div>
+)}
+
+<style>
+  :where(.taxonomy-listing-wrapper) {
+    margin-bottom: var(--space-m);
+  }
+
+  .taxonomy-listing {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    padding: 0;
+    margin: var(--space-m) 0 0 0;
+    counter-reset: expression-counter var(--counter-start);
+
+    .listing-item {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
+      column-gap: var(--space-3xs);
+      align-items: baseline;
+      padding-bottom: var(--space-3xs);
+      list-style: none;
+      counter-increment: expression-counter var(--counter-increment);
+
+      &::before {
+        font-size: small;
+        color: var(--color-text-muted);
+        content: counter(expression-counter) ".";
+      }
+
+      .listing-content {
+        display: flex;
+        gap: var(--space-2xs);
+        align-items: baseline;
+      }
+
+      a {
+        --link-underline-color: transparent;
+      }
+
+      .title {
+        color: var(--color-text);
+
+        &:hover {
+          color: var(--color-accent);
+        }
+      }
+
+      .count {
+        font-size: var(--font-step--1);
+        color: var(--color-text-muted);
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .browse-all {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-2xs);
+    font-size: var(--font-step--1);
+  }
+</style>

@@ -4,12 +4,10 @@ import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
+import TaxonomyListingCompact from "@components/TaxonomyListingCompact.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { getEntryUrl } from "@lib/entries";
 import Link from "astro-typesafe-routes/link";
 import { $path } from "astro-typesafe-routes/path";
-
-const allThreadEntries = await getCollection("threads");
 
 const breadcrumbs: BreadcrumbComponent[] = [
   { label: "Explore", styleNormal: true },
@@ -23,18 +21,18 @@ const breadcrumbs: BreadcrumbComponent[] = [
 <BaseLayout pageTitle="Explore" displayTitle="Explore">
   <Breadcrumb breadcrumbs={breadcrumbs} />
   <Heading level="2"><Link to="/tags">Tags</Link></Heading>
-  <p>See all tags <Link to="/tags">here</Link>.</p>
+  {!(await getCollection("tags"))
+    ? <p>"Nothing yet..."</p>
+    : <TaxonomyListingCompact
+        browseAllLink={$path({ to: "/tags" })}
+        collections={["tags"]}
+        limit={8} />}
   <hr>
   <Heading level="2"><Link to="/threads">Threads</Link></Heading>
-  <p>
-    See all threads <Link to="/threads">here</Link>
-    . There is a list of them below
-  </p>
-  {!allThreadEntries
+  {!(await getCollection("threads"))
     ? <p>"Nothing yet..."</p>
-    : <ul>
-        {allThreadEntries.map((thread) => {
-          return <li><a href={getEntryUrl(thread)}>{thread.data.title}</a></li>}
-        )}
-      </ul>}
+    : <TaxonomyListingCompact
+        browseAllLink={$path({ to: "/threads" })}
+        collections={["threads"]}
+        limit={8} />}
 </BaseLayout>

@@ -34,11 +34,7 @@ const finalFilter = (expression: ExpressionEntry): boolean =>
   isPublished(expression) && extraFilter(expression);
 
 const expressions = (
-  await Promise.all(
-    (Array.isArray(collections) ? collections : [collections]).map((c) =>
-      getCollection(c, finalFilter)
-    )
-  )
+  await Promise.all(collections.map((c) => getCollection(c, finalFilter)))
 ).flat();
 const expressionItems: ListingItem[] = expressions
   .map(
@@ -52,9 +48,9 @@ const expressionItems: ListingItem[] = expressions
     const diff = a.pubDate.getTime() - b.pubDate.getTime();
     return descending ? -diff : diff;
   });
-const hasItems = expressionItems.length > 0;
-const itemCount = expressionItems.length;
 const displayItems = limit ? expressionItems.slice(0, limit) : expressionItems;
+const hasItems = displayItems.length > 0;
+const itemCount = expressionItems.length;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
