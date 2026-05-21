@@ -17,11 +17,3 @@ const breadcrumbs: BreadcrumbComponent[] = [
   <hr>
   <ExpressionListing collections={["notes"]} />
 </BaseLayout>
-
-<style is:global lang="scss">
-  @use "mixins";
-
-  .expression-listing {
-    @include mixins.breakout(var(--space-s-m));
-  }
-</style>
