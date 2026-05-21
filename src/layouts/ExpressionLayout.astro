@@ -20,6 +20,7 @@ const pubDate = expression.data.pubDate;
 const title = expression.data.title;
 
 const breadcrumbs: BreadcrumbComponent[] = [
+  { label: "prose", href: $path({ to: "/prose" }) },
   {
     label: expression.collection,
     href: $path({ to: `/${expression.collection}` }),
