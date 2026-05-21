@@ -91,13 +91,11 @@ blockquote:not(.special-blockquote) {
 /* * Utility classes */
 
 .ui {
-  font-family: var(--font-ui);
+  --link-underline-style: solid;
+  --link-underline-color: transparent;
 
-  a {
-    --link-underline-style: solid;
-    --link-underline-color: transparent;
-    transition: var(--transition-ui);
-  }
+  font-family: var(--font-ui);
+  transition: var(--transition-ui);
 }
 
 .interior-container {

@@ -6,12 +6,12 @@ interface Props {
 const { num } = Astro.props;
 ---
 
-<li class="ui" id={`fn-${num}`}>
+<li id={`fn-${num}`}>
   {/* For sighted users */}
   {/* biome-ignore lint/a11y/useAnchorContent: decorative duplicate of sr-only backref */}
   <a
     href={`#fnref-${num}`}
-    class="fn-marker"
+    class="ui fn-marker"
     aria-label={`Return to footnote ${num} reference`}
     aria-hidden="true"
     tabindex="-1"
@@ -57,9 +57,7 @@ const { num } = Astro.props;
   }
 
   .fn-marker {
-    font-family: var(--font-ui);
     color: var(--color-accent);
-    border-bottom: unset;
   }
 
   .fn-content > :global(*:first-child) {
