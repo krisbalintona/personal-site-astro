@@ -1,22 +1,14 @@
 ---
 import { getCollection } from "astro:content";
-import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
-import Breadcrumb from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Link from "astro-typesafe-routes/link";
-import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
 
 const allThreadEntries = await getCollection("threads");
-const breadcrumbs: BreadcrumbComponent[] = [
-  { label: "explore", href: $path({ to: "/explore" }) },
-];
 ---
 
 <BaseLayout pageTitle="Explore" displayTitle="Explore">
-  <Breadcrumb breadcrumbs={breadcrumbs} />
-  <hr>
   <Heading level="2"><Link to="/tags">Tags</Link></Heading>
   <p>See all tags <Link to="/tags">here</Link>.</p>
   <hr>
