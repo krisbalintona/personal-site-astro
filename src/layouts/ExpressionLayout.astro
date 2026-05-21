@@ -60,11 +60,10 @@ const { Content } = await render(expression);
           const tag = await getEntry(t);
 
           return (
-            <>
-              {i > 0 && ", "}
+            <>{i > 0 && ", "}
               <Link class="tag" params={{ tag: slugify(tag.data.title) }} to="/tags/[tag]"
-              >{tag.data.title}</Link>
-            </>
+              >{tag.data.title}</Link
+              ></>
           )}
         )}
       </div>
