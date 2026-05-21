@@ -15,8 +15,7 @@ const { num, id, hasSeparator } = Astro.props;
     id={`fnref-${id ?? num}`}
     class="fnref"
     href={`#fn-${num}`}
-    aria-label={`Footnote ${num} reference`}
-    >[{num}]</a
+    aria-label={`Footnote ${num} reference`}>[{num}]</a
   >{hasSeparator && <span aria-hidden="true">, </span>}</sup
 >
 

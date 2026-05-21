@@ -37,7 +37,7 @@ export const expressionSchema = rssSchema
       zType.infer<zType.ZodObject<typeof baseContentShape>>;
     const titleSlug = slugify(
       d.title ?? "",
-      { strict: true } // Strips special characters like colons
+      { strict: true }, // Strips special characters like colons
     );
     return {
       ...data,
@@ -52,11 +52,11 @@ export type ExpressionCollection = (typeof ExpressionCollectionNames)[number];
 export type ExpressionEntry = CollectionEntry<ExpressionCollection>;
 
 export async function allExpressions(
-  filter?: (entry: CollectionEntry<ExpressionCollection>) => boolean
+  filter?: (entry: CollectionEntry<ExpressionCollection>) => boolean,
 ): Promise<ExpressionEntry[]> {
   return (
     await Promise.all(
-      ExpressionCollectionNames.map((name) => getCollection(name, filter))
+      ExpressionCollectionNames.map((name) => getCollection(name, filter)),
     )
   ).flat();
 }

@@ -2,6 +2,7 @@
   --_breakout: calc(#{$size} + var(--page-side-padding));
   --_margin: calc(-1 * var(--_breakout));
   --_margin-min: calc(-50dvw + 50%);
+
   width: calc(100% + 2 * var(--_breakout));
   max-width: 100dvw;
   margin-left: max(var(--_margin), var(--_margin-min));

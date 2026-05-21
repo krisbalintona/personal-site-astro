@@ -57,24 +57,34 @@ const { Content } = await render(expression);
 
     <footer class="expression-footer">
       <dl class="expression-taxonomy">
-        {tags && (
-          <ExpressionTaxonomyRow
-            label="tagged"
-            items={(await getEntries(tags)).map((tag) => ({
-              href: $path({ to: "/tags/[tag]", params: { tag: slugify(tag.data.title) } }),
-              title: tag.data.title,
-            }))}
-          />
-        )}
-        {threads && (
-          <ExpressionTaxonomyRow
-            label="in threads"
-            items={(await getEntries(threads)).map((thread) => ({
-              href: $path({ to: "/threads/[thread]", params: { thread: slugify(thread.data.title) } }),
-              title: thread.data.title,
-            }))}
-          />
-        )}
+        {
+          tags && (
+            <ExpressionTaxonomyRow
+              label="tagged"
+              items={(await getEntries(tags)).map((tag) => ({
+                href: $path({
+                  to: "/tags/[tag]",
+                  params: { tag: slugify(tag.data.title) },
+                }),
+                title: tag.data.title,
+              }))}
+            />
+          )
+        }
+        {
+          threads && (
+            <ExpressionTaxonomyRow
+              label="in threads"
+              items={(await getEntries(threads)).map((thread) => ({
+                href: $path({
+                  to: "/threads/[thread]",
+                  params: { thread: slugify(thread.data.title) },
+                }),
+                title: thread.data.title,
+              }))}
+            />
+          )
+        }
       </dl>
     </footer>
   </article>

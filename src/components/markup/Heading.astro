@@ -30,7 +30,14 @@ const HeadingLevel = headingOptions[level] as HeadingTag;
   class:list={["heading", level, "no-visited", classSpecified]}
   {...rest}
   ><slot />
-  {selfLink && <a class="self-link" aria-label="Link to this section" href={`#${id}`}> §</a>}
+  {
+    selfLink && (
+      <a class="self-link" aria-label="Link to this section" href={`#${id}`}>
+        {" "}
+        §
+      </a>
+    )
+  }
 </HeadingLevel>
 
 <style>

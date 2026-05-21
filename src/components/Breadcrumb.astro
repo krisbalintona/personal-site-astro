@@ -15,18 +15,33 @@ const { breadcrumbs, description } = Astro.props;
 
 <div class="breadcrumb-container">
   <div class="breadcrumb-components">
-    {breadcrumbs.map((b, i) => <>
-      {Array.isArray(b)
-        // Is a BreadcrumbLeaf[]
-        ? b.map((leaf, ci) => <>
-            <BreadcrumbLeaf {...leaf} />
-            {ci !== b.length - 1 && <span aria-hidden="true" class="sep sep-child">/</span>}
-        </>)
-        // Is a BreadcrumbLeaf
-        : <BreadcrumbLeaf {...b} />
-      }
-      {i !== breadcrumbs.length - 1 && <span aria-hidden="true" class="sep">·</span>}
-    </>)}
+    {
+      breadcrumbs.map((b, i) => (
+        <>
+          {Array.isArray(b) ? (
+            // Is a BreadcrumbLeaf[]
+            b.map((leaf, ci) => (
+              <>
+                <BreadcrumbLeaf {...leaf} />
+                {ci !== b.length - 1 && (
+                  <span aria-hidden="true" class="sep sep-child">
+                    /
+                  </span>
+                )}
+              </>
+            ))
+          ) : (
+            // Is a BreadcrumbLeaf
+            <BreadcrumbLeaf {...b} />
+          )}
+          {i !== breadcrumbs.length - 1 && (
+            <span aria-hidden="true" class="sep">
+              ·
+            </span>
+          )}
+        </>
+      ))
+    }
   </div>
   {description && <span id="breadcrumb-description">{description}</span>}
 </div>
@@ -42,6 +57,7 @@ const { breadcrumbs, description } = Astro.props;
 
       .component {
         --link-underline-color: transparent;
+
         font-style: italic;
         color: var(--color-text-muted);
         transition: var(--transition-ui);

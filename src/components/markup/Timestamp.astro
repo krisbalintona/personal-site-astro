@@ -14,7 +14,7 @@ const d = time
       year,
       month - 1,
       day,
-      ...(time.split(":").map(Number) as [number, number])
+      ...(time.split(":").map(Number) as [number, number]),
     )
   : new Date(year, month - 1, day);
 
@@ -27,11 +27,14 @@ const timeStr = time
 
 <time class="ts" datetime={toDateTimeAttribute(d)}>
   <span class="ts-date">{dateStr}</span>
-  {timeStr &&
-  <>
-    <span class="ts-sep">·</span>
-    <span class="ts-time">{timeStr}</span>
-  </>}
+  {
+    timeStr && (
+      <>
+        <span class="ts-sep">·</span>
+        <span class="ts-time">{timeStr}</span>
+      </>
+    )
+  }
 </time>
 
 <style>
@@ -48,7 +51,7 @@ const timeStr = time
     line-height: 1.8;
     vertical-align: middle;
     color: var(--color-text);
-    white-space: nowrap; /* Don't wrap mid-render*/
+    white-space: nowrap; /* Don't wrap mid-render */
     background-color: var(--_ts-bg);
     border: 0.1em solid var(--color-border);
     border-radius: 0.4em;

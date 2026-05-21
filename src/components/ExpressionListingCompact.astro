@@ -42,7 +42,7 @@ const expressionItems: ListingItem[] = expressions
       title: expression.data.title,
       pubDate: expression.data.pubDate,
       href: getEntryUrl(expression),
-    })
+    }),
   )
   .sort((a, b) => {
     const diff = a.pubDate.getTime() - b.pubDate.getTime();
@@ -54,34 +54,41 @@ const itemCount = expressionItems.length;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
-{hasItems && (
-  <div class="listing-wrapper expression-listing-wrapper">
-    {/* Note: `reversed={descending}` has no visual effect (we set
+{
+  hasItems && (
+    <div class="listing-wrapper expression-listing-wrapper">
+      {/* Note: `reversed={descending}` has no visual effect (we set
     `list-style: none` below, removing the native markers), but
     preserves semantics for screen readers that announce list order
     */}
-    <ol
-      class="compact-listing expression-listing"
-      reversed={descending}
-      style={`--counter-start: ${descending ? itemCount + 1 : 0}; --counter-increment: ${descending ? -1 : 1}`}>
-      {displayItems.map((item: ListingItem) => (
-        <li class="listing-item no-visited">
-          <a class="title" href={item.href}>{item.title}</a>
-          <a class="date" href={item.href}>
-            <time datetime={toDateTimeAttribute(item.pubDate)}>
-              {formatDate(item.pubDate)}
-            </time>
-          </a>
-        </li>
-      ))}
-    </ol>
-    {browseAllLink && (
-      <div class="browse-all">
-        <small><a href={browseAllLink}>Browse all {itemCount} entries</a></small>
-      </div>
-    )}
-  </div>
-)}
+      <ol
+        class="compact-listing expression-listing"
+        reversed={descending}
+        style={`--counter-start: ${descending ? itemCount + 1 : 0}; --counter-increment: ${descending ? -1 : 1}`}
+      >
+        {displayItems.map((item: ListingItem) => (
+          <li class="listing-item no-visited">
+            <a class="title" href={item.href}>
+              {item.title}
+            </a>
+            <a class="date" href={item.href}>
+              <time datetime={toDateTimeAttribute(item.pubDate)}>
+                {formatDate(item.pubDate)}
+              </time>
+            </a>
+          </li>
+        ))}
+      </ol>
+      {browseAllLink && (
+        <div class="browse-all">
+          <small>
+            <a href={browseAllLink}>Browse all {itemCount} entries</a>
+          </small>
+        </div>
+      )}
+    </div>
+  )
+}
 
 <style>
   :where(.expression-listing-wrapper) {
@@ -129,7 +136,7 @@ const itemCount = expressionItems.length;
         color: var(--color-text-muted);
 
         &:hover {
-          color: currentColor;
+          color: currentcolor;
         }
       }
     }

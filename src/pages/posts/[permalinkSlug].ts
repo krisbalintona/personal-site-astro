@@ -28,6 +28,6 @@ export const GET = ({
       to: `/${post.collection}/[titleSlug]`,
       params: { titleSlug: post.data.titleSlug },
     }),
-    301
+    301,
   );
 };

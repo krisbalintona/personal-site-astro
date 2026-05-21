@@ -40,7 +40,7 @@ export function isPublished(entry: AnyCollectionEntry) {
 
 export function getEntryUrl(
   entry: AnyCollectionEntry,
-  anchor?: string
+  anchor?: string,
 ): string {
   switch (entry.collection) {
     case "articles":

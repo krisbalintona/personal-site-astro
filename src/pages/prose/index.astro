@@ -37,11 +37,14 @@ const { Content: NotesContent } = notesEntry
     <Heading id="articles-heading" level="2"
       ><Link to="/articles">Articles</Link></Heading
     >
-    {articlesEntry &&
-      <>
-        <p>{articlesEntry.data.description}</p>
-        {ArticlesContent && <ArticlesContent />}
-      </>}
+    {
+      articlesEntry && (
+        <>
+          <p>{articlesEntry.data.description}</p>
+          {ArticlesContent && <ArticlesContent />}
+        </>
+      )
+    }
     <ExpressionListingCompact
       browseAllLink={$path({ to: "/articles" })}
       collections={["articles"]}
@@ -52,11 +55,14 @@ const { Content: NotesContent } = notesEntry
     <Heading id="notes-heading" level="2"
       ><Link to="/notes">Notes</Link></Heading
     >
-    {notesEntry &&
-      <>
-        <p>{notesEntry.data.description}</p>
-        {NotesContent && <NotesContent />}
-      </>}
+    {
+      notesEntry && (
+        <>
+          <p>{notesEntry.data.description}</p>
+          {NotesContent && <NotesContent />}
+        </>
+      )
+    }
     <ExpressionListingCompact
       browseAllLink={$path({ to: "/notes" })}
       collections={["notes"]}

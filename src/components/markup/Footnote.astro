@@ -8,14 +8,15 @@ const { num } = Astro.props;
 
 <li id={`fn-${num}`}>
   {/* For sighted users */}
-  {/* biome-ignore lint/a11y/useAnchorContent: decorative duplicate of sr-only backref */}
+  {
+    /* biome-ignore lint/a11y/useAnchorContent: decorative duplicate of sr-only backref */
+  }
   <a
     href={`#fnref-${num}`}
     class="ui fn-marker"
     aria-label={`Return to footnote ${num} reference`}
     aria-hidden="true"
-    tabindex="-1"
-    >[{num}]</a
+    tabindex="-1">[{num}]</a
   >
   <div class="fn-content">
     <slot />
@@ -23,8 +24,7 @@ const { num } = Astro.props;
     <a
       href={`#fnref-${num}`}
       class="sr-only"
-      aria-label={`Return to footnote ${num} reference`}
-      >↩</a
+      aria-label={`Return to footnote ${num} reference`}>↩</a
     >
   </div>
 </li>
@@ -51,6 +51,7 @@ const { num } = Astro.props;
     80% {
       border-left: var(--border-left) solid var(--color-accent);
     }
+
     100% {
       border-left: var(--border-left) solid transparent;
     }
@@ -65,6 +66,7 @@ const { num } = Astro.props;
   }
 
   /* We want the penultimate element since The final element */
+
   /* is the sr-only `a` tag */
   .fn-content > :global(*:nth-last-child(2)) {
     margin-bottom: 0;

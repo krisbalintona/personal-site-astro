@@ -14,7 +14,7 @@ export function makeRSSFeed(
   context: APIContext,
   title: string,
   description: string,
-  items: RSSFeedItem[]
+  items: RSSFeedItem[],
 ) {
   if (!context.site) {
     throw new Error("site is not set in astro.config.ts");
@@ -49,7 +49,7 @@ const container = await experimental_AstroContainer.create();
 container.addServerRenderer({ renderer: mdxRenderer });
 
 async function buildRssItems(
-  collection: ExpressionCollection
+  collection: ExpressionCollection,
 ): Promise<RSSFeedItem[]> {
   return Promise.all(
     (await getCollection(collection)).map(async (expressionEntry) => {
@@ -128,7 +128,7 @@ async function buildRssItems(
         title: expressionEntry.data.title,
         pubDate: expressionEntry.data.pubDate,
         categories: (await getEntries(expressionEntry.data.tags ?? []))?.map(
-          (p) => p.data.title
+          (p) => p.data.title,
         ),
         link: $path({
           to: "/posts/[permalinkSlug]",
@@ -137,7 +137,7 @@ async function buildRssItems(
         description,
         content,
       };
-    })
+    }),
   );
 }
 
@@ -150,7 +150,7 @@ const [articleItems, noteItems] = await Promise.all([
 
 // Compose for "all", sorted by date
 const allItems = [...articleItems, ...noteItems].sort(
-  (a, b) => (b.pubDate?.getTime() ?? 0) - (a.pubDate?.getTime() ?? 0)
+  (a, b) => (b.pubDate?.getTime() ?? 0) - (a.pubDate?.getTime() ?? 0),
 );
 
 export interface RSSFeed {

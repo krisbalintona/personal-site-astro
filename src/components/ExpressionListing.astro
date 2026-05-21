@@ -37,8 +37,8 @@ const expressions = collections
   ? (
       await Promise.all(
         (Array.isArray(collections) ? collections : [collections]).map((c) =>
-          getCollection(c, finalFilter)
-        )
+          getCollection(c, finalFilter),
+        ),
       )
     ).flat()
   : await allExpressions(finalFilter);
@@ -48,7 +48,7 @@ const expressionItems: ListingItem[] = expressions
       title: expression.data.title,
       pubDate: expression.data.pubDate,
       href: getEntryUrl(expression),
-    })
+    }),
   )
   .sort((a, b) => {
     const diff = a.pubDate.getTime() - b.pubDate.getTime();
@@ -58,19 +58,25 @@ const hasItems = expressionItems.length > 0;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
-{hasItems &&
-  <ul class="expression-listing">
-    {hasItems && expressionItems.map((item: ListingItem) => (
-      <li class="listing-item no-visited">
-        <a class="title" href={item.href}>{item.title}</a>
-        <a class="date" href={item.href}>
-          <time datetime={toDateTimeAttribute(item.pubDate)}>
-            {formatDate(item.pubDate)}
-          </time>
-        </a>
-      </li>
-    ))}
-  </ul>}
+{
+  hasItems && (
+    <ul class="expression-listing">
+      {hasItems &&
+        expressionItems.map((item: ListingItem) => (
+          <li class="listing-item no-visited">
+            <a class="title" href={item.href}>
+              {item.title}
+            </a>
+            <a class="date" href={item.href}>
+              <time datetime={toDateTimeAttribute(item.pubDate)}>
+                {formatDate(item.pubDate)}
+              </time>
+            </a>
+          </li>
+        ))}
+    </ul>
+  )
+}
 
 <style>
   :where(.expression-listing) {
@@ -100,7 +106,7 @@ const hasItems = expressionItems.length > 0;
         color: var(--color-text-muted);
 
         &:hover {
-          color: currentColor;
+          color: currentcolor;
         }
       }
     }

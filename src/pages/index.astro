@@ -9,7 +9,13 @@ const { Content } = bio ? await render(bio) : { Content: undefined };
 
 <BaseLayout
   pageTitle="Home"
-  displayTitle="Kristoffer Balintona &mdash; Personal site"
+  displayTitle="Kristoffer Balintona — Personal site"
 >
-  {bio && isPublished(bio) && Content && <article><Content /></article>}
+  {
+    bio && isPublished(bio) && Content && (
+      <article>
+        <Content />
+      </article>
+    )
+  }
 </BaseLayout>

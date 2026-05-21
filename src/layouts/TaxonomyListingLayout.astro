@@ -33,8 +33,13 @@ const { Content: PreambleContent } = preambleEntry
       breadcrumbs={breadcrumbs}
       description={breadcrumbsDescription}
     />
-    {preambleEntry && isPublished(preambleEntry)
-      && PreambleContent && <div class="taxonomy-preamble"><PreambleContent /></div>}
+    {
+      preambleEntry && isPublished(preambleEntry) && PreambleContent && (
+        <div class="taxonomy-preamble">
+          <PreambleContent />
+        </div>
+      )
+    }
   </header>
   <slot />
 </BaseLayout>

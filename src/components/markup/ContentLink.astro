@@ -17,7 +17,7 @@ const { collectionName: collection, id, anchor } = Astro.props;
 const entry: AnyCollectionEntry | undefined = await getEntry(collection, id);
 if (!entry) {
   throw new Error(
-    `ContentLink: no entry found for entry "${id}" in collection ${collection}`
+    `ContentLink: no entry found for entry "${id}" in collection ${collection}`,
   );
 }
 

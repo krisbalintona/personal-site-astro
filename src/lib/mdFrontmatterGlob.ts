@@ -197,11 +197,11 @@ export default function (loaderOptions: LoaderOptions): Loader {
           }
           return files.map((file) => ({
             path: fileURLToPath(
-              new URL(encodeURI(file), pathToFileURL(`${source.base}/`))
+              new URL(encodeURI(file), pathToFileURL(`${source.base}/`)),
             ),
             base: source.base,
           }));
-        })
+        }),
       );
       const resolvedSourceFiles = [
         ...new Set(filesBySource.flat().map((sourceFile) => sourceFile.path)),
@@ -289,7 +289,7 @@ export default function (loaderOptions: LoaderOptions): Loader {
       // don't)
       function deleteStubEntryMaybe(value: string) {
         const stillExists = [...sourceFileValuesMap.values()].some(
-          (fileValues) => fileValues.has(value)
+          (fileValues) => fileValues.has(value),
         );
         if (!stillExists) {
           const entry = store.get(value);
@@ -320,7 +320,7 @@ export default function (loaderOptions: LoaderOptions): Loader {
           }
         } catch (e) {
           logger.error(
-            `Failed to reload ${relative(rootPath, absPath)}: ${(e as Error).message}`
+            `Failed to reload ${relative(rootPath, absPath)}: ${(e as Error).message}`,
           );
         }
       }
@@ -340,7 +340,7 @@ export default function (loaderOptions: LoaderOptions): Loader {
 
       watcher.on("change", (absPath) => {
         const matchingSource = sourceMatchers.find(({ base, match }) =>
-          match(relative(base, absPath).replace(/\\/g, "/"))
+          match(relative(base, absPath).replace(/\\/g, "/")),
         );
         if (matchingSource) {
           onSourceChangeOrAdd(absPath);
@@ -348,7 +348,7 @@ export default function (loaderOptions: LoaderOptions): Loader {
       });
       watcher.on("add", (absPath) => {
         const matchingSource = sourceMatchers.find(({ base, match }) =>
-          match(relative(base, absPath).replace(/\\/g, "/"))
+          match(relative(base, absPath).replace(/\\/g, "/")),
         );
         if (matchingSource) {
           onSourceChangeOrAdd(absPath);
@@ -356,7 +356,7 @@ export default function (loaderOptions: LoaderOptions): Loader {
       });
       watcher.on("unlink", (absPath) => {
         const matchingSource = sourceMatchers.find(({ base, match }) =>
-          match(relative(base, absPath).replace(/\\/g, "/"))
+          match(relative(base, absPath).replace(/\\/g, "/")),
         );
         if (matchingSource) {
           onSourceUnlink(absPath);
@@ -421,7 +421,7 @@ async function processStubEntries({
           return [String(v)];
         default:
           logger.warn(
-            `Unexpected value type "${typeof v}" for field "${sourceField}" in ${file}, skipping`
+            `Unexpected value type "${typeof v}" for field "${sourceField}" in ${file}, skipping`,
           );
           return [];
       }
@@ -452,8 +452,8 @@ async function processStubEntries({
         const values = await extractFieldValues(file);
         sourceFileValuesMap.set(file, new Set(values));
         return values;
-      })
-    )
+      }),
+    ),
   );
   const stubEntryIds = new Set(nestedFieldValues.flat());
   for (const value of stubEntryIds) {
@@ -504,7 +504,7 @@ async function processContentFiles({
   });
   if (contentFiles.length === 0) {
     logger.warn(
-      `No content files found matching "${contentPattern}" in "${contentBase}"`
+      `No content files found matching "${contentPattern}" in "${contentBase}"`,
     );
   }
 
@@ -515,7 +515,7 @@ async function processContentFiles({
   async function syncContentEntry(file: string): Promise<string | undefined> {
     const fileUrl = new URL(
       encodeURI(file),
-      pathToFileURL(`${contentBasePath}/`)
+      pathToFileURL(`${contentBasePath}/`),
     );
     const absPath = fileURLToPath(fileUrl);
 
@@ -570,12 +570,12 @@ async function processContentFiles({
           if (id) {
             untouchedEntries.delete(id);
           }
-        })
-      )
+        }),
+      ),
     );
   } else {
     logger.warn(
-      `The content base directory "${contentBasePath}" does not exist.`
+      `The content base directory "${contentBasePath}" does not exist.`,
     );
   }
 
@@ -595,12 +595,12 @@ async function processContentFiles({
       // posix-style)
       try {
         await syncContentEntry(
-          relative(contentBasePath, absPath).replace(/\\/g, "/")
+          relative(contentBasePath, absPath).replace(/\\/g, "/"),
         );
         logger.info(`Reloaded data from ${relative(rootPath, absPath)}`);
       } catch (e) {
         logger.error(
-          `Failed to reload ${relative(rootPath, absPath)}: ${(e as Error).message}`
+          `Failed to reload ${relative(rootPath, absPath)}: ${(e as Error).message}`,
         );
       }
     }
@@ -621,7 +621,7 @@ async function processContentFiles({
         }
       } catch (e) {
         logger.error(
-          `Failed to remove entry for ${relative(rootPath, absPath)}: ${(e as Error).message}`
+          `Failed to remove entry for ${relative(rootPath, absPath)}: ${(e as Error).message}`,
         );
       }
     }

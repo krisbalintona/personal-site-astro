@@ -16,7 +16,7 @@ export const getStaticPaths = Route.createGetStaticPaths(async () =>
   (await getCollection("tags")).map((tag) => ({
     params: { tag: slugify(tag.data.title) },
     props: { tag },
-  }))
+  })),
 );
 
 interface Props {

@@ -12,7 +12,7 @@ export const getStaticPaths = Route.createGetStaticPaths(async () =>
   (await getCollection("articles", isPublished)).map((articleEntry) => ({
     params: { titleSlug: articleEntry.data.titleSlug },
     props: { articleEntry },
-  }))
+  })),
 );
 
 interface Props {
@@ -22,4 +22,4 @@ interface Props {
 const { articleEntry } = Astro.props;
 ---
 
-<ExpressionLayout expression={articleEntry}></ExpressionLayout>
+<ExpressionLayout expression={articleEntry} />

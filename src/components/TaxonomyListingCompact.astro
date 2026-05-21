@@ -39,8 +39,8 @@ const taxonomyItems: TaxonomyListingItem[] = taxonomyEntries
     href: getEntryUrl(taxonomy),
     count: expressions.filter((expression) =>
       collections.some((c) =>
-        (expression.data[c] ?? []).some((t) => t.id === taxonomy.id)
-      )
+        (expression.data[c] ?? []).some((t) => t.id === taxonomy.id),
+      ),
     ).length,
   }))
   .sort((a, b) => {
@@ -60,34 +60,45 @@ const itemCount = nonEmptyItems.length;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
-{hasItems && (
-  <div class="listing-wrapper taxonomy-listing-wrapper">
-    {/* Note: `reversed={descending}` has no visual effect (we set
+{
+  hasItems && (
+    <div class="listing-wrapper taxonomy-listing-wrapper">
+      {/* Note: `reversed={descending}` has no visual effect (we set
     `list-style: none` below, removing the native markers), but
     preserves semantics for screen readers that announce list order
       */}
-    <ol
-      class="compact-listing taxonomy-listing"
-      reversed={descending}
-      style={`--counter-start: ${descending ? itemCount + 1 : 0}; --counter-increment: ${descending ? -1 : 1}`}>
-      {displayItems.map((item) => (
-        <li class="listing-item no-visited">
-          <span class="listing-content">
-            <a class="title" href={item.href}>{item.title}</a>
-            <span class="count">{item.count}{item.count === 1 ? " entry" : " entries"}</span>
-          </span>
-        </li>
-      ))}
-    </ol>
-    {browseAllLink && (
-      <div class="browse-all">
-        <small>
-          <a href={browseAllLink}>Browse all {itemCount} {collections.length === 1 && ` ${collections[0]}`}</a>
-        </small>
-      </div>
-    )}
-  </div>
-)}
+      <ol
+        class="compact-listing taxonomy-listing"
+        reversed={descending}
+        style={`--counter-start: ${descending ? itemCount + 1 : 0}; --counter-increment: ${descending ? -1 : 1}`}
+      >
+        {displayItems.map((item) => (
+          <li class="listing-item no-visited">
+            <span class="listing-content">
+              <a class="title" href={item.href}>
+                {item.title}
+              </a>
+              <span class="count">
+                {item.count}
+                {item.count === 1 ? " entry" : " entries"}
+              </span>
+            </span>
+          </li>
+        ))}
+      </ol>
+      {browseAllLink && (
+        <div class="browse-all">
+          <small>
+            <a href={browseAllLink}>
+              Browse all {itemCount}{" "}
+              {collections.length === 1 && ` ${collections[0]}`}
+            </a>
+          </small>
+        </div>
+      )}
+    </div>
+  )
+}
 
 <style>
   :where(.taxonomy-listing-wrapper) {

@@ -66,9 +66,15 @@ const navItems: { to: StaticRouteId; label: string }[] = [
       </button>
       <div id="nav-panel">
         <ul id="nav-pages">
-          {navItems.map(({ to, label }) => (
-            <li><Link id={navItemCurrent(to)} to={to}>{label}</Link></li>
-          ))}
+          {
+            navItems.map(({ to, label }) => (
+              <li>
+                <Link id={navItemCurrent(to)} to={to}>
+                  {label}
+                </Link>
+              </li>
+            ))
+          }
         </ul>
       </div>
     </div>
@@ -112,8 +118,10 @@ const navItems: { to: StaticRouteId; label: string }[] = [
           opacity: var(--_nav-item-opacity, 0.65);
 
           /* We also add a transition to color to avoid an instance */
+
           /* "opacity: 1" causing unexpected discoloration after */
-          /* hovering*/
+
+          /* hovering */
           transition:
             opacity var(--_transition-duration) ease-in,
             color var(--_transition-duration) ease-in;
@@ -127,14 +135,17 @@ const navItems: { to: StaticRouteId; label: string }[] = [
   }
 
   /* Must stay at top level because nesting inside any ID selector */
+
   /* (e.g. #nav-pages) would add specificity, preventing `a:hover` */
+
   /* in global.css from taking effect. */
   :where(#nav-page-current) {
     --_nav-item-opacity: 0.95;
+
     color: var(--color-accent-subtle);
   }
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     #site-header {
       min-height: var(--space-xl);
     }
@@ -186,7 +197,6 @@ const navItems: { to: StaticRouteId; label: string }[] = [
           position: fixed;
           top: 0;
           left: 100%;
-
           display: flex;
           justify-content: center;
           width: min(60vw, 280px);
@@ -262,7 +272,7 @@ const navItems: { to: StaticRouteId; label: string }[] = [
     toggle.setAttribute("aria-expanded", String(!isOpen));
     toggle.setAttribute(
       "aria-label",
-      isOpen ? "Open navigation menu" : "Close navigation menu"
+      isOpen ? "Open navigation menu" : "Close navigation menu",
     );
 
     if (!isOpen) {

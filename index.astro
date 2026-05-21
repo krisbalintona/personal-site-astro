@@ -25,25 +25,29 @@ const breadcrumbs: BreadcrumbComponent[] = [
 
 <BaseLayout pageTitle="Threads" displayTitle="All threads">
   <Breadcrumb breadcrumbs={breadcrumbs} />
-  {(await getCollection("threads")).map((thread) => {
-     const headingId = slugify(thread.data.title, { lower: true, strict: true });
-     return (
-       <section aria-labelledby={headingId}>
-         <Heading
-           id={headingId}
-           level="3"
-           selfLink={true}
-         >{thread.data.title}</Heading>
-         
-         <ExpressionListingCompact
-           browseAllLink={getEntryUrl(thread)}
-           collections={["articles", "notes"]}
-           descending={false}
-           extraFilter={inThisThread(thread)}
-           limit={5} />
-       </section>
-       )
-     })}
+  {
+    (await getCollection("threads")).map((thread) => {
+      const headingId = slugify(thread.data.title, {
+        lower: true,
+        strict: true,
+      });
+      return (
+        <section aria-labelledby={headingId}>
+          <Heading id={headingId} level="3" selfLink={true}>
+            {thread.data.title}
+          </Heading>
+
+          <ExpressionListingCompact
+            browseAllLink={getEntryUrl(thread)}
+            collections={["articles", "notes"]}
+            descending={false}
+            extraFilter={inThisThread(thread)}
+            limit={5}
+          />
+        </section>
+      );
+    })
+  }
 </BaseLayout>
 
 <style>

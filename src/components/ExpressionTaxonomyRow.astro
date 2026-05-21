@@ -7,14 +7,20 @@ interface Props {
 const { label, items } = Astro.props;
 ---
 
-{items.length > 0 && (
-  <div class="expression-taxonomy-container">
-    <dt>{label}</dt>
-    <dd>{items.map(({ href, title }) => (
-      <span><a href={href}>{title}</a></span>
-    ))}</dd>
-  </div>
-)}
+{
+  items.length > 0 && (
+    <div class="expression-taxonomy-container">
+      <dt>{label}</dt>
+      <dd>
+        {items.map(({ href, title }) => (
+          <span>
+            <a href={href}>{title}</a>
+          </span>
+        ))}
+      </dd>
+    </div>
+  )
+}
 
 <style>
   .expression-taxonomy-container {
@@ -28,7 +34,9 @@ const { label, items } = Astro.props;
     }
 
     /* Space after colon is added via margin rather than a content */
+
     /* string, as trailing spaces in pseudo-element content can be */
+
     /* collapsed inconsistently across browsers */
     dt::after {
       margin-right: 0.25em;
@@ -45,6 +53,7 @@ const { label, items } = Astro.props;
 
     a {
       --link-underline-color: transparent;
+
       font-style: italic;
       color: var(--color-text-muted);
       transition: color 0.15s;

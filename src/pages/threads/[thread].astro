@@ -16,7 +16,7 @@ export const getStaticPaths = Route.createGetStaticPaths(async () =>
   (await getCollection("threads")).map((thread) => ({
     params: { thread: slugify(thread.data.title) },
     props: { thread },
-  }))
+  })),
 );
 
 interface Props {

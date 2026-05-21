@@ -17,10 +17,13 @@ const footnoteSectionHeadingId = "footnotes-heading";
     ><slot>Footnotes</slot></FootnoteHeading
   >
 
-  {Astro.slots.has("footnotes") &&
-    <ol>
-      <slot name="footnotes"/>
-    </ol>}
+  {
+    Astro.slots.has("footnotes") && (
+      <ol>
+        <slot name="footnotes" />
+      </ol>
+    )
+  }
 </footer>
 
 <style>

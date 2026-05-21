@@ -20,6 +20,6 @@ export function GET(context: APIContext<{ channel: RSSFeed }>) {
     context,
     channel.title,
     channel.description,
-    channel.items
+    channel.items,
   );
 }
