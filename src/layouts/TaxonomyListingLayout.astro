@@ -22,12 +22,18 @@ const {
 ---
 
 <BaseLayout displayTitle={displayTitle} pageTitle={pageTitle}>
-  <Breadcrumb breadcrumbs={breadcrumbs} description={breadcrumbsDescription} />
-  {Preamble && <Preamble />}
+  <header class="taxonomy-header">
+    <Breadcrumb breadcrumbs={breadcrumbs} description={breadcrumbsDescription} />
+    {Preamble && <Preamble />}
+  </header>
   <slot />
 </BaseLayout>
 
 <style>
+  .taxonomy-header {
+    border-bottom: 1px solid var(--color-border);
+  }
+
   :global(section + section) {
     padding-top: var(--space-m);
     border-top: 1px solid var(--color-border);
