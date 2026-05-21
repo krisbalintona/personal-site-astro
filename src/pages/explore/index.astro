@@ -26,7 +26,8 @@ const breadcrumbs: BreadcrumbComponent[] = [
     : <TaxonomyListingCompact
         browseAllLink={$path({ to: "/tags" })}
         collections={["tags"]}
-        limit={8} />}
+        limit={8}
+        sortBy="count" />}
   <hr>
   <Heading level="2"><Link to="/threads">Threads</Link></Heading>
   {!(await getCollection("threads"))
@@ -34,5 +35,6 @@ const breadcrumbs: BreadcrumbComponent[] = [
     : <TaxonomyListingCompact
         browseAllLink={$path({ to: "/threads" })}
         collections={["threads"]}
-        limit={8} />}
+        limit={8}
+        sortBy="title"/>}
 </BaseLayout>

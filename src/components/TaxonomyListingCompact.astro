@@ -16,12 +16,14 @@ interface Props {
   descending?: boolean;
   extraFilter?: (taxonomy: TaxonomyEntry) => boolean;
   limit?: number;
+  sortBy?: "count" | "title";
 }
 
 const {
   browseAllLink,
   collections,
-  descending = true,
+  sortBy = "title",
+  descending = sortBy === "title" ? false : true,
   extraFilter = () => true,
   limit,
 } = Astro.props;
@@ -40,7 +42,13 @@ const taxonomyItems: TaxonomyListingItem[] = taxonomyEntries
       )
     ).length,
   }))
-  .sort((a, b) => (descending ? b.count - a.count : a.count - b.count));
+  .sort((a, b) => {
+    if (sortBy === "title") {
+      const cmp = a.title.localeCompare(b.title);
+      return descending ? -cmp : cmp;
+    }
+    return descending ? b.count - a.count : a.count - b.count;
+  });
 
 const displayItems = limit ? taxonomyItems.slice(0, limit) : taxonomyItems;
 const hasItems = displayItems.length > 0;
