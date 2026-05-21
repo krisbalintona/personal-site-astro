@@ -1,5 +1,5 @@
 ---
-import { getEntry, render } from "astro:content";
+import { getEntries, render } from "astro:content";
 import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
@@ -35,6 +35,7 @@ const formattedVisibleDate = pubDate.toLocaleDateString("en-US", {
 });
 
 const tags = expression.data.tags;
+const threads = expression.data.threads;
 const { Content } = await render(expression);
 ---
 
@@ -55,17 +56,37 @@ const { Content } = await render(expression);
     <div class="expression-content"><Content /></div>
 
     <footer class="expression-footer">
-      <div class="expression-tags-container">
-        {tags && <span id="tags-label">tagged: </span>}
-        {tags?.map(async (t, i) => {
-          const tag = await getEntry(t);
-
-          return (
-            <>{i > 0 && ", "}
-              <Link class="tag" params={{ tag: slugify(tag.data.title) }} to="/tags/[tag]"
-              >{tag.data.title}</Link
-              ></>
-          )}
+      <div class="expression-taxonomy-container">
+        {tags && (
+          <>
+            <span class="label">tagged: </span>
+            {await Promise.all((await getEntries(tags)).map((tag, i) => {
+              return (
+                <>{i > 0 && ", "}<Link
+                  class="entry"
+                  params={{ tag: slugify(tag.data.title) }}
+                  to="/tags/[tag]"
+                >{tag.data.title}</Link></>
+              );
+            }))}
+          </>
+        )}
+      </div>
+      <br>
+      <div class="expression-taxonomy-container">
+        {threads && (
+          <>
+            <span class="label">in threads: </span>
+            {await Promise.all((await getEntries(threads)).map((thread, i) => {
+              return (
+                <>{i > 0 && ", "}<Link
+                  class="entry"
+                  params={{ thread: slugify(thread.data.title) }}
+                  to="/threads/[thread]"
+                >{thread.data.title}</Link></>
+              );
+            }))}
+          </>
         )}
       </div>
     </footer>
@@ -99,22 +120,22 @@ const { Content } = await render(expression);
     margin-top: var(--space-xs-s);
     border-top: 2px solid var(--color-border);
 
-    .expression-tags-container {
+    .expression-taxonomy-container {
       display: inline;
       font-size: var(--font-step--1);
 
-      #tags-label {
+      .label {
         font-weight: bold;
       }
 
-      .tag {
+      .entry {
         --link-underline-color: transparent;
         font-style: italic;
         color: var(--color-text-muted);
         transition: color 0.15s;
       }
 
-      .tag:hover {
+      .entry:hover {
         color: var(--color-text);
       }
     }
