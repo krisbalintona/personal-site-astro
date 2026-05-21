@@ -9,4 +9,5 @@
  (js-ts-mode . ((eval . (eglot-ensure))
                 (apheleia-formatter . biome)))
  (tsx-ts-mode . ((apheleia-formatter . biome)))
- (nil . ((compile-command . "npm run fix && npm run build"))))
+ (nil . ((compile-command . "npm run fix && npm run build")
+         (tab-width . 2))))

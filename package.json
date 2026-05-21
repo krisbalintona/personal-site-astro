@@ -10,8 +10,8 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "ultracite check && astro check",
-    "fix": "ultracite fix"
+    "lint": "eslint src/ && stylelint 'src/**/*.{css,scss,astro}' && prettier --check .",
+    "fix": "eslint src/ --fix && stylelint 'src/**/*.{css,scss,astro}' --fix && prettier --write ."
   },
   "dependencies": {
     "@astrojs/check": "^0.9.8",
