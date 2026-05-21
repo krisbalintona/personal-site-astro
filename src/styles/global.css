@@ -43,14 +43,6 @@ a {
   }
 }
 
-li {
-  margin-bottom: var(--space-3xs);
-
-  &::marker {
-    font-size: 0.85em;
-  }
-}
-
 small {
   font-size: var(--font-step--1);
 }
@@ -144,6 +136,34 @@ blockquote:not(.special-blockquote) {
       color: currentColor;
       text-decoration-color: currentColor;
     }
+  }
+}
+
+/* * Lists */
+
+li {
+  margin-bottom: var(--space-3xs);
+
+  &::marker {
+    font-size: 0.85em;
+  }
+}
+
+dl {
+  margin-block: 1.3em;
+}
+
+dt {
+  font-family: var(--font-ui);
+  font-weight: bold;
+}
+
+dd {
+  margin-block-end: var(--space-3xs);
+  margin-inline-start: var(--space-m);
+
+  &:last-child {
+    margin-block-end: 0;
   }
 }
 
