@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { isProd } from "@lib/consts";
 import { getEntryUrl, isPublished } from "@lib/entries";
 import { allExpressions } from "@lib/expressions";
 import type { TaxonomyCollection, TaxonomyEntry } from "@lib/taxonomies";
@@ -50,9 +51,12 @@ const taxonomyItems: TaxonomyListingItem[] = taxonomyEntries
     return descending ? b.count - a.count : a.count - b.count;
   });
 
-const displayItems = limit ? taxonomyItems.slice(0, limit) : taxonomyItems;
+const nonEmptyItems = isProd
+  ? taxonomyItems.filter((item) => item.count > 0)
+  : taxonomyItems;
+const displayItems = limit ? nonEmptyItems.slice(0, limit) : nonEmptyItems;
 const hasItems = displayItems.length > 0;
-const itemCount = taxonomyItems.length;
+const itemCount = nonEmptyItems.length;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
