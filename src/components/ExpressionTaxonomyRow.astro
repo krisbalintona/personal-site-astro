@@ -1,0 +1,57 @@
+---
+interface Props {
+  items: { href: string; title: string }[];
+  label: string;
+}
+
+const { label, items } = Astro.props;
+---
+
+{items.length > 0 && (
+  <div class="expression-taxonomy-container">
+    <dt>{label}</dt>
+    <dd>{items.map(({ href, title }) => (
+      <span><a href={href}>{title}</a></span>
+    ))}</dd>
+  </div>
+)}
+
+<style>
+  .expression-taxonomy-container {
+    display: block;
+    font-size: var(--font-step--1);
+
+    dt,
+    dd {
+      display: inline;
+      margin: 0;
+    }
+
+    /* Space after colon is added via margin rather than a content */
+    /* string, as trailing spaces in pseudo-element content can be */
+    /* collapsed inconsistently across browsers */
+    dt::after {
+      margin-right: 0.25em;
+      content: ":";
+    }
+
+    dt {
+      font-weight: bold;
+    }
+
+    span + span::before {
+      content: ", ";
+    }
+
+    a {
+      --link-underline-color: transparent;
+      font-style: italic;
+      color: var(--color-text-muted);
+      transition: color 0.15s;
+
+      &:hover {
+        color: var(--color-text);
+      }
+    }
+  }
+</style>
