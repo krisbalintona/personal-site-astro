@@ -3,24 +3,23 @@ import ExpressionListingCompact from "@components/ExpressionListingCompact.astro
 import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Link from "astro-typesafe-routes/link";
+import { $path } from "astro-typesafe-routes/path";
 ---
 
 <BaseLayout pageTitle="Prose" displayTitle="Prose">
   <Heading level="2"><Link to="/articles">Articles</Link></Heading>
-  <p>
-    Essays and long-form writing. See all articles <Link to="/articles"
-      >here</Link
-    >
-    .
-  </p>
-  <ExpressionListingCompact collections={["articles"]} limit={5} />
+  <p>Essays and long-form writing</p>
+  <ExpressionListingCompact
+    browseAllLink={$path({ to: "/articles" })}
+    collections={["articles"]}
+    limit={5}
+  />
   <hr>
   <Heading level="2"><Link to="/notes">Notes</Link></Heading>
-  <p>
-    Unrefined reflections and ongoing thinking. See all notes <Link to="/notes"
-      >here</Link
-    >
-    .
-  </p>
-  <ExpressionListingCompact collections={["notes"]} limit={5} />
+  <p>Unrefined reflections and ongoing thinking</p>
+  <ExpressionListingCompact
+    browseAllLink={$path({ to: "/notes" })}
+    collections={["notes"]}
+    limit={5}
+  />
 </BaseLayout>

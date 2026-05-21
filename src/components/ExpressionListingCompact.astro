@@ -15,6 +15,7 @@ export interface ListingItem {
 }
 
 interface Props {
+  browseAllLink?: string;
   collections: ExpressionCollection[];
   descending?: boolean;
   extraFilter?: (expression: ExpressionEntry) => boolean;
@@ -22,6 +23,7 @@ interface Props {
 }
 
 const {
+  browseAllLink,
   collections,
   extraFilter = () => true,
   descending = true,
@@ -56,28 +58,41 @@ const displayItems = limit ? expressionItems.slice(0, limit) : expressionItems;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
-{hasItems &&
-  /* Note: `reversed={descending}` has no visual effect (we set
-  `list-style: none` below, removing the native markers), but
-  preserves semantics for screen readers that announce list order */
-  <ol
-    class="expression-listing"
-    reversed={descending}
-    style={`--counter-start: ${descending ? itemCount + 1 : 0}; --counter-increment: ${descending ? -1 : 1}`}>
-    {displayItems.map((item: ListingItem) => (
-      <li class="listing-item no-visited">
-        <a class="title" href={item.href}>{item.title}</a>
-        <a class="date" href={item.href}>
-          <time datetime={toDateTimeAttribute(item.pubDate)}>
-            {formatDate(item.pubDate)}
-          </time>
-        </a>
-      </li>
-    ))}
-  </ol>}
+{hasItems && (
+  <div class="expression-listing-wrapper">
+    {/* Note: `reversed={descending}` has no visual effect (we set
+    `list-style: none` below, removing the native markers), but
+    preserves semantics for screen readers that announce list order
+    */}
+    <ol
+      class="expression-listing"
+      reversed={descending}
+      style={`--counter-start: ${descending ? itemCount + 1 : 0}; --counter-increment: ${descending ? -1 : 1}`}>
+      {displayItems.map((item: ListingItem) => (
+        <li class="listing-item no-visited">
+          <a class="title" href={item.href}>{item.title}</a>
+          <a class="date" href={item.href}>
+            <time datetime={toDateTimeAttribute(item.pubDate)}>
+              {formatDate(item.pubDate)}
+            </time>
+          </a>
+        </li>
+      ))}
+    </ol>
+    {browseAllLink && (
+      <div class="browse-all">
+        <small><a href={browseAllLink}>Browse all {itemCount} entries</a></small>
+      </div>
+    )}
+  </div>
+)}
 
 <style>
-  :where(.expression-listing) {
+  :where(.expression-listing-wrapper) {
+    margin-bottom: var(--space-m);
+  }
+
+  .expression-listing {
     display: grid;
     grid-template-columns: auto 1fr auto;
     padding: 0 var(--space-s) 0 0;
@@ -121,5 +136,12 @@ const displayItems = limit ? expressionItems.slice(0, limit) : expressionItems;
         }
       }
     }
+  }
+
+  .browse-all {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-2xs);
+    font-size: var(--font-step--1);
   }
 </style>

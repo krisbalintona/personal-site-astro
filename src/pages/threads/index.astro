@@ -6,6 +6,7 @@ import Breadcrumb, {
 } from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { getEntryUrl } from "@lib/entries";
 import type { ExpressionEntry } from "@lib/expressions";
 import ExpressionListingCompact from "@src/components/ExpressionListingCompact.astro";
 import { $path } from "astro-typesafe-routes/path";
@@ -36,6 +37,7 @@ const breadcrumbs: BreadcrumbComponent[] = [
          
          <div class="listing-container">
            <ExpressionListingCompact
+             browseAllLink={getEntryUrl(thread)}
              collections={["articles", "notes"]}
              descending={false}
              extraFilter={inThisThread(thread)}
