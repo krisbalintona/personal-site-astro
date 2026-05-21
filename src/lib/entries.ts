@@ -1,6 +1,7 @@
 import { isProd } from "@lib/consts.ts";
 import type { AnyCollectionEntry } from "@src/content.config.ts";
 import { $path } from "astro-typesafe-routes/path";
+import slugify from "slugify";
 
 // * Dates
 
@@ -57,7 +58,7 @@ export function getEntryUrl(
     case "tags":
       return $path({
         to: "/tags/[tag]",
-        params: { tag: entry.data.title },
+        params: { tag: slugify(entry.data.title) },
         hash: anchor,
       });
     default:
