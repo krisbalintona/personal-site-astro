@@ -21,20 +21,16 @@ const breadcrumbs: BreadcrumbComponent[] = [
 <BaseLayout pageTitle="Explore" displayTitle="Explore">
   <Breadcrumb breadcrumbs={breadcrumbs} />
   <Heading level="2"><Link to="/tags">Tags</Link></Heading>
-  {!(await getCollection("tags"))
-    ? <p>"Nothing yet..."</p>
-    : <TaxonomyListingCompact
-        browseAllLink={$path({ to: "/tags" })}
-        collections={["tags"]}
-        limit={8}
-        sortBy="count" />}
+  <TaxonomyListingCompact
+    browseAllLink={$path({ to: "/tags" })}
+    collections={["tags"]}
+    limit={8}
+    sortBy="count" />
   <hr>
   <Heading level="2"><Link to="/threads">Threads</Link></Heading>
-  {!(await getCollection("threads"))
-    ? <p>"Nothing yet..."</p>
-    : <TaxonomyListingCompact
-        browseAllLink={$path({ to: "/threads" })}
-        collections={["threads"]}
-        limit={8}
-        sortBy="title"/>}
+  <TaxonomyListingCompact
+    browseAllLink={$path({ to: "/threads" })}
+    collections={["threads"]}
+    limit={8}
+    sortBy="title"/>
 </BaseLayout>

@@ -25,7 +25,5 @@ const breadcrumbs: BreadcrumbComponent[] = [
 <BaseLayout pageTitle="Tags" displayTitle="All tags">
   <Breadcrumb breadcrumbs={breadcrumbs} />
   <hr>
-  {!(await getCollection("tags"))
-    ? <p>"Nothing yet..."</p>
-    : <TaxonomyListingCompact collections={["tags"]} sortBy="title" />}
+  <TaxonomyListingCompact collections={["tags"]} sortBy="title" />
 </BaseLayout>
