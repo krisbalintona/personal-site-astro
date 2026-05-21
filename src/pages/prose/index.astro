@@ -18,19 +18,27 @@ const breadcrumbs: BreadcrumbComponent[] = [
 
 <BaseLayout pageTitle="Prose" displayTitle="Prose">
   <Breadcrumb breadcrumbs={breadcrumbs} />
-  <Heading level="2"><Link to="/articles">Articles</Link></Heading>
-  <p>Essays and long-form writing</p>
-  <ExpressionListingCompact
-    browseAllLink={$path({ to: "/articles" })}
-    collections={["articles"]}
-    limit={5}
-  />
+  <section aria-labelledby="articles-heading">
+    <Heading id="articles-heading" level="2"
+      ><Link to="/articles">Articles</Link></Heading
+    >
+    <p>Essays and long-form writing</p>
+    <ExpressionListingCompact
+      browseAllLink={$path({ to: "/articles" })}
+      collections={["articles"]}
+      limit={5}
+    />
+  </section>
   <hr>
-  <Heading level="2"><Link to="/notes">Notes</Link></Heading>
-  <p>Unrefined reflections and ongoing thinking</p>
-  <ExpressionListingCompact
-    browseAllLink={$path({ to: "/notes" })}
-    collections={["notes"]}
-    limit={5}
-  />
+  <section aria-labelledby="notes-heading">
+    <Heading id="notes-heading" level="2"
+      ><Link to="/notes">Notes</Link></Heading
+    >
+    <p>Unrefined reflections and ongoing thinking</p>
+    <ExpressionListingCompact
+      browseAllLink={$path({ to: "/notes" })}
+      collections={["notes"]}
+      limit={5}
+    />
+  </section>
 </BaseLayout>

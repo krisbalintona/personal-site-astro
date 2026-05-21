@@ -20,17 +20,25 @@ const breadcrumbs: BreadcrumbComponent[] = [
 
 <BaseLayout pageTitle="Explore" displayTitle="Explore">
   <Breadcrumb breadcrumbs={breadcrumbs} />
-  <Heading level="2"><Link to="/tags">Tags</Link></Heading>
-  <TaxonomyListingCompact
-    browseAllLink={$path({ to: "/tags" })}
-    collections={["tags"]}
-    limit={8}
-    sortBy="count" />
+  <section aria-labelledby="tags-heading">
+    <Heading id="tags-heading" level="2"><Link to="/tags">Tags</Link></Heading>
+    <TaxonomyListingCompact
+      browseAllLink={$path({ to: "/tags" })}
+      collections={["tags"]}
+      limit={8}
+      sortBy="count"
+    />
+  </section>
   <hr>
-  <Heading level="2"><Link to="/threads">Threads</Link></Heading>
-  <TaxonomyListingCompact
-    browseAllLink={$path({ to: "/threads" })}
-    collections={["threads"]}
-    limit={8}
-    sortBy="title"/>
+  <section aria-labelledby="threads-heading">
+    <Heading id="threads-heading" level="2"
+      ><Link to="/threads">Threads</Link></Heading
+    >
+    <TaxonomyListingCompact
+      browseAllLink={$path({ to: "/threads" })}
+      collections={["threads"]}
+      limit={8}
+      sortBy="title"
+    />
+  </section>
 </BaseLayout>
