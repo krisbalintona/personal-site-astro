@@ -1,9 +1,9 @@
 ---
-export interface BreadcrumbComponent {
-  href?: string;
-  label: string;
-  styleNormal?: boolean;
-}
+import BreadcrumbLeaf, {
+  type BreadcrumbLeafProps,
+} from "@components/BreadcrumbLeaf.astro";
+
+export type BreadcrumbComponent = BreadcrumbLeafProps | BreadcrumbLeafProps[];
 
 interface Props {
   breadcrumbs: BreadcrumbComponent[];
@@ -15,17 +15,18 @@ const { breadcrumbs, description } = Astro.props;
 
 <div class="breadcrumb-container">
   <div class="breadcrumb-components">
-    {breadcrumbs.map((b, i) => {
-      const classes = ["component", { normal: b.styleNormal }];
-      return (
-        <>
-          {b.href
-            ? <a href={b.href} class:list={classes}>{b.label}</a>
-            : <span class:list={classes}>{b.label}</span>
-          }
-          {i !== breadcrumbs.length - 1 && <span aria-hidden="true" class="sep">·</span>}
-        </>
-    )})}
+    {breadcrumbs.map((b, i) => <>
+      {Array.isArray(b)
+        // Is a BreadcrumbLeaf[]
+        ? b.map((leaf, ci) => <>
+            <BreadcrumbLeaf {...leaf} />
+            {ci !== b.length - 1 && <span aria-hidden="true" class="sep sep-child">/</span>}
+        </>)
+        // Is a BreadcrumbLeaf
+        : <BreadcrumbLeaf {...b} />
+      }
+      {i !== breadcrumbs.length - 1 && <span aria-hidden="true" class="sep">·</span>}
+    </>)}
   </div>
   {description && <span id="breadcrumb-description">{description}</span>}
 </div>
@@ -44,10 +45,10 @@ const { breadcrumbs, description } = Astro.props;
         font-style: italic;
         color: var(--color-text-muted);
         transition: var(--transition-ui);
-      }
 
-      .component:hover {
-        color: var(--color-text);
+        &:hover {
+          color: var(--color-text);
+        }
       }
 
       .sep {
@@ -55,6 +56,11 @@ const { breadcrumbs, description } = Astro.props;
         font-style: normal;
         color: var(--color-text-muted);
         user-select: none;
+      }
+
+      .sep-child {
+        /* Shrink vertically without affecting font size or baseline */
+        transform: scaleY(0.7);
       }
 
       .normal {

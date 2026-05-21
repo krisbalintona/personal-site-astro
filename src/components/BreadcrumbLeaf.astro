@@ -1,0 +1,13 @@
+---
+export interface BreadcrumbLeafProps {
+  href?: string;
+  label: string;
+  styleNormal?: boolean;
+}
+
+const { href, label, styleNormal } = Astro.props;
+---
+
+{href
+  ? <a href={href} class:list={["component", { normal: styleNormal }]}>{label}</a>
+  : <span class:list={["component", { normal: styleNormal }]}>{label}</span>}

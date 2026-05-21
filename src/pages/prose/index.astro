@@ -1,12 +1,23 @@
 ---
+import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
+import Breadcrumb from "@components/Breadcrumb.astro";
 import ExpressionListingCompact from "@components/ExpressionListingCompact.astro";
 import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Link from "astro-typesafe-routes/link";
 import { $path } from "astro-typesafe-routes/path";
+
+const breadcrumbs: BreadcrumbComponent[] = [
+  { label: "Prose", styleNormal: true },
+  [
+    { label: "articles", href: $path({ to: "/articles" }) },
+    { label: "notes", href: $path({ to: "/notes" }) },
+  ],
+];
 ---
 
 <BaseLayout pageTitle="Prose" displayTitle="Prose">
+  <Breadcrumb breadcrumbs={breadcrumbs} />
   <Heading level="2"><Link to="/articles">Articles</Link></Heading>
   <p>Essays and long-form writing</p>
   <ExpressionListingCompact
