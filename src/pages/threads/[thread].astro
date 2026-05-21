@@ -27,7 +27,9 @@ interface Props {
 }
 
 const { thread: threadEntry } = Astro.props;
-const { Content } = threadEntry ? await render(threadEntry) : { Content: null };
+const { Content } = threadEntry
+  ? await render(threadEntry)
+  : { Content: undefined };
 const threadTitle: string = threadEntry.data.title;
 
 function hasThisThread(expression: ExpressionEntry): boolean {

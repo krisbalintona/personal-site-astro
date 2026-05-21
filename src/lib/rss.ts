@@ -1,4 +1,4 @@
-import { getCollection, getEntries, render } from "astro:content";
+import { getCollection, getEntries, getEntry, render } from "astro:content";
 import mdxRenderer from "@astrojs/mdx/server.js";
 import generateRssFeed, { type RSSFeedItem } from "@astrojs/rss";
 import { SITE_TITLE, SITE_URL } from "@lib/consts.ts";
@@ -168,12 +168,16 @@ export const RSSFeeds: Record<string, RSSFeed> = {
   },
   articles: {
     title: `${SITE_TITLE} — Articles`,
-    description: "Essays and long-form writing",
+    description:
+      (await getEntry("standalone", "taxonomyArticles"))?.data.description ??
+      "All articles",
     items: articleItems,
   },
   notes: {
     title: `${SITE_TITLE} — Notes`,
-    description: "Unrefined reflections and ongoing thinking",
+    description:
+      (await getEntry("standalone", "taxonomyNotes"))?.data.description ??
+      "All notes",
     items: noteItems,
   },
 };

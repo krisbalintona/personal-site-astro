@@ -33,7 +33,7 @@ function hasThisTag(expression: ExpressionEntry): boolean {
   return expression.data.tags?.some((t) => t.id === tagEntry.id) ?? false;
 }
 
-const { Content } = tagEntry ? await render(tagEntry) : { Content: null };
+const { Content } = tagEntry ? await render(tagEntry) : { Content: undefined };
 
 const breadcrumbs: BreadcrumbComponent[] = [
   { label: "explore", href: $path({ to: "/explore" }) },

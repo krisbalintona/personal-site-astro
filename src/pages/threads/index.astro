@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { getCollection } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
@@ -19,12 +19,19 @@ const breadcrumbs: BreadcrumbComponent[] = [
   { label: "explore", href: $path({ to: "/explore" }) },
   { label: "Threads", styleNormal: true },
 ];
+
+const threadsEntry = await getEntry("standalone", "taxonomyThreads");
+const { Content: ThreadsContent } = threadsEntry
+  ? await render(threadsEntry)
+  : { Content: undefined };
 ---
 
 <TaxonomyListingLayout
   pageTitle="Threads"
   displayTitle="All threads"
   breadcrumbs={breadcrumbs}
+  breadcrumbsDescription={threadsEntry?.data.description}
+  preamble={ThreadsContent}
 >
   {(await getCollection("threads")).map((thread) => {
      const headingId = slugify(thread.data.title, { lower: true, strict: true });

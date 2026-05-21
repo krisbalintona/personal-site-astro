@@ -1,4 +1,5 @@
 ---
+import { getEntry, render } from "astro:content";
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
 import TaxonomyListingCompact from "@components/TaxonomyListingCompact.astro";
@@ -13,15 +14,35 @@ const breadcrumbs: BreadcrumbComponent[] = [
     { label: "threads", href: $path({ to: "/threads" }) },
   ],
 ];
+
+const exploreEntry = await getEntry("standalone", "explore");
+const { Content: ExploreContent } = exploreEntry
+  ? await render(exploreEntry)
+  : { Content: undefined };
+const tagsEntry = await getEntry("standalone", "taxonomyTags");
+const { Content: TagsContent } = tagsEntry
+  ? await render(tagsEntry)
+  : { Content: undefined };
+const ThreadsEntry = await getEntry("standalone", "taxonomyThreads");
+const { Content: ThreadsContent } = ThreadsEntry
+  ? await render(ThreadsEntry)
+  : { Content: undefined };
 ---
 
 <TaxonomyListingLayout
   pageTitle="Explore"
   displayTitle="Explore"
   breadcrumbs={breadcrumbs}
+  breadcrumbsDescription={exploreEntry?.data.description}
+  preamble={ExploreContent}
 >
   <section aria-labelledby="tags-heading">
     <Heading id="tags-heading" level="2"><Link to="/tags">Tags</Link></Heading>
+    {tagsEntry &&
+      <>
+        <p>{tagsEntry.data.description}</p>
+        {TagsContent && <TagsContent />}
+      </>}
     <TaxonomyListingCompact
       browseAllLink={$path({ to: "/tags" })}
       collections={["tags"]}
@@ -33,6 +54,11 @@ const breadcrumbs: BreadcrumbComponent[] = [
     <Heading id="threads-heading" level="2"
       ><Link to="/threads">Threads</Link></Heading
     >
+    {ThreadsEntry &&
+      <>
+        <p>{ThreadsEntry.data.description}</p>
+        {ThreadsContent && <ThreadsContent />}
+      </>}
     <TaxonomyListingCompact
       browseAllLink={$path({ to: "/threads" })}
       collections={["threads"]}

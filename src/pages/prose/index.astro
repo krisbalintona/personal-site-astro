@@ -1,4 +1,5 @@
 ---
+import { getEntry, render } from "astro:content";
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import ExpressionListingCompact from "@components/ExpressionListingCompact.astro";
 import Heading from "@components/markup/Heading.astro";
@@ -13,18 +14,37 @@ const breadcrumbs: BreadcrumbComponent[] = [
     { label: "notes", href: $path({ to: "/notes" }) },
   ],
 ];
+
+const proseEntry = await getEntry("standalone", "prose");
+const { Content: ProseContent } = proseEntry
+  ? await render(proseEntry)
+  : { Content: undefined };
+const articlesEntry = await getEntry("standalone", "taxonomyArticles");
+const { Content: ArticlesContent } = articlesEntry
+  ? await render(articlesEntry)
+  : { Content: undefined };
+const notesEntry = await getEntry("standalone", "taxonomyNotes");
+const { Content: NotesContent } = notesEntry
+  ? await render(notesEntry)
+  : { Content: undefined };
 ---
 
 <TaxonomyListingLayout
   pageTitle="Prose"
   displayTitle="Prose"
   breadcrumbs={breadcrumbs}
+  breadcrumbsDescription={proseEntry?.data.description}
+  preamble={ProseContent}
 >
   <section aria-labelledby="articles-heading">
     <Heading id="articles-heading" level="2"
       ><Link to="/articles">Articles</Link></Heading
     >
-    <p>Essays and long-form writing</p>
+    {articlesEntry &&
+      <>
+        <p>{articlesEntry.data.description}</p>
+        {ArticlesContent && <ArticlesContent />}
+      </>}
     <ExpressionListingCompact
       browseAllLink={$path({ to: "/articles" })}
       collections={["articles"]}
@@ -35,7 +55,11 @@ const breadcrumbs: BreadcrumbComponent[] = [
     <Heading id="notes-heading" level="2"
       ><Link to="/notes">Notes</Link></Heading
     >
-    <p>Unrefined reflections and ongoing thinking</p>
+    {notesEntry &&
+      <>
+        <p>{notesEntry.data.description}</p>
+        {NotesContent && <NotesContent />}
+      </>}
     <ExpressionListingCompact
       browseAllLink={$path({ to: "/notes" })}
       collections={["notes"]}

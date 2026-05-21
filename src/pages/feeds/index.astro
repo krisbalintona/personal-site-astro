@@ -6,7 +6,7 @@ import { RSSFeeds } from "@lib/rss";
 import Link from "astro-typesafe-routes/link";
 
 const preamble = await getEntry("standalone", "rss_feeds");
-const { Content } = preamble ? await render(preamble) : { Content: null };
+const { Content } = preamble ? await render(preamble) : { Content: undefined };
 ---
 
 <BaseLayout pageTitle="RSS" displayTitle="RSS feeds">

@@ -822,15 +822,19 @@ communication channel for the export process."
           (when date-timestamp
             (concat "pubDate: " (org-format-timestamp date-timestamp "%FT%T%:z")))) ; YAML 1.1 timestamp spec
          (draft (concat "draft: " (plist-get info :mdx-draft-p))) ; Return YAML boolean
+         (raw-description (plist-get info :description))
+         (escaped-description (when raw-description (org-mdx--frontmatter-quote-string raw-description)))
+         (description (when raw-description (concat "description: " escaped-description)))
          (imports (org-string-nw-p
                    (mapconcat #'cdr (plist-get info :mdx-imports) "\n")))
+         (frontmatter-base (list title draft description))
          frontmatter)
 
     ;; Emit different frontmatter depending on :mdx-entry-type
     (pcase entry-type
       ("standalone"
-       (setq frontmatter (string-join (delq nil (list title slug date draft)) "\n")))
-      ((or "articles" "notes")          ; Prose type entries
+       (setq frontmatter (string-join (delq nil (append frontmatter-base (list date slug))) "\n")))
+      ((or "articles" "notes")          ; Expression entries
        (let* ((raw-tags (plist-get info :mdx-tags))
               (parsed-tags
                (when (org-string-nw-p raw-tags)
@@ -866,10 +870,9 @@ communication channel for the export process."
               (threads
                (when parsed-threads
                  (org-mdx--frontmatter-build-list "threads" parsed-threads))))
-         (setq frontmatter (string-join (delq nil (list title date draft tags threads)) "\n"))))
-      ((or "tags" "threads")            ; Taxonomy type entries
-       (let* ((name (when raw-title (concat "title: " escaped-title))))
-         (setq frontmatter (string-join (delq nil (list name draft)) "\n")))))
+         (setq frontmatter (string-join (delq nil (append frontmatter-base (list date tags threads))) "\n"))))
+      ((or "tags" "threads")            ; Taxonomy entries
+       (setq frontmatter (string-join (delq nil (append frontmatter-base (list date))) "\n"))))
 
     ;; Final result
     (concat

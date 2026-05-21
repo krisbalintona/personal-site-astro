@@ -18,6 +18,7 @@ export function dateToPostId(date: Date): string {
 export const baseContentShape = {
   title: z.string().default("Untitled"),
   draft: z.boolean().default(true),
+  description: z.string().optional(),
 };
 
 // See https://github.com/withastro/astro/tree/main/packages/astro-rss

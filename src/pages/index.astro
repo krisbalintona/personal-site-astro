@@ -4,7 +4,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import { isPublished } from "@lib/entries";
 
 const bio = await getEntry("standalone", "bio");
-const { Content } = bio ? await render(bio) : { Content: null };
+const { Content } = bio ? await render(bio) : { Content: undefined };
 ---
 
 <BaseLayout

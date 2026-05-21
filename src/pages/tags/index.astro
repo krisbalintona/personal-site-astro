@@ -1,4 +1,5 @@
 ---
+import { getEntry, render } from "astro:content";
 import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
@@ -20,10 +21,19 @@ const breadcrumbs: BreadcrumbComponent[] = [
   { label: "explore", href: $path({ to: "/explore" }) },
   { label: "Tags", styleNormal: true },
 ];
+
+const tagsEntry = await getEntry("standalone", "taxonomyTags");
+const { Content: TagsContent } = tagsEntry
+  ? await render(tagsEntry)
+  : { Content: undefined };
 ---
 
 <BaseLayout pageTitle="Tags" displayTitle="All tags">
-  <Breadcrumb breadcrumbs={breadcrumbs} />
+  <Breadcrumb
+    breadcrumbs={breadcrumbs}
+    description={tagsEntry?.data.description}
+  />
+  {TagsContent && <TagsContent />}
   <hr>
   <TaxonomyListingCompact collections={["tags"]} sortBy="title" />
 </BaseLayout>

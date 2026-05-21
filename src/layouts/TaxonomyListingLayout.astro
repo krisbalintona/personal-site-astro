@@ -2,18 +2,28 @@
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import Breadcrumb from "@components/Breadcrumb.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
 
 interface Props {
   breadcrumbs: BreadcrumbComponent[];
+  breadcrumbsDescription?: string;
   displayTitle?: string;
   pageTitle: string;
+  preamble?: AstroComponentFactory;
 }
 
-const { displayTitle, pageTitle, breadcrumbs } = Astro.props;
+const {
+  displayTitle,
+  pageTitle,
+  breadcrumbs,
+  breadcrumbsDescription,
+  preamble: Preamble,
+} = Astro.props;
 ---
 
 <BaseLayout displayTitle={displayTitle} pageTitle={pageTitle}>
-  <Breadcrumb breadcrumbs={breadcrumbs} />
+  <Breadcrumb breadcrumbs={breadcrumbs} description={breadcrumbsDescription} />
+  {Preamble && <Preamble />}
   <slot />
 </BaseLayout>
 
