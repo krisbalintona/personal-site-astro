@@ -2,8 +2,8 @@
 import { getCollection } from "astro:content";
 import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { getEntryUrl } from "@lib/entries";
 import Link from "astro-typesafe-routes/link";
-import slugify from "slugify";
 
 const allThreadEntries = await getCollection("threads");
 ---
@@ -20,15 +20,8 @@ const allThreadEntries = await getCollection("threads");
   {!allThreadEntries
     ? <p>"Nothing yet..."</p>
     : <ul>
-        {allThreadEntries.map((s) => {
-          return (
-            /* The `hash` has to match the anchors in
-            `src/pages/threads/index.astro`*/
-            <li><Link
-              hash={slugify(s.data.title, { lower: true, strict: true })}
-              to="/threads"
-            >{s.data.title}</Link></li>
-            )}
+        {allThreadEntries.map((thread) => {
+          return <li><a href={getEntryUrl(thread)}>{thread.data.title}</a></li>}
         )}
       </ul>}
 </BaseLayout>

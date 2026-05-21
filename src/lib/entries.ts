@@ -61,6 +61,12 @@ export function getEntryUrl(
         params: { tag: slugify(entry.data.title) },
         hash: anchor,
       });
+    case "threads":
+      return $path({
+        to: "/threads/[thread]",
+        params: { thread: slugify(entry.data.title) },
+        hash: anchor,
+      });
     default:
       throw new Error(`No URL mapping for collection "${entry.collection}"`);
   }

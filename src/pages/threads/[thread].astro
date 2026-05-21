@@ -1,0 +1,53 @@
+---
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import Breadcrumb, {
+  type BreadcrumbComponent,
+} from "@components/Breadcrumb.astro";
+import ExpressionListing from "@components/ExpressionListing.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { isPublished } from "@lib/entries";
+import type { ExpressionEntry } from "@lib/expressions";
+import { createRoute } from "astro-typesafe-routes/create-route";
+import { $path } from "astro-typesafe-routes/path";
+import slugify from "slugify";
+
+export const Route = createRoute({
+  routeId: "/threads/[thread]",
+});
+
+export const getStaticPaths = Route.createGetStaticPaths(async () =>
+  (await getCollection("threads")).map((thread) => ({
+    params: { thread: slugify(thread.data.title) },
+    props: { thread },
+  }))
+);
+
+interface Props {
+  thread: CollectionEntry<"threads">;
+}
+
+const { thread: threadEntry } = Astro.props;
+const { Content } = threadEntry ? await render(threadEntry) : { Content: null };
+const threadTitle: string = threadEntry.data.title;
+
+function hasThisThread(expression: ExpressionEntry): boolean {
+  return expression.data.threads?.some((t) => t.id === threadEntry.id) ?? false;
+}
+
+const breadcrumbs: BreadcrumbComponent[] = [
+  { label: "explore", href: $path({ to: "/explore" }) },
+  { label: "threads", href: $path({ to: "/threads" }) },
+  { label: threadTitle, styleNormal: true },
+];
+---
+
+<BaseLayout
+  pageTitle={threadTitle}
+  displayTitle={`Entries belonging to the thread "${threadTitle}"`}
+>
+  <Breadcrumb breadcrumbs={breadcrumbs} />
+  {threadEntry && isPublished(threadEntry) && Content && <Content />}
+  <hr>
+
+  <ExpressionListing extraFilter={hasThisThread} />
+</BaseLayout>
