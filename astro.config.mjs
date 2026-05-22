@@ -11,6 +11,7 @@ import { pluginFullscreen } from "expressive-code-fullscreen";
 import { SITE_URL } from "./src/lib/consts.ts";
 import { faviconRss } from "./src/lib/faviconRss.ts";
 import icon from "astro-icon";
+import robotsTxt from "astro-robots-txt";
 
 // https://astro.build/config
 export default defineConfig({
@@ -67,6 +68,7 @@ export default defineConfig({
     }),
     sitemap({ filter: (page) => !page.startsWith(`${SITE_URL}/posts/`) }),
     icon(),
+    robotsTxt(),
   ],
   fonts: [
     {
