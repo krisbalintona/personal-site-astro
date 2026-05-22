@@ -3,6 +3,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import { isPublished } from "@lib/entries";
 import { getRssFeedUrl, RSSFeeds } from "@lib/rss";
 import { getEntry, render } from "astro:content";
+import Link from "astro-typesafe-routes/link";
 
 const preamble = await getEntry("standalone", "rss_feeds");
 const { Content } = preamble ? await render(preamble) : { Content: undefined };
@@ -27,4 +28,7 @@ const { Content } = preamble ? await render(preamble) : { Content: undefined };
       </dl>
     )
   }
+  <p>
+    Additionally, <Link to="/tags">each tag</Link> has its own associated feed.
+  </p>
 </BaseLayout>

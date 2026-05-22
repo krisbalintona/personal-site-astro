@@ -1,7 +1,7 @@
 import mdxRenderer from "@astrojs/mdx/server.js";
 import generateRssFeed, { type RSSFeedItem } from "@astrojs/rss";
 import { SITE_TITLE, SITE_URL } from "@lib/consts.ts";
-import type { ExpressionCollection } from "@lib/expressions.ts";
+import type { ExpressionEntry } from "@lib/expressions.ts";
 import type { APIContext } from "astro";
 import { experimental_AstroContainer } from "astro/container";
 import { getCollection, getEntries, getEntry, render } from "astro:content";
@@ -48,11 +48,11 @@ export function makeRSSFeed(
 const container = await experimental_AstroContainer.create();
 container.addServerRenderer({ renderer: mdxRenderer });
 
-async function buildRssItems(
-  collection: ExpressionCollection,
+export async function buildRssItems(
+  expressions: ExpressionEntry[],
 ): Promise<RSSFeedItem[]> {
   return Promise.all(
-    (await getCollection(collection)).map(async (expressionEntry) => {
+    expressions.map(async (expressionEntry) => {
       const { Content } = await render(expressionEntry);
       const rawHTML: string = await container.renderToString(Content);
 
@@ -63,27 +63,27 @@ async function buildRssItems(
       // https://github.com/delucis/astro-blog-full-text-rss/blob/latest/src/pages/rss.xml.ts,
       // which was pointed to by
       // https://docs.astro.build/en/recipes/rss/#including-full-post-content.
-      // The difference is that we use the sanitize-html library to
-      // more thoroughly strip elements and classes; the documentation
-      // linked above shows a rudimentary usage of the library for
-      // this purpose.
+      // The difference is that we use the sanitize-html library to more
+      // thoroughly strip elements and classes; the documentation linked
+      // above shows a rudimentary usage of the library for this
+      // purpose.
       //
       // Using sanitize-html is more appropriate since Expressive Code
-      // (EC) and its plugins may introduce undesirable elements such
-      // as buttons.  Using sanitize-html also brings forward
-      // compatibility for any other elements I may introduce into my
-      // rendered entry content in the future.
+      // (EC) and its plugins may introduce undesirable elements such as
+      // buttons.  Using sanitize-html also brings forward compatibility
+      // for any other elements I may introduce into my rendered entry
+      // content in the future.
       //
       // Below does the following:
-      // - Strips all elements not in the allowlist (including EC's
-      //   copy buttons, fullscreen toggles, SVG icons, and wrapper
-      //   divs), leaving code blocks as plain `<pre><code>`
-      // - Makes link `href` and image `src` attributes absolute
-      //   instead of relative, so they resolve correctly in feed
-      //   readers that have no knowledge of the site's base URL
-      // - Strips any `<script>` and `<style>` tags (covered
-      //   implicitly by sanitize-html's allowlist, since neither is a
-      //   permitted tag)
+      // - Strips all elements not in the allowlist (including EC's copy
+      //   buttons, fullscreen toggles, SVG icons, and wrapper divs),
+      //   leaving code blocks as plain `<pre><code>`
+      // - Makes link `href` and image `src` attributes absolute instead
+      //   of relative, so they resolve correctly in feed readers that
+      //   have no knowledge of the site's base URL
+      // - Strips any `<script>` and `<style>` tags (covered implicitly
+      //   by sanitize-html's allowlist, since neither is a permitted
+      //   tag)
       const renderedHTML: string = sanitize(rawHTML, {
         // Preserve `img`s in feed content
         allowedTags: sanitize.defaults.allowedTags.concat(["img"]),
@@ -114,10 +114,10 @@ async function buildRssItems(
 
       // See
       // https://github.com/withastro/astro/tree/main/packages/astro-rss:
-      // rendered HTML should either (i) be in the description if
-      // there is no actual description or (ii) be in a content
-      // element if there is an actual entry description, with that
-      // description being in the description element
+      // rendered HTML should either (i) be in the description if there
+      // is no actual description or (ii) be in a content element if
+      // there is an actual entry description, with that description
+      // being in the description element
       const hasDescription: boolean = !!expressionEntry.data.description;
       const description = hasDescription
         ? expressionEntry.data.description
@@ -144,8 +144,8 @@ async function buildRssItems(
 // Build per-collection RSS feed items for expressions (the only
 // content that receive an associated feed)
 const [articleItems, noteItems] = await Promise.all([
-  buildRssItems("articles"),
-  buildRssItems("notes"),
+  buildRssItems(await getCollection("articles")),
+  buildRssItems(await getCollection("notes")),
 ]);
 
 // Compose for "all", sorted by date
