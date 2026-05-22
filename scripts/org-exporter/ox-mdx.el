@@ -1171,41 +1171,36 @@ This function is used as the :publishing-function in
                        :time-stamp-file nil
                        :base-extension "org"
                        :publishing-function org-mdx-publish-to-site)))
-  (setopt
-   ;; NOTE 2026-02-12: This is set to nil as I develop, to force
-   ;; publishing every file.  When in use, a value of t is more
-   ;; appropriate.
-   org-publish-use-timestamps-flag nil
-   org-publish-project-alist
-   `(("standalone"
-      :base-directory ,(expand-file-name "standalone" krisb-manuscript-blog-directory)
-      :publishing-directory ,org-mdx-standalone-dir
-      :recursive t
-      ,@base-options)
-     ("articles"
-      :base-directory ,(expand-file-name "articles" krisb-manuscript-blog-directory)
-      :publishing-directory ,org-mdx-articles-dir
-      :recursive t
-      :mdx-entry-type "articles"
-      ,@base-options)
-     ("notes"
-      :base-directory ,(expand-file-name "notes" krisb-manuscript-blog-directory)
-      :publishing-directory ,org-mdx-notes-dir
-      :recursive t
-      :mdx-entry-type "notes"
-      ,@base-options)
-     ("tags"
-      :base-directory ,(expand-file-name "tags" krisb-manuscript-blog-directory)
-      :publishing-directory ,org-mdx-tags-dir
-      :recursive t
-      :mdx-entry-type "tags"
-      ,@base-options)
-     ("threads"
-      :base-directory ,(expand-file-name "threads" krisb-manuscript-blog-directory)
-      :publishing-directory ,org-mdx-threads-dir
-      :recursive t
-      :mdx-entry-type "threads"
-      ,@base-options))))
+  (setopt org-publish-project-alist
+          `(("standalone"
+             :base-directory ,(expand-file-name "standalone" krisb-manuscript-blog-directory)
+             :publishing-directory ,org-mdx-standalone-dir
+             :recursive t
+             ,@base-options)
+            ("articles"
+             :base-directory ,(expand-file-name "articles" krisb-manuscript-blog-directory)
+             :publishing-directory ,org-mdx-articles-dir
+             :recursive t
+             :mdx-entry-type "articles"
+             ,@base-options)
+            ("notes"
+             :base-directory ,(expand-file-name "notes" krisb-manuscript-blog-directory)
+             :publishing-directory ,org-mdx-notes-dir
+             :recursive t
+             :mdx-entry-type "notes"
+             ,@base-options)
+            ("tags"
+             :base-directory ,(expand-file-name "tags" krisb-manuscript-blog-directory)
+             :publishing-directory ,org-mdx-tags-dir
+             :recursive t
+             :mdx-entry-type "tags"
+             ,@base-options)
+            ("threads"
+             :base-directory ,(expand-file-name "threads" krisb-manuscript-blog-directory)
+             :publishing-directory ,org-mdx-threads-dir
+             :recursive t
+             :mdx-entry-type "threads"
+             ,@base-options))))
 
 ;;; Provide
 (provide 'ox-mdx)
