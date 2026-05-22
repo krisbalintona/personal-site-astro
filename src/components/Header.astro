@@ -35,11 +35,15 @@ const navItems: { to: StaticRouteId; label: string }[] = [
 ---
 
 <div id="site-header">
-  <!-- Structure `header`,`nav`, and `button` according to: -->
-  <!-- https://dev.to/masakudamatsu/don-t-nest-nav-inside-header-do-nest-the-hamburger-menu-button-inside-nav-6cp -->
+  {
+    /* Structure `header`,`nav`, and `button` according to
+    https://dev.to/masakudamatsu/don-t-nest-nav-inside-header-do-nest-the-hamburger-menu-button-inside-nav-6cp
+    */
+  }
   <header></header>
   <nav id="nav-container" class="ui">
-    <!-- This wrapper serves three purposes on mobile:
+    {
+      /* This wrapper serves three purposes on mobile:
       1. Positioning anchor: switches between `position: absolute`
          (menu closed) and `position: fixed` (menu open), lifting both
          the toggle and panel out of document flow so the header
@@ -48,7 +52,8 @@ const navItems: { to: StaticRouteId; label: string }[] = [
          styles.
       3. Groups toggle + panel so they can be jointly repositioned as
          a unit.
-    -->
+       */
+    }
     <div id="nav-mobile-fixed">
       <button
         id="nav-toggle"
