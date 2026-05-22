@@ -7,9 +7,9 @@ import type { ExpressionEntry } from "@lib/expressions";
 import ExpressionListingCompact from "@src/components/ExpressionListingCompact.astro";
 import type { CollectionEntry } from "astro:content";
 import { getCollection, getEntry, render } from "astro:content";
+import Link from "astro-typesafe-routes/link";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
-import Link from "astro-typesafe-routes/link";
 
 function inThisThread(thread: CollectionEntry<"threads">) {
   return (expression: ExpressionEntry): boolean =>
@@ -51,7 +51,23 @@ const threadsEntry = await getEntry("standalone", "taxonomyThreads");
               {thread.data.title}
             </Link>
           </Heading>
-          {isPublished(thread) && Content && <Content />}
+          {isPublished(thread) && Content && (
+            <div class="content-fade">
+              {/* Use `autocomplete="off"` to reset fade on page refresh */}
+              <input
+                type="checkbox"
+                id={`fade-${headingId}`}
+                class="fade-checkbox"
+                autocomplete="off"
+              />
+              <div class="content-fade-inner">
+                <Content />
+              </div>
+              <label for={`fade-${headingId}`} class="fade-trigger">
+                <span class="sr-only">Show full content</span>
+              </label>
+            </div>
+          )}
 
           <ExpressionListingCompact
             browseAllLink={getEntryUrl(thread)}
@@ -65,3 +81,95 @@ const threadsEntry = await getEntry("standalone", "taxonomyThreads");
     })
   }
 </TaxonomyListingLayout>
+
+<style>
+  .fade-checkbox {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .content-fade {
+    position: relative;
+
+    .content-fade-inner {
+      overflow: hidden;
+      max-height: var(--expanded-height, none);
+    }
+
+    &.is-ready .content-fade-inner {
+      transition: max-height 0.25s ease-out;
+      will-change: max-height;
+    }
+
+    .fade-trigger {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3em;
+      background: linear-gradient(to bottom, transparent, var(--color-bg));
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Hidden state */
+    &.has-overflow:not(:has(input:checked)) {
+      .content-fade-inner {
+        /* Show ~9.5 lines */
+        max-height: calc(9.5 * 1lh);
+      }
+
+      .fade-trigger {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+
+    /* Revealed state */
+    &.has-overflow:has(input:checked) {
+      .content-fade-inner {
+        max-height: var(--expanded-height);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &.is-ready .content-fade-inner,
+      .fade-trigger {
+        transition: none;
+      }
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>(".content-fade").forEach((fade) => {
+    const inner = fade.querySelector<HTMLElement>(".content-fade-inner");
+    if (!inner) return;
+
+    const lineHeight = parseFloat(getComputedStyle(inner).lineHeight);
+    const threshold = lineHeight * 10;
+
+    const observer = new ResizeObserver(() => {
+      inner.style.setProperty("--expanded-height", `${inner.scrollHeight}px`);
+      fade.classList.toggle("has-overflow", inner.scrollHeight > threshold);
+
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          fade.classList.add("is-ready");
+          observer.disconnect();
+        }),
+      );
+    });
+
+    observer.observe(inner);
+  });
+</script>
