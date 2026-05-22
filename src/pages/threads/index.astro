@@ -2,13 +2,14 @@
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
-import { getEntryUrl } from "@lib/entries";
+import { getEntryUrl, isPublished } from "@lib/entries";
 import type { ExpressionEntry } from "@lib/expressions";
 import ExpressionListingCompact from "@src/components/ExpressionListingCompact.astro";
 import type { CollectionEntry } from "astro:content";
-import { getCollection, getEntry } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
+import Link from "astro-typesafe-routes/link";
 
 function inThisThread(thread: CollectionEntry<"threads">) {
   return (expression: ExpressionEntry): boolean =>
@@ -31,16 +32,26 @@ const threadsEntry = await getEntry("standalone", "taxonomyThreads");
   preambleEntry={threadsEntry}
 >
   {
-    (await getCollection("threads")).map((thread) => {
+    (await getCollection("threads")).map(async (thread) => {
       const headingId = slugify(thread.data.title, {
         lower: true,
         strict: true,
       });
+      const { Content } = thread
+        ? await render(thread)
+        : { Content: undefined };
+
       return (
         <section aria-labelledby={headingId}>
-          <Heading id={headingId} level="2" selfLink={true}>
-            {thread.data.title}
+          <Heading id={headingId} level="2">
+            <Link
+              to="/threads/[thread]"
+              params={{ thread: slugify(thread.data.title) }}
+            >
+              {thread.data.title}
+            </Link>
           </Heading>
+          {isPublished(thread) && Content && <Content />}
 
           <ExpressionListingCompact
             browseAllLink={getEntryUrl(thread)}
