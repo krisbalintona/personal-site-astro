@@ -1,5 +1,4 @@
 ---
-import { getEntries, render } from "astro:content";
 import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
@@ -7,6 +6,7 @@ import ExpressionTaxonomyRow from "@components/ExpressionTaxonomyRow.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { toDateTimeAttribute } from "@lib/entries";
 import type { ExpressionEntry } from "@lib/expressions";
+import { getEntries, render } from "astro:content";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
 

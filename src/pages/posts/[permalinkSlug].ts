@@ -1,6 +1,6 @@
-import { getCollection } from "astro:content";
 import type { ExpressionEntry } from "@lib/expressions.ts";
 import type { APIContext } from "astro";
+import { getCollection } from "astro:content";
 import { createRoute } from "astro-typesafe-routes/create-route";
 import { $path } from "astro-typesafe-routes/path";
 

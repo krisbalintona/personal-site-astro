@@ -1,6 +1,6 @@
-import { type CollectionEntry, getCollection, reference } from "astro:content";
 import { rssSchema } from "@astrojs/rss";
 import { z } from "astro/zod";
+import { type CollectionEntry, getCollection, reference } from "astro:content";
 import slugify from "slugify";
 import type { z as zType } from "zod/v4";
 

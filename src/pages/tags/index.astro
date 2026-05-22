@@ -1,10 +1,10 @@
 ---
-import { getEntry } from "astro:content";
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import TaxonomyListingCompact from "@components/TaxonomyListingCompact.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
 import { isPublished } from "@lib/entries";
 import { allExpressions } from "@lib/expressions";
+import { getEntry } from "astro:content";
 import { $path } from "astro-typesafe-routes/path";
 
 const tagCounts: Map<string, number> = new Map();

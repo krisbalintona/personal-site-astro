@@ -1,12 +1,12 @@
 ---
-import type { CollectionEntry } from "astro:content";
-import { getCollection, getEntry } from "astro:content";
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
 import { getEntryUrl } from "@lib/entries";
 import type { ExpressionEntry } from "@lib/expressions";
 import ExpressionListingCompact from "@src/components/ExpressionListingCompact.astro";
+import type { CollectionEntry } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
 

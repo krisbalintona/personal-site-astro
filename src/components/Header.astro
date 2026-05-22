@@ -1,8 +1,8 @@
 ---
 import { trailingSlash } from "astro:config/server";
+import { Icon } from "astro-icon/components";
 import Link from "astro-typesafe-routes/link";
 import { $path, type RouteId, type Routes } from "astro-typesafe-routes/path";
-import { Icon } from "astro-icon/components";
 
 type StaticRouteId = {
   [K in RouteId]: Routes[K]["params"] extends null ? K : never;

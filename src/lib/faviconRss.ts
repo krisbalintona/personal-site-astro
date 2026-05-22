@@ -1,4 +1,5 @@
 import { existsSync } from "node:fs";
+
 import type { AstroIntegration } from "astro";
 import sharp from "sharp";
 

@@ -1,5 +1,4 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content";
 import {
   formatDate,
   getEntryUrl,
@@ -7,6 +6,7 @@ import {
   toDateTimeAttribute,
 } from "@lib/entries";
 import type { ExpressionCollection, ExpressionEntry } from "@lib/expressions";
+import { type CollectionEntry, getCollection } from "astro:content";
 
 export interface ListingItem {
   href: string;

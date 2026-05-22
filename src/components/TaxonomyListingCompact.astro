@@ -1,9 +1,9 @@
 ---
-import { getCollection } from "astro:content";
 import { isProd } from "@lib/consts";
 import { getEntryUrl, isPublished } from "@lib/entries";
 import { allExpressions } from "@lib/expressions";
 import type { TaxonomyCollection, TaxonomyEntry } from "@lib/taxonomies";
+import { getCollection } from "astro:content";
 
 interface TaxonomyListingItem {
   count: number;

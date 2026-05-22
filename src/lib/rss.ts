@@ -1,10 +1,10 @@
-import { getCollection, getEntries, getEntry, render } from "astro:content";
 import mdxRenderer from "@astrojs/mdx/server.js";
 import generateRssFeed, { type RSSFeedItem } from "@astrojs/rss";
 import { SITE_TITLE, SITE_URL } from "@lib/consts.ts";
 import type { ExpressionCollection } from "@lib/expressions.ts";
 import type { APIContext } from "astro";
 import { experimental_AstroContainer } from "astro/container";
+import { getCollection, getEntries, getEntry, render } from "astro:content";
 import { $path } from "astro-typesafe-routes/path";
 import sanitize from "sanitize-html";
 

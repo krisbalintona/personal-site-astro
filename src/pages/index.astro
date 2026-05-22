@@ -1,7 +1,7 @@
 ---
-import { getEntry, render } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { isPublished } from "@lib/entries";
+import { getEntry, render } from "astro:content";
 
 const bio = await getEntry("standalone", "bio");
 const { Content } = bio ? await render(bio) : { Content: undefined };
