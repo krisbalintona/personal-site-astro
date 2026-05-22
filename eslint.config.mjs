@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 import astro from "eslint-plugin-astro";
 import globals from "globals";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 
 export default [
   js.configs.recommended,
@@ -13,6 +14,13 @@ export default [
         ...globals.browser,
         ...globals.node,
       },
+    },
+  },
+  {
+    plugins: { "simple-import-sort": simpleImportSort },
+    rules: {
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
     },
   },
   {
