@@ -1,0 +1,32 @@
+import { SITE_TITLE } from "@lib/consts";
+import { buildRssItems, makeRSSFeed } from "@lib/rss.ts";
+import { allExpressions } from "@src/lib/expressions";
+import type { APIContext } from "astro";
+import { type CollectionEntry, getCollection } from "astro:content";
+import { createRoute } from "astro-typesafe-routes/create-route";
+import slugify from "slugify";
+
+export const Route = createRoute({ routeId: "/threads/[thread]/feed.xml" });
+
+export const getStaticPaths = Route.createGetStaticPaths(async () =>
+  (await getCollection("threads")).map((thread) => ({
+    params: { thread: slugify(thread.data.title) },
+    props: { thread },
+  })),
+);
+
+export async function GET(
+  context: APIContext<{ thread: CollectionEntry<"threads"> }>,
+) {
+  const { thread } = context.props;
+  const title = `${SITE_TITLE} — ${thread.data.title}`;
+  const description =
+    thread.data.description ?? `Entries in the "${thread.data.title}" thread`;
+  const items = await buildRssItems(
+    await allExpressions(
+      (e) => e.data.threads?.some((t) => t.id === thread.id) ?? false,
+    ),
+  );
+
+  return makeRSSFeed(context, title, description, items);
+}
