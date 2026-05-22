@@ -10,7 +10,6 @@ import typesafeRoutes from "astro-typesafe-routes";
 import { pluginFullscreen } from "expressive-code-fullscreen";
 import { SITE_URL } from "./src/lib/consts.ts";
 import { faviconRss } from "./src/lib/faviconRss.ts";
-
 import icon from "astro-icon";
 
 // https://astro.build/config
