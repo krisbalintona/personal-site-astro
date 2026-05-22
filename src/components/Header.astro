@@ -1,15 +1,14 @@
 ---
 import { trailingSlash } from "astro:config/server";
-import MenuIconClose from "@src/assets/menu-close.svg";
-import MenuIconOpen from "@src/assets/menu-open.svg";
 import Link from "astro-typesafe-routes/link";
 import { $path, type RouteId, type Routes } from "astro-typesafe-routes/path";
+import { Icon } from "astro-icon/components";
 
 type StaticRouteId = {
   [K in RouteId]: Routes[K]["params"] extends null ? K : never;
 }[RouteId];
 
-const menuIconWidth = "var(--font-step-3)";
+const menuIconSize = "var(--font-step-3)";
 const TRAILING_SLASH = /\/$/;
 const normalizeUrlPathname = (p: string): string => {
   if (trailingSlash === "always") {
@@ -62,11 +61,17 @@ const navItems: { to: StaticRouteId; label: string }[] = [
         aria-label="Open navigation menu"
         type="button"
       >
-        <MenuIconOpen aria-hidden="true" id="icon-open" width={menuIconWidth} />
-        <MenuIconClose
+        <Icon
+          name="ph:list"
+          aria-hidden="true"
+          id="icon-open"
+          size={menuIconSize}
+        />
+        <Icon
+          name="ph:x"
           aria-hidden="true"
           id="icon-close"
-          width={menuIconWidth}
+          size={menuIconSize}
         />
       </button>
       <div id="nav-panel">
