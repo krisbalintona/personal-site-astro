@@ -161,19 +161,19 @@ export interface RSSFeed {
 
 // Declare a list of all RSS feeds here
 export const RSSFeeds: Record<string, RSSFeed> = {
-  all: {
+  All: {
     title: `${SITE_TITLE} — All`,
     description: "All expressions",
     items: allItems,
   },
-  articles: {
+  Articles: {
     title: `${SITE_TITLE} — Articles`,
     description:
       (await getEntry("standalone", "taxonomyArticles"))?.data.description ??
       "All articles",
     items: articleItems,
   },
-  notes: {
+  Notes: {
     title: `${SITE_TITLE} — Notes`,
     description:
       (await getEntry("standalone", "taxonomyNotes"))?.data.description ??
@@ -181,3 +181,29 @@ export const RSSFeeds: Record<string, RSSFeed> = {
     items: noteItems,
   },
 };
+
+export function getRssFeedUrl(feedName: string): string {
+  /* Explicitly set `trailingSlash={false}` because the actual built
+  file paths are e.g. `dist/feeds/all.xml` with no trailing slash. If
+  the site config has `trailingSlash=true` then these links would be
+  broken. */
+  switch (feedName) {
+    case "All":
+      return $path({
+        to: "/feed.xml",
+        trailingSlash: false,
+      });
+    case "Articles":
+      return $path({
+        to: "/articles/feed.xml",
+        trailingSlash: false,
+      });
+    case "Notes":
+      return $path({
+        to: "/notes/feed.xml",
+        trailingSlash: false,
+      });
+    default:
+      throw new Error(`No URL mapping for feed named "${feedName}"`);
+  }
+}

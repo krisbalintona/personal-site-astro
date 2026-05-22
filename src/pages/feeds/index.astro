@@ -1,9 +1,8 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { isPublished } from "@lib/entries";
-import { RSSFeeds } from "@lib/rss";
+import { getRssFeedUrl, RSSFeeds } from "@lib/rss";
 import { getEntry, render } from "astro:content";
-import Link from "astro-typesafe-routes/link";
 
 const preamble = await getEntry("standalone", "rss_feeds");
 const { Content } = preamble ? await render(preamble) : { Content: undefined };
@@ -16,22 +15,10 @@ const { Content } = preamble ? await render(preamble) : { Content: undefined };
     RSSFeeds && (
       <dl>
         {Object.entries(RSSFeeds).map(([feedName, channel]) => {
-          const feedTitle =
-            String(feedName)[0].toUpperCase() + String(feedName).slice(1);
           return (
             <>
               <dt>
-                {/* Explicitly set `trailingSlash={false}` because the
-            actual built file paths are e.g. `dist/feeds/all.xml` with
-            no trailing slash. The mismatch would cause false
-            positives in astro-broken-links-checker. */}
-                <Link
-                  params={{ feed: feedName }}
-                  to="/feeds/[feed].xml"
-                  trailingSlash={false}
-                >
-                  {feedTitle}
-                </Link>
+                <a href={getRssFeedUrl(feedName)}>{feedName}</a>
               </dt>
               <dd>{channel.description}</dd>
             </>

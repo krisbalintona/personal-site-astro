@@ -6,7 +6,7 @@ import Footer from "@components/Footer.astro";
 import Header from "@components/Header.astro";
 import Heading from "@components/markup/Heading.astro";
 import { SITE_TITLE } from "@lib/consts";
-import { RSSFeeds } from "@lib/rss";
+import { getRssFeedUrl, RSSFeeds } from "@lib/rss";
 import { Font } from "astro:assets";
 import { $path } from "astro-typesafe-routes/path";
 
@@ -47,7 +47,7 @@ const { pageTitle, displayTitle } = Astro.props;
           rel="alternate"
           type="application/rss+xml"
           title={channel.title}
-          href={$path({ to: "/feeds/[feed].xml", params: { feed: feedName } })}
+          href={getRssFeedUrl(feedName)}
         />
       ))
     }
