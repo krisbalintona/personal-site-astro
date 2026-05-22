@@ -19,8 +19,11 @@ export default defineConfig({
   trailingSlash: "always",
   prerenderConflictBehavior: "error",
   integrations: [
+    // Run before everything else
     faviconRss(),
     typesafeRoutes(),
+
+    // Run before file format integrations (e.g., MDX)
     expressiveCode({
       themes: ["material-theme-lighter", "material-theme-darker"],
       useDarkModeMediaQuery: true,
@@ -62,12 +65,16 @@ export default defineConfig({
       },
     }),
     astroD2({ experimental: { useD2js: true } }),
+    icon(),
+
+    // File format integrations
     mdx({ gfm: false }),
+
+    // End-of-build integrations
     astroBrokenLinksChecker({
       checkExternalLinks: false,
     }),
     sitemap({ filter: (page) => !page.startsWith(`${SITE_URL}/posts/`) }),
-    icon(),
     robotsTxt(),
   ],
   fonts: [
