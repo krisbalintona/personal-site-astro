@@ -3,8 +3,8 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import { isPublished } from "@lib/entries";
 import { getEntry, render } from "astro:content";
 
-const bio = await getEntry("standalone", "bio");
-const { Content } = bio ? await render(bio) : { Content: undefined };
+const home = await getEntry("standalone", "about");
+const { Content } = home ? await render(home) : { Content: undefined };
 ---
 
 <BaseLayout
@@ -12,7 +12,7 @@ const { Content } = bio ? await render(bio) : { Content: undefined };
   displayTitle="Kristoffer Balintona — Personal site"
 >
   {
-    bio && isPublished(bio) && Content && (
+    home && isPublished(home) && Content && (
       <article>
         <Content />
       </article>
