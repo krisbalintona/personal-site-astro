@@ -24,7 +24,7 @@ interface Props {
 }
 
 const { tag: tagEntry } = Astro.props;
-const tagName = tagEntry.data.title;
+const tagTitle = tagEntry.data.title;
 
 function hasThisTag(expression: ExpressionEntry): boolean {
   return expression.data.tags?.some((t) => t.id === tagEntry.id) ?? false;
@@ -33,14 +33,19 @@ function hasThisTag(expression: ExpressionEntry): boolean {
 const breadcrumbs: BreadcrumbComponent[] = [
   { label: "explore", href: $path({ to: "/explore" }) },
   { label: "tags", href: $path({ to: "/tags" }) },
-  { label: tagName, styleNormal: true },
+  { label: tagTitle, styleNormal: true },
 ];
 ---
 
 <TaxonomyListingLayout
-  pageTitle={tagName}
-  displayTitle={`Entries tagged with "${tagName}"`}
+  pageTitle={tagTitle}
+  displayTitle={`Entries tagged with "${tagTitle}"`}
   breadcrumbs={breadcrumbs}
+  rssHref={$path({
+    to: "/tags/[tag]/feed.xml",
+    params: { tag: slugify(tagTitle) },
+    trailingSlash: false,
+  })}
   breadcrumbsDescription={tagEntry?.data.description}
   preambleEntry={tagEntry}
 >

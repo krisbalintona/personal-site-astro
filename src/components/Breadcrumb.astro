@@ -41,6 +41,13 @@ const { breadcrumbs } = Astro.props;
         </>
       ))
     }
+    {
+      Astro.slots.has("component-post") && (
+        <span class="breadcrumb-component-post">
+          <slot name="component-post" />
+        </span>
+      )
+    }
   </div>
   {
     Astro.slots.has("description") && (
@@ -87,6 +94,16 @@ const { breadcrumbs } = Astro.props;
       .normal {
         font-style: normal;
         color: var(--color-text);
+      }
+
+      .breadcrumb-component-post:has(svg) {
+        margin-left: 0.1em;
+
+        /* Vertically center all SVG icons, since they don't have a
+        baseline, which means `align-items: baseline` does not apply
+        to it */
+        align-self: center;
+        line-height: 0;
       }
     }
 

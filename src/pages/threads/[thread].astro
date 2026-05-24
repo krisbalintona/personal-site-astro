@@ -41,6 +41,11 @@ const breadcrumbs: BreadcrumbComponent[] = [
   pageTitle={threadTitle}
   displayTitle={`Entries belonging to the thread "${threadTitle}"`}
   breadcrumbs={breadcrumbs}
+  rssHref={$path({
+    to: "/threads/[thread]/feed.xml",
+    params: { thread: slugify(threadTitle) },
+    trailingSlash: false,
+  })}
   breadcrumbsDescription={threadEntry?.data.description}
   preambleEntry={threadEntry}
 >

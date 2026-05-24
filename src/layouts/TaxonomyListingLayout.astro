@@ -5,9 +5,11 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import { isPublished } from "@lib/entries";
 import type { AnyCollectionEntry } from "@src/content.config";
 import { render } from "astro:content";
+import { Icon } from "astro-icon/components";
 
 interface Props {
   breadcrumbs: BreadcrumbComponent[];
+  rssHref?: string;
   breadcrumbsDescription?: string;
   displayTitle?: string;
   pageTitle: string;
@@ -19,6 +21,7 @@ const {
   pageTitle,
   breadcrumbs,
   breadcrumbsDescription,
+  rssHref,
   preambleEntry,
 } = Astro.props;
 
@@ -30,7 +33,20 @@ const { Content: PreambleContent } = preambleEntry
 <BaseLayout displayTitle={displayTitle} pageTitle={pageTitle}>
   <header>
     <Breadcrumb breadcrumbs={breadcrumbs}>
-      <Fragment slot="description">{breadcrumbsDescription}</slot>
+      {
+        rssHref && (
+          <Fragment slot="component-post">
+            <a href={rssHref}>
+              <Icon name="ph:rss" aria-hidden="true" />
+            </a>
+          </Fragment>
+        )
+      }
+      {
+        breadcrumbsDescription && (
+          <Fragment slot="description">{breadcrumbsDescription}</Fragment>
+        )
+      }
     </Breadcrumb>
     {
       preambleEntry && isPublished(preambleEntry) && PreambleContent && (
