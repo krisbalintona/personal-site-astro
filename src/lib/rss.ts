@@ -1,6 +1,7 @@
 import mdxRenderer from "@astrojs/mdx/server.js";
 import generateRssFeed, { type RSSFeedItem } from "@astrojs/rss";
 import { SITE_TITLE, SITE_URL } from "@lib/consts.ts";
+import { isPublished } from "@lib/entries";
 import type { ExpressionEntry } from "@lib/expressions.ts";
 import type { APIContext } from "astro";
 import { experimental_AstroContainer } from "astro/container";
@@ -51,6 +52,11 @@ container.addServerRenderer({ renderer: mdxRenderer });
 export async function buildRssItems(
   expressions: ExpressionEntry[],
 ): Promise<RSSFeedItem[]> {
+  const unpublished = expressions.filter((e) => !isPublished(e));
+  if (unpublished.length > 0) {
+    throw new Error(`${unpublished.length} RSS item(s) are unpublished`);
+  }
+
   const items = await Promise.all(
     expressions.map(async (expressionEntry) => {
       const { Content } = await render(expressionEntry);
