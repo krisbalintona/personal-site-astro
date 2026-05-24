@@ -35,14 +35,7 @@ const { Content: ThreadsContent } = ThreadsEntry
 >
   <section aria-labelledby="tags-heading">
     <Heading id="tags-heading" level="2"><Link to="/tags">Tags</Link></Heading>
-    {
-      tagsEntry && (
-        <>
-          <p>{tagsEntry.data.description}</p>
-          {TagsContent && <TagsContent />}
-        </>
-      )
-    }
+    {tagsEntry && TagsContent && <TagsContent />}
     <TaxonomyListingCompact
       browseAllLink={$path({ to: "/tags" })}
       collections={["tags"]}
@@ -54,14 +47,7 @@ const { Content: ThreadsContent } = ThreadsEntry
     <Heading id="threads-heading" level="2"
       ><Link to="/threads">Threads</Link></Heading
     >
-    {
-      ThreadsEntry && (
-        <>
-          <p>{ThreadsEntry.data.description}</p>
-          {ThreadsContent && <ThreadsContent />}
-        </>
-      )
-    }
+    {ThreadsEntry && ThreadsContent && <ThreadsContent />}
     <TaxonomyListingCompact
       browseAllLink={$path({ to: "/threads" })}
       collections={["threads"]}
