@@ -29,10 +29,9 @@ const { Content: PreambleContent } = preambleEntry
 
 <BaseLayout displayTitle={displayTitle} pageTitle={pageTitle}>
   <header>
-    <Breadcrumb
-      breadcrumbs={breadcrumbs}
-      description={breadcrumbsDescription}
-    />
+    <Breadcrumb breadcrumbs={breadcrumbs}>
+      <Fragment slot="description">{breadcrumbsDescription}</slot>
+    </Breadcrumb>
     {
       preambleEntry && isPublished(preambleEntry) && PreambleContent && (
         <div class="taxonomy-preamble">

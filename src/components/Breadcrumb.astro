@@ -7,10 +7,9 @@ export type BreadcrumbComponent = BreadcrumbLeafProps | BreadcrumbLeafProps[];
 
 interface Props {
   breadcrumbs: BreadcrumbComponent[];
-  description?: string;
 }
 
-const { breadcrumbs, description } = Astro.props;
+const { breadcrumbs } = Astro.props;
 ---
 
 <div class="breadcrumb-container">
@@ -43,7 +42,13 @@ const { breadcrumbs, description } = Astro.props;
       ))
     }
   </div>
-  {description && <span id="breadcrumb-description">{description}</span>}
+  {
+    Astro.slots.has("description") && (
+      <span class="breadcrumb-description">
+        <slot name="description" />
+      </span>
+    )
+  }
 </div>
 
 <style>
@@ -85,7 +90,7 @@ const { breadcrumbs, description } = Astro.props;
       }
     }
 
-    #breadcrumb-description {
+    .breadcrumb-description {
       display: block;
       font-size: 0.85em;
       font-style: italic;
