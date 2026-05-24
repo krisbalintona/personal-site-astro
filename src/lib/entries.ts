@@ -1,7 +1,16 @@
 import { isDev } from "@lib/consts.ts";
 import type { AnyCollectionEntry } from "@src/content.config.ts";
 import { $path } from "astro-typesafe-routes/path";
+import { z } from "astro/zod";
 import slugify from "slugify";
+
+// * Content
+
+export const baseContentShape = {
+  title: z.string().default("Untitled"),
+  draft: z.boolean().default(true),
+  description: z.string().optional(),
+};
 
 // * Dates
 

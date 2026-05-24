@@ -3,6 +3,7 @@ import { z } from "astro/zod";
 import { type CollectionEntry, getCollection, reference } from "astro:content";
 import slugify from "slugify";
 import type { z as zType } from "zod/v4";
+import { baseContentShape, isPublished } from "@lib/entries";
 
 export function dateToPostId(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -14,12 +15,6 @@ export function dateToPostId(date: Date): string {
     pad(date.getMinutes())
   );
 }
-
-export const baseContentShape = {
-  title: z.string().default("Untitled"),
-  draft: z.boolean().default(true),
-  description: z.string().optional(),
-};
 
 // See https://github.com/withastro/astro/tree/main/packages/astro-rss
 // for all properties of `rssSchema`.  Although all the properties in
