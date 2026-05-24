@@ -51,7 +51,7 @@ container.addServerRenderer({ renderer: mdxRenderer });
 export async function buildRssItems(
   expressions: ExpressionEntry[],
 ): Promise<RSSFeedItem[]> {
-  return Promise.all(
+  const items = await Promise.all(
     expressions.map(async (expressionEntry) => {
       const { Content } = await render(expressionEntry);
       const rawHTML: string = await container.renderToString(Content);
@@ -139,19 +139,27 @@ export async function buildRssItems(
       };
     }),
   );
+
+  return sortRSSItemsDescending(items);
 }
 
-// Build per-collection RSS feed items for expressions (the only
-// content that receive an associated feed)
+function sortRSSItemsDescending(entries: RSSFeedItem[]): RSSFeedItem[] {
+  const missing = entries.filter((e) => !e.pubDate);
+  if (missing.length > 0) {
+    throw new Error(`${missing.length} RSS item(s) are missing pubDate`);
+  }
+  return entries.sort((a, b) => b.pubDate!.getTime() - a.pubDate!.getTime());
+}
+
+// Build per-expression content collection RSS feed items for
+// expressions (the only content that receive an associated feed)
 const [articleItems, noteItems] = await Promise.all([
   buildRssItems(await getCollection("articles")),
   buildRssItems(await getCollection("notes")),
 ]);
 
-// Compose for "all", sorted by date
-const allItems = [...articleItems, ...noteItems].sort(
-  (a, b) => (b.pubDate?.getTime() ?? 0) - (a.pubDate?.getTime() ?? 0),
-);
+// Compose for "all"
+const allItems = sortRSSItemsDescending([...articleItems, ...noteItems]);
 
 export interface RSSFeed {
   description: string;
