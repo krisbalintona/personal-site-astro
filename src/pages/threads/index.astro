@@ -73,7 +73,6 @@ const threadsEntry = await getContentEntry("standalone", "taxonomyThreads");
 
           <ExpressionListingCompact
             browseAllLink={getEntryUrl(thread)}
-            collections={["articles", "notes"]}
             descending={false}
             filter={inThisThread(thread)}
             limit={5}

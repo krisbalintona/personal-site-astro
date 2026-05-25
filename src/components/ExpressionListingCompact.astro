@@ -5,7 +5,11 @@ import {
   getEntryUrl,
   toDateTimeAttribute,
 } from "@lib/entries";
-import type { ExpressionCollection, ExpressionEntry } from "@lib/expressions";
+import {
+  allExpressions,
+  type ExpressionCollection,
+  type ExpressionEntry,
+} from "@lib/expressions";
 import { type CollectionEntry } from "astro:content";
 
 export interface ListingItem {
@@ -16,7 +20,7 @@ export interface ListingItem {
 
 interface Props {
   browseAllLink?: string;
-  collections: ExpressionCollection[];
+  collections?: ExpressionCollection[];
   descending?: boolean;
   filter?: (expression: ExpressionEntry) => boolean;
   limit?: number;
@@ -30,9 +34,11 @@ const {
   limit,
 } = Astro.props;
 
-const expressions = (
-  await Promise.all(collections.map((c) => getContentCollection(c, filter)))
-).flat();
+const expressions = collections
+  ? (
+      await Promise.all(collections.map((c) => getContentCollection(c, filter)))
+    ).flat()
+  : await allExpressions();
 const expressionItems: ListingItem[] = expressions
   .map(
     (expression: CollectionEntry<ExpressionCollection>): ListingItem => ({
