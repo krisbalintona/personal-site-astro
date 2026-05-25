@@ -32,7 +32,7 @@ export function makeRSSFeed(
     site: siteURL,
     title,
     description,
-    stylesheet: "/pretty-feed-v3.xsl",
+    stylesheet: "/custom-pretty-feed-v3.xsl",
     // NOTE: As specified here
     // (https://www.rssboard.org/rss-specification#ltimagegtSubelementOfLtchannelgt),
     // in practice the image <title> and <link> should have the same value
