@@ -1,9 +1,8 @@
 ---
 import { isProd } from "@lib/consts";
-import { getEntryUrl, isPublished } from "@lib/entries";
+import { getContentCollection, getEntryUrl } from "@lib/entries";
 import { allExpressions } from "@lib/expressions";
 import type { TaxonomyCollection, TaxonomyEntry } from "@lib/taxonomies";
-import { getCollection } from "astro:content";
 
 interface TaxonomyListingItem {
   count: number;
@@ -15,7 +14,7 @@ interface Props {
   browseAllLink?: string;
   collections: TaxonomyCollection[];
   descending?: boolean;
-  extraFilter?: (taxonomy: TaxonomyEntry) => boolean;
+  filter?: (taxonomy: TaxonomyEntry) => boolean;
   limit?: number;
   sortBy?: "count" | "title";
 }
@@ -25,14 +24,14 @@ const {
   collections,
   sortBy = "title",
   descending = sortBy === "title" ? false : true,
-  extraFilter = () => true,
+  filter: filter = () => true,
   limit,
 } = Astro.props;
 
 const taxonomyEntries = (
-  await Promise.all(collections.map((c) => getCollection(c, extraFilter)))
+  await Promise.all(collections.map((c) => getContentCollection(c, filter)))
 ).flat();
-const expressions = await allExpressions(isPublished);
+const expressions = await allExpressions();
 const taxonomyItems: TaxonomyListingItem[] = taxonomyEntries
   .map((taxonomy: TaxonomyEntry) => ({
     title: taxonomy.data.title,

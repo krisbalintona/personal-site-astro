@@ -3,7 +3,7 @@ import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import ExpressionListingCompact from "@components/ExpressionListingCompact.astro";
 import Heading from "@components/markup/Heading.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
-import { getEntry, render } from "astro:content";
+import { getContentEntry, renderContent } from "@lib/entries";
 import Link from "astro-typesafe-routes/link";
 import { $path } from "astro-typesafe-routes/path";
 
@@ -15,15 +15,11 @@ const breadcrumbs: BreadcrumbComponent[] = [
   ],
 ];
 
-const proseEntry = await getEntry("standalone", "prose");
-const articlesEntry = await getEntry("standalone", "taxonomyArticles");
-const { Content: ArticlesContent } = articlesEntry
-  ? await render(articlesEntry)
-  : { Content: undefined };
-const notesEntry = await getEntry("standalone", "taxonomyNotes");
-const { Content: NotesContent } = notesEntry
-  ? await render(notesEntry)
-  : { Content: undefined };
+const proseEntry = await getContentEntry("standalone", "prose");
+const articlesEntry = await getContentEntry("standalone", "taxonomyArticles");
+const { Content: ArticlesContent } = await renderContent(articlesEntry);
+const notesEntry = await getContentEntry("standalone", "taxonomyNotes");
+const { Content: NotesContent } = await renderContent(notesEntry);
 ---
 
 <TaxonomyListingLayout

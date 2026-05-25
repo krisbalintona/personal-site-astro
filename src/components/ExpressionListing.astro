@@ -1,8 +1,8 @@
 ---
 import {
   formatDate,
+  getContentCollection,
   getEntryUrl,
-  isPublished,
   toDateTimeAttribute,
 } from "@lib/entries";
 import {
@@ -10,7 +10,7 @@ import {
   type ExpressionCollection,
   type ExpressionEntry,
 } from "@lib/expressions";
-import { type CollectionEntry, getCollection } from "astro:content";
+import { type CollectionEntry } from "astro:content";
 
 export interface ListingItem {
   href: string;
@@ -21,27 +21,24 @@ export interface ListingItem {
 interface Props {
   collections?: ExpressionCollection[];
   descending?: boolean;
-  extraFilter?: (expression: ExpressionEntry) => boolean;
+  filter?: (expression: ExpressionEntry) => boolean;
 }
 
 const {
   collections,
-  extraFilter = () => true,
+  filter: filter = () => true,
   descending = true,
 } = Astro.props;
-
-const finalFilter = (expression: ExpressionEntry): boolean =>
-  isPublished(expression) && extraFilter(expression);
 
 const expressions = collections
   ? (
       await Promise.all(
         (Array.isArray(collections) ? collections : [collections]).map((c) =>
-          getCollection(c, finalFilter),
+          getContentCollection(c, filter),
         ),
       )
     ).flat()
-  : await allExpressions(finalFilter);
+  : await allExpressions(filter);
 const expressionItems: ListingItem[] = expressions
   .map(
     (expression: CollectionEntry<ExpressionCollection>): ListingItem => ({

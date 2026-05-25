@@ -1,9 +1,9 @@
+import { baseContentShape } from "@lib/entries";
 import { expressionSchema } from "@lib/expressions.ts";
 import mdFrontmatterLoader from "@lib/mdFrontmatterGlob.ts";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import { type CollectionEntry, defineCollection } from "astro:content";
-import { baseContentShape } from "@lib/entries";
 
 // * Expressions
 

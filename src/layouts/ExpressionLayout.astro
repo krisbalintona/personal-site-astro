@@ -4,9 +4,12 @@ import Breadcrumb, {
 } from "@components/Breadcrumb.astro";
 import ExpressionTaxonomyRow from "@components/ExpressionTaxonomyRow.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { toDateTimeAttribute } from "@lib/entries";
+import {
+  getContentEntries,
+  renderContent,
+  toDateTimeAttribute,
+} from "@lib/entries";
 import type { ExpressionEntry } from "@lib/expressions";
-import { getEntries, render } from "astro:content";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
 
@@ -36,7 +39,7 @@ const formattedVisibleDate = pubDate.toLocaleDateString("en-US", {
 
 const tags = expression.data.tags;
 const threads = expression.data.threads;
-const { Content } = await render(expression);
+const { Content } = await renderContent(expression);
 ---
 
 <BaseLayout pageTitle={title}>
@@ -53,7 +56,13 @@ const { Content } = await render(expression);
       </div>
     </header>
 
-    <div class="expression-content"><Content /></div>
+    {
+      Content && (
+        <div class="expression-content">
+          <Content />
+        </div>
+      )
+    }
 
     <footer class="expression-footer">
       <dl class="expression-taxonomy">
@@ -61,7 +70,7 @@ const { Content } = await render(expression);
           tags && (
             <ExpressionTaxonomyRow
               label="tagged"
-              items={(await getEntries(tags)).map((tag) => ({
+              items={(await getContentEntries(tags)).map((tag) => ({
                 href: $path({
                   to: "/tags/[tag]",
                   params: { tag: slugify(tag.data.title) },
@@ -75,7 +84,7 @@ const { Content } = await render(expression);
           threads && (
             <ExpressionTaxonomyRow
               label="in threads"
-              items={(await getEntries(threads)).map((thread) => ({
+              items={(await getContentEntries(threads)).map((thread) => ({
                 href: $path({
                   to: "/threads/[thread]",
                   params: { thread: slugify(thread.data.title) },

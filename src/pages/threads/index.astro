@@ -2,11 +2,15 @@
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
-import { getEntryUrl, isPublished } from "@lib/entries";
+import {
+  getContentCollection,
+  getContentEntry,
+  getEntryUrl,
+  renderContent,
+} from "@lib/entries";
 import type { ExpressionEntry } from "@lib/expressions";
 import ExpressionListingCompact from "@src/components/ExpressionListingCompact.astro";
 import type { CollectionEntry } from "astro:content";
-import { getCollection, getEntry, render } from "astro:content";
 import Link from "astro-typesafe-routes/link";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
@@ -21,7 +25,7 @@ const breadcrumbs: BreadcrumbComponent[] = [
   { label: "Threads", styleNormal: true },
 ];
 
-const threadsEntry = await getEntry("standalone", "taxonomyThreads");
+const threadsEntry = await getContentEntry("standalone", "taxonomyThreads");
 ---
 
 <TaxonomyListingLayout
@@ -32,14 +36,12 @@ const threadsEntry = await getEntry("standalone", "taxonomyThreads");
   preambleEntry={threadsEntry}
 >
   {
-    (await getCollection("threads")).map(async (thread) => {
+    (await getContentCollection("threads")).map(async (thread) => {
       const headingId = slugify(thread.data.title, {
         lower: true,
         strict: true,
       });
-      const { Content } = thread
-        ? await render(thread)
-        : { Content: undefined };
+      const { Content } = await renderContent(thread);
 
       return (
         <section aria-labelledby={headingId}>
@@ -51,7 +53,7 @@ const threadsEntry = await getEntry("standalone", "taxonomyThreads");
               {thread.data.title}
             </Link>
           </Heading>
-          {isPublished(thread) && Content && (
+          {Content && (
             <div class="content-fade">
               {/* Use `autocomplete="off"` to reset fade on page refresh */}
               <input
@@ -73,7 +75,7 @@ const threadsEntry = await getEntry("standalone", "taxonomyThreads");
             browseAllLink={getEntryUrl(thread)}
             collections={["articles", "notes"]}
             descending={false}
-            extraFilter={inThisThread(thread)}
+            filter={inThisThread(thread)}
             limit={5}
           />
         </section>

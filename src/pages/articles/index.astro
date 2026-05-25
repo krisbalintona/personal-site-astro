@@ -2,7 +2,7 @@
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import ExpressionListing from "@components/ExpressionListing.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
-import { getEntry } from "astro:content";
+import { getContentEntry } from "@lib/entries";
 import { $path } from "astro-typesafe-routes/path";
 
 const breadcrumbs: BreadcrumbComponent[] = [
@@ -10,7 +10,7 @@ const breadcrumbs: BreadcrumbComponent[] = [
   { label: "Articles", styleNormal: true },
 ];
 
-const articlesEntry = await getEntry("standalone", "taxonomyArticles");
+const articlesEntry = await getContentEntry("standalone", "taxonomyArticles");
 ---
 
 <TaxonomyListingLayout

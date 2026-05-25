@@ -1,16 +1,15 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { isPublished } from "@lib/entries";
+import { getContentEntry, renderContent } from "@lib/entries";
 import { getRssFeedUrl, RSSFeeds } from "@lib/rss";
-import { getEntry, render } from "astro:content";
 import Link from "astro-typesafe-routes/link";
 
-const preamble = await getEntry("standalone", "rss_feeds");
-const { Content } = preamble ? await render(preamble) : { Content: undefined };
+const preamble = await getContentEntry("standalone", "rss_feeds");
+const { Content: PreambleContent } = await renderContent(preamble);
 ---
 
 <BaseLayout pageTitle="RSS" displayTitle="RSS feeds">
-  {preamble && isPublished(preamble) && Content && <Content />}
+  {PreambleContent && <PreambleContent />}
 
   {
     RSSFeeds && (

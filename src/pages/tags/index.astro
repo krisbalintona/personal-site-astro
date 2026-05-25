@@ -2,14 +2,12 @@
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import TaxonomyListingCompact from "@components/TaxonomyListingCompact.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
-import { isPublished } from "@lib/entries";
+import { getContentEntry } from "@lib/entries";
 import { allExpressions } from "@lib/expressions";
-import { getEntry } from "astro:content";
 import { $path } from "astro-typesafe-routes/path";
 
 const tagCounts: Map<string, number> = new Map();
-const expressions = await allExpressions(isPublished);
-for (const expression of expressions) {
+for (const expression of await allExpressions()) {
   for (const tag of expression.data.tags ?? []) {
     tagCounts.set(tag.id, (tagCounts.get(tag.id) ?? 0) + 1);
   }
@@ -20,7 +18,7 @@ const breadcrumbs: BreadcrumbComponent[] = [
   { label: "Tags", styleNormal: true },
 ];
 
-const tagsEntry = await getEntry("standalone", "taxonomyTags");
+const tagsEntry = await getContentEntry("standalone", "taxonomyTags");
 ---
 
 <TaxonomyListingLayout

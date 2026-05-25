@@ -1,6 +1,6 @@
+import { getContentCollection } from "@lib/entries";
 import type { ExpressionEntry } from "@lib/expressions.ts";
 import type { APIContext } from "astro";
-import { getCollection } from "astro:content";
 import { createRoute } from "astro-typesafe-routes/create-route";
 import { $path } from "astro-typesafe-routes/path";
 
@@ -9,7 +9,9 @@ export const Route = createRoute({
 });
 
 export const getStaticPaths = Route.createGetStaticPaths(async () => {
-  const allPosts = (await Promise.all([getCollection("articles")])).flat();
+  const allPosts = (
+    await Promise.all([getContentCollection("articles")])
+  ).flat();
 
   return allPosts.map((post) => ({
     params: { permalinkSlug: post.data.permalinkSlug },

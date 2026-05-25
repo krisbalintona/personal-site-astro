@@ -3,7 +3,7 @@ import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
 import TaxonomyListingCompact from "@components/TaxonomyListingCompact.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
-import { getEntry, render } from "astro:content";
+import { getContentEntry, renderContent } from "@lib/entries";
 import Link from "astro-typesafe-routes/link";
 import { $path } from "astro-typesafe-routes/path";
 
@@ -15,15 +15,13 @@ const breadcrumbs: BreadcrumbComponent[] = [
   ],
 ];
 
-const exploreEntry = await getEntry("standalone", "explore");
-const tagsEntry = await getEntry("standalone", "taxonomyTags");
-const { Content: TagsContent } = tagsEntry
-  ? await render(tagsEntry)
-  : { Content: undefined };
-const ThreadsEntry = await getEntry("standalone", "taxonomyThreads");
-const { Content: ThreadsContent } = ThreadsEntry
-  ? await render(ThreadsEntry)
-  : { Content: undefined };
+const exploreEntry = await getContentEntry("standalone", "explore");
+const { Content: TagsContent } = await renderContent(
+  await getContentEntry("standalone", "taxonomyTags"),
+);
+const { Content: ThreadsContent } = await renderContent(
+  await getContentEntry("standalone", "taxonomyThreads"),
+);
 ---
 
 <TaxonomyListingLayout
@@ -35,7 +33,7 @@ const { Content: ThreadsContent } = ThreadsEntry
 >
   <section aria-labelledby="tags-heading">
     <Heading id="tags-heading" level="2"><Link to="/tags">Tags</Link></Heading>
-    {tagsEntry && TagsContent && <TagsContent />}
+    {TagsContent && <TagsContent />}
     <TaxonomyListingCompact
       browseAllLink={$path({ to: "/tags" })}
       collections={["tags"]}
@@ -47,7 +45,7 @@ const { Content: ThreadsContent } = ThreadsEntry
     <Heading id="threads-heading" level="2"
       ><Link to="/threads">Threads</Link></Heading
     >
-    {ThreadsEntry && ThreadsContent && <ThreadsContent />}
+    {ThreadsContent && <ThreadsContent />}
     <TaxonomyListingCompact
       browseAllLink={$path({ to: "/threads" })}
       collections={["threads"]}

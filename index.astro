@@ -1,12 +1,11 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { getCollection } from "astro:content";
 import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { getEntryUrl } from "@lib/entries";
+import { getContentCollection, getEntryUrl } from "@lib/entries";
 import type { ExpressionEntry } from "@lib/expressions";
 import ExpressionListingCompact from "@src/components/ExpressionListingCompact.astro";
 import { $path } from "astro-typesafe-routes/path";
@@ -26,7 +25,7 @@ const breadcrumbs: BreadcrumbComponent[] = [
 <BaseLayout pageTitle="Threads" displayTitle="All threads">
   <Breadcrumb breadcrumbs={breadcrumbs} />
   {
-    (await getCollection("threads")).map((thread) => {
+    (await getContentCollection("threads")).map((thread) => {
       const headingId = slugify(thread.data.title, {
         lower: true,
         strict: true,
@@ -41,7 +40,7 @@ const breadcrumbs: BreadcrumbComponent[] = [
             browseAllLink={getEntryUrl(thread)}
             collections={["articles", "notes"]}
             descending={false}
-            extraFilter={inThisThread(thread)}
+            filter={inThisThread(thread)}
             limit={5}
           />
         </section>

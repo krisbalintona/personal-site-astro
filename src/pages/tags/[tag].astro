@@ -2,8 +2,9 @@
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import ExpressionListing from "@components/ExpressionListing.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
-import type { ExpressionEntry } from "@src/lib/expressions";
-import { type CollectionEntry, getCollection } from "astro:content";
+import { getContentCollection } from "@lib/entries";
+import type { ExpressionEntry } from "@lib/expressions";
+import { type CollectionEntry } from "astro:content";
 import { createRoute } from "astro-typesafe-routes/create-route";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
@@ -13,7 +14,7 @@ export const Route = createRoute({
 });
 
 export const getStaticPaths = Route.createGetStaticPaths(async () =>
-  (await getCollection("tags")).map((tag) => ({
+  (await getContentCollection("tags")).map((tag) => ({
     params: { tag: slugify(tag.data.title) },
     props: { tag },
   })),
@@ -49,5 +50,5 @@ const breadcrumbs: BreadcrumbComponent[] = [
   breadcrumbsDescription={tagEntry?.data.description}
   preambleEntry={tagEntry}
 >
-  <ExpressionListing extraFilter={hasThisTag} />
+  <ExpressionListing filter={hasThisTag} />
 </TaxonomyListingLayout>

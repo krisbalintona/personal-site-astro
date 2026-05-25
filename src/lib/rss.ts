@@ -1,11 +1,15 @@
 import mdxRenderer from "@astrojs/mdx/server.js";
 import generateRssFeed, { type RSSFeedItem } from "@astrojs/rss";
 import { SITE_TITLE, SITE_URL } from "@lib/consts.ts";
-import { isPublished } from "@lib/entries";
+import {
+  getContentCollection,
+  getContentEntries,
+  getContentEntry,
+  renderContent,
+} from "@lib/entries";
 import type { ExpressionEntry } from "@lib/expressions.ts";
 import type { APIContext } from "astro";
 import { experimental_AstroContainer } from "astro/container";
-import { getCollection, getEntries, getEntry, render } from "astro:content";
 import { $path } from "astro-typesafe-routes/path";
 import sanitize from "sanitize-html";
 
@@ -52,14 +56,13 @@ container.addServerRenderer({ renderer: mdxRenderer });
 export async function buildRssItems(
   expressions: ExpressionEntry[],
 ): Promise<RSSFeedItem[]> {
-  const unpublished = expressions.filter((e) => !isPublished(e));
-  if (unpublished.length > 0) {
-    throw new Error(`${unpublished.length} RSS item(s) are unpublished`);
-  }
-
   const items = await Promise.all(
     expressions.map(async (expressionEntry) => {
-      const { Content } = await render(expressionEntry);
+      const { Content } = await renderContent(expressionEntry);
+      if (!Content)
+        throw new Error(
+          `Failed to render content for ${expressionEntry.id}. Is this expression unpublished?`,
+        );
       const rawHTML: string = await container.renderToString(Content);
 
       // Sanitize rendered content to HTML suitable for an RSS feed
@@ -133,9 +136,9 @@ export async function buildRssItems(
       return {
         title: expressionEntry.data.title,
         pubDate: expressionEntry.data.pubDate,
-        categories: (await getEntries(expressionEntry.data.tags ?? []))?.map(
-          (p) => p.data.title,
-        ),
+        categories: (
+          await getContentEntries(expressionEntry.data.tags ?? [])
+        )?.map((p) => p.data.title),
         link: $path({
           to: "/posts/[permalinkSlug]",
           params: { permalinkSlug: expressionEntry.data.permalinkSlug },
@@ -160,8 +163,8 @@ function sortRSSItemsDescending(entries: RSSFeedItem[]): RSSFeedItem[] {
 // Build per-expression content collection RSS feed items for
 // expressions (the only content that receive an associated feed)
 const [articleItems, noteItems] = await Promise.all([
-  buildRssItems(await getCollection("articles")),
-  buildRssItems(await getCollection("notes")),
+  buildRssItems(await getContentCollection("articles")),
+  buildRssItems(await getContentCollection("notes")),
 ]);
 
 // Compose for "all"
@@ -183,15 +186,15 @@ export const RSSFeeds: Record<string, RSSFeed> = {
   Articles: {
     title: `${SITE_TITLE} — Articles`,
     description:
-      (await getEntry("standalone", "taxonomyArticles"))?.data.description ??
-      "All articles",
+      (await getContentEntry("standalone", "taxonomyArticles"))?.data
+        .description ?? "All articles",
     items: articleItems,
   },
   Notes: {
     title: `${SITE_TITLE} — Notes`,
     description:
-      (await getEntry("standalone", "taxonomyNotes"))?.data.description ??
-      "All notes",
+      (await getContentEntry("standalone", "taxonomyNotes"))?.data
+        .description ?? "All notes",
     items: noteItems,
   },
 };

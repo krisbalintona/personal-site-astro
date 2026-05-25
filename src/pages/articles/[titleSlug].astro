@@ -1,7 +1,7 @@
 ---
 import ExpressionLayout from "@layouts/ExpressionLayout.astro";
-import { isPublished } from "@lib/entries";
-import { type CollectionEntry, getCollection } from "astro:content";
+import { getContentCollection } from "@lib/entries";
+import { type CollectionEntry } from "astro:content";
 import { createRoute } from "astro-typesafe-routes/create-route";
 
 export const Route = createRoute({
@@ -9,7 +9,7 @@ export const Route = createRoute({
 });
 
 export const getStaticPaths = Route.createGetStaticPaths(async () =>
-  (await getCollection("articles", isPublished)).map((articleEntry) => ({
+  (await getContentCollection("articles")).map((articleEntry) => ({
     params: { titleSlug: articleEntry.data.titleSlug },
     props: { articleEntry },
   })),
