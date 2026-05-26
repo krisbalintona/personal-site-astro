@@ -1,6 +1,6 @@
 import { SITE_TITLE } from "@lib/consts";
 import { getContentCollection } from "@lib/entries";
-import { buildRssItems, makeRSSFeed } from "@lib/rss.ts";
+import { buildRSSItems, makeRSSFeed } from "@lib/rss.ts";
 import { allExpressions } from "@src/lib/expressions";
 import type { APIContext } from "astro";
 import { type CollectionEntry } from "astro:content";
@@ -23,7 +23,7 @@ export async function GET(
   const title = `${SITE_TITLE} — ${thread.data.title}`;
   const description =
     thread.data.description ?? `Entries in the "${thread.data.title}" thread`;
-  const items = await buildRssItems(
+  const items = await buildRSSItems(
     await allExpressions(
       (e) => e.data.threads?.some((t) => t.id === thread.id) ?? false,
     ),

@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getContentEntry, renderContent } from "@lib/entries";
-import { getRssFeedUrl, RSSFeeds } from "@lib/rss";
+import { getRSSFeedUrl, RSSFeeds } from "@lib/rss";
 import Link from "astro-typesafe-routes/link";
 
 const feeds = await RSSFeeds();
@@ -19,7 +19,7 @@ const { Content: PreambleContent } = await renderContent(preamble);
           return (
             <>
               <dt>
-                <a href={getRssFeedUrl(feedName)}>{feedName}</a>
+                <a href={getRSSFeedUrl(feedName)}>{feedName}</a>
               </dt>
               <dd>{channel.description}</dd>
             </>

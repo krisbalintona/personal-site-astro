@@ -1,6 +1,6 @@
 import { SITE_TITLE } from "@lib/consts";
 import { getContentCollection } from "@lib/entries";
-import { buildRssItems, makeRSSFeed } from "@lib/rss.ts";
+import { buildRSSItems, makeRSSFeed } from "@lib/rss.ts";
 import { allExpressions } from "@src/lib/expressions";
 import type { APIContext } from "astro";
 import { type CollectionEntry } from "astro:content";
@@ -23,7 +23,7 @@ export async function GET(
   const title = `${SITE_TITLE} — #${tag.data.title}`;
   const description =
     tag.data.description ?? `Entries tagged with "${tag.data.title}"`;
-  const items = await buildRssItems(
+  const items = await buildRSSItems(
     await allExpressions(
       (e) => e.data.tags?.some((t) => t.id === tag.id) ?? false,
     ),

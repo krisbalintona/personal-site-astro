@@ -6,7 +6,7 @@ import Footer from "@components/Footer.astro";
 import Header from "@components/Header.astro";
 import Heading from "@components/markup/Heading.astro";
 import { SITE_TITLE } from "@lib/consts";
-import { getRssFeedUrl, RSSFeeds } from "@lib/rss";
+import { getRSSFeedUrl, RSSFeeds } from "@lib/rss";
 import { Font } from "astro:assets";
 
 interface Props {
@@ -46,7 +46,7 @@ const { pageTitle, displayTitle } = Astro.props;
           rel="alternate"
           type="application/rss+xml"
           title={channel.title}
-          href={getRssFeedUrl(feedName)}
+          href={getRSSFeedUrl(feedName)}
         />
       ))
     }

@@ -1,5 +1,5 @@
 import mdxRenderer from "@astrojs/mdx/server.js";
-import generateRssFeed, { type RSSFeedItem } from "@astrojs/rss";
+import generateRSSFeed, { type RSSFeedItem } from "@astrojs/rss";
 import { SITE_TITLE, SITE_URL } from "@lib/consts.ts";
 import {
   getContentCollection,
@@ -28,7 +28,7 @@ export function makeRSSFeed(
   // below aren't dependent on the Astro `trailingSlash` setting
   const siteURL = context.site.href.replace(TRAILING_SLASH_REGEX, "");
 
-  return generateRssFeed({
+  return generateRSSFeed({
     site: siteURL,
     title,
     description,
@@ -66,7 +66,7 @@ async function getContainer() {
   return _container;
 }
 
-export async function buildRssItems(
+export async function buildRSSItems(
   expressions: ExpressionEntry[],
 ): Promise<RSSFeedItem[]> {
   const container = await getContainer();
@@ -194,8 +194,8 @@ export async function RSSFeeds(): Promise<Record<string, RSSFeed>> {
   // Build per-expression content collection RSS feed items for
   // expressions (the only content that receive an associated feed)
   const [articleItems, noteItems] = await Promise.all([
-    buildRssItems(await getContentCollection("articles")),
-    buildRssItems(await getContentCollection("notes")),
+    buildRSSItems(await getContentCollection("articles")),
+    buildRSSItems(await getContentCollection("notes")),
   ]);
   // Compose for "all"
   const allItems = sortRSSItemsDescending([...articleItems, ...noteItems]);
@@ -224,7 +224,7 @@ export async function RSSFeeds(): Promise<Record<string, RSSFeed>> {
   return _feedsCache;
 }
 
-export function getRssFeedUrl(feedName: string): string {
+export function getRSSFeedUrl(feedName: string): string {
   /* Explicitly set `trailingSlash={false}` because the actual built
   file paths are e.g. `dist/feeds/all.xml` with no trailing slash. If
   the site config has `trailingSlash=true` then these links would be
