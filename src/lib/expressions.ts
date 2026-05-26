@@ -2,6 +2,7 @@ import { rssSchema } from "@astrojs/rss";
 import { baseContentShape, getContentCollection } from "@lib/entries";
 import { z } from "astro/zod";
 import { type CollectionEntry, reference } from "astro:content";
+import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
 import type { z as zType } from "zod/v4";
 
@@ -14,6 +15,13 @@ export function dateToPostId(date: Date): string {
     pad(date.getUTCHours()) +
     pad(date.getUTCMinutes())
   );
+}
+
+export function getExpressionPermalink(expression: ExpressionEntry): string {
+  return $path({
+    to: "/posts/[permalinkSlug]",
+    params: { permalinkSlug: expression.data.permalinkSlug },
+  });
 }
 
 // See https://github.com/withastro/astro/tree/main/packages/astro-rss

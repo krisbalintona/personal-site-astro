@@ -9,7 +9,8 @@ import {
   renderContent,
   toDateTimeAttribute,
 } from "@lib/entries";
-import type { ExpressionEntry } from "@lib/expressions";
+import { type ExpressionEntry, getExpressionPermalink } from "@lib/expressions";
+import { Icon } from "astro-icon/components";
 import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
 
@@ -48,10 +49,19 @@ const { Content } = await renderContent(expression);
       <Breadcrumb breadcrumbs={breadcrumbs} />
 
       <div class="expression-info-container">
-        <time class="expression-date" datetime={formattedDateTime}
-          >{formattedVisibleDate}</time
-        >
-
+        <div class="expression-info-meta">
+          <time class="expression-date" datetime={formattedDateTime}
+            >{formattedVisibleDate}</time
+          >
+          <button
+            id="copy-permalink"
+            aria-label="Copy permalink"
+            data-permalink={getExpressionPermalink(expression)}
+          >
+            <Icon name="ph:link" aria-hidden="true" focusable="false" />
+            <span class="copy-tooltip">Copied!</span>
+          </button>
+        </div>
         <h1 class="expression-title">{title}</h1>
       </div>
     </header>
@@ -105,11 +115,44 @@ const { Content } = await renderContent(expression);
     border-bottom: 2px solid var(--color-border);
 
     .expression-info-container {
-      .expression-date {
-        display: block;
-        margin: var(--space-3xs-2xs) 0;
+      .expression-info-meta {
         font-family: var(--font-ui);
         font-size: var(--font-step--1);
+        display: flex;
+        align-items: center;
+        gap: var(--space-3xs-2xs);
+        margin: var(--space-3xs) 0;
+
+        button#copy-permalink {
+          display: inline-flex;
+          align-items: center;
+          padding: 0;
+          cursor: pointer;
+          background: none;
+          border: none;
+          font-size: 0.9em;
+          position: relative;
+
+          &:hover [data-icon] {
+            color: var(--color-accent);
+          }
+
+          .copy-tooltip {
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: var(--font-step--2);
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+          }
+
+          &.copied .copy-tooltip {
+            opacity: 1;
+          }
+        }
       }
 
       .expression-title {
@@ -149,3 +192,26 @@ const { Content } = await renderContent(expression);
     }
   }
 </style>
+
+<script>
+  const btn = document.getElementById("copy-permalink");
+  btn?.addEventListener("click", () => {
+    const permalink = btn.getAttribute("data-permalink");
+    if (permalink) {
+      // Copy to clipboard
+      navigator.clipboard.writeText(
+        new URL(permalink, window.location.origin).href,
+      );
+      // Show brief tooltip
+      btn.classList.add("copied");
+      const originalAriaLabel = btn.getAttribute("aria-label");
+      btn.setAttribute("aria-label", "Permalink copied!");
+      setTimeout(() => {
+        btn.classList.remove("copied");
+        // Restore aria-label to ensure it is reset when the user
+        // presses the button in quick succession
+        btn.setAttribute("aria-label", originalAriaLabel ?? "Copy permalink");
+      }, 2000);
+    }
+  });
+</script>
