@@ -17,6 +17,10 @@ const notesEntry = await getContentEntry("standalone", "taxonomyNotes");
   pageTitle="Notes"
   displayTitle="All notes"
   breadcrumbs={breadcrumbs}
+  rssHref={$path({
+    to: "/notes/feed.xml",
+    trailingSlash: false,
+  })}
   breadcrumbsDescription={notesEntry?.data.description}
   preambleEntry={notesEntry}
 >

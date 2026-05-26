@@ -17,6 +17,10 @@ const articlesEntry = await getContentEntry("standalone", "taxonomyArticles");
   pageTitle="Articles"
   displayTitle="All articles"
   breadcrumbs={breadcrumbs}
+  rssHref={$path({
+    to: "/articles/feed.xml",
+    trailingSlash: false,
+  })}
   breadcrumbsDescription={articlesEntry?.data.description}
   preambleEntry={articlesEntry}
 >
