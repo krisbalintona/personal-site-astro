@@ -31,7 +31,11 @@ if (rssHref && rssHref.endsWith("/")) {
 const { Content: PreambleContent } = await renderContent(preambleEntry);
 ---
 
-<BaseLayout displayTitle={displayTitle} pageTitle={pageTitle}>
+<BaseLayout
+  displayTitle={displayTitle}
+  pageTitle={pageTitle}
+  pageDescription={breadcrumbsDescription}
+>
   <slot name="head-extra" slot="head-extra" />
   <header>
     <Breadcrumb breadcrumbs={breadcrumbs}>

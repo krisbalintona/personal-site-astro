@@ -9,7 +9,11 @@ const preamble = await getContentEntry("standalone", "rss_feeds");
 const { Content: PreambleContent } = await renderContent(preamble);
 ---
 
-<BaseLayout pageTitle="RSS" displayTitle="RSS feeds">
+<BaseLayout
+  displayTitle="RSS feeds"
+  pageTitle="RSS"
+  pageDescription="Learn about where my site's RSS feeds can be found"
+>
   {PreambleContent && <PreambleContent />}
 
   {

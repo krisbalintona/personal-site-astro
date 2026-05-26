@@ -43,7 +43,7 @@ const threads = expression.data.threads;
 const { Content } = await renderContent(expression);
 ---
 
-<BaseLayout pageTitle={title}>
+<BaseLayout pageTitle={title} pageDescription={expression.data.description}>
   <article>
     <header class="expression-header">
       <Breadcrumb breadcrumbs={breadcrumbs} />
