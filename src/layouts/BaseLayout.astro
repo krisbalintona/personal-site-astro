@@ -8,21 +8,30 @@ import Heading from "@components/markup/Heading.astro";
 import { SITE_TITLE } from "@lib/consts";
 import { getRSSFeedUrl, RSSFeeds } from "@lib/rss";
 import { Font } from "astro:assets";
+import { SEO } from "astro-seo";
 
 interface Props {
   displayTitle?: string;
-  pageTitle: string;
+  pageTitle?: string;
+  pageDescription?: string;
 }
 
-const { pageTitle, displayTitle } = Astro.props;
+const { pageTitle, pageDescription, displayTitle } = Astro.props;
 ---
 
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>{`${pageTitle} - ${SITE_TITLE}`}</title>
+
+    {/* SEO-related tags */}
+    <SEO
+      charset="utf-8"
+      title={pageTitle}
+      titleDefault={SITE_TITLE}
+      titleTemplate={`%s — ${SITE_TITLE}`}
+      description={pageDescription}
+    />
 
     {/* Adaptive-color favicon */}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
