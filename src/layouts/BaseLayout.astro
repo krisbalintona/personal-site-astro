@@ -36,9 +36,10 @@ const { pageTitle, displayTitle } = Astro.props;
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     {
-      /* RSS autodiscovery. See
-    https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery
-    for more information */
+      /* RSS autodiscovery for site-wide feeds (e.g., notes,
+      articles). See
+      https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery
+      for more information */
     }
     {
       Object.entries(await RSSFeeds()).map(([feedName, channel]) => (
@@ -50,6 +51,7 @@ const { pageTitle, displayTitle } = Astro.props;
         />
       ))
     }
+    <slot name="head-extra" />
   </head>
 
   <body>

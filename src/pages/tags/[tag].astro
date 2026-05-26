@@ -36,19 +36,28 @@ const breadcrumbs: BreadcrumbComponent[] = [
   { label: "tags", href: $path({ to: "/tags" }) },
   { label: tagTitle, styleNormal: true },
 ];
+const rssHref = $path({
+  to: "/tags/[tag]/feed.xml",
+  params: { tag: slugify(tagTitle) },
+  trailingSlash: false,
+});
 ---
 
 <TaxonomyListingLayout
   pageTitle={tagTitle}
   displayTitle={`Entries tagged with "${tagTitle}"`}
   breadcrumbs={breadcrumbs}
-  rssHref={$path({
-    to: "/tags/[tag]/feed.xml",
-    params: { tag: slugify(tagTitle) },
-    trailingSlash: false,
-  })}
+  rssHref={rssHref}
   breadcrumbsDescription={tagEntry?.data.description}
   preambleEntry={tagEntry}
 >
+  <Fragment slot="head-extra">
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`RSS feed for the "${tagTitle}" tag`}
+      href={rssHref}
+    />
+  </Fragment>
   <ExpressionListing filter={hasThisTag} />
 </TaxonomyListingLayout>

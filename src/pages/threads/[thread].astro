@@ -36,19 +36,28 @@ const breadcrumbs: BreadcrumbComponent[] = [
   { label: "threads", href: $path({ to: "/threads" }) },
   { label: threadTitle, styleNormal: true },
 ];
+const rssHref = $path({
+  to: "/threads/[thread]/feed.xml",
+  params: { thread: slugify(threadTitle) },
+  trailingSlash: false,
+});
 ---
 
 <TaxonomyListingLayout
   pageTitle={threadTitle}
   displayTitle={`Entries belonging to the thread "${threadTitle}"`}
   breadcrumbs={breadcrumbs}
-  rssHref={$path({
-    to: "/threads/[thread]/feed.xml",
-    params: { thread: slugify(threadTitle) },
-    trailingSlash: false,
-  })}
+  rssHref={rssHref}
   breadcrumbsDescription={threadEntry?.data.description}
   preambleEntry={threadEntry}
 >
+  <Fragment slot="head-extra">
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`RSS feed for the ${threadTitle} thread`}
+      href={rssHref}
+    />
+  </Fragment>
   <ExpressionListing filter={hasThisThread} />
 </TaxonomyListingLayout>

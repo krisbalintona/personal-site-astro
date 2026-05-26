@@ -32,6 +32,7 @@ const { Content: PreambleContent } = await renderContent(preambleEntry);
 ---
 
 <BaseLayout displayTitle={displayTitle} pageTitle={pageTitle}>
+  <slot name="head-extra" slot="head-extra" />
   <header>
     <Breadcrumb breadcrumbs={breadcrumbs}>
       {
