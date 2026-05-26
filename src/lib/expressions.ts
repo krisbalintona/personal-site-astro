@@ -7,8 +7,6 @@ import {
 import { z } from "astro/zod";
 import { type CollectionEntry, reference } from "astro:content";
 import { $path } from "astro-typesafe-routes/path";
-import slugify from "slugify";
-import type { z as zType } from "zod/v4";
 
 function dateToStableId(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -21,10 +19,18 @@ function dateToStableId(date: Date): string {
   );
 }
 
+export function getExpressionStableId(expression: ExpressionEntry): string {
+  return titleToUrlSlug(
+    expression.data.pubDate && expression.data.draft === false
+      ? dateToStableId(expression.data.pubDate)
+      : expression.data.title,
+  );
+}
+
 export function getExpressionPermalink(expression: ExpressionEntry): string {
   return $path({
-    to: "/posts/[permalinkSlug]",
-    params: { permalinkSlug: titleToUrlSlug(expression.data.permalinkSlug) },
+    to: "/posts/[stableId]",
+    params: { stableId: getExpressionStableId(expression) },
   });
 }
 
@@ -32,27 +38,11 @@ export function getExpressionPermalink(expression: ExpressionEntry): string {
 // for all properties of `rssSchema`.  Although all the properties in
 // `rssSchema` are typed as optional, RSS feeds themselves to have
 // required XML fields.
-export const expressionSchema = rssSchema
-  .extend(baseContentShape)
-  .extend({
-    pubDate: z.coerce.date().default(new Date("1970-01-01")),
-    tags: z.array(reference("tags")).optional(),
-    threads: z.array(reference("threads")).optional(),
-  })
-  .transform((data) => {
-    const d = data as zType.infer<typeof rssSchema> &
-      zType.infer<zType.ZodObject<typeof baseContentShape>>;
-    const titleSlug = slugify(
-      d.title ?? "",
-      { strict: true }, // Strips special characters like colons
-    );
-    return {
-      ...data,
-      titleSlug,
-      permalinkSlug:
-        d.pubDate && d.draft === false ? dateToStableId(d.pubDate) : titleSlug,
-    };
-  });
+export const expressionSchema = rssSchema.extend(baseContentShape).extend({
+  pubDate: z.coerce.date().default(new Date("1970-01-01")),
+  tags: z.array(reference("tags")).optional(),
+  threads: z.array(reference("threads")).optional(),
+});
 
 export const ExpressionCollectionNames = ["articles", "notes"] as const;
 export type ExpressionCollection = (typeof ExpressionCollectionNames)[number];

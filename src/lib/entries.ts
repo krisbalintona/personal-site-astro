@@ -133,14 +133,14 @@ export function getEntryUrl(
   switch (entry.collection) {
     case "articles":
       return $path({
-        to: "/articles/[titleSlug]",
-        params: { titleSlug: titleToUrlSlug(entry.data.titleSlug) },
+        to: "/articles/[title]",
+        params: { title: titleToUrlSlug(entry.data.title) },
         hash: anchor,
       });
     case "notes":
       return $path({
-        to: "/notes/[titleSlug]",
-        params: { titleSlug: titleToUrlSlug(entry.data.titleSlug) },
+        to: "/notes/[title]",
+        params: { title: titleToUrlSlug(entry.data.title) },
         hash: anchor,
       });
     case "tags":

@@ -5,12 +5,12 @@ import { type CollectionEntry } from "astro:content";
 import { createRoute } from "astro-typesafe-routes/create-route";
 
 export const Route = createRoute({
-  routeId: "/articles/[titleSlug]",
+  routeId: "/articles/[title]",
 });
 
 export const getStaticPaths = Route.createGetStaticPaths(async () =>
   (await getContentCollection("articles")).map((articleEntry) => ({
-    params: { titleSlug: titleToUrlSlug(articleEntry.data.titleSlug) },
+    params: { title: titleToUrlSlug(articleEntry.data.title) },
     props: { articleEntry },
   })),
 );
