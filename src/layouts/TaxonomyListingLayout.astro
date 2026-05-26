@@ -24,6 +24,10 @@ const {
   preambleEntry,
 } = Astro.props;
 
+if (rssHref && rssHref.endsWith("/")) {
+  throw new Error(`rssHref must not end with a trailing slash: "${rssHref}"`);
+}
+
 const { Content: PreambleContent } = await renderContent(preambleEntry);
 ---
 
