@@ -117,7 +117,7 @@ export default defineConfig({
       name: "Iosevka Charon Mono",
       cssVariable: "--font-code",
       provider: fontProviders.fontsource(),
-      fallbacks: ["Consolas", "Liberation Mono", "Courier New", "monospace"],
+      fallbacks: ["monospace"],
     },
   ],
 
