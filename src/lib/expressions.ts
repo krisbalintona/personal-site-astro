@@ -6,7 +6,7 @@ import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
 import type { z as zType } from "zod/v4";
 
-export function dateToStableId(date: Date): string {
+function dateToStableId(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return (
     String(date.getUTCFullYear()) +
