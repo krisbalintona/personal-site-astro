@@ -6,8 +6,10 @@ export const Route = createRoute({
   routeId: "/articles/feed.xml",
 });
 
-export function GET(context: APIContext) {
-  const channel = RSSFeeds["Articles"];
+const feeds = await RSSFeeds();
+
+export async function GET(context: APIContext) {
+  const channel = feeds["Articles"];
 
   return makeRSSFeed(
     context,

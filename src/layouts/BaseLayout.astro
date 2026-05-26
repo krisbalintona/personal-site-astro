@@ -41,7 +41,7 @@ const { pageTitle, displayTitle } = Astro.props;
     for more information */
     }
     {
-      Object.entries(RSSFeeds).map(([feedName, channel]) => (
+      Object.entries(await RSSFeeds()).map(([feedName, channel]) => (
         <link
           rel="alternate"
           type="application/rss+xml"

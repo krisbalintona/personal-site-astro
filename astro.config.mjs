@@ -12,6 +12,7 @@ import { SITE_URL } from "./src/lib/consts.ts";
 import { faviconRss } from "./src/lib/faviconRss.ts";
 import icon from "astro-icon";
 import robotsTxt from "astro-robots-txt";
+import netlify from "@astrojs/netlify";
 
 // https://astro.build/config
 export default defineConfig({
@@ -19,6 +20,7 @@ export default defineConfig({
   site: SITE_URL,
   trailingSlash: "always",
   prerenderConflictBehavior: "error",
+
   integrations: [
     // Run before everything else
     faviconRss(),
@@ -78,6 +80,7 @@ export default defineConfig({
     sitemap({ filter: (page) => !page.startsWith(`${SITE_URL}/posts/`) }),
     robotsTxt(),
   ],
+
   fonts: [
     {
       // Other good choices:
@@ -106,6 +109,7 @@ export default defineConfig({
       fallbacks: ["Consolas", "Liberation Mono", "Courier New", "monospace"],
     },
   ],
+
   vite: {
     css: {
       preprocessorOptions: {
@@ -115,4 +119,6 @@ export default defineConfig({
       },
     },
   },
+
+  adapter: netlify({ imageCDN: false }),
 });

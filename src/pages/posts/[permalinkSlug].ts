@@ -1,35 +1,25 @@
-import { getContentCollection } from "@lib/entries";
-import type { ExpressionEntry } from "@lib/expressions.ts";
+import { getEntryUrl } from "@lib/entries";
+import { allExpressions } from "@lib/expressions.ts";
 import type { APIContext } from "astro";
 import { createRoute } from "astro-typesafe-routes/create-route";
-import { $path } from "astro-typesafe-routes/path";
 
 export const Route = createRoute({
   routeId: "/posts/[permalinkSlug]",
 });
 
-export const getStaticPaths = Route.createGetStaticPaths(async () => {
-  const allPosts = (
-    await Promise.all([getContentCollection("articles")])
-  ).flat();
+export const prerender = false;
 
-  return allPosts.map((post) => ({
-    params: { permalinkSlug: post.data.permalinkSlug },
-    props: { post },
-  }));
-});
+const expressions = allExpressions();
 
-export const GET = ({
-  props,
-  redirect,
-}: APIContext<{ post: ExpressionEntry }>) => {
-  const { post } = props;
-
-  return redirect(
-    $path({
-      to: `/${post.collection}/[titleSlug]`,
-      params: { titleSlug: post.data.titleSlug },
-    }),
-    301,
+export const GET = async ({ params, redirect }: APIContext) => {
+  const resolved = await expressions;
+  const expression = resolved.find(
+    (e) => e.data.permalinkSlug === params.permalinkSlug,
   );
+
+  if (!expression) {
+    return redirect("/404", 302);
+  } else {
+    return redirect(getEntryUrl(expression), 301);
+  }
 };
