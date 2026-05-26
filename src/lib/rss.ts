@@ -7,7 +7,10 @@ import {
   getContentEntry,
   renderContent,
 } from "@lib/entries";
-import type { ExpressionEntry } from "@lib/expressions.ts";
+import {
+  type ExpressionEntry,
+  getExpressionPermalink,
+} from "@lib/expressions.ts";
 import type { APIContext } from "astro";
 import { experimental_AstroContainer } from "astro/container";
 import { $path } from "astro-typesafe-routes/path";
@@ -153,10 +156,7 @@ export async function buildRSSItems(
         categories: (
           await getContentEntries(expressionEntry.data.tags ?? [])
         )?.map((p) => p.data.title),
-        link: $path({
-          to: "/posts/[permalinkSlug]",
-          params: { permalinkSlug: expressionEntry.data.permalinkSlug },
-        }),
+        link: getExpressionPermalink(expressionEntry),
         description,
         content,
       };

@@ -122,6 +122,10 @@ export function formatDate(date: Date): string {
 
 // * URLs
 
+export function titleToUrlSlug(title: string): string {
+  return slugify(title, { lower: true, strict: true });
+}
+
 export function getEntryUrl(
   entry: AnyCollectionEntry,
   anchor?: string,
@@ -130,25 +134,25 @@ export function getEntryUrl(
     case "articles":
       return $path({
         to: "/articles/[titleSlug]",
-        params: { titleSlug: entry.data.titleSlug },
+        params: { titleSlug: titleToUrlSlug(entry.data.titleSlug) },
         hash: anchor,
       });
     case "notes":
       return $path({
         to: "/notes/[titleSlug]",
-        params: { titleSlug: entry.data.titleSlug },
+        params: { titleSlug: titleToUrlSlug(entry.data.titleSlug) },
         hash: anchor,
       });
     case "tags":
       return $path({
         to: "/tags/[tag]",
-        params: { tag: slugify(entry.data.title) },
+        params: { tag: titleToUrlSlug(entry.data.title) },
         hash: anchor,
       });
     case "threads":
       return $path({
         to: "/threads/[thread]",
-        params: { thread: slugify(entry.data.title) },
+        params: { thread: titleToUrlSlug(entry.data.title) },
         hash: anchor,
       });
     default:

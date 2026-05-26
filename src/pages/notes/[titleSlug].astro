@@ -1,6 +1,6 @@
 ---
 import ExpressionLayout from "@layouts/ExpressionLayout.astro";
-import { getContentCollection } from "@lib/entries";
+import { getContentCollection, titleToUrlSlug } from "@lib/entries";
 import { type CollectionEntry } from "astro:content";
 import { createRoute } from "astro-typesafe-routes/create-route";
 
@@ -10,7 +10,7 @@ export const Route = createRoute({
 
 export const getStaticPaths = Route.createGetStaticPaths(async () =>
   (await getContentCollection("notes")).map((noteEntry) => ({
-    params: { titleSlug: noteEntry.data.titleSlug },
+    params: { titleSlug: titleToUrlSlug(noteEntry.data.titleSlug) },
     props: { noteEntry },
   })),
 );

@@ -6,13 +6,13 @@ import ExpressionTaxonomyRow from "@components/ExpressionTaxonomyRow.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import {
   getContentEntries,
+  getEntryUrl,
   renderContent,
   toDateTimeAttribute,
 } from "@lib/entries";
 import { type ExpressionEntry, getExpressionPermalink } from "@lib/expressions";
 import { Icon } from "astro-icon/components";
 import { $path } from "astro-typesafe-routes/path";
-import slugify from "slugify";
 
 interface Props {
   expression: ExpressionEntry;
@@ -81,10 +81,7 @@ const { Content } = await renderContent(expression);
             <ExpressionTaxonomyRow
               label="tagged"
               items={(await getContentEntries(tags)).map((tag) => ({
-                href: $path({
-                  to: "/tags/[tag]",
-                  params: { tag: slugify(tag.data.title) },
-                }),
+                href: getEntryUrl(tag),
                 title: tag.data.title,
               }))}
             />
@@ -95,10 +92,7 @@ const { Content } = await renderContent(expression);
             <ExpressionTaxonomyRow
               label="in threads"
               items={(await getContentEntries(threads)).map((thread) => ({
-                href: $path({
-                  to: "/threads/[thread]",
-                  params: { thread: slugify(thread.data.title) },
-                }),
+                href: getEntryUrl(thread),
                 title: thread.data.title,
               }))}
             />

@@ -2,12 +2,11 @@
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import ExpressionListing from "@components/ExpressionListing.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
-import { getContentCollection } from "@lib/entries";
+import { getContentCollection, titleToUrlSlug } from "@lib/entries";
 import type { ExpressionEntry } from "@lib/expressions";
 import { type CollectionEntry } from "astro:content";
 import { createRoute } from "astro-typesafe-routes/create-route";
 import { $path } from "astro-typesafe-routes/path";
-import slugify from "slugify";
 
 export const Route = createRoute({
   routeId: "/tags/[tag]",
@@ -15,7 +14,7 @@ export const Route = createRoute({
 
 export const getStaticPaths = Route.createGetStaticPaths(async () =>
   (await getContentCollection("tags")).map((tag) => ({
-    params: { tag: slugify(tag.data.title) },
+    params: { tag: titleToUrlSlug(tag.data.title) },
     props: { tag },
   })),
 );
@@ -38,7 +37,7 @@ const breadcrumbs: BreadcrumbComponent[] = [
 ];
 const rssHref = $path({
   to: "/tags/[tag]/feed.xml",
-  params: { tag: slugify(tagTitle) },
+  params: { tag: titleToUrlSlug(tagTitle) },
   trailingSlash: false,
 });
 ---
