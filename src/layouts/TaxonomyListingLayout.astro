@@ -33,8 +33,8 @@ const { Content: PreambleContent } = await renderContent(preambleEntry);
       {
         rssHref && (
           <Fragment slot="component-post">
-            <a href={rssHref}>
-              <Icon name="ph:rss" aria-hidden="true" />
+            <a href={rssHref} aria-label="RSS feed">
+              <Icon name="ph:rss" aria-hidden="true" focusable="false" />
             </a>
           </Fragment>
         )
