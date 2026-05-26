@@ -14,13 +14,13 @@
     "fix": "eslint src/ --fix && stylelint 'src/**/*.{css,scss,astro}' --fix && prettier -w -l ."
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.8",
-    "@astrojs/mdx": "^5.0.3",
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/mdx": "^5.0.6",
     "@astrojs/netlify": "^7.0.10",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
     "@iconify-json/ph": "^1.2.2",
-    "astro": "^6.1.8",
+    "astro": "^6.3.7",
     "astro-broken-links-checker": "^1.1.0",
     "astro-d2": "^0.10.0",
     "astro-expressive-code": "^0.41.7",
@@ -35,8 +35,8 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@astrojs/language-server": "^2.16.6",
-    "@astrojs/ts-plugin": "^1.10.7",
+    "@astrojs/language-server": "^2.16.9",
+    "@astrojs/ts-plugin": "^1.10.9",
     "@eslint/js": "^10.0.1",
     "@types/node": "^25.6.0",
     "@types/picomatch": "^4.0.3",
