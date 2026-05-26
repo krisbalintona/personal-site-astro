@@ -4,6 +4,7 @@ import { getContentEntry, renderContent } from "@lib/entries";
 import { getRssFeedUrl, RSSFeeds } from "@lib/rss";
 import Link from "astro-typesafe-routes/link";
 
+const feeds = await RSSFeeds();
 const preamble = await getContentEntry("standalone", "rss_feeds");
 const { Content: PreambleContent } = await renderContent(preamble);
 ---
@@ -12,9 +13,9 @@ const { Content: PreambleContent } = await renderContent(preamble);
   {PreambleContent && <PreambleContent />}
 
   {
-    RSSFeeds && (
+    feeds && (
       <dl>
-        {Object.entries(RSSFeeds).map(([feedName, channel]) => {
+        {Object.entries(feeds).map(([feedName, channel]) => {
           return (
             <>
               <dt>

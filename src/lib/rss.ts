@@ -49,13 +49,27 @@ export function makeRSSFeed(
   });
 }
 
-// Create a container to return rendered HTML as a string
-const container = await experimental_AstroContainer.create();
-container.addServerRenderer({ renderer: mdxRenderer });
+let _container: Awaited<
+  ReturnType<typeof experimental_AstroContainer.create>
+> | null = null;
+
+// Don't initialize the AstroContainer at the module-level, otherwise
+// this may cause hangs during the prerendering stage of builds,
+// because the SSR routing layer intercepts AstroContainer's internal
+// requests before it is fully initialized.
+async function getContainer() {
+  if (!_container) {
+    // Create a container to return rendered HTML as a string
+    _container = await experimental_AstroContainer.create();
+    _container.addServerRenderer({ renderer: mdxRenderer });
+  }
+  return _container;
+}
 
 export async function buildRssItems(
   expressions: ExpressionEntry[],
 ): Promise<RSSFeedItem[]> {
+  const container = await getContainer();
   const items = await Promise.all(
     expressions.map(async (expressionEntry) => {
       const { Content } = await renderContent(expressionEntry);
@@ -160,44 +174,55 @@ function sortRSSItemsDescending(entries: RSSFeedItem[]): RSSFeedItem[] {
   return entries.sort((a, b) => b.pubDate!.getTime() - a.pubDate!.getTime());
 }
 
-// Build per-expression content collection RSS feed items for
-// expressions (the only content that receive an associated feed)
-const [articleItems, noteItems] = await Promise.all([
-  buildRssItems(await getContentCollection("articles")),
-  buildRssItems(await getContentCollection("notes")),
-]);
-
-// Compose for "all"
-const allItems = sortRSSItemsDescending([...articleItems, ...noteItems]);
-
 export interface RSSFeed {
   description: string;
   items: RSSFeedItem[];
   title: string;
 }
 
-// Declare a list of all RSS feeds here
-export const RSSFeeds: Record<string, RSSFeed> = {
-  All: {
-    title: `${SITE_TITLE} — All`,
-    description: "All expressions",
-    items: allItems,
-  },
-  Articles: {
-    title: `${SITE_TITLE} — Articles`,
-    description:
-      (await getContentEntry("standalone", "taxonomyArticles"))?.data
-        .description ?? "All articles",
-    items: articleItems,
-  },
-  Notes: {
-    title: `${SITE_TITLE} — Notes`,
-    description:
-      (await getContentEntry("standalone", "taxonomyNotes"))?.data
-        .description ?? "All notes",
-    items: noteItems,
-  },
-};
+let _feedsCache: Record<string, RSSFeed> | null = null;
+
+// RSSFeeds is a function rather than a module-level constant to avoid
+// top-level awaits, which would cause experimental_AstroContainer to
+// be created at import time.  In hybrid builds (builds with static
+// and on-demand routes/endpoints), this hangs the prerender phase
+// because the SSR routing layer intercepts AstroContainer's internal
+// requests before it is fully initialized.
+export async function RSSFeeds(): Promise<Record<string, RSSFeed>> {
+  if (_feedsCache) return _feedsCache;
+
+  // Build per-expression content collection RSS feed items for
+  // expressions (the only content that receive an associated feed)
+  const [articleItems, noteItems] = await Promise.all([
+    buildRssItems(await getContentCollection("articles")),
+    buildRssItems(await getContentCollection("notes")),
+  ]);
+  // Compose for "all"
+  const allItems = sortRSSItemsDescending([...articleItems, ...noteItems]);
+
+  _feedsCache = {
+    All: {
+      title: `${SITE_TITLE} — All`,
+      description: "All expressions",
+      items: allItems,
+    },
+    Articles: {
+      title: `${SITE_TITLE} — Articles`,
+      description:
+        (await getContentEntry("standalone", "taxonomyArticles"))?.data
+          .description ?? "All articles",
+      items: articleItems,
+    },
+    Notes: {
+      title: `${SITE_TITLE} — Notes`,
+      description:
+        (await getContentEntry("standalone", "taxonomyNotes"))?.data
+          .description ?? "All notes",
+      items: noteItems,
+    },
+  };
+  return _feedsCache;
+}
 
 export function getRssFeedUrl(feedName: string): string {
   /* Explicitly set `trailingSlash={false}` because the actual built
