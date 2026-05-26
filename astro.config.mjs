@@ -14,6 +14,7 @@ import icon from "astro-icon";
 import robotsTxt from "astro-robots-txt";
 import netlify from "@astrojs/netlify";
 import { imageService } from "@unpic/astro/service";
+import staticHeaders from "astro-static-headers";
 
 // https://astro.build/config
 export default defineConfig({
@@ -90,6 +91,7 @@ export default defineConfig({
     }),
     sitemap({ filter: (page) => !page.startsWith(`${SITE_URL}/posts/`) }),
     robotsTxt(),
+    staticHeaders(),
   ],
 
   fonts: [

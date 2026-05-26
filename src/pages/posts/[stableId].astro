@@ -1,0 +1,22 @@
+---
+import { getEntryUrl } from "@lib/entries";
+import { allExpressions, getExpressionStableId } from "@lib/expressions.ts";
+import { createRoute } from "astro-typesafe-routes/create-route";
+
+export const Route = createRoute({
+  routeId: "/posts/[stableId]",
+});
+
+export const getStaticPaths = Route.createGetStaticPaths(async () => {
+  return (await allExpressions()).map((e) => ({
+    params: { stableId: getExpressionStableId(e) },
+    props: { targetUrl: getEntryUrl(e) },
+  }));
+});
+
+// `targetUrl` is used in the return statement below, but `astro
+// check` cannot trace through it and incorrectly reports them as unused.
+// So, as a trick, we prefix the symbol name with an underscore.
+const { targetUrl: _targetUrl } = Astro.props;
+return Astro.redirect(_targetUrl, 301);
+---

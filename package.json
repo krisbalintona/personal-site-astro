@@ -28,6 +28,7 @@
     "astro-icon": "^1.1.5",
     "astro-robots-txt": "^1.0.0",
     "astro-seo": "^1.1.0",
+    "astro-static-headers": "^1.0.3",
     "astro-typesafe-routes": "^5.1.0",
     "gray-matter": "^4.0.3",
     "picomatch": "^4.0.4",
