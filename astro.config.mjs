@@ -13,6 +13,7 @@ import { faviconRss } from "./src/lib/faviconRss.ts";
 import icon from "astro-icon";
 import robotsTxt from "astro-robots-txt";
 import netlify from "@astrojs/netlify";
+import { imageService } from "@unpic/astro/service";
 
 // https://astro.build/config
 export default defineConfig({
@@ -21,6 +22,16 @@ export default defineConfig({
   trailingSlash: "always",
   prerenderConflictBehavior: "error",
 
+  image: {
+    service: imageService({
+      placeholder: "blurhash",
+      layout: "constrained", // Default
+      // NOTE 2026-05-26: I set `imageCDN: false` for the Netlify
+      // adapter, but Unpic doesn't seem to respect it, so I
+      // explicitly set `fallbackService` here
+      fallbackService: "sharp",
+    }),
+  },
   integrations: [
     // Run before everything else
     faviconRss(),

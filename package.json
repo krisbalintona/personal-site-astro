@@ -20,6 +20,7 @@
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
     "@iconify-json/ph": "^1.2.2",
+    "@unpic/astro": "^1.0.2",
     "astro": "^6.3.7",
     "astro-broken-links-checker": "^1.1.0",
     "astro-d2": "^0.10.0",
