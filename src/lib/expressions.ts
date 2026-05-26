@@ -6,7 +6,7 @@ import { $path } from "astro-typesafe-routes/path";
 import slugify from "slugify";
 import type { z as zType } from "zod/v4";
 
-export function dateToPostId(date: Date): string {
+export function dateToStableId(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return (
     String(date.getUTCFullYear()) +
@@ -46,7 +46,7 @@ export const expressionSchema = rssSchema
       ...data,
       titleSlug,
       permalinkSlug:
-        d.pubDate && d.draft === false ? dateToPostId(d.pubDate) : titleSlug,
+        d.pubDate && d.draft === false ? dateToStableId(d.pubDate) : titleSlug,
     };
   });
 
