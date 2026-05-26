@@ -8,11 +8,11 @@ import type { z as zType } from "zod/v4";
 export function dateToPostId(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return (
-    String(date.getFullYear()) +
-    pad(date.getMonth() + 1) +
-    pad(date.getDate()) +
-    pad(date.getHours()) +
-    pad(date.getMinutes())
+    String(date.getUTCFullYear()) +
+    pad(date.getUTCMonth() + 1) +
+    pad(date.getUTCDate()) +
+    pad(date.getUTCHours()) +
+    pad(date.getUTCMinutes())
   );
 }
 
