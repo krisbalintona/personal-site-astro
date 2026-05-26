@@ -8,7 +8,6 @@ type StaticRouteId = {
   [K in RouteId]: Routes[K]["params"] extends null ? K : never;
 }[RouteId];
 
-const menuIconSize = "var(--font-step-3)";
 const TRAILING_SLASH = /\/$/;
 const normalizeUrlPathname = (p: string): string => {
   if (trailingSlash === "always") {
@@ -66,14 +65,12 @@ const navItems: { to: StaticRouteId; label: string }[] = [
           aria-hidden="true"
           focusable="false"
           id="icon-open"
-          size={menuIconSize}
         />
         <Icon
           name="ph:x"
           aria-hidden="true"
           focusable="false"
           id="icon-close"
-          size={menuIconSize}
         />
       </button>
       <div id="nav-panel">
@@ -180,6 +177,7 @@ const navItems: { to: StaticRouteId; label: string }[] = [
 
           #icon-open,
           #icon-close {
+            font-size: var(--font-step-2); /* Size of icons */
             z-index: 1001; /* Above #nav-mobile-fixed */
             grid-area: 1 / 1;
             margin-top: var(--space-s);
