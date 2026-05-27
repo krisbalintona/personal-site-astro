@@ -5,7 +5,7 @@ import "@styles/global.css";
 import Footer from "@components/Footer.astro";
 import Header from "@components/Header.astro";
 import Heading from "@components/markup/Heading.astro";
-import { SITE_TITLE } from "@lib/consts";
+import { isProd, SITE_TITLE } from "@lib/consts";
 import { getRSSFeedUrl, RSSFeeds } from "@lib/rss";
 import { Font } from "astro:assets";
 import { SEO } from "astro-seo";
@@ -60,6 +60,18 @@ const { pageTitle, pageDescription, displayTitle } = Astro.props;
         />
       ))
     }
+
+    {/* Analytics */}
+    {
+      isProd && (
+        <script
+          data-goatcounter="https://krisbalintona.goatcounter.com/count"
+          async
+          src="//gc.zgo.at/count.js"
+        />
+      )
+    }
+
     <slot name="head-extra" />
   </head>
 
