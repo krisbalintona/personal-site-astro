@@ -4,3 +4,5 @@
 
 [build.environment]
   NODE_VERSION = "25.9.0"
+  # FIXME 2026-05-26: Until Unpic official supports Astro v6
+  NPM_FLAGS = "--legacy-peer-deps"
