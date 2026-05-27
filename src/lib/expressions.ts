@@ -11,16 +11,23 @@ import { $path } from "astro-typesafe-routes/path";
 // The date the site was migrated from Hugo to Astro. Posts published
 // before this date used local time for their stable IDs (matching
 // Hugo's permalink scheme) rather than UTC.
-const ASTRO_MIGRATION_DATE = new Date("2025-05-26");
+const ASTRO_MIGRATION_DATE = new Date("2026-05-24");
 
 function dateToLegacyStableId(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
+
+  // Hugo generated permalinks in Chicago local time (CST = UTC-6, CDT
+  // = UTC-5).  We hardcode CDT (-5h = -300min) since that matches the
+  // old stable IDs.
+  const CHICAGO_OFFSET_MS = -5 * 60 * 60 * 1000;
+  const local = new Date(date.getTime() + CHICAGO_OFFSET_MS);
+
   return (
-    String(date.getFullYear()) +
-    pad(date.getMonth() + 1) +
-    pad(date.getDate()) +
-    pad(date.getHours()) +
-    pad(date.getMinutes())
+    String(local.getUTCFullYear()) +
+    pad(local.getUTCMonth() + 1) +
+    pad(local.getUTCDate()) +
+    pad(local.getUTCHours()) +
+    pad(local.getUTCMinutes())
   );
 }
 
