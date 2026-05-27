@@ -1,6 +1,10 @@
 ---
 import { getEntryUrl } from "@lib/entries";
-import { allExpressions, getExpressionStableId } from "@lib/expressions.ts";
+import {
+  allExpressions,
+  getExpressionLegacyId,
+  getExpressionStableId,
+} from "@lib/expressions.ts";
 import { createRoute } from "astro-typesafe-routes/create-route";
 
 export const Route = createRoute({
@@ -8,10 +12,28 @@ export const Route = createRoute({
 });
 
 export const getStaticPaths = Route.createGetStaticPaths(async () => {
-  return (await allExpressions()).map((e) => ({
-    params: { stableId: getExpressionStableId(e) },
-    props: { targetUrl: getEntryUrl(e) },
-  }));
+  const expressions = await allExpressions();
+  return expressions.flatMap((e) => {
+    const targetUrl = getEntryUrl(e);
+    const paths = [
+      {
+        params: { stableId: getExpressionStableId(e) },
+        props: { targetUrl },
+      },
+    ];
+    // Also register the legacy Hugo local-time ID if present, so old
+    // Hugo permalinks (e.g., /posts/202504201934) continue to
+    // redirect correctly alongside the UTC-based stable ID (e.g,
+    // /posts/202504210034)
+    const legacyId = getExpressionLegacyId(e);
+    if (legacyId) {
+      paths.push({
+        params: { stableId: legacyId },
+        props: { targetUrl },
+      });
+    }
+    return paths;
+  });
 });
 
 // `targetUrl` is used in the return statement below, but `astro

@@ -8,6 +8,30 @@ import { z } from "astro/zod";
 import { type CollectionEntry, reference } from "astro:content";
 import { $path } from "astro-typesafe-routes/path";
 
+// The date the site was migrated from Hugo to Astro. Posts published
+// before this date used local time for their stable IDs (matching
+// Hugo's permalink scheme) rather than UTC.
+const ASTRO_MIGRATION_DATE = new Date("2025-05-26");
+
+function dateToLegacyStableId(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return (
+    String(date.getFullYear()) +
+    pad(date.getMonth() + 1) +
+    pad(date.getDate()) +
+    pad(date.getHours()) +
+    pad(date.getMinutes())
+  );
+}
+
+export function getExpressionLegacyId(
+  expression: ExpressionEntry,
+): string | undefined {
+  const pubDate = expression.data.pubDate;
+  if (!pubDate || pubDate >= ASTRO_MIGRATION_DATE) return undefined;
+  return titleToUrlSlug(dateToLegacyStableId(pubDate));
+}
+
 function dateToStableId(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return (
