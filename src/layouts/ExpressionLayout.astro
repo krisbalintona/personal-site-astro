@@ -10,7 +10,11 @@ import {
   renderContent,
   toDateTimeAttribute,
 } from "@lib/entries";
-import { type ExpressionEntry, getExpressionPermalink } from "@lib/expressions";
+import {
+  type ExpressionEntry,
+  getExpressionPermalink,
+  getExpressionStableId,
+} from "@lib/expressions";
 import { Icon } from "astro-icon/components";
 import { $path } from "astro-typesafe-routes/path";
 
@@ -44,6 +48,24 @@ const { Content } = await renderContent(expression);
 ---
 
 <BaseLayout pageTitle={title} pageDescription={expression.data.description}>
+  {
+    /* Use `data-goatcounter-settings` to set the path counted by
+    GoatCounter. See https://krisbalintona.goatcounter.com/help/path
+    for more information */
+  }
+  <Fragment slot="script-goat-counter"
+    ><script
+      is:inline
+      data-goatcounter="https://krisbalintona.goatcounter.com/count"
+      data-goatcounter-settings={JSON.stringify({
+        path: $path({
+          to: "/posts/[stableId]",
+          params: { stableId: getExpressionStableId(expression) },
+        }),
+      })}
+      async
+      src="//gc.zgo.at/count.js"></script></Fragment
+  >
   <article>
     <header class="expression-header">
       <Breadcrumb breadcrumbs={breadcrumbs} />

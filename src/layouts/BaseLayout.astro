@@ -61,15 +61,18 @@ const { pageTitle, pageDescription, displayTitle } = Astro.props;
       ))
     }
 
-    {/* Analytics */}
+    {/* GoatCounter analytics */}
     {
       isProd && (
-        <script
-          is:inline
-          data-goatcounter="https://krisbalintona.goatcounter.com/count"
-          async
-          src="//gc.zgo.at/count.js"
-        />
+        /* Make this a named slot so that specific paths can override */
+        <slot name="script-goat-counter">
+          <script
+            is:inline
+            data-goatcounter="https://krisbalintona.goatcounter.com/count"
+            async
+            src="//gc.zgo.at/count.js"
+          />
+        </slot>
       )
     }
 
