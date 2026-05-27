@@ -121,6 +121,13 @@ const { Content } = await renderContent(expression);
           )
         }
       </dl>
+      <div
+        class="not-ai-badges"
+        title="Written by a human, not by AI. (If you're curious about this badge, check out https://notbyai.fyi/!)"
+      >
+        <Icon name="Written-By-a-Human-Not-By-AI-Badge-white" />
+        <Icon name="Written-By-a-Human-Not-By-AI-Badge-black" />
+      </div>
     </footer>
   </article>
 </BaseLayout>
@@ -184,6 +191,33 @@ const { Content } = await renderContent(expression);
   .expression-footer {
     margin-top: var(--space-xs-s);
     border-top: 2px solid var(--color-border);
+
+    .not-ai-badges {
+      display: flex;
+      justify-content: center;
+      font-size: var(--font-step-4);
+
+      /* Show light theme badge by default */
+      svg[data-icon="Written-By-a-Human-Not-By-AI-Badge-white"] {
+        display: block;
+      }
+
+      svg[data-icon="Written-By-a-Human-Not-By-AI-Badge-black"] {
+        display: none;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .not-ai-badges {
+        svg[data-icon="Written-By-a-Human-Not-By-AI-Badge-white"] {
+          display: none;
+        }
+
+        svg[data-icon="Written-By-a-Human-Not-By-AI-Badge-black"] {
+          display: block;
+        }
+      }
+    }
   }
 </style>
 
