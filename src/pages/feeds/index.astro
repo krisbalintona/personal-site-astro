@@ -1,12 +1,9 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { getContentEntry, renderContent } from "@lib/entries";
 import { getRSSFeedUrl, RSSFeeds } from "@lib/rss";
 import Link from "astro-typesafe-routes/link";
 
 const feeds = await RSSFeeds();
-const preamble = await getContentEntry("standalone", "rss_feeds");
-const { Content: PreambleContent } = await renderContent(preamble);
 ---
 
 <BaseLayout
@@ -14,8 +11,7 @@ const { Content: PreambleContent } = await renderContent(preamble);
   pageTitle="RSS"
   pageDescription="Learn about where my site's RSS feeds can be found"
 >
-  {PreambleContent && <PreambleContent />}
-
+  <p>This site offers multiple RSS feeds for its content:</p>
   {
     feeds && (
       <dl>
@@ -35,6 +31,7 @@ const { Content: PreambleContent } = await renderContent(preamble);
   <p>
     Additionally, <Link to="/tags">each tag</Link> and <Link to="/threads"
       >each thread</Link
-    > has its own associated feed.
+    > has its own associated feed (look out for the feed icon near the top of each
+    page).
   </p>
 </BaseLayout>
