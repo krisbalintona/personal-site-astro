@@ -264,3 +264,14 @@ const { Content } = await renderContent(expression);
     }
   });
 </script>
+
+{/* Zoomable images */}
+<script>
+  const selector = ".expression-content img";
+  if (document.querySelector(selector)) {
+    const { default: mediumZoom } = await import("medium-zoom");
+    mediumZoom(selector, {
+      background: "color-mix(in srgb, var(--color-bg) 80%, transparent)",
+    });
+  }
+</script>
