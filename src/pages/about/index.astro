@@ -1,0 +1,21 @@
+---
+import { getContentEntry, renderContent } from "@lib/entries";
+import BaseLayout from "@src/layouts/BaseLayout.astro";
+
+const about = await getContentEntry("standalone", "about");
+const { Content } = await renderContent(about);
+---
+
+<BaseLayout
+  displayTitle="About"
+  pageTitle="About"
+  pageDescription="About me and this site"
+>
+  {
+    Content && (
+      <article>
+        <Content />
+      </article>
+    )
+  }
+</BaseLayout>

@@ -1,0 +1,35 @@
+---
+title: "Blog page: about"
+draft: false
+pubDate: 2026-05-28T02:11:00-05:00
+slug: "about"
+---
+import Heading from "@components/markup/Heading.astro";
+
+**Hello reader,**
+
+I don't have much to say (aside, I suppose, from what you can already find elsewhere here). I use [Emacs](https://en.wikipedia.org/wiki/Emacs) for most things. On it I lightly code, write notes, and manage work. Some of the projects I've authored or maintain:
+
+-   [vc-jj.el: A GNU Emacs vc.el integration with Jujutsu VCS](https://codeberg.org/emacs-jj-vc/vc-jj.el)
+-   [org-hide-drawers: Hide drawers in org-mode with overlays](https://github.com/krisbalintona/org-hide-drawers)
+-   [My Emacs config](https://codeberg.org/krisbalintona/emacs-config)
+-   [My Guix config](https://codeberg.org/krisbalintona/guix-config)
+
+You may find or contact me freely at:
+
+<dl>
+<dt>Email</dt>
+<dd>[krisbalintona@gmail.com](mailto:krisbalintona@gmail.com)</dd>
+<dt>Codeberg</dt>
+<dd>[krisbalintona](https://codeberg.org/krisbalintona)</dd>
+<dt>GitHub</dt>
+<dd>[krisbalintona](https://github.com/krisbalintona)</dd>
+<dt>Reddit</dt>
+<dd>[r/krisbalintona](https://www.reddit.com/user/krisbalintona/)</dd>
+</dl>
+
+<Heading level="2" id="colophon-about-this-site"selfLink={true}>Colophon (about this site)</Heading>
+
+This site is handmade with [Astro](https://astro.build/) and hosted for free on [Netlify](https://www.netlify.com/). All of its source code may be found [on Codeberg](https://codeberg.org/krisbalintona/personal-site-astro.git). Thanks to Astro, it is statically built and ships with nearly no JavaScript. Your privacy is respected: this site uses no cookies and collects no personal data. Basic, anonymized analytics are provided by [GoatCounter](https://www.goatcounter.com/).
+
+Content is written in [Org-mode](https://orgmode.org/), exported to MDX files using a custom [`ox-mdx.el` org-mode export backend](https://codeberg.org/krisbalintona/personal-site-astro/src/branch/main/scripts/org-exporter/ox-mdx.el) developed specifically for this site.
