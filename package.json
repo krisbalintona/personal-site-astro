@@ -31,6 +31,7 @@
     "astro-static-headers": "^1.0.3",
     "astro-typesafe-routes": "^5.1.0",
     "gray-matter": "^4.0.3",
+    "medium-zoom": "^1.1.0",
     "picomatch": "^4.0.4",
     "pluralize": "^8.0.0",
     "sanitize-html": "^2.17.3",
