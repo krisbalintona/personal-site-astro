@@ -869,8 +869,17 @@ communication channel for the export process."
                  (mapcar #'org-mdx--frontmatter-quote-string transformed-threads)))
               (threads
                (when parsed-threads
-                 (org-mdx--frontmatter-build-list "threads" parsed-threads))))
-         (setq frontmatter (string-join (delq nil (append frontmatter-base (list date tags threads))) "\n"))))
+                 (org-mdx--frontmatter-build-list "threads" parsed-threads)))
+              (raw-redirects (plist-get info :mdx-redirects))
+              (parsed-redirects
+               (when (org-string-nw-p raw-redirects)
+                 (mapcar #'org-mdx--frontmatter-quote-string
+                         (split-string-and-unquote (string-trim raw-redirects)))))
+              (redirects
+               (when raw-redirects
+                 (org-mdx--frontmatter-build-list "redirects" parsed-redirects))))
+         (setq frontmatter
+               (string-join (delq nil (append frontmatter-base (list date tags threads redirects))) "\n"))))
       ((or "tags" "threads")            ; Taxonomy entries
        (setq frontmatter (string-join (delq nil (append frontmatter-base (list date))) "\n"))))
 
@@ -1101,6 +1110,7 @@ Return the output directory's name."
     (:mdx-draft-p "MDX_DRAFT" "mdx-draft" "true")
     (:mdx-tags "MDX_TAGS" nil nil space)
     (:mdx-threads "MDX_THREADS" nil nil space)
+    (:mdx-redirects "MDX_REDIRECTS" nil nil space)
     (:md-toplevel-hlevel nil nil 2) ; The title is h1; headings must be lower
     ;; See `org-export-headline-levels' and
     ;; `org-export-options-alist'.  Set :headline-levels to 5 since

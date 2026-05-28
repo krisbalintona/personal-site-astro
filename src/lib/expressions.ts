@@ -73,6 +73,16 @@ export const expressionSchema = rssSchema.extend(baseContentShape).extend({
   pubDate: z.coerce.date().default(new Date("1970-01-01")),
   tags: z.array(reference("tags")).optional(),
   threads: z.array(reference("threads")).optional(),
+  redirects: z
+    .array(
+      z
+        .string()
+        .refine(
+          (path) => /^\/.*[^/]$/.test(path),
+          "Redirect path must start with '/' and must not end with '/'",
+        ),
+    )
+    .optional(),
 });
 
 export const ExpressionCollectionNames = ["articles", "notes"] as const;
