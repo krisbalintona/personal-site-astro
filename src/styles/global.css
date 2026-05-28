@@ -148,6 +148,10 @@ li {
   }
 }
 
+li :is(ul, ol) {
+  padding-left: var(--space-m);
+}
+
 dl {
   margin-block: 1.3em;
 }
