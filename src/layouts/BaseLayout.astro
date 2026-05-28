@@ -11,12 +11,12 @@ import { Font } from "astro:assets";
 import { SEO } from "astro-seo";
 
 interface Props {
+  pageTitle: string;
   displayTitle?: string;
-  pageTitle?: string;
   pageDescription?: string;
 }
 
-const { pageTitle, pageDescription, displayTitle } = Astro.props;
+const { pageTitle, pageDescription, displayTitle = pageTitle } = Astro.props;
 ---
 
 <html lang="en">
@@ -83,13 +83,7 @@ const { pageTitle, pageDescription, displayTitle } = Astro.props;
     <Header />
     <div class="page-content">
       <main>
-        {
-          displayTitle && (
-            <Heading class="sr-only" level="1">
-              {displayTitle}
-            </Heading>
-          )
-        }
+        <Heading class="sr-only" level="1">{displayTitle}</Heading>
         <slot />
       </main>
       <Footer />
