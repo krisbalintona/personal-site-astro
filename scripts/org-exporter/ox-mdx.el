@@ -788,18 +788,46 @@ an MDX file whose type is a string."
                        (replace-regexp-in-string "\t" "\\\\t")) ; tab -> \t
           "\""))
 
-(defun org-mdx--frontmatter-build-list (name items)
-  "Build a YAML frontmatter list.
-NAME is the string used as the top-level listing item content.  ITEMS is
-a list of strings whose elements will be the sub-items in the built
-list."
-  (concat name ":\n"
-          (mapconcat (lambda (item) (format "  - %s" item)) items "\n")))
+(defun org-mdx--frontmatter-field (key raw-value &optional unquotedp)
+  "Return a YAML scalar field \"KEY: VALUE\" for use in MDX frontmatter.
+Returns nil if RAW-VALUE is nil or whitespace-only.  When UNQUOTEDP is
+non-nil, VALUE is emitted as-is (use for YAML e.g. booleans and
+timestamps); otherwise it is double-quoted.
 
-(defun org-mdx-template (contents info)
-  "Return complete document string after Markdown conversion.
-CONTENTS is the transcoded contents string (returned by the
-inner-template backend transcoder).  INFO is a plist used as a
+Use this function for single-value org keywords (e.g. #+title, #+date).
+For multi-value keywords, use `org-mdx--frontmatter-build-list' instead."
+  (when (org-string-nw-p raw-value)
+    (concat key ": " (if unquotedp
+                         raw-value
+                       (org-mdx--frontmatter-quote-string raw-value)))))
+
+(defun org-mdx--frontmatter-build-list (name items)
+  "Return a YAML sequence field NAME for use in MDX frontmatter.
+ITEMS is a list of already-quoted strings, as returned by e.g.
+`org-mdx--frontmatter-parse-keyword-list'.  Returns nil if ITEMS is nil."
+  (when items
+    (concat name ":\n"
+            (mapconcat (lambda (item) (format "  - %s" item)) items "\n"))))
+
+(defun org-mdx--frontmatter-parse-keyword-list (raw-string &optional post-process)
+  "Parse a multi-value org keyword value RAW-STRING for use in MDX frontmatter.
+Splits RAW-STRING with `split-string-and-unquote' and quotes each
+element for YAML.  When POST-PROCESS is a function, it is applied to
+each element before quoting (use this to transform values,
+e.g. resolving org IDs to titles).  Returns nil if RAW-STRING is nil or
+whitespace-only.
+
+Use this function for org keywords that accept a space-separated list of
+values (e.g. #+filetags, #+mdx_tags)."
+  (when (org-string-nw-p raw-string)
+    (mapcar (lambda (s)
+              (org-mdx--frontmatter-quote-string
+               (funcall (or (and (functionp post-process) post-process) #'identity) s)))
+            (split-string-and-unquote (string-trim raw-string)))))
+
+(defun org-mdx--frontmatter (contents info)
+  "Return document's formatted YAML frontmatter.
+CONTENTS is the transcoded contents string.  INFO is a plist used as a
 communication channel for the export process."
   (let* ((entry-type
           (or (plist-get info :mdx-entry-type)
@@ -807,83 +835,88 @@ communication channel for the export process."
               ;; there will be no frontmatter
               (and (buffer-file-name)
                    (car (org-publish-get-project-from-filename (buffer-file-name))))))
-         (raw-title (org-mdx--title-to-utf8 info))
-         (escaped-title
+
+         ;; Title
+         (raw-title
           ;; We want a plain-text (UTF-8, since our HTML is encoded in
           ;; UTF-8 anyway) version of the title, since that's what we
           ;; want rendered on the page
-          (when raw-title (org-mdx--frontmatter-quote-string raw-title)))
-         (title (when raw-title (concat "title: " escaped-title)))
+          (org-mdx--title-to-utf8 info))
+         (title (org-mdx--frontmatter-field "title" raw-title))
+
+         ;; Slug
          (raw-slug (plist-get info :mdx-slug))
-         (escaped-slug (when raw-slug (org-mdx--frontmatter-quote-string raw-slug)))
-         (slug (when raw-slug (concat "slug: " escaped-slug)))
-         (date-timestamp (car (plist-get info :date)))
-         (date
-          (when date-timestamp
-            (concat "pubDate: " (org-format-timestamp date-timestamp "%FT%T%:z")))) ; YAML 1.1 timestamp spec
-         (draft (concat "draft: " (plist-get info :mdx-draft-p))) ; Return YAML boolean
+         (slug (org-mdx--frontmatter-field "slug" raw-slug))
+
+         ;; Date
+         (raw-pub-date (car (plist-get info :date)))
+         (pub-date-timestamp
+          (when raw-pub-date
+            (org-format-timestamp raw-pub-date "%FT%T%:z"))) ; YAML 1.1 timestamp spec
+         (pub-date (org-mdx--frontmatter-field "pubDate" pub-date-timestamp 'timestamp))
+
+         ;; Draft
+         (raw-draft (plist-get info :mdx-draft-p))
+         (draft (org-mdx--frontmatter-field "draft" raw-draft 'boolean))
+
+         ;; Tags
+         (raw-tags (plist-get info :mdx-tags))
+         (tags (org-mdx--frontmatter-build-list
+                "tags" (org-mdx--frontmatter-parse-keyword-list raw-tags)))
+
+         ;; Description
          (raw-description (plist-get info :description))
-         (escaped-description (when raw-description (org-mdx--frontmatter-quote-string raw-description)))
-         (description (when raw-description (concat "description: " escaped-description)))
-         (imports (org-string-nw-p
-                   (mapconcat #'cdr (plist-get info :mdx-imports) "\n")))
-         (frontmatter-base (list title draft description))
-         frontmatter)
+         (description (org-mdx--frontmatter-field "description" raw-description))
 
-    ;; Emit different frontmatter depending on :mdx-entry-type
-    (pcase entry-type
-      ("standalone"
-       (setq frontmatter (string-join (delq nil (append frontmatter-base (list date slug))) "\n")))
-      ((or "articles" "notes")          ; Expression entries
-       (let* ((raw-tags (plist-get info :mdx-tags))
-              (parsed-tags
-               (when (org-string-nw-p raw-tags)
-                 (mapcar #'org-mdx--frontmatter-quote-string
-                         (split-string-and-unquote (string-trim raw-tags)))))
-              (tags
-               (when parsed-tags
-                 (org-mdx--frontmatter-build-list "tags" parsed-tags)))
-              (raw-threads (plist-get info :mdx-threads))
-              (transformed-threads ; Convert entry IDs to their corresponding title
-               (when raw-threads
-                 (mapcar (lambda (s)
-                           ;; FIXME 2026-05-17: Should we call
-                           ;; something like
-                           ;; (org-id-update-id-locations nil t)
-                           ;; before publishing to ensure the cache is
-                           ;; up to date before export?  Or are we
-                           ;; okay settling with a potentially stale
-                           ;; cache
-                           ;;
-                           ;; When S is an (unquoted) ID, then return
-                           ;; the title of the entry corresponding to
-                           ;; that ID.  Otherwise return S.
-                           (if (not (and org-id-locations (gethash s org-id-locations)))
-                               s
-                             (org-with-point-at (org-id-find s 'marker)
-                               (or (org-element-property :title (org-element-at-point))
-                                   (org-get-title)))))
-                         (split-string-and-unquote (string-trim raw-threads)))))
-              (parsed-threads
-               (when (org-string-nw-p raw-threads)
-                 (mapcar #'org-mdx--frontmatter-quote-string transformed-threads)))
-              (threads
-               (when parsed-threads
-                 (org-mdx--frontmatter-build-list "threads" parsed-threads)))
-              (raw-redirects (plist-get info :mdx-redirects))
-              (parsed-redirects
-               (when (org-string-nw-p raw-redirects)
-                 (mapcar #'org-mdx--frontmatter-quote-string
-                         (split-string-and-unquote (string-trim raw-redirects)))))
-              (redirects
-               (when raw-redirects
-                 (org-mdx--frontmatter-build-list "redirects" parsed-redirects))))
-         (setq frontmatter
-               (string-join (delq nil (append frontmatter-base (list date tags threads redirects))) "\n"))))
-      ((or "tags" "threads")            ; Taxonomy entries
-       (setq frontmatter (string-join (delq nil (append frontmatter-base (list date))) "\n"))))
+         ;; Threads
+         (raw-threads (plist-get info :mdx-threads))
+         (transform-threads-func ; Convert entry IDs to their corresponding title
+          (lambda (s)
+            ;; FIXME 2026-05-17: Should we call something like
+            ;; (org-id-update-id-locations nil t) before publishing to
+            ;; ensure the cache is up to date before export?  Or are
+            ;; we okay settling with a potentially stale cache
+            ;;
+            ;; When S is an (unquoted) ID, then return the title of
+            ;; the entry corresponding to that ID.  Otherwise return
+            ;; S.
+            (if (not (and org-id-locations (gethash s org-id-locations)))
+                s
+              (org-with-point-at (org-id-find s 'marker)
+                (or (org-element-property :title (org-element-at-point))
+                    (org-get-title))))))
+         (threads (org-mdx--frontmatter-build-list
+                   "threads" (org-mdx--frontmatter-parse-keyword-list
+                              raw-threads transform-threads-func)))
 
-    ;; Final result
+
+         ;; Redirects
+         (raw-redirects (plist-get info :mdx-redirects))
+         (redirects (org-mdx--frontmatter-build-list
+                     "redirects" (org-mdx--frontmatter-parse-keyword-list raw-redirects)))
+
+         (frontmatter-base (list title slug draft description)))
+
+    (string-join
+     (delq nil
+           ;; Emit different frontmatter depending on :mdx-entry-type.
+           ;; This should match the schema of collections in my
+           ;; project content.config.ts
+           (pcase entry-type
+             ((or "articles" "notes")
+              (append frontmatter-base (list pub-date tags threads redirects)))
+             (_ frontmatter-base)))
+     "\n")))
+
+(defun org-mdx-template (contents info)
+  "Return complete document string after Markdown conversion.
+CONTENTS is the transcoded contents string (returned by the
+inner-template backend transcoder).  INFO is a plist used as a
+communication channel for the export process."
+  (let ((frontmatter (org-mdx--frontmatter contents info))
+        (imports
+         (org-string-nw-p
+          (mapconcat #'cdr (plist-get info :mdx-imports) "\n"))))
     (concat
      (when frontmatter
        (concat "---\n"
