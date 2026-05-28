@@ -38,7 +38,7 @@ const expressions = collections
   ? (
       await Promise.all(collections.map((c) => getContentCollection(c, filter)))
     ).flat()
-  : await allExpressions();
+  : await allExpressions(filter);
 const expressionItems: ListingItem[] = expressions
   .map(
     (expression: CollectionEntry<ExpressionCollection>): ListingItem => ({
