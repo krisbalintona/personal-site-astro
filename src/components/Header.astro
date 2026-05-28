@@ -19,10 +19,16 @@ const normalizeUrlPathname = (p: string): string => {
   // "ignore" - strip both sides for comparison
   return p.replace(TRAILING_SLASH, "") || "/";
 };
-const navItemCurrent = (to: StaticRouteId) => {
+const navItemCurrentId = (to: StaticRouteId) => {
   return normalizeUrlPathname(Astro.url.pathname) ===
     normalizeUrlPathname($path({ to }))
     ? "nav-page-current"
+    : undefined;
+};
+const navItemCurrentClass = (to: StaticRouteId) => {
+  return normalizeUrlPathname(Astro.url.pathname) ===
+    normalizeUrlPathname($path({ to }))
+    ? "link-strong"
     : undefined;
 };
 const navItems: { to: StaticRouteId; label: string }[] = [
@@ -78,7 +84,11 @@ const navItems: { to: StaticRouteId; label: string }[] = [
           {
             navItems.map(({ to, label }) => (
               <li>
-                <Link id={navItemCurrent(to)} to={to}>
+                <Link
+                  id={navItemCurrentId(to)}
+                  class={navItemCurrentClass(to)}
+                  to={to}
+                >
                   {label}
                 </Link>
               </li>
@@ -126,11 +136,9 @@ const navItems: { to: StaticRouteId; label: string }[] = [
 
           opacity: var(--_nav-item-opacity, 0.65);
 
-          /* We also add a transition to color to avoid an instance */
-
-          /* "opacity: 1" causing unexpected discoloration after */
-
-          /* hovering */
+          /* We also add a transition to color to avoid an instance
+          "opacity: 1" causing unexpected discoloration after hovering
+          */
           transition:
             opacity var(--_transition-duration) ease-in,
             color var(--_transition-duration) ease-in;
@@ -143,15 +151,11 @@ const navItems: { to: StaticRouteId; label: string }[] = [
     }
   }
 
-  /* Must stay at top level because nesting inside any ID selector */
-
-  /* (e.g. #nav-pages) would add specificity, preventing `a:hover` */
-
-  /* in global.css from taking effect. */
-  :where(#nav-page-current) {
+  /* Must stay at top level because nesting inside any ID selector
+  (e.g. #nav-pages) would add specificity, preventing `a:hover` in
+  global.css from taking effect. */
+  #nav-page-current {
     --_nav-item-opacity: 0.95;
-
-    color: var(--color-accent-subtle);
   }
 
   @media (width <= 768px) {

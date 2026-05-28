@@ -32,7 +32,11 @@ const HeadingLevel = headingOptions[level] as HeadingTag;
   ><slot />
   {
     selfLink && (
-      <a class="self-link" aria-label="Link to this section" href={`#${id}`}>
+      <a
+        class="self-link link-strong"
+        aria-label="Link to this section"
+        href={`#${id}`}
+      >
         {" "}
         §
       </a>
@@ -49,12 +53,7 @@ const HeadingLevel = headingOptions[level] as HeadingTag;
     }
 
     .self-link {
-      color: var(--color-accent);
       opacity: 0;
-
-      &:hover {
-        color: var(--color-accent-emphasis);
-      }
     }
 
     &:hover > .self-link {

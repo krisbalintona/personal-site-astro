@@ -24,7 +24,8 @@ p {
   margin-block: 1.3em;
 }
 
-a {
+a,
+.like-link {
   --_link-underline-style: var(--link-underline-style, solid);
   --_link-underline-color: var(--link-underline-color, var(--color-text));
 
@@ -88,6 +89,14 @@ blockquote:not(.special-blockquote) {
 
   font-family: var(--font-ui);
   transition: var(--transition-ui);
+}
+
+.link-strong {
+  color: var(--color-accent);
+
+  &:hover {
+    color: var(--color-accent-emphasis);
+  }
 }
 
 .interior-container {
