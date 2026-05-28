@@ -17,6 +17,7 @@ interface Props {
   filter?: (taxonomy: TaxonomyEntry) => boolean;
   limit?: number;
   sortBy?: "count" | "title";
+  numbered?: boolean;
 }
 
 const {
@@ -26,8 +27,10 @@ const {
   descending = sortBy === "title" ? false : true,
   filter: filter = () => true,
   limit,
+  numbered = false,
 } = Astro.props;
 
+const ListingTag = numbered ? "ol" : "ul";
 const taxonomyEntries = (
   await Promise.all(collections.map((c) => getContentCollection(c, filter)))
 ).flat();
@@ -66,13 +69,13 @@ const itemCount = nonEmptyItems.length;
     `list-style: none` below, removing the native markers), but
     preserves semantics for screen readers that announce list order
       */}
-      <ol
+      <ListingTag
         class="compact-listing taxonomy-listing"
         reversed={descending}
         style={`--counter-start: ${descending ? itemCount + 1 : 0}; --counter-increment: ${descending ? -1 : 1}`}
       >
         {displayItems.map((item) => (
-          <li class="listing-item no-visited">
+          <li class:list={[{ numbered }, "listing-item", "no-visited"]}>
             <span class="listing-content">
               <a class="title" href={item.href}>
                 {item.title}
@@ -84,7 +87,7 @@ const itemCount = nonEmptyItems.length;
             </span>
           </li>
         ))}
-      </ol>
+      </ListingTag>
       {browseAllLink && (
         <div class="browse-all">
           <small>
@@ -124,6 +127,10 @@ const itemCount = nonEmptyItems.length;
 
       &::before {
         font-size: small;
+        content: "•";
+      }
+
+      &.numbered::before {
         color: var(--color-text-muted);
         content: counter(expression-counter) ".";
       }
