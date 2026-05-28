@@ -35,7 +35,7 @@ const { Content: ThreadsContent } = await renderContent(
     <Heading id="tags-heading" level="2"><Link to="/tags">Tags</Link></Heading>
     {TagsContent && <TagsContent />}
     <TaxonomyListingCompact
-      browseAllLink={$path({ to: "/tags" })}
+      moreLink={$path({ to: "/tags" })}
       collections={["tags"]}
       limit={8}
       sortBy="count"
@@ -47,7 +47,7 @@ const { Content: ThreadsContent } = await renderContent(
     >
     {ThreadsContent && <ThreadsContent />}
     <TaxonomyListingCompact
-      browseAllLink={$path({ to: "/threads" })}
+      moreLink={$path({ to: "/threads" })}
       collections={["threads"]}
       limit={8}
       sortBy="title"

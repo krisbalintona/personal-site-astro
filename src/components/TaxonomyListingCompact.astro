@@ -3,6 +3,7 @@ import { isProd } from "@lib/consts";
 import { getContentCollection, getEntryUrl } from "@lib/entries";
 import { allExpressions } from "@lib/expressions";
 import type { TaxonomyCollection, TaxonomyEntry } from "@lib/taxonomies";
+import pluralize from "pluralize";
 
 interface TaxonomyListingItem {
   count: number;
@@ -11,7 +12,7 @@ interface TaxonomyListingItem {
 }
 
 interface Props {
-  browseAllLink?: string;
+  moreLink?: string;
   collections: TaxonomyCollection[];
   descending?: boolean;
   filter?: (taxonomy: TaxonomyEntry) => boolean;
@@ -21,7 +22,7 @@ interface Props {
 }
 
 const {
-  browseAllLink,
+  moreLink,
   collections,
   sortBy = "title",
   descending = sortBy === "title" ? false : true,
@@ -59,6 +60,7 @@ const nonEmptyItems = isProd
 const displayItems = limit ? nonEmptyItems.slice(0, limit) : nonEmptyItems;
 const hasItems = displayItems.length > 0;
 const itemCount = nonEmptyItems.length;
+const limitExceeded = limit && itemCount > limit;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
@@ -80,24 +82,28 @@ const itemCount = nonEmptyItems.length;
               <a class="title" href={item.href}>
                 {item.title}
               </a>
-              <span class="count">
-                {item.count}
-                {item.count === 1 ? " entry" : " entries"}
-              </span>
+              <span class="count">{pluralize(" entry", item.count, true)}</span>
             </span>
           </li>
         ))}
       </ListingTag>
-      {browseAllLink && (
-        <div class="browse-all">
-          <small>
-            <a href={browseAllLink}>
-              Browse all {itemCount}{" "}
-              {collections.length === 1 && ` ${collections[0]}`}
-            </a>
-          </small>
-        </div>
-      )}
+      {moreLink &&
+        (limitExceeded ? (
+          <div class="more-entries inline">
+            &#8230;{/* Ellipsis */}and{" "}
+            <a href={moreLink}>{!numbered && itemCount - limit} more</a>
+          </div>
+        ) : (
+          <div class="more-entries browse">
+            <small>
+              <a href={moreLink}>
+                Browse all {itemCount}{" "}
+                {collections.length === 1 &&
+                  pluralize(` ${collections[0]}`, itemCount)}
+              </a>
+            </small>
+          </div>
+        ))}
     </div>
   )
 }
@@ -109,26 +115,21 @@ const itemCount = nonEmptyItems.length;
   }
 
   .taxonomy-listing {
+    list-style: none;
     display: grid;
     grid-template-columns: auto 1fr;
     padding: 0;
     margin: var(--space-m) 0 0 0;
     counter-reset: expression-counter var(--counter-start);
 
-    .listing-item {
+    li {
       display: grid;
       grid-template-columns: subgrid;
       grid-column: 1 / -1;
       column-gap: var(--space-3xs);
       align-items: baseline;
       padding-bottom: var(--space-3xs);
-      list-style: none;
       counter-increment: expression-counter var(--counter-increment);
-
-      &::before {
-        font-size: small;
-        content: "•";
-      }
 
       &.numbered::before {
         color: var(--color-text-muted);
@@ -139,10 +140,10 @@ const itemCount = nonEmptyItems.length;
         display: flex;
         gap: var(--space-2xs);
         align-items: baseline;
-      }
 
-      a {
-        --link-underline-color: transparent;
+        a {
+          --link-underline-color: transparent;
+        }
       }
 
       .title {
@@ -159,12 +160,24 @@ const itemCount = nonEmptyItems.length;
         white-space: nowrap;
       }
     }
+
+    .listing-item::before {
+      font-size: small;
+      content: "•";
+    }
   }
 
-  .browse-all {
-    display: flex;
-    justify-content: center;
-    margin-top: var(--space-2xs);
+  .more-entries {
     font-size: var(--font-step--1);
+
+    &.inline {
+      padding-left: var(--space-2xs);
+    }
+
+    &.browse {
+      display: flex;
+      justify-content: center;
+      margin-top: var(--space-2xs);
+    }
   }
 </style>
