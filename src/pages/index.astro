@@ -1,8 +1,12 @@
 ---
+import ExpressionListingCompact from "@components/ExpressionListingCompact.astro";
+import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getContentEntry, renderContent } from "@lib/entries";
+import Link from "astro-typesafe-routes/link";
+import { $path } from "astro-typesafe-routes/path";
 
-const home = await getContentEntry("standalone", "about");
+const home = await getContentEntry("standalone", "home");
 const { Content } = await renderContent(home);
 ---
 
@@ -11,11 +15,28 @@ const { Content } = await renderContent(home);
   pageTitle="Home"
   pageDescription="A personal site to help me flesh out my ideas and share them along the way"
 >
-  {
-    Content && (
-      <article>
-        <Content />
-      </article>
-    )
-  }
+  <article>
+    <section>
+      {Content && <Content />}
+      <p>Learn more about me and this site <Link to="/about">here</Link>.</p>
+    </section>
+    <section aria-labelledby="recents-heading">
+      <Heading id="recents-heading" level="2">Recent</Heading>
+      <ExpressionListingCompact
+        browseAllLink={$path({ to: "/prose" })}
+        limit={10}
+      />
+    </section>
+  </article>
 </BaseLayout>
+
+<style>
+  #recents-heading {
+    margin-top: 0.1em !important;
+  }
+
+  :global(section + section) {
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--color-border);
+  }
+</style>
