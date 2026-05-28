@@ -1,0 +1,85 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<button id="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false">
+  <Icon name="ph:sun" aria-hidden="true" focusable="false" />
+  <Icon name="ph:moon" aria-hidden="true" focusable="false" />
+</button>
+
+<style>
+  button {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    font-size: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  :global([data-theme="dark"]) svg[data-icon="ph:sun"] {
+    display: none;
+  }
+
+  :global([data-theme="light"]) svg[data-icon="ph:moon"] {
+    display: none;
+  }
+</style>
+
+<style is:global>
+  .theme-transitioning,
+  .theme-transitioning *,
+  .theme-transitioning *::before,
+  .theme-transitioning *::after {
+    --transition-duration: 0.4s;
+
+    transition:
+      background-color var(--transition-duration) ease,
+      color var(--transition-duration) ease,
+      border-color var(--transition-duration) ease !important;
+  }
+</style>
+
+{
+  /* Must be run immediately on page load, so must be `is:inline` (not
+  bundled as a separate module */
+}
+<script is:inline>
+  const root = document.documentElement;
+  const toggle = document.getElementById("theme-toggle");
+  const state =
+    localStorage.getItem("theme") ??
+    (window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light");
+
+  function setTheme(theme) {
+    localStorage.setItem("theme", theme);
+
+    // Set attributes appropriately
+    root.setAttribute("data-theme", theme);
+    toggle.setAttribute(
+      "aria-label",
+      `Switch to ${theme === "dark" ? "light" : "dark"} mode`,
+    );
+    toggle.setAttribute("aria-pressed", theme === "dark");
+  }
+
+  // Immediately set theme on page load/refresh
+  setTheme(state);
+
+  // Theme toggle button
+  toggle.addEventListener("click", () => {
+    // Temporarily add a transition to every element so the change of
+    // colors is not sudden
+    root.classList.add("theme-transitioning");
+    window.setTimeout(() => {
+      root.classList.remove("theme-transitioning");
+    }, 400);
+
+    setTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
+  });
+</script>
