@@ -38,7 +38,11 @@ const { Content } = await renderContent(home);
           {(await getContentEntry("standalone", "explore"))?.data.description}
         </dd>
       </dl>
-      <p>Learn more about me and this site <Link to="/about">here</Link>.</p>
+      <p>
+        Learn more about me and this site <Link to="/about">here</Link>. RSS
+        feeds are also available for various subsets of my content; they are
+        listed <Link to="/feeds">here</Link>.
+      </p>
     </section>
     <section aria-labelledby="recents-heading">
       <Heading id="recents-heading" level="2">Recent</Heading>
