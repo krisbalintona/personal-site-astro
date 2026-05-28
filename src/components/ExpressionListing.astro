@@ -64,11 +64,9 @@ const hasItems = expressionItems.length > 0;
             <a class="title" href={item.href}>
               {item.title}
             </a>
-            <a class="date" href={item.href}>
-              <time datetime={toDateTimeAttribute(item.pubDate)}>
-                {formatDate(item.pubDate)}
-              </time>
-            </a>
+            <time class="date" datetime={toDateTimeAttribute(item.pubDate)}>
+              {formatDate(item.pubDate)}
+            </time>
           </li>
         ))}
     </ul>
@@ -101,10 +99,6 @@ const hasItems = expressionItems.length > 0;
 
       .date {
         color: var(--color-text-muted);
-
-        &:hover {
-          color: currentcolor;
-        }
       }
     }
   }

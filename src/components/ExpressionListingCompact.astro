@@ -61,9 +61,9 @@ const itemCount = expressionItems.length;
   hasItems && (
     <div class="listing-wrapper expression-listing-wrapper">
       {/* Note: `reversed={descending}` has no visual effect (we set
-    `list-style: none` below, removing the native markers), but
-    preserves semantics for screen readers that announce list order
-    */}
+      `list-style: none` below, removing the native markers), but
+      preserves semantics for screen readers that announce list order
+        */}
       <ol
         class="compact-listing expression-listing"
         reversed={descending}
@@ -74,11 +74,9 @@ const itemCount = expressionItems.length;
             <a class="title" href={item.href}>
               {item.title}
             </a>
-            <a class="date" href={item.href}>
-              <time datetime={toDateTimeAttribute(item.pubDate)}>
-                {formatDate(item.pubDate)}
-              </time>
-            </a>
+            <time class="date" datetime={toDateTimeAttribute(item.pubDate)}>
+              {formatDate(item.pubDate)}
+            </time>
           </li>
         ))}
       </ol>
@@ -137,10 +135,6 @@ const itemCount = expressionItems.length;
 
       .date {
         color: var(--color-text-muted);
-
-        &:hover {
-          color: currentcolor;
-        }
       }
     }
   }
