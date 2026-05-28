@@ -1,9 +1,9 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { getRSSFeedUrl, RSSFeeds } from "@lib/rss";
+import { getRSSFeedUrl, topLevelRSSFeeds } from "@lib/rss";
 import Link from "astro-typesafe-routes/link";
 
-const feeds = await RSSFeeds();
+const feeds = await topLevelRSSFeeds();
 ---
 
 <BaseLayout

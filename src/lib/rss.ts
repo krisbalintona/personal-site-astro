@@ -188,7 +188,7 @@ let _feedsCache: Record<string, RSSFeed> | null = null;
 // and on-demand routes/endpoints), this hangs the prerender phase
 // because the SSR routing layer intercepts AstroContainer's internal
 // requests before it is fully initialized.
-export async function RSSFeeds(): Promise<Record<string, RSSFeed>> {
+export async function topLevelRSSFeeds(): Promise<Record<string, RSSFeed>> {
   if (_feedsCache) return _feedsCache;
 
   // Build per-expression content collection RSS feed items for

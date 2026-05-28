@@ -6,7 +6,7 @@ import Footer from "@components/Footer.astro";
 import Header from "@components/Header.astro";
 import Heading from "@components/markup/Heading.astro";
 import { isProd, SITE_TITLE } from "@lib/consts";
-import { getRSSFeedUrl, RSSFeeds } from "@lib/rss";
+import { getRSSFeedUrl, topLevelRSSFeeds } from "@lib/rss";
 import { Font } from "astro:assets";
 import { SEO } from "astro-seo";
 
@@ -51,7 +51,7 @@ const { pageTitle, pageDescription, displayTitle = pageTitle } = Astro.props;
       for more information */
     }
     {
-      Object.entries(await RSSFeeds()).map(([feedName, channel]) => (
+      Object.entries(await topLevelRSSFeeds()).map(([feedName, channel]) => (
         <link
           rel="alternate"
           type="application/rss+xml"
