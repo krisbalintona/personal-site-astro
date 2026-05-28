@@ -533,7 +533,9 @@ async function processContentFiles({
     // Determine the entry ID: use `title` frontmatter field if
     // present (and a string), otherwise error
     let id: string;
-    if (frontmatter.title && typeof frontmatter.title === "string") {
+    if (frontmatter.slug && typeof frontmatter.slug === "string") {
+      id = frontmatter.slug;
+    } else if (frontmatter.title && typeof frontmatter.title === "string") {
       id = frontmatter.title;
     } else {
       logger.error(`File ${file} should have title in the frontmatter`);

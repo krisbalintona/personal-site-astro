@@ -20,6 +20,7 @@ import slugify from "slugify";
 
 export const baseContentShape = {
   title: z.string().default("Untitled"),
+  slug: z.string().optional(),
   draft: z.boolean().default(true),
   description: z.string().optional(),
 };
