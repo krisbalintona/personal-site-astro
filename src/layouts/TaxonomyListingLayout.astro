@@ -54,13 +54,10 @@ const { Content: PreambleContent } = await renderContent(preambleEntry);
         )
       }
     </Breadcrumb>
-    {
-      PreambleContent && (
-        <div class="taxonomy-preamble">
-          <PreambleContent />
-        </div>
-      )
-    }
+    <div class="taxonomy-preamble">
+      {PreambleContent && <PreambleContent />}
+      <slot name="preamble-extra" />
+    </div>
   </header>
   <slot />
 </BaseLayout>

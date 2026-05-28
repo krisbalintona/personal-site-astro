@@ -4,7 +4,6 @@ import Heading from "@components/markup/Heading.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getContentEntry, renderContent } from "@lib/entries";
 import Link from "astro-typesafe-routes/link";
-import { $path } from "astro-typesafe-routes/path";
 
 const home = await getContentEntry("standalone", "home");
 const { Content } = await renderContent(home);
@@ -18,14 +17,32 @@ const { Content } = await renderContent(home);
   <article>
     <section>
       {Content && <Content />}
+      <p>You may use these pages as entrypoints to my content:</p>
+      <dl>
+        <dt><Link to="/articles">Articles</Link></dt>
+        <dd>
+          {
+            (await getContentEntry("standalone", "taxonomyArticles"))?.data
+              .description
+          }
+        </dd>
+        <dt><Link to="/notes">Notes</Link></dt>
+        <dd>
+          {
+            (await getContentEntry("standalone", "taxonomyNotes"))?.data
+              .description
+          }
+        </dd>
+        <dt><Link to="/explore">Explore</Link></dt>
+        <dd>
+          {(await getContentEntry("standalone", "explore"))?.data.description}
+        </dd>
+      </dl>
       <p>Learn more about me and this site <Link to="/about">here</Link>.</p>
     </section>
     <section aria-labelledby="recents-heading">
       <Heading id="recents-heading" level="2">Recent</Heading>
-      <ExpressionListingCompact
-        browseAllLink={$path({ to: "/prose" })}
-        limit={10}
-      />
+      <ExpressionListingCompact limit={10} />
     </section>
   </article>
 </BaseLayout>

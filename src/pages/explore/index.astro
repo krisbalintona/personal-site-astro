@@ -31,6 +31,20 @@ const { Content: ThreadsContent } = await renderContent(
   breadcrumbsDescription={exploreEntry?.data.description}
   preambleEntry={exploreEntry}
 >
+  <dl slot="preamble-extra">
+    <p>For other listings of my content, see</p>
+    <dt><Link to="/articles">Articles</Link></dt>
+    <dd>
+      {
+        (await getContentEntry("standalone", "taxonomyArticles"))?.data
+          .description
+      }
+    </dd>
+    <dt><Link to="/notes">Notes</Link></dt>
+    <dd>
+      {(await getContentEntry("standalone", "taxonomyNotes"))?.data.description}
+    </dd>
+  </dl>
   <section aria-labelledby="tags-heading">
     <Heading id="tags-heading" level="2"><Link to="/tags">Tags</Link></Heading>
     {TagsContent && <TagsContent />}
