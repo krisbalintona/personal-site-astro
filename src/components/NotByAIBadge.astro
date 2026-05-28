@@ -1,0 +1,35 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<span
+  title="Written by a human, not by AI. (If you're curious about this badge, check out https://notbyai.fyi/!)"
+>
+  <Icon name="Written-By-a-Human-Not-By-AI-Badge-white" />
+  <Icon name="Written-By-a-Human-Not-By-AI-Badge-black" />
+</span>
+
+<style>
+  /* Show light theme badge by default */
+  span {
+    svg[data-icon="Written-By-a-Human-Not-By-AI-Badge-white"] {
+      display: block;
+    }
+
+    svg[data-icon="Written-By-a-Human-Not-By-AI-Badge-black"] {
+      display: none;
+    }
+  }
+
+  :global([data-theme="dark"]) {
+    span {
+      svg[data-icon="Written-By-a-Human-Not-By-AI-Badge-white"] {
+        display: none;
+      }
+
+      svg[data-icon="Written-By-a-Human-Not-By-AI-Badge-black"] {
+        display: block;
+      }
+    }
+  }
+</style>
