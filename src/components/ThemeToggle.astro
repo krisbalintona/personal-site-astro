@@ -2,10 +2,17 @@
 import { Icon } from "astro-icon/components";
 ---
 
-<button id="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false">
-  <Icon name="ph:sun" aria-hidden="true" focusable="false" />
-  <Icon name="ph:moon" aria-hidden="true" focusable="false" />
-</button>
+<div role="radiogroup" aria-label="Theme">
+  <button role="radio" aria-checked="false" data-theme-value="light">
+    <Icon name="ph:sun-bold" aria-hidden="true" focusable="false" />
+  </button>
+  <button role="radio" aria-checked="false" data-theme-value="dark">
+    <Icon name="ph:moon-bold" aria-hidden="true" focusable="false" />
+  </button>
+  <button role="radio" aria-checked="true" data-theme-value="system">
+    <Icon name="ph:monitor-bold" aria-hidden="true" focusable="false" />
+  </button>
+</div>
 
 <style>
   button {
@@ -20,12 +27,37 @@ import { Icon } from "astro-icon/components";
     cursor: pointer;
   }
 
-  :global([data-theme="dark"]) svg[data-icon="ph:sun"] {
-    display: none;
+  /* When light theme */
+  :global([data-theme="light"]) {
+    svg[data-icon="ph:moon-bold"] {
+      display: none;
+    }
+
+    svg[data-icon="ph:monitor-bold"] {
+      display: none;
+    }
   }
 
-  :global([data-theme="light"]) svg[data-icon="ph:moon"] {
-    display: none;
+  /* When dark theme */
+  :global([data-theme="dark"]) {
+    svg[data-icon="ph:sun-bold"] {
+      display: none;
+    }
+
+    svg[data-icon="ph:monitor-bold"] {
+      display: none;
+    }
+  }
+
+  /* When system theme */
+  :global([data-theme="system"]) {
+    svg[data-icon="ph:sun-bold"] {
+      display: none;
+    }
+
+    svg[data-icon="ph:moon-bold"] {
+      display: none;
+    }
   }
 </style>
 
@@ -49,8 +81,8 @@ import { Icon } from "astro-icon/components";
 }
 <script is:inline>
   const root = document.documentElement;
-  const toggle = document.getElementById("theme-toggle");
-  const state =
+  const buttons = document.querySelectorAll("[data-theme-value]");
+  const initialState =
     localStorage.getItem("theme") ??
     (window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
@@ -58,28 +90,44 @@ import { Icon } from "astro-icon/components";
 
   function setTheme(theme) {
     localStorage.setItem("theme", theme);
-
-    // Set attributes appropriately
     root.setAttribute("data-theme", theme);
-    toggle.setAttribute(
-      "aria-label",
-      `Switch to ${theme === "dark" ? "light" : "dark"} mode`,
-    );
-    toggle.setAttribute("aria-pressed", theme === "dark");
+    buttons.forEach((btn) => {
+      const value = btn.dataset.themeValue;
+      const labelLower = value.charAt(0).toLowerCase() + value.slice(1);
+      const labelUpper = value.charAt(0).toUpperCase() + value.slice(1);
+      btn.setAttribute("aria-checked", value === theme);
+      btn.setAttribute(
+        "aria-label",
+        value === theme
+          ? `${labelUpper} theme, selected`
+          : `Switch to ${labelLower} theme`,
+      );
+      btn.setAttribute(
+        "title",
+        value === theme
+          ? `${labelUpper} theme, selected`
+          : `Switch to ${labelLower} theme`,
+      );
+    });
   }
 
   // Immediately set theme on page load/refresh
-  setTheme(state);
+  setTheme(initialState);
 
   // Theme toggle button
-  toggle.addEventListener("click", () => {
-    // Temporarily add a transition to every element so the change of
-    // colors is not sudden
-    root.classList.add("theme-transitioning");
-    window.setTimeout(() => {
-      root.classList.remove("theme-transitioning");
-    }, 400);
+  buttons.forEach((btn) =>
+    btn.addEventListener("click", () => {
+      // Temporarily add a transition to every element so the change
+      // of colors is not sudden
+      root.classList.add("theme-transitioning");
+      window.setTimeout(() => {
+        root.classList.remove("theme-transitioning");
+      }, 400);
 
-    setTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
-  });
+      // Switch to next theme
+      const themes = { light: "dark", dark: "system", system: "light" };
+      const nextTheme = themes[btn.dataset.themeValue];
+      setTheme(nextTheme);
+    }),
+  );
 </script>
