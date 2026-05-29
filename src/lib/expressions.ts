@@ -71,6 +71,7 @@ export function getExpressionPermalink(expression: ExpressionEntry): string {
 // required XML fields.
 export const expressionSchema = rssSchema.extend(baseContentShape).extend({
   pubDate: z.coerce.date().default(new Date("1970-01-01")),
+  lastMod: z.coerce.date().optional(),
   subtitle: z.string().optional(),
   tags: z.array(reference("tags")).optional(),
   threads: z.array(reference("threads")).optional(),

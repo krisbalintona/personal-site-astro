@@ -835,6 +835,8 @@ communication channel for the export process."
               ;; there will be no frontmatter
               (and (buffer-file-name)
                    (car (org-publish-get-project-from-filename (buffer-file-name))))))
+         ;; YAML 1.1 timestamp spec
+         (timestamp-format "%FT%T%:z")
 
          ;; Title
          (raw-title
@@ -849,8 +851,15 @@ communication channel for the export process."
          (slug (org-mdx--frontmatter-field "slug" raw-slug))
 
          ;; Date
-         (pub-date-timestamp (car (ensure-list (org-export-get-date info "%FT%T%:z")))) ; YAML 1.1 timestamp spec
+         (pub-date-timestamp (car (ensure-list (org-export-get-date info timestamp-format))))
          (pub-date (org-mdx--frontmatter-field "pubDate" pub-date-timestamp 'timestamp))
+
+         ;; Last modification (last-mod)
+         (raw-last-mod (plist-get info :mdx-last-mod))
+         (last-mod
+          (when (org-string-nw-p raw-last-mod)
+            (format-time-string timestamp-format (encode-time (org-parse-time-string raw-last-mod)))))
+         (last-mod (org-mdx--frontmatter-field "lastMod" last-mod 'timestamp))
 
          ;; Draft
          (raw-draft (plist-get info :mdx-draft-p))
@@ -901,7 +910,7 @@ communication channel for the export process."
            ;; project content.config.ts
            (pcase entry-type
              ((or "articles" "notes")
-              (append frontmatter-base (list pub-date tags threads redirects)))
+              (append frontmatter-base (list pub-date last-mod tags threads redirects)))
              (_ frontmatter-base)))
      "\n")))
 
@@ -1134,6 +1143,7 @@ Return the output directory's name."
   :options-alist
   '((:mdx-slug "MDX_SLUG" nil nil)
     (:mdx-draft-p "MDX_DRAFT" "mdx-draft" "true")
+    (:mdx-last-mod "MDX_LAST_MOD" nil nil nil)
     (:mdx-tags "MDX_TAGS" nil nil space)
     (:mdx-threads "MDX_THREADS" nil nil space)
     (:mdx-redirects "MDX_REDIRECTS" nil nil space)
