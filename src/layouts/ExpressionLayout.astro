@@ -47,7 +47,11 @@ const threads = expression.data.threads;
 const { Content } = await renderContent(expression);
 ---
 
-<BaseLayout pageTitle={title} pageDescription={expression.data.description}>
+<BaseLayout
+  pageTitle={title}
+  displayTitle={false}
+  pageDescription={expression.data.description}
+>
   {
     /* Use `data-goatcounter-settings` to set the path counted by
     GoatCounter. See https://krisbalintona.goatcounter.com/help/path
