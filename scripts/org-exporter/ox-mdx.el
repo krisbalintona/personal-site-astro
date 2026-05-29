@@ -849,10 +849,7 @@ communication channel for the export process."
          (slug (org-mdx--frontmatter-field "slug" raw-slug))
 
          ;; Date
-         (raw-pub-date (car (plist-get info :date)))
-         (pub-date-timestamp
-          (when raw-pub-date
-            (org-format-timestamp raw-pub-date "%FT%T%:z"))) ; YAML 1.1 timestamp spec
+         (pub-date-timestamp (car (ensure-list (org-export-get-date info "%FT%T%:z")))) ; YAML 1.1 timestamp spec
          (pub-date (org-mdx--frontmatter-field "pubDate" pub-date-timestamp 'timestamp))
 
          ;; Draft
