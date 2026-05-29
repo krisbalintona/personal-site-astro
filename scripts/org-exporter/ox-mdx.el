@@ -839,43 +839,46 @@ communication channel for the export process."
          (timestamp-format "%FT%T%:z")
 
          ;; Title
-         (raw-title
-          ;; We want a plain-text (UTF-8, since our HTML is encoded in
-          ;; UTF-8 anyway) version of the title, since that's what we
-          ;; want rendered on the page
-          (org-mdx--title-to-utf8 info))
-         (title (org-mdx--frontmatter-field "title" raw-title))
+         (title (org-mdx--frontmatter-field
+                 "title"
+                 ;; We want a plain-text (UTF-8, since our HTML is
+                 ;; encoded in UTF-8 anyway) version of the title,
+                 ;; since that's what we want rendered on the page
+                 (org-mdx--title-to-utf8 info)))
 
          ;; Slug
-         (raw-slug (plist-get info :mdx-slug))
-         (slug (org-mdx--frontmatter-field "slug" raw-slug))
+         (slug (org-mdx--frontmatter-field "slug" (plist-get info :mdx-slug)))
 
          ;; Date
-         (pub-date-timestamp (car (ensure-list (org-export-get-date info timestamp-format))))
-         (pub-date (org-mdx--frontmatter-field "pubDate" pub-date-timestamp 'timestamp))
+         (pub-date (org-mdx--frontmatter-field
+                    "pubDate"
+                    (car (ensure-list (org-export-get-date info timestamp-format)))
+                    'timestamp))
 
-         ;; Last modification (last-mod)
+         ;; Last modification
          (raw-last-mod (plist-get info :mdx-last-mod))
          (last-mod
-          (when (org-string-nw-p raw-last-mod)
-            (format-time-string timestamp-format (encode-time (org-parse-time-string raw-last-mod)))))
-         (last-mod (org-mdx--frontmatter-field "lastMod" last-mod 'timestamp))
+          (org-mdx--frontmatter-field
+           "lastMod"
+           (when (org-string-nw-p raw-last-mod)
+             (format-time-string timestamp-format (encode-time (org-parse-time-string raw-last-mod))))
+           'timestamp))
 
          ;; Draft
-         (raw-draft (plist-get info :mdx-draft-p))
-         (draft (org-mdx--frontmatter-field "draft" raw-draft 'boolean))
+         (draft
+          (org-mdx--frontmatter-field "draft" (plist-get info :mdx-draft-p) 'boolean))
 
          ;; Tags
-         (raw-tags (plist-get info :mdx-tags))
-         (tags (org-mdx--frontmatter-build-list
-                "tags" (org-mdx--frontmatter-parse-keyword-list raw-tags)))
+         (tags
+          (org-mdx--frontmatter-build-list
+           "tags"
+           (org-mdx--frontmatter-parse-keyword-list (plist-get info :mdx-tags))))
 
          ;; Description
-         (raw-description (plist-get info :description))
-         (description (org-mdx--frontmatter-field "description" raw-description))
+         (description
+          (org-mdx--frontmatter-field "description" (plist-get info :description)))
 
          ;; Threads
-         (raw-threads (plist-get info :mdx-threads))
          (transform-threads-func ; Convert entry IDs to their corresponding title
           (lambda (s)
             ;; FIXME 2026-05-17: Should we call something like
@@ -891,15 +894,16 @@ communication channel for the export process."
               (org-with-point-at (org-id-find s 'marker)
                 (or (org-element-property :title (org-element-at-point))
                     (org-get-title))))))
-         (threads (org-mdx--frontmatter-build-list
-                   "threads" (org-mdx--frontmatter-parse-keyword-list
-                              raw-threads transform-threads-func)))
-
+         (threads
+          (org-mdx--frontmatter-build-list
+           "threads" (org-mdx--frontmatter-parse-keyword-list
+                      (plist-get info :mdx-threads) transform-threads-func)))
 
          ;; Redirects
-         (raw-redirects (plist-get info :mdx-redirects))
-         (redirects (org-mdx--frontmatter-build-list
-                     "redirects" (org-mdx--frontmatter-parse-keyword-list raw-redirects)))
+         (redirects
+          (org-mdx--frontmatter-build-list
+           "redirects"
+           (org-mdx--frontmatter-parse-keyword-list (plist-get info :mdx-redirects))))
 
          (frontmatter-base (list title slug draft description)))
 
