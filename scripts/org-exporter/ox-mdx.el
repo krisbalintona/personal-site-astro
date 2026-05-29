@@ -911,14 +911,10 @@ CONTENTS is the transcoded contents string (returned by the
 inner-template backend transcoder).  INFO is a plist used as a
 communication channel for the export process."
   (let ((frontmatter (org-mdx--frontmatter contents info))
-        (imports
-         (org-string-nw-p
-          (mapconcat #'cdr (plist-get info :mdx-imports) "\n"))))
+        (imports (org-string-nw-p
+                  (mapconcat #'cdr (plist-get info :mdx-imports) "\n"))))
     (concat
-     (when frontmatter
-       (concat "---\n"
-               frontmatter
-               "\n---\n"))
+     (when frontmatter (concat "---\n" frontmatter "\n---\n"))
      (when imports (concat imports "\n\n"))
      contents)))
 
