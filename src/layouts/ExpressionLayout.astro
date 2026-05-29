@@ -26,6 +26,7 @@ interface Props {
 const { expression } = Astro.props;
 
 const pubDate = expression.data.pubDate;
+const lastMod = expression.data.lastMod;
 const title = expression.data.title;
 
 const breadcrumbs: BreadcrumbComponent[] = [
@@ -35,12 +36,21 @@ const breadcrumbs: BreadcrumbComponent[] = [
   },
 ];
 
-const formattedDateTime = toDateTimeAttribute(pubDate);
-const formattedVisibleDate = pubDate.toLocaleDateString("en-US", {
+const dateStringFormat: Intl.DateTimeFormatOptions = {
   year: "numeric",
   month: "long",
   day: "numeric",
-});
+};
+// Publication date
+const formattedPubDate = toDateTimeAttribute(pubDate);
+const visiblePubDate = pubDate.toLocaleDateString("en-US", dateStringFormat);
+// Last modification
+let formattedLastMod;
+let visibleLastMod;
+if (lastMod) {
+  formattedLastMod = toDateTimeAttribute(lastMod);
+  visibleLastMod = lastMod.toLocaleDateString("en-US", dateStringFormat);
+}
 
 const tags = expression.data.tags;
 const threads = expression.data.threads;
@@ -76,9 +86,20 @@ const { Content } = await renderContent(expression);
 
       <div class="expression-info-container">
         <div class="expression-info-meta">
-          <time class="expression-date" datetime={formattedDateTime}
-            >{formattedVisibleDate}</time
-          >
+          {
+            lastMod ? (
+              <>
+                <time datetime={formattedPubDate}>{visiblePubDate}</time>
+                <span class="sr-only">,</span>
+                <span class="last-mod">
+                  last updated{" "}
+                  <time datetime={formattedLastMod}>{visibleLastMod}</time>
+                </span>
+              </>
+            ) : (
+              <time datetime={formattedPubDate}>{visiblePubDate}</time>
+            )
+          }
           <button
             id="copy-permalink"
             aria-label="Copy permalink"
@@ -151,10 +172,12 @@ const { Content } = await renderContent(expression);
 
       .expression-info-meta {
         font-size: var(--font-step--1);
-        display: flex;
-        align-items: center;
-        gap: var(--space-3xs-2xs);
         margin: var(--space-3xs) 0;
+
+        .last-mod {
+          font-size: small;
+          color: var(--color-text-muted);
+        }
 
         button#copy-permalink {
           display: inline-flex;
