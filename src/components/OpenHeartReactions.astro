@@ -1,0 +1,248 @@
+---
+import { isDev } from "@lib/consts";
+import { type ExpressionEntry, getExpressionPermalink } from "@lib/expressions";
+
+interface Props {
+  expression: ExpressionEntry;
+}
+
+const { expression } = Astro.props;
+
+if (!Astro.site)
+  throw new Error("Site URL must be set for Open Heart reactions to work");
+// Use permalink as path to be robust against path changes
+const path = getExpressionPermalink(expression);
+const pageUrl = new URL(path, Astro.site.origin).href;
+const endpoint = "https://openheart.kristofferbalintona.me"; // Endpoint for HeartHeartStore backend
+---
+
+<div
+  role="group"
+  aria-label="Post reactions"
+  class="open-heart-reactions"
+  data-endpoint={endpoint}
+  data-page-url={pageUrl}
+  title={isDev ? "Reactions disabled in dev mode" : undefined}
+>
+  <button
+    aria-label="Thumbs up reaction"
+    class="reaction"
+    data-emoji="👍"
+    aria-pressed="false">👍<span class="count"></span></button
+  >
+  <button
+    aria-label="Heart reaction"
+    class="reaction"
+    data-emoji="❤️"
+    aria-pressed="false">❤️<span class="count"></span></button
+  >
+  <button
+    aria-label="Celebration reaction"
+    class="reaction"
+    data-emoji="🎉"
+    aria-pressed="false">🎉<span class="count"></span></button
+  >
+  <button
+    aria-label="Thinking reaction"
+    class="reaction"
+    data-emoji="🤔"
+    aria-pressed="false">🤔<span class="count"></span></button
+  >
+</div>
+
+<style>
+  .open-heart-reactions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m-l);
+    font-family: var(--font-ui);
+
+    .reaction {
+      font-size: inherit;
+    }
+
+    &[data-error="true"] .reaction {
+      filter: grayscale(0.5) opacity(0.7);
+      cursor: not-allowed;
+    }
+  }
+
+  .reaction {
+    cursor: pointer;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    padding: 0.4em 1.1em;
+    gap: var(--space-3xs);
+    background: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      border-color 150ms ease,
+      background 150ms ease,
+      opacity 150ms ease,
+      transform 100ms ease;
+
+    &:active {
+      transform: scale(0.97);
+    }
+
+    &[aria-pressed="true"] {
+      border-color: var(--color-bg-surface-accent);
+      background: var(--color-bg-surface);
+      animation: reaction-pop 200ms ease;
+    }
+
+    &[aria-busy="true"] {
+      opacity: 0.6;
+      cursor: wait;
+    }
+  }
+
+  @keyframes reaction-pop {
+    0% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.05);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .count:empty {
+    display: none;
+  }
+</style>
+
+<script>
+  import { isDev } from "@lib/consts";
+
+  const containers = document.querySelectorAll<HTMLElement>(
+    ".open-heart-reactions[data-endpoint]",
+  );
+
+  for (const container of containers) {
+    const btns = container.querySelectorAll<HTMLButtonElement>(".reaction");
+    const endpoint = container.dataset.endpoint!;
+    const pageUrl = container.dataset.pageUrl!;
+    const storageKey = `open-heart-reactions:${pageUrl}`;
+
+    // Emojis the user has already reacted with on this page,
+    // persisted across sessions
+    const sent: Set<string> = new Set(
+      JSON.parse(localStorage.getItem(storageKey) ?? "[]"),
+    );
+
+    /* Debounce to avoid server spam */
+    function debounce<T extends (...args: unknown[]) => void>(
+      fn: T,
+      ms: number,
+    ): T {
+      let timer: ReturnType<typeof setTimeout>;
+      return ((...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), ms);
+      }) as T;
+    }
+
+    async function fetchCounts() {
+      try {
+        const result = await fetch(
+          `${endpoint}/?url=${encodeURIComponent(pageUrl)}`,
+        );
+        if (!result.ok)
+          throw new Error(
+            `Failed to fetch reaction counts for ${pageUrl}: ${result.status} ${result.statusText}`,
+          );
+        const counts: Record<string, number> = await result.json();
+        for (const btn of btns) {
+          const emoji = btn.dataset.emoji!;
+          const count = counts[emoji] ?? 0;
+          btn.querySelector(".count")!.textContent = String(count);
+        }
+      } catch (e) {
+        console.error(e);
+        container.dataset.error = "true";
+        for (const btn of btns) {
+          btn.disabled = true;
+          btn.setAttribute("aria-disabled", "true");
+        }
+      }
+    }
+
+    const debouncedFetchCounts = debounce(fetchCounts, 400);
+
+    /* Restore clicked state of buttons after page refresh (via
+       localStorage) */
+    function restoreState() {
+      for (const btn of btns) {
+        if (sent.has(btn.dataset.emoji!)) {
+          btn.setAttribute("aria-pressed", "true");
+        }
+      }
+    }
+
+    async function handleClick(btn: HTMLButtonElement) {
+      const emoji = btn.dataset.emoji!;
+      const isUndo = sent.has(emoji);
+
+      // When in a dev environment, make the clicks no-ops
+      if (isDev) return;
+
+      /* Before making any network requests, disable and make the
+         button busy, so that users are aware that some background
+         work is in progress */
+      btn.setAttribute("aria-busy", "true");
+      btn.disabled = true;
+      btn.setAttribute("aria-disabled", "true");
+
+      try {
+        const result = await fetch(
+          `${endpoint}/?url=${encodeURIComponent(pageUrl)}`,
+          {
+            method: isUndo ? "DELETE" : "POST",
+            body: emoji,
+          },
+        );
+        if (!result.ok) {
+          throw new Error(
+            `Failed to send reaction for ${pageUrl}: ${result.status} ${result.statusText}`,
+          );
+        }
+
+        if (!isUndo) {
+          /* POST */
+          sent.add(emoji);
+          btn.setAttribute("aria-pressed", "true");
+        } else {
+          /* DELETE */
+          sent.delete(emoji);
+          btn.setAttribute("aria-pressed", "false");
+        }
+
+        localStorage.setItem(storageKey, JSON.stringify([...sent]));
+        await debouncedFetchCounts();
+      } finally {
+        /* Clean up */
+        btn.removeAttribute("aria-busy");
+        btn.disabled = false;
+        btn.removeAttribute("aria-disabled");
+      }
+    }
+
+    container.addEventListener("click", (e) => {
+      // When anything inside the container is clicked, take the
+      // element that was actually clicked (`e.target`), then walk up
+      // from it until an ancestor matching ".reaction" is found
+      const btn = (e.target as Element).closest<HTMLButtonElement>(".reaction");
+      if (btn) handleClick(btn);
+    });
+
+    restoreState();
+    fetchCounts();
+  }
+</script>

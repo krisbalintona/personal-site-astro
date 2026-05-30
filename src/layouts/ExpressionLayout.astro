@@ -4,6 +4,7 @@ import Breadcrumb, {
 } from "@components/Breadcrumb.astro";
 import ExpressionTaxonomyRow from "@components/ExpressionTaxonomyRow.astro";
 import NotByAIBadge from "@components/NotByAIBadge.astro";
+import OpenHeartReactions from "@components/OpenHeartReactions.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import {
   getContentEntries,
@@ -155,6 +156,9 @@ const { Content } = await renderContent(expression);
           )
         }
       </dl>
+
+      <OpenHeartReactions expression={expression} />
+
       <div class="not-ai-badge">
         <NotByAIBadge />
       </div>
@@ -236,6 +240,18 @@ const { Content } = await renderContent(expression);
   .expression-footer {
     margin-top: var(--space-xs-s);
     border-top: 2px solid var(--color-border);
+
+    .expression-taxonomy {
+      margin: 0.5rem 0 var(--space-m) 0;
+      padding: 0;
+    }
+
+    .open-heart-reactions {
+      display: flex;
+      justify-content: center;
+      margin-bottom: var(--space-l);
+      font-size: var(--font-step--2);
+    }
 
     .not-ai-badge {
       display: flex;
