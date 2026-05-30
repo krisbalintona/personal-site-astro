@@ -43,7 +43,7 @@ import { Icon } from "astro-icon/components";
   }
 
   /* When light theme */
-  :global([data-theme="light"]) {
+  :global([data-theme-actual="light"]) {
     svg[data-icon="ph:moon-bold"] {
       display: none;
     }
@@ -54,7 +54,7 @@ import { Icon } from "astro-icon/components";
   }
 
   /* When dark theme */
-  :global([data-theme="dark"]) {
+  :global([data-theme-actual="dark"]) {
     svg[data-icon="ph:sun-bold"] {
       display: none;
     }
@@ -65,7 +65,7 @@ import { Icon } from "astro-icon/components";
   }
 
   /* When system theme */
-  :global([data-theme="system"]) {
+  :global([data-theme-actual="system"]) {
     svg[data-icon="ph:sun-bold"] {
       display: none;
     }
@@ -104,8 +104,17 @@ import { Icon } from "astro-icon/components";
       : "light");
 
   function setTheme(theme) {
+    console.log("setTheme called with", theme);
     localStorage.setItem("theme", theme);
-    root.setAttribute("data-theme", theme);
+    root.setAttribute("data-theme-actual", theme);
+    const resolvedTheme =
+      theme === "system"
+        ? window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light"
+        : theme;
+    root.setAttribute("data-theme", resolvedTheme);
+
     buttons.forEach((btn) => {
       const value = btn.dataset.themeValue;
       const labelLower = value.charAt(0).toLowerCase() + value.slice(1);
@@ -141,8 +150,16 @@ import { Icon } from "astro-icon/components";
 
       // Switch to next theme
       const themes = { light: "dark", dark: "system", system: "light" };
-      const nextTheme = themes[btn.dataset.themeValue];
+      const nextTheme = themes[root.getAttribute("data-theme-actual")];
       setTheme(nextTheme);
     }),
   );
+
+  // Re-resolve system theme live if the user preference changes while
+  // user is on system mode
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", () => {
+      if (localStorage.getItem("theme") === "system") setTheme("system");
+    });
 </script>
