@@ -8,9 +8,6 @@ const { num } = Astro.props;
 
 <li id={`fn-${num}`}>
   {/* For sighted users */}
-  {
-    /* biome-ignore lint/a11y/useAnchorContent: decorative duplicate of sr-only backref */
-  }
   <a
     href={`#fnref-${num}`}
     class="ui fn-marker"
