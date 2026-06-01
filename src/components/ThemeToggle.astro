@@ -104,7 +104,6 @@ import { Icon } from "astro-icon/components";
       : "light");
 
   function setTheme(theme) {
-    console.log("setTheme called with", theme);
     localStorage.setItem("theme", theme);
     root.setAttribute("data-theme-actual", theme);
     const resolvedTheme =
