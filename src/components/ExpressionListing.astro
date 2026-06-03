@@ -10,48 +10,32 @@ import {
   type ExpressionCollection,
   type ExpressionEntry,
 } from "@lib/expressions";
-import { type CollectionEntry } from "astro:content";
-
-export interface ListingItem {
-  href: string;
-  pubDate: Date;
-  title: string;
-}
+import Link from "astro-typesafe-routes/link";
 
 interface Props {
   collections?: ExpressionCollection[];
   descending?: boolean;
   filter?: (expression: ExpressionEntry) => boolean;
+  showType?: boolean;
 }
 
 const {
   collections,
   filter: filter = () => true,
   descending = true,
+  showType = false,
 } = Astro.props;
 
 const expressions = collections
   ? (
-      await Promise.all(
-        (Array.isArray(collections) ? collections : [collections]).map((c) =>
-          getContentCollection(c, filter),
-        ),
-      )
+      await Promise.all(collections.map((c) => getContentCollection(c, filter)))
     ).flat()
   : await allExpressions(filter);
-const expressionItems: ListingItem[] = expressions
-  .map(
-    (expression: CollectionEntry<ExpressionCollection>): ListingItem => ({
-      title: expression.data.title,
-      pubDate: expression.data.pubDate,
-      href: getEntryUrl(expression),
-    }),
-  )
-  .sort((a, b) => {
-    const diff = a.pubDate.getTime() - b.pubDate.getTime();
-    return descending ? -diff : diff;
-  });
-const hasItems = expressionItems.length > 0;
+const expressionsSorted = expressions.sort((a, b) => {
+  const diff = a.data.pubDate.getTime() - b.data.pubDate.getTime();
+  return descending ? -diff : diff;
+});
+const hasItems = expressionsSorted.length > 0;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
@@ -59,14 +43,19 @@ const hasItems = expressionItems.length > 0;
   hasItems && (
     <ul class="expression-listing">
       {hasItems &&
-        expressionItems.map((item: ListingItem) => (
+        expressionsSorted.map((entry) => (
           <li class="listing-item no-visited">
-            <a class="title" href={item.href}>
-              {item.title}
-            </a>
-            <time class="date" datetime={toDateTimeAttribute(item.pubDate)}>
-              {formatDate(item.pubDate)}
-            </time>
+            <a href={getEntryUrl(entry)}>{entry.data.title}</a>
+            <div class="expression-metadata">
+              <time datetime={toDateTimeAttribute(entry.data.pubDate)}>
+                {formatDate(entry.data.pubDate)}
+              </time>
+              {showType && (
+                <Link class="item-type" to={`/${entry.collection}`}>
+                  {entry.collection}
+                </Link>
+              )}
+            </div>
           </li>
         ))}
     </ul>
@@ -83,22 +72,30 @@ const hasItems = expressionItems.length > 0;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      padding-bottom: var(--space-s);
+      padding-bottom: var(--space-m);
 
       a {
         --link-underline-color: transparent;
       }
 
-      .title {
-        color: var(--color-text);
+      .expression-metadata {
+        display: flex;
+        flex-direction: row;
+        gap: var(--space-s);
+        font-size: 0.95em;
 
-        &:hover {
-          color: var(--color-accent);
+        time {
+          color: var(--color-text-muted);
         }
-      }
 
-      .date {
-        color: var(--color-text-muted);
+        .item-type {
+          font-style: italic;
+          color: var(--color-text-muted);
+
+          &:hover {
+            color: var(--color-text);
+          }
+        }
       }
     }
   }
