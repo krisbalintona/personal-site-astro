@@ -10,12 +10,13 @@ import {
   type ExpressionCollection,
   type ExpressionEntry,
 } from "@lib/expressions";
-import { type CollectionEntry } from "astro:content";
+import Link from "astro-typesafe-routes/link";
 
 export interface ListingItem {
   href: string;
   pubDate: Date;
   title: string;
+  collection: string;
 }
 
 interface Props {
@@ -24,6 +25,7 @@ interface Props {
   descending?: boolean;
   filter?: (expression: ExpressionEntry) => boolean;
   limit?: number;
+  showType?: boolean;
 }
 
 const {
@@ -32,6 +34,7 @@ const {
   filter: filter = () => true,
   descending = true,
   limit,
+  showType = false,
 } = Astro.props;
 
 const expressions = collections
@@ -39,21 +42,15 @@ const expressions = collections
       await Promise.all(collections.map((c) => getContentCollection(c, filter)))
     ).flat()
   : await allExpressions(filter);
-const expressionItems: ListingItem[] = expressions
-  .map(
-    (expression: CollectionEntry<ExpressionCollection>): ListingItem => ({
-      title: expression.data.title,
-      pubDate: expression.data.pubDate,
-      href: getEntryUrl(expression),
-    }),
-  )
-  .sort((a, b) => {
-    const diff = a.pubDate.getTime() - b.pubDate.getTime();
-    return descending ? -diff : diff;
-  });
-const displayItems = limit ? expressionItems.slice(0, limit) : expressionItems;
+const expressionsSorted = expressions.sort((a, b) => {
+  const diff = a.data.pubDate.getTime() - b.data.pubDate.getTime();
+  return descending ? -diff : diff;
+});
+const displayItems = limit
+  ? expressionsSorted.slice(0, limit)
+  : expressionsSorted;
 const hasItems = displayItems.length > 0;
-const itemCount = expressionItems.length;
+const itemCount = expressionsSorted.length;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
@@ -69,13 +66,24 @@ const itemCount = expressionItems.length;
         reversed={descending}
         style={`--counter-start: ${descending ? itemCount + 1 : 0}; --counter-increment: ${descending ? -1 : 1}`}
       >
-        {displayItems.map((item: ListingItem) => (
+        {displayItems.map((entry) => (
           <li class="listing-item no-visited">
-            <a class="title" href={item.href}>
-              {item.title}
-            </a>
-            <time class="date" datetime={toDateTimeAttribute(item.pubDate)}>
-              {formatDate(item.pubDate)}
+            <div class="expression-entry">
+              <a href={getEntryUrl(entry)}>{entry.data.title}</a>
+              {showType && (
+                <>
+                  {" "}
+                  <Link class="item-type" to={`/${entry.collection}`}>
+                    ({entry.collection})
+                  </Link>
+                </>
+              )}
+            </div>
+            <time
+              class="date"
+              datetime={toDateTimeAttribute(entry.data.pubDate)}
+            >
+              {formatDate(entry.data.pubDate)}
             </time>
           </li>
         ))}
@@ -125,11 +133,17 @@ const itemCount = expressionItems.length;
         --link-underline-color: transparent;
       }
 
-      .title {
+      .expression-entry {
         color: var(--color-text);
 
-        &:hover {
-          color: var(--color-accent);
+        .item-type {
+          font-style: italic;
+          font-size: 0.9em;
+          color: var(--color-text-muted);
+
+          &:hover {
+            color: var(--color-text);
+          }
         }
       }
 
