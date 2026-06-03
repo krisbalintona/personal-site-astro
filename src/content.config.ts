@@ -16,6 +16,10 @@ const expressionSources = [
     pattern: "*/index.mdx",
     base: "src/content/notes/",
   },
+  {
+    pattern: "*/index.mdx",
+    base: "src/content/documents/",
+  },
 ];
 
 const articles = defineCollection({
@@ -30,6 +34,14 @@ const notes = defineCollection({
   loader: glob({
     pattern: "*/index.mdx",
     base: "./src/content/notes",
+  }),
+  schema: expressionSchema,
+});
+
+const documents = defineCollection({
+  loader: glob({
+    pattern: "*/index.mdx",
+    base: "./src/content/documents",
   }),
   schema: expressionSchema,
 });
@@ -70,4 +82,11 @@ const standalone = defineCollection({
 
 export type AnyCollectionName = keyof typeof collections;
 export type AnyCollectionEntry = CollectionEntry<AnyCollectionName>;
-export const collections = { articles, notes, tags, threads, standalone };
+export const collections = {
+  articles,
+  notes,
+  documents,
+  tags,
+  threads,
+  standalone,
+};

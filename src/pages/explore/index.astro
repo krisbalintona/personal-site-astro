@@ -44,6 +44,13 @@ const { Content: ThreadsContent } = await renderContent(
     <dd>
       {(await getContentEntry("standalone", "taxonomyNotes"))?.data.description}
     </dd>
+    <dt><Link to="/documents">Documents</Link></dt>
+    <dd>
+      {
+        (await getContentEntry("standalone", "taxonomyDocuments"))?.data
+          .description
+      }
+    </dd>
   </dl>
   <section aria-labelledby="tags-heading">
     <Heading id="tags-heading" level="2"><Link to="/tags">Tags</Link></Heading>

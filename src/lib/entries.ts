@@ -144,6 +144,12 @@ export function getEntryUrl(
         params: { title: titleToUrlSlug(entry.data.title) },
         hash: anchor,
       });
+    case "documents":
+      return $path({
+        to: "/documents/[title]",
+        params: { title: titleToUrlSlug(entry.data.title) },
+        hash: anchor,
+      });
     case "tags":
       return $path({
         to: "/tags/[tag]",

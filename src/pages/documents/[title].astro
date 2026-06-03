@@ -1,0 +1,25 @@
+---
+import ExpressionLayout from "@layouts/ExpressionLayout.astro";
+import { getContentCollection, titleToUrlSlug } from "@lib/entries";
+import { type CollectionEntry } from "astro:content";
+import { createRoute } from "astro-typesafe-routes/create-route";
+
+export const Route = createRoute({
+  routeId: "/documents/[title]",
+});
+
+export const getStaticPaths = Route.createGetStaticPaths(async () =>
+  (await getContentCollection("documents")).map((documentEntry) => ({
+    params: { title: titleToUrlSlug(documentEntry.data.title) },
+    props: { documentEntry: documentEntry },
+  })),
+);
+
+interface Props {
+  documentEntry: CollectionEntry<"documents">;
+}
+
+const { documentEntry } = Astro.props;
+---
+
+<ExpressionLayout expression={documentEntry} />

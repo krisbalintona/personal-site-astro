@@ -1,0 +1,22 @@
+---
+import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
+import ExpressionListing from "@components/ExpressionListing.astro";
+import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
+import { getContentEntry } from "@lib/entries";
+
+const breadcrumbs: BreadcrumbComponent[] = [
+  { label: "Documents", styleNormal: true },
+];
+
+const documentsEntry = await getContentEntry("standalone", "taxonomyDocuments");
+---
+
+<TaxonomyListingLayout
+  pageTitle="Documents"
+  displayTitle="All documents"
+  breadcrumbs={breadcrumbs}
+  breadcrumbsDescription={documentsEntry?.data.description}
+  preambleEntry={documentsEntry}
+>
+  <ExpressionListing collections={["documents"]} />
+</TaxonomyListingLayout>

@@ -33,6 +33,13 @@ const { Content } = await renderContent(home);
               .description
           }
         </dd>
+        <dt><Link to="/documents">Documents</Link></dt>
+        <dd>
+          {
+            (await getContentEntry("standalone", "taxonomyDocuments"))?.data
+              .description
+          }
+        </dd>
         <dt><Link to="/explore">Explore</Link></dt>
         <dd>
           {(await getContentEntry("standalone", "explore"))?.data.description}

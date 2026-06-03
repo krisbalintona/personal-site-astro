@@ -42,21 +42,6 @@ This option is used to define the value of other relevant paths.")
 (defconst org-mdx-content-dir (expand-file-name "src/content/" org-mdx-root-dir)
   "Directory where all MDX content resides.")
 
-(defconst org-mdx-articles-dir (expand-file-name "articles/" org-mdx-content-dir)
-  "Directory where articles will be exported to.")
-
-(defconst org-mdx-notes-dir (expand-file-name "notes/" org-mdx-content-dir)
-  "Directory where notes will be exported to.")
-
-(defconst org-mdx-tags-dir (expand-file-name "tags/" org-mdx-content-dir)
-  "Directory where custom tag pages will be exported to.")
-
-(defconst org-mdx-threads-dir (expand-file-name "threads/" org-mdx-content-dir)
-  "Directory where custom thread pages will be exported to.")
-
-(defconst org-mdx-standalone-dir (expand-file-name "standalone/" org-mdx-content-dir)
-  "Directory where standalone content will be exported to.")
-
 (defvar org-mdx-default-alt-text "img"
   "Default alt text used for `img' and `svg' HTML tags.
 This variable can be `let'-bound to change the default string.")
@@ -1040,7 +1025,7 @@ directory."
                    (org-format-timestamp date-timestamp "%Y%m%d%H%M")
                    (org-mdx--title-to-subdirectory-name title))
            ;; As a fallback, ask user
-           (read-file-name "Output directory: " org-mdx-articles-dir))))
+           (read-file-name "Output directory: " org-mdx-content-dir))))
     (expand-file-name directory output-dir)))
 
 (defun org-mdx--copy-attachments (path info)
@@ -1224,30 +1209,36 @@ This function is used as the :publishing-function in
   (setopt org-publish-project-alist
           `(("standalone"
              :base-directory ,(expand-file-name "standalone" krisb-manuscript-blog-directory)
-             :publishing-directory ,org-mdx-standalone-dir
+             :publishing-directory ,(expand-file-name "standalone/" org-mdx-content-dir)
              :recursive t
              ,@base-options)
             ("articles"
              :base-directory ,(expand-file-name "articles" krisb-manuscript-blog-directory)
-             :publishing-directory ,org-mdx-articles-dir
+             :publishing-directory ,(expand-file-name "articles/" org-mdx-content-dir)
              :recursive t
              :mdx-entry-type "articles"
              ,@base-options)
             ("notes"
              :base-directory ,(expand-file-name "notes" krisb-manuscript-blog-directory)
-             :publishing-directory ,org-mdx-notes-dir
+             :publishing-directory ,(expand-file-name "notes/" org-mdx-content-dir)
+             :recursive t
+             :mdx-entry-type "notes"
+             ,@base-options)
+            ("documents"
+             :base-directory ,(expand-file-name "documents" krisb-manuscript-blog-directory)
+             :publishing-directory ,(expand-file-name "documents/" org-mdx-content-dir)
              :recursive t
              :mdx-entry-type "notes"
              ,@base-options)
             ("tags"
              :base-directory ,(expand-file-name "tags" krisb-manuscript-blog-directory)
-             :publishing-directory ,org-mdx-tags-dir
+             :publishing-directory ,(expand-file-name "tags/" org-mdx-content-dir)
              :recursive t
              :mdx-entry-type "tags"
              ,@base-options)
             ("threads"
              :base-directory ,(expand-file-name "threads" krisb-manuscript-blog-directory)
-             :publishing-directory ,org-mdx-threads-dir
+             :publishing-directory ,(expand-file-name "threads/" org-mdx-content-dir)
              :recursive t
              :mdx-entry-type "threads"
              ,@base-options))))

@@ -87,7 +87,11 @@ export const expressionSchema = rssSchema.extend(baseContentShape).extend({
     .optional(),
 });
 
-export const ExpressionCollectionNames = ["articles", "notes"] as const;
+export const ExpressionCollectionNames = [
+  "articles",
+  "notes",
+  "documents",
+] as const;
 export type ExpressionCollection = (typeof ExpressionCollectionNames)[number];
 export type ExpressionEntry = CollectionEntry<ExpressionCollection>;
 
