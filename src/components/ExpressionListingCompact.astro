@@ -12,13 +12,6 @@ import {
 } from "@lib/expressions";
 import Link from "astro-typesafe-routes/link";
 
-export interface ListingItem {
-  href: string;
-  pubDate: Date;
-  title: string;
-  collection: string;
-}
-
 interface Props {
   browseAllLink?: string;
   collections?: ExpressionCollection[];

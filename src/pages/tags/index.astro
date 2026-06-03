@@ -15,7 +15,10 @@ for (const expression of await allExpressions()) {
 
 const breadcrumbs: BreadcrumbComponent[] = [
   { label: "explore", href: $path({ to: "/explore" }) },
-  { label: "Tags", styleNormal: true },
+  [
+    { label: "Tags", styleNormal: true },
+    { label: "threads", href: $path({ to: "/threads" }) },
+  ],
 ];
 
 const tagsEntry = await getContentEntry("standalone", "taxonomyTags");

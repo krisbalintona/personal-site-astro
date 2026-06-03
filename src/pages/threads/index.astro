@@ -21,7 +21,10 @@ function inThisThread(thread: CollectionEntry<"threads">) {
 
 const breadcrumbs: BreadcrumbComponent[] = [
   { label: "explore", href: $path({ to: "/explore" }) },
-  { label: "Threads", styleNormal: true },
+  [
+    { label: "Threads", styleNormal: true },
+    { label: "tags", href: $path({ to: "/tags" }) },
+  ],
 ];
 
 const threadsEntry = await getContentEntry("standalone", "taxonomyThreads");
