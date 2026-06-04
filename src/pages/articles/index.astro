@@ -7,7 +7,10 @@ import { $path } from "astro-typesafe-routes/path";
 
 const breadcrumbs: BreadcrumbComponent[] = [
   { label: "index", href: $path({ to: "/index" }) },
-  { label: "Articles", styleNormal: true },
+  [
+    { label: "notes", href: $path({ to: "/notes" }) },
+    { label: "Articles", styleNormal: true },
+  ],
 ];
 
 const articlesEntry = await getContentEntry("other", "taxonomyArticles");

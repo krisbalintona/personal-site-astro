@@ -3,19 +3,32 @@ import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import Heading from "@components/markup/Heading.astro";
 import PostListing from "@components/PostListing.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
-import { formatDate, getContentCollection, titleToUrlSlug } from "@lib/entries";
+import {
+  formatDate,
+  getContentCollection,
+  getContentEntry,
+  titleToUrlSlug,
+} from "@lib/entries";
 import Link from "astro-typesafe-routes/link";
+import { $path } from "astro-typesafe-routes/path";
 
 const breadcrumbs: BreadcrumbComponent[] = [
   { label: "Index", styleNormal: true },
+  [
+    { label: "articles", href: $path({ to: "/articles" }) },
+    { label: "notes", href: $path({ to: "/notes" }) },
+  ],
 ];
+
+const indexEntry = await getContentEntry("other", "index");
 ---
 
 <TaxonomyListingLayout
   pageTitle="Index"
   displayTitle="Index"
-  breadcrumbsDescription="All site content"
+  breadcrumbsDescription={indexEntry?.data.description ?? "All site content"}
   breadcrumbs={breadcrumbs}
+  preambleEntry={indexEntry}
 >
   <section aria-labelledby="all-posts">
     <Heading id="all-posts" level="2">All posts</Heading>
