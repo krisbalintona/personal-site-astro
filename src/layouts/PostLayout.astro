@@ -2,9 +2,9 @@
 import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
-import ExpressionTaxonomyRow from "@components/ExpressionTaxonomyRow.astro";
 import NotByAIBadge from "@components/NotByAIBadge.astro";
 import OpenHeartReactions from "@components/OpenHeartReactions.astro";
+import PostTaxonomyRow from "@components/PostTaxonomyRow.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import {
   getContentEntries,
@@ -12,28 +12,24 @@ import {
   renderContent,
   toDateTimeAttribute,
 } from "@lib/entries";
-import {
-  type ExpressionEntry,
-  getExpressionPermalink,
-  getExpressionStableId,
-} from "@lib/expressions";
+import { getPostPermalink, getPostStableId, type PostEntry } from "@lib/posts";
 import { Icon } from "astro-icon/components";
 import { $path } from "astro-typesafe-routes/path";
 
 interface Props {
-  expression: ExpressionEntry;
+  post: PostEntry;
 }
 
-const { expression } = Astro.props;
+const { post } = Astro.props;
 
-const pubDate = expression.data.pubDate;
-const lastMod = expression.data.lastMod;
-const title = expression.data.title;
+const pubDate = post.data.pubDate;
+const lastMod = post.data.lastMod;
+const title = post.data.title;
 
 const breadcrumbs: BreadcrumbComponent[] = [
   {
-    label: expression.collection,
-    href: $path({ to: `/${expression.collection}` }),
+    label: post.collection,
+    href: $path({ to: `/${post.collection}` }),
   },
 ];
 
@@ -53,15 +49,15 @@ if (lastMod) {
   visibleLastMod = lastMod.toLocaleDateString("en-US", dateStringFormat);
 }
 
-const tags = expression.data.tags;
-const threads = expression.data.threads;
-const { Content } = await renderContent(expression);
+const tags = post.data.tags;
+const threads = post.data.threads;
+const { Content } = await renderContent(post);
 ---
 
 <BaseLayout
   pageTitle={title}
   displayTitle={false}
-  pageDescription={expression.data.description}
+  pageDescription={post.data.description}
 >
   {
     /* Use `data-goatcounter-settings` to set the path counted by
@@ -75,18 +71,18 @@ const { Content } = await renderContent(expression);
       data-goatcounter-settings={JSON.stringify({
         path: $path({
           to: "/posts/[stableId]",
-          params: { stableId: getExpressionStableId(expression) },
+          params: { stableId: getPostStableId(post) },
         }),
       })}
       async
       src="//gc.zgo.at/count.js"></script></Fragment
   >
   <article>
-    <header class="expression-header">
+    <header class="post-header">
       <Breadcrumb breadcrumbs={breadcrumbs} />
 
-      <div class="expression-info-container">
-        <div class="expression-info-meta">
+      <div class="post-info-container">
+        <div class="post-info-meta">
           {
             lastMod ? (
               <>
@@ -104,20 +100,20 @@ const { Content } = await renderContent(expression);
           <button
             id="copy-permalink"
             aria-label="Copy permalink"
-            data-permalink={getExpressionPermalink(expression)}
+            data-permalink={getPostPermalink(post)}
           >
             <Icon name="ph:link" aria-hidden="true" focusable="false" />
             <span class="copy-tooltip">Copied!</span>
           </button>
         </div>
         {
-          expression.data.subtitle ? (
-            <hgroup class="expression-title">
+          post.data.subtitle ? (
+            <hgroup class="post-title">
               <h1>{title}</h1>
-              <p>{expression.data.subtitle}</p>
+              <p>{post.data.subtitle}</p>
             </hgroup>
           ) : (
-            <h1 class="expression-title">{title}</h1>
+            <h1 class="post-title">{title}</h1>
           )
         }
       </div>
@@ -125,17 +121,17 @@ const { Content } = await renderContent(expression);
 
     {
       Content && (
-        <div class="expression-content">
+        <div class="post-content">
           <Content />
         </div>
       )
     }
 
-    <footer class="expression-footer">
-      <dl class="expression-taxonomy">
+    <footer class="post-footer">
+      <dl class="post-taxonomy">
         {
           tags && (
-            <ExpressionTaxonomyRow
+            <PostTaxonomyRow
               label="tagged"
               items={(await getContentEntries(tags)).map((tag) => ({
                 href: getEntryUrl(tag),
@@ -146,7 +142,7 @@ const { Content } = await renderContent(expression);
         }
         {
           threads && (
-            <ExpressionTaxonomyRow
+            <PostTaxonomyRow
               label="in threads"
               items={(await getContentEntries(threads)).map((thread) => ({
                 href: getEntryUrl(thread),
@@ -157,7 +153,7 @@ const { Content } = await renderContent(expression);
         }
       </dl>
 
-      <OpenHeartReactions expression={expression} />
+      <OpenHeartReactions post={post} />
 
       <div class="not-ai-badge">
         <NotByAIBadge />
@@ -167,14 +163,14 @@ const { Content } = await renderContent(expression);
 </BaseLayout>
 
 <style>
-  .expression-header {
+  .post-header {
     margin-bottom: var(--space-xl);
     border-bottom: 2px solid var(--color-border);
 
-    .expression-info-container {
+    .post-info-container {
       font-family: var(--font-ui);
 
-      .expression-info-meta {
+      .post-info-meta {
         font-size: var(--font-step--1);
         margin: var(--space-3xs) 0;
 
@@ -215,7 +211,7 @@ const { Content } = await renderContent(expression);
         }
       }
 
-      .expression-title {
+      .post-title {
         /* With and without subtitle */
         margin: 0 0 var(--space-s) 0;
 
@@ -233,15 +229,15 @@ const { Content } = await renderContent(expression);
     }
   }
 
-  .expression-content {
+  .post-content {
     margin-top: var(--space-l);
   }
 
-  .expression-footer {
+  .post-footer {
     margin-top: var(--space-xs-s);
     border-top: 2px solid var(--color-border);
 
-    .expression-taxonomy {
+    .post-taxonomy {
       margin: 0.5rem 0 var(--space-m) 0;
       padding: 0;
     }
@@ -266,7 +262,7 @@ const { Content } = await renderContent(expression);
 
   /* "Breakout" effect for code blocks, standalone images, and figures */
   @layer defaults {
-    :where(.expression-content) {
+    :where(.post-content) {
       .expressive-code {
         @include mixins.breakout(var(--space-xs-s));
       }
@@ -308,7 +304,7 @@ const { Content } = await renderContent(expression);
 
 {/* Zoomable images */}
 <script>
-  const selector = ".expression-content img";
+  const selector = ".post-content img";
   if (document.querySelector(selector)) {
     const { default: mediumZoom } = await import("medium-zoom");
     mediumZoom(selector, {

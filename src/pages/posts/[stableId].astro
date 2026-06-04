@@ -1,10 +1,6 @@
 ---
 import { getEntryUrl } from "@lib/entries";
-import {
-  allExpressions,
-  getExpressionLegacyId,
-  getExpressionStableId,
-} from "@lib/expressions.ts";
+import { allPosts, getPostLegacyId, getPostStableId } from "@lib/posts.ts";
 import { createRoute } from "astro-typesafe-routes/create-route";
 
 export const Route = createRoute({
@@ -12,12 +8,12 @@ export const Route = createRoute({
 });
 
 export const getStaticPaths = Route.createGetStaticPaths(async () => {
-  const expressions = await allExpressions();
-  return expressions.flatMap((e) => {
+  const posts = await allPosts();
+  return posts.flatMap((e) => {
     const targetUrl = getEntryUrl(e);
     const paths = [
       {
-        params: { stableId: getExpressionStableId(e) },
+        params: { stableId: getPostStableId(e) },
         props: { targetUrl },
       },
     ];
@@ -25,7 +21,7 @@ export const getStaticPaths = Route.createGetStaticPaths(async () => {
     // Hugo permalinks (e.g., /posts/202504201934) continue to
     // redirect correctly alongside the UTC-based stable ID (e.g,
     // /posts/202504210034)
-    const legacyId = getExpressionLegacyId(e);
+    const legacyId = getPostLegacyId(e);
     if (legacyId) {
       paths.push({
         params: { stableId: legacyId },

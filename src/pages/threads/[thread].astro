@@ -1,9 +1,9 @@
 ---
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
-import ExpressionListing from "@components/ExpressionListing.astro";
+import PostListing from "@components/PostListing.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
 import { getContentCollection, titleToUrlSlug } from "@lib/entries";
-import type { ExpressionEntry } from "@lib/expressions";
+import type { PostEntry } from "@lib/posts";
 import { type CollectionEntry } from "astro:content";
 import { createRoute } from "astro-typesafe-routes/create-route";
 import { $path } from "astro-typesafe-routes/path";
@@ -26,8 +26,8 @@ interface Props {
 const { thread: threadEntry } = Astro.props;
 const threadTitle: string = threadEntry.data.title;
 
-function hasThisThread(expression: ExpressionEntry): boolean {
-  return expression.data.threads?.some((t) => t.id === threadEntry.id) ?? false;
+function hasThisThread(post: PostEntry): boolean {
+  return post.data.threads?.some((t) => t.id === threadEntry.id) ?? false;
 }
 
 const breadcrumbs: BreadcrumbComponent[] = [
@@ -58,5 +58,5 @@ const rssHref = $path({
       href={rssHref}
     />
   </Fragment>
-  <ExpressionListing filter={hasThisThread} />
+  <PostListing filter={hasThisThread} />
 </TaxonomyListingLayout>

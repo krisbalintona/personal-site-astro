@@ -1,5 +1,5 @@
 ---
-import ExpressionLayout from "@layouts/ExpressionLayout.astro";
+import PostLayout from "@layouts/PostLayout.astro";
 import { getContentCollection, titleToUrlSlug } from "@lib/entries";
 import { type CollectionEntry } from "astro:content";
 import { createRoute } from "astro-typesafe-routes/create-route";
@@ -22,4 +22,4 @@ interface Props {
 const { noteEntry } = Astro.props;
 ---
 
-<ExpressionLayout expression={noteEntry} />
+<PostLayout post={noteEntry} />

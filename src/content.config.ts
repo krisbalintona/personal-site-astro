@@ -1,13 +1,13 @@
 import { baseContentShape } from "@lib/entries";
-import { expressionSchema } from "@lib/expressions.ts";
 import mdFrontmatterLoader from "@lib/mdFrontmatterGlob.ts";
+import { postSchema } from "@lib/posts.ts";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import { type CollectionEntry, defineCollection } from "astro:content";
 
-// * Expressions
+// * Posts
 
-const expressionSources = [
+const postSources = [
   {
     pattern: "*/index.mdx",
     base: "src/content/articles/",
@@ -27,7 +27,7 @@ const articles = defineCollection({
     pattern: "*/index.mdx",
     base: "./src/content/articles",
   }),
-  schema: expressionSchema,
+  schema: postSchema,
 });
 
 const notes = defineCollection({
@@ -35,7 +35,7 @@ const notes = defineCollection({
     pattern: "*/index.mdx",
     base: "./src/content/notes",
   }),
-  schema: expressionSchema,
+  schema: postSchema,
 });
 
 const documents = defineCollection({
@@ -43,14 +43,14 @@ const documents = defineCollection({
     pattern: "*/index.mdx",
     base: "./src/content/documents",
   }),
-  schema: expressionSchema,
+  schema: postSchema,
 });
 
 // * Taxonomy
 
 const tags = defineCollection({
   loader: mdFrontmatterLoader({
-    sources: expressionSources,
+    sources: postSources,
     sourceField: "tags",
     contentPattern: "*/index.mdx",
     contentBase: "./src/content/tags",
@@ -60,7 +60,7 @@ const tags = defineCollection({
 
 const threads = defineCollection({
   loader: mdFrontmatterLoader({
-    sources: expressionSources,
+    sources: postSources,
     sourceField: "threads",
     contentPattern: "*/index.mdx",
     contentBase: "./src/content/threads",

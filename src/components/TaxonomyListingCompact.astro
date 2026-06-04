@@ -1,7 +1,7 @@
 ---
 import { isProd } from "@lib/consts";
 import { getContentCollection, getEntryUrl } from "@lib/entries";
-import { allExpressions } from "@lib/expressions";
+import { allPosts } from "@lib/posts";
 import type { TaxonomyCollection, TaxonomyEntry } from "@lib/taxonomies";
 import pluralize from "pluralize";
 
@@ -35,14 +35,14 @@ const ListingTag = numbered ? "ol" : "ul";
 const taxonomyEntries = (
   await Promise.all(collections.map((c) => getContentCollection(c, filter)))
 ).flat();
-const expressions = await allExpressions();
+const posts = await allPosts();
 const taxonomyItems: TaxonomyListingItem[] = taxonomyEntries
   .map((taxonomy: TaxonomyEntry) => ({
     title: taxonomy.data.title,
     href: getEntryUrl(taxonomy),
-    count: expressions.filter((expression) =>
+    count: posts.filter((post) =>
       collections.some((c) =>
-        (expression.data[c] ?? []).some((t) => t.id === taxonomy.id),
+        (post.data[c] ?? []).some((t) => t.id === taxonomy.id),
       ),
     ).length,
   }))
@@ -120,7 +120,7 @@ const limitExceeded = limit && itemCount > limit;
     grid-template-columns: auto 1fr;
     padding: 0;
     margin: var(--space-m) 0 0 0;
-    counter-reset: expression-counter var(--counter-start);
+    counter-reset: post-counter var(--counter-start);
 
     li {
       display: grid;
@@ -129,11 +129,11 @@ const limitExceeded = limit && itemCount > limit;
       column-gap: var(--space-3xs);
       align-items: baseline;
       padding-bottom: var(--space-3xs);
-      counter-increment: expression-counter var(--counter-increment);
+      counter-increment: post-counter var(--counter-increment);
 
       &.numbered::before {
         color: var(--color-text-muted);
-        content: counter(expression-counter) ".";
+        content: counter(post-counter) ".";
       }
 
       .listing-content {

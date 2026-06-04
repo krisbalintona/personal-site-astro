@@ -5,17 +5,13 @@ import {
   getEntryUrl,
   toDateTimeAttribute,
 } from "@lib/entries";
-import {
-  allExpressions,
-  type ExpressionCollection,
-  type ExpressionEntry,
-} from "@lib/expressions";
+import { allPosts, type PostCollection, type PostEntry } from "@lib/posts";
 import Link from "astro-typesafe-routes/link";
 
 interface Props {
-  collections?: ExpressionCollection[];
+  collections?: PostCollection[];
   descending?: boolean;
-  filter?: (expression: ExpressionEntry) => boolean;
+  filter?: (post: PostEntry) => boolean;
   showType?: boolean;
 }
 
@@ -26,27 +22,27 @@ const {
   showType = false,
 } = Astro.props;
 
-const expressions = collections
+const posts = collections
   ? (
       await Promise.all(collections.map((c) => getContentCollection(c, filter)))
     ).flat()
-  : await allExpressions(filter);
-const expressionsSorted = expressions.sort((a, b) => {
+  : await allPosts(filter);
+const postsSorted = posts.sort((a, b) => {
   const diff = a.data.pubDate.getTime() - b.data.pubDate.getTime();
   return descending ? -diff : diff;
 });
-const hasItems = expressionsSorted.length > 0;
+const hasItems = postsSorted.length > 0;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
 {
   hasItems && (
-    <ul class="expression-listing">
+    <ul class="post-listing">
       {hasItems &&
-        expressionsSorted.map((entry) => (
+        postsSorted.map((entry) => (
           <li class="listing-item no-visited">
             <a href={getEntryUrl(entry)}>{entry.data.title}</a>
-            <div class="expression-metadata">
+            <div class="post-metadata">
               <div class="dates">
                 <time datetime={toDateTimeAttribute(entry.data.pubDate)}>
                   {formatDate(entry.data.pubDate)}
@@ -74,7 +70,7 @@ const hasItems = expressionsSorted.length > 0;
 }
 
 <style>
-  :where(.expression-listing) {
+  :where(.post-listing) {
     padding: 0;
     margin: var(--space-l) 0 0 0;
     list-style: none;
@@ -89,7 +85,7 @@ const hasItems = expressionsSorted.length > 0;
         --link-underline-color: transparent;
       }
 
-      .expression-metadata {
+      .post-metadata {
         display: flex;
         flex-direction: row;
         gap: var(--space-s);

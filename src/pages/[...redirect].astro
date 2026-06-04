@@ -1,6 +1,6 @@
 ---
 import { getEntryUrl } from "@lib/entries";
-import { allExpressions } from "@lib/expressions";
+import { allPosts } from "@lib/posts";
 import { createRoute } from "astro-typesafe-routes/create-route";
 
 export const Route = createRoute({
@@ -8,14 +8,14 @@ export const Route = createRoute({
 });
 
 export const getStaticPaths = Route.createGetStaticPaths(async () => {
-  return (await allExpressions()).flatMap((expression) => {
-    if (!expression.data.redirects?.length) return [];
-    return expression.data.redirects.map((redirectPath) => ({
+  return (await allPosts()).flatMap((post) => {
+    if (!post.data.redirects?.length) return [];
+    return post.data.redirects.map((redirectPath) => ({
       params: {
         redirect: redirectPath.slice(1), // Strip leading slash
       },
       props: {
-        targetUrl: getEntryUrl(expression),
+        targetUrl: getEntryUrl(post),
       },
     }));
   });

@@ -1,6 +1,6 @@
 ---
-import ExpressionListingCompact from "@components/ExpressionListingCompact.astro";
 import Heading from "@components/markup/Heading.astro";
+import PostListingCompact from "@components/PostListingCompact.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getContentEntry, renderContent } from "@lib/entries";
 import Link from "astro-typesafe-routes/link";
@@ -53,7 +53,7 @@ const { Content } = await renderContent(home);
     </section>
     <section aria-labelledby="recents-heading">
       <Heading id="recents-heading" level="2">Recent</Heading>
-      <ExpressionListingCompact limit={10} showType={true} />
+      <PostListingCompact limit={10} showType={true} />
     </section>
   </article>
 </BaseLayout>

@@ -1,6 +1,6 @@
 ---
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
-import ExpressionListing from "@components/ExpressionListing.astro";
+import PostListing from "@components/PostListing.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
 import { getContentEntry } from "@lib/entries";
 import { $path } from "astro-typesafe-routes/path";
@@ -23,5 +23,5 @@ const articlesEntry = await getContentEntry("standalone", "taxonomyArticles");
   breadcrumbsDescription={articlesEntry?.data.description}
   preambleEntry={articlesEntry}
 >
-  <ExpressionListing collections={["articles"]} />
+  <PostListing collections={["articles"]} />
 </TaxonomyListingLayout>

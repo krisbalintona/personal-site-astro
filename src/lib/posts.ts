@@ -31,10 +31,8 @@ function dateToLegacyStableId(date: Date): string {
   );
 }
 
-export function getExpressionLegacyId(
-  expression: ExpressionEntry,
-): string | undefined {
-  const pubDate = expression.data.pubDate;
+export function getPostLegacyId(post: PostEntry): string | undefined {
+  const pubDate = post.data.pubDate;
   if (!pubDate || pubDate >= ASTRO_MIGRATION_DATE) return undefined;
   return titleToUrlSlug(dateToLegacyStableId(pubDate));
 }
@@ -50,18 +48,18 @@ function dateToStableId(date: Date): string {
   );
 }
 
-export function getExpressionStableId(expression: ExpressionEntry): string {
+export function getPostStableId(post: PostEntry): string {
   return titleToUrlSlug(
-    expression.data.pubDate && expression.data.draft === false
-      ? dateToStableId(expression.data.pubDate)
-      : expression.data.title,
+    post.data.pubDate && post.data.draft === false
+      ? dateToStableId(post.data.pubDate)
+      : post.data.title,
   );
 }
 
-export function getExpressionPermalink(expression: ExpressionEntry): string {
+export function getPostPermalink(post: PostEntry): string {
   return $path({
     to: "/posts/[stableId]",
-    params: { stableId: getExpressionStableId(expression) },
+    params: { stableId: getPostStableId(post) },
   });
 }
 
@@ -69,7 +67,7 @@ export function getExpressionPermalink(expression: ExpressionEntry): string {
 // for all properties of `rssSchema`.  Although all the properties in
 // `rssSchema` are typed as optional, RSS feeds themselves to have
 // required XML fields.
-export const expressionSchema = rssSchema.extend(baseContentShape).extend({
+export const postSchema = rssSchema.extend(baseContentShape).extend({
   pubDate: z.coerce.date().default(new Date("1970-01-01")),
   lastMod: z.coerce.date().optional(),
   subtitle: z.string().optional(),
@@ -87,22 +85,16 @@ export const expressionSchema = rssSchema.extend(baseContentShape).extend({
     .optional(),
 });
 
-export const ExpressionCollectionNames = [
-  "articles",
-  "notes",
-  "documents",
-] as const;
-export type ExpressionCollection = (typeof ExpressionCollectionNames)[number];
-export type ExpressionEntry = CollectionEntry<ExpressionCollection>;
+export const PostCollectionNames = ["articles", "notes", "documents"] as const;
+export type PostCollection = (typeof PostCollectionNames)[number];
+export type PostEntry = CollectionEntry<PostCollection>;
 
-export async function allExpressions(
-  filter?: (entry: CollectionEntry<ExpressionCollection>) => boolean,
-): Promise<ExpressionEntry[]> {
+export async function allPosts(
+  filter?: (entry: CollectionEntry<PostCollection>) => boolean,
+): Promise<PostEntry[]> {
   return (
     await Promise.all(
-      ExpressionCollectionNames.map((name) =>
-        getContentCollection(name, filter),
-      ),
+      PostCollectionNames.map((name) => getContentCollection(name, filter)),
     )
   ).flat();
 }

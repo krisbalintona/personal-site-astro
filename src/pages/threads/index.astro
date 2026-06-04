@@ -9,14 +9,14 @@ import {
   renderContent,
   titleToUrlSlug,
 } from "@lib/entries";
-import type { ExpressionEntry } from "@lib/expressions";
-import ExpressionListingCompact from "@src/components/ExpressionListingCompact.astro";
+import type { PostEntry } from "@lib/posts";
+import PostListingCompact from "@src/components/PostListingCompact.astro";
 import type { CollectionEntry } from "astro:content";
 import { $path } from "astro-typesafe-routes/path";
 
 function inThisThread(thread: CollectionEntry<"threads">) {
-  return (expression: ExpressionEntry): boolean =>
-    expression.data.threads?.some((s) => s.id === thread.id) ?? false;
+  return (post: PostEntry): boolean =>
+    post.data.threads?.some((s) => s.id === thread.id) ?? false;
 }
 
 const breadcrumbs: BreadcrumbComponent[] = [
@@ -65,7 +65,7 @@ const threadsEntry = await getContentEntry("standalone", "taxonomyThreads");
             </div>
           )}
 
-          <ExpressionListingCompact
+          <PostListingCompact
             browseAllLink={getEntryUrl(thread)}
             descending={false}
             filter={inThisThread(thread)}

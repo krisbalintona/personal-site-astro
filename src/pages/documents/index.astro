@@ -1,6 +1,6 @@
 ---
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
-import ExpressionListing from "@components/ExpressionListing.astro";
+import PostListing from "@components/PostListing.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
 import { getContentEntry } from "@lib/entries";
 
@@ -18,5 +18,5 @@ const documentsEntry = await getContentEntry("standalone", "taxonomyDocuments");
   breadcrumbsDescription={documentsEntry?.data.description}
   preambleEntry={documentsEntry}
 >
-  <ExpressionListing collections={["documents"]} />
+  <PostListing collections={["documents"]} />
 </TaxonomyListingLayout>

@@ -3,12 +3,12 @@ import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import TaxonomyListingCompact from "@components/TaxonomyListingCompact.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
 import { getContentEntry } from "@lib/entries";
-import { allExpressions } from "@lib/expressions";
+import { allPosts } from "@lib/posts";
 import { $path } from "astro-typesafe-routes/path";
 
 const tagCounts: Map<string, number> = new Map();
-for (const expression of await allExpressions()) {
-  for (const tag of expression.data.tags ?? []) {
+for (const post of await allPosts()) {
+  for (const tag of post.data.tags ?? []) {
     tagCounts.set(tag.id, (tagCounts.get(tag.id) ?? 0) + 1);
   }
 }

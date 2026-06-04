@@ -5,18 +5,14 @@ import {
   getEntryUrl,
   toDateTimeAttribute,
 } from "@lib/entries";
-import {
-  allExpressions,
-  type ExpressionCollection,
-  type ExpressionEntry,
-} from "@lib/expressions";
+import { allPosts, type PostCollection, type PostEntry } from "@lib/posts";
 import Link from "astro-typesafe-routes/link";
 
 interface Props {
   browseAllLink?: string;
-  collections?: ExpressionCollection[];
+  collections?: PostCollection[];
   descending?: boolean;
-  filter?: (expression: ExpressionEntry) => boolean;
+  filter?: (post: PostEntry) => boolean;
   limit?: number;
   showType?: boolean;
 }
@@ -30,38 +26,36 @@ const {
   showType = false,
 } = Astro.props;
 
-const expressions = collections
+const posts = collections
   ? (
       await Promise.all(collections.map((c) => getContentCollection(c, filter)))
     ).flat()
-  : await allExpressions(filter);
-const expressionsSorted = expressions.sort((a, b) => {
+  : await allPosts(filter);
+const postsSorted = posts.sort((a, b) => {
   const diff = a.data.pubDate.getTime() - b.data.pubDate.getTime();
   return descending ? -diff : diff;
 });
-const displayItems = limit
-  ? expressionsSorted.slice(0, limit)
-  : expressionsSorted;
+const displayItems = limit ? postsSorted.slice(0, limit) : postsSorted;
 const hasItems = displayItems.length > 0;
-const itemCount = expressionsSorted.length;
+const itemCount = postsSorted.length;
 ---
 
 {!hasItems && <p>Nothing yet...</p>}
 {
   hasItems && (
-    <div class="listing-wrapper expression-listing-wrapper">
+    <div class="listing-wrapper post-listing-wrapper">
       {/* Note: `reversed={descending}` has no visual effect (we set
       `list-style: none` below, removing the native markers), but
       preserves semantics for screen readers that announce list order
         */}
       <ol
-        class="compact-listing expression-listing"
+        class="compact-listing post-listing"
         reversed={descending}
         style={`--counter-start: ${descending ? itemCount + 1 : 0}; --counter-increment: ${descending ? -1 : 1}`}
       >
         {displayItems.map((entry) => (
           <li class="listing-item no-visited">
-            <div class="expression-entry">
+            <div class="post-entry">
               <a href={getEntryUrl(entry)}>{entry.data.title}</a>
               {showType && (
                 <>
@@ -93,17 +87,17 @@ const itemCount = expressionsSorted.length;
 }
 
 <style>
-  :where(.expression-listing-wrapper) {
+  :where(.post-listing-wrapper) {
     padding: 0 var(--space-3xs-2xs) 0 var(--space-s);
     margin-bottom: var(--space-m);
   }
 
-  .expression-listing {
+  .post-listing {
     display: grid;
     grid-template-columns: auto 1fr auto;
     padding: 0 var(--space-s) 0 0;
     margin: var(--space-m) 0 0 0;
-    counter-reset: expression-counter var(--counter-start);
+    counter-reset: post-counter var(--counter-start);
 
     .listing-item {
       display: grid;
@@ -113,20 +107,20 @@ const itemCount = expressionsSorted.length;
       align-items: center;
       padding-bottom: var(--space-xs);
       list-style: none;
-      counter-increment: expression-counter var(--counter-increment);
+      counter-increment: post-counter var(--counter-increment);
 
       &::before {
         align-self: center;
         font-size: small;
         color: var(--color-text-muted);
-        content: counter(expression-counter) ".";
+        content: counter(post-counter) ".";
       }
 
       a {
         --link-underline-color: transparent;
       }
 
-      .expression-entry {
+      .post-entry {
         color: var(--color-text);
 
         .item-type {

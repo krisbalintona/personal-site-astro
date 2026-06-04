@@ -7,10 +7,7 @@ import {
   getContentEntry,
   renderContent,
 } from "@lib/entries";
-import {
-  type ExpressionEntry,
-  getExpressionPermalink,
-} from "@lib/expressions.ts";
+import { getPostPermalink, type PostEntry } from "@lib/posts.ts";
 import type { APIContext } from "astro";
 import { experimental_AstroContainer } from "astro/container";
 import { $path } from "astro-typesafe-routes/path";
@@ -70,15 +67,15 @@ async function getContainer() {
 }
 
 export async function buildRSSItems(
-  expressions: ExpressionEntry[],
+  posts: PostEntry[],
 ): Promise<RSSFeedItem[]> {
   const container = await getContainer();
   const items = await Promise.all(
-    expressions.map(async (expressionEntry) => {
-      const { Content } = await renderContent(expressionEntry);
+    posts.map(async (postEntry) => {
+      const { Content } = await renderContent(postEntry);
       if (!Content)
         throw new Error(
-          `Failed to render content for ${expressionEntry.id}. Is this expression unpublished?`,
+          `Failed to render content for ${postEntry.id}. Is this post unpublished?`,
         );
       const rawHTML: string = await container.renderToString(Content);
 
@@ -144,19 +141,19 @@ export async function buildRSSItems(
       // is no actual description or (ii) be in a content element if
       // there is an actual entry description, with that description
       // being in the description element
-      const hasDescription: boolean = !!expressionEntry.data.description;
+      const hasDescription: boolean = !!postEntry.data.description;
       const description = hasDescription
-        ? expressionEntry.data.description
+        ? postEntry.data.description
         : renderedHTML;
       const content = hasDescription ? renderedHTML : undefined;
 
       return {
-        title: expressionEntry.data.title,
-        pubDate: expressionEntry.data.pubDate,
-        categories: (
-          await getContentEntries(expressionEntry.data.tags ?? [])
-        )?.map((p) => p.data.title),
-        link: getExpressionPermalink(expressionEntry),
+        title: postEntry.data.title,
+        pubDate: postEntry.data.pubDate,
+        categories: (await getContentEntries(postEntry.data.tags ?? []))?.map(
+          (p) => p.data.title,
+        ),
+        link: getPostPermalink(postEntry),
         description,
         content,
       };
@@ -191,8 +188,8 @@ let _feedsCache: Record<string, RSSFeed> | null = null;
 export async function topLevelRSSFeeds(): Promise<Record<string, RSSFeed>> {
   if (_feedsCache) return _feedsCache;
 
-  // Build per-expression content collection RSS feed items for
-  // expressions (the only content that receive an associated feed)
+  // Build per-post content collection RSS feed items for
+  // posts (the only content that receive an associated feed)
   const [articleItems, noteItems] = await Promise.all([
     buildRSSItems(await getContentCollection("articles")),
     buildRSSItems(await getContentCollection("notes")),
@@ -203,7 +200,7 @@ export async function topLevelRSSFeeds(): Promise<Record<string, RSSFeed>> {
   _feedsCache = {
     All: {
       title: `${SITE_TITLE} — All`,
-      description: "All expressions",
+      description: "All posts",
       items: allItems,
     },
     Articles: {

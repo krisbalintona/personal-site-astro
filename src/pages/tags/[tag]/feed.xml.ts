@@ -1,7 +1,7 @@
 import { SITE_TITLE } from "@lib/consts";
 import { getContentCollection, titleToUrlSlug } from "@lib/entries";
 import { buildRSSItems, makeRSSFeed } from "@lib/rss.ts";
-import { allExpressions } from "@src/lib/expressions";
+import { allPosts } from "@src/lib/posts";
 import type { APIContext } from "astro";
 import { type CollectionEntry } from "astro:content";
 import { createRoute } from "astro-typesafe-routes/create-route";
@@ -23,9 +23,7 @@ export async function GET(
   const description =
     tag.data.description ?? `Entries tagged with "${tag.data.title}"`;
   const items = await buildRSSItems(
-    await allExpressions(
-      (e) => e.data.tags?.some((t) => t.id === tag.id) ?? false,
-    ),
+    await allPosts((e) => e.data.tags?.some((t) => t.id === tag.id) ?? false),
   );
 
   return makeRSSFeed(context, title, description, items);
