@@ -1,8 +1,65 @@
 ---
+import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
+import Heading from "@components/markup/Heading.astro";
 import PostListing from "@components/PostListing.astro";
-import BaseLayout from "@layouts/BaseLayout.astro";
+import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
+import { formatDate, getContentCollection, titleToUrlSlug } from "@lib/entries";
+import Link from "astro-typesafe-routes/link";
+
+const breadcrumbs: BreadcrumbComponent[] = [
+  { label: "Index", styleNormal: true },
+];
 ---
 
-<BaseLayout pageTitle="Index" displayTitle="Index" pageDescription="All posts">
-  <PostListing showType={true} />
-</BaseLayout>
+<TaxonomyListingLayout
+  pageTitle="Index"
+  displayTitle="Index"
+  breadcrumbsDescription="All site content"
+  breadcrumbs={breadcrumbs}
+>
+  <section aria-labelledby="all-posts">
+    <Heading id="all-posts" level="2">All posts</Heading>
+    <PostListing showType={true} />
+  </section>
+
+  <section aria-labelledby="other">
+    <Heading id="other" level="2">Other content</Heading>
+    <ul>
+      {
+        (await getContentCollection("standalone")).map((entry) => {
+          const title = (
+            <Link
+              to="/[standaloneTitle]"
+              params={{ standaloneTitle: titleToUrlSlug(entry.data.title) }}
+            >
+              {entry.data.title}
+            </Link>
+          );
+          return (
+            <li>
+              {title},
+              <span class="date">
+                published {formatDate(entry.data.pubDate)}
+                {entry.data.lastMod && (
+                  <span class="last-mod">
+                    (last updated {formatDate(entry.data.lastMod)})
+                  </span>
+                )}
+              </span>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </section>
+</TaxonomyListingLayout>
+
+<style>
+  .date {
+    font-size: 0.9em;
+  }
+
+  .last-mod {
+    color: var(--color-text-muted);
+  }
+</style>

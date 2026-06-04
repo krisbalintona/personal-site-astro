@@ -31,9 +31,7 @@ function dateToLegacyStableId(date: Date): string {
   );
 }
 
-export function getPostLegacyId(
-  post: PostEntry,
-): string | undefined {
+export function getPostLegacyId(post: PostEntry): string | undefined {
   const pubDate = post.data.pubDate;
   if (!pubDate || pubDate >= ASTRO_MIGRATION_DATE) return undefined;
   return titleToUrlSlug(dateToLegacyStableId(pubDate));
@@ -84,9 +82,7 @@ export async function allPosts(
 ): Promise<PostEntry[]> {
   return (
     await Promise.all(
-      PostCollectionNames.map((name) =>
-        getContentCollection(name, filter),
-      ),
+      PostCollectionNames.map((name) => getContentCollection(name, filter)),
     )
   ).flat();
 }

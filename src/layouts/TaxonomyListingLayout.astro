@@ -12,12 +12,14 @@ interface Props {
   breadcrumbsDescription?: string;
   displayTitle?: string;
   pageTitle: string;
+  pageDescription?: string;
   preambleEntry?: AnyCollectionEntry;
 }
 
 const {
   displayTitle,
   pageTitle,
+  pageDescription,
   breadcrumbs,
   breadcrumbsDescription,
   rssHref,
@@ -34,7 +36,7 @@ const { Content: PreambleContent } = await renderContent(preambleEntry);
 <BaseLayout
   displayTitle={displayTitle}
   pageTitle={pageTitle}
-  pageDescription={breadcrumbsDescription}
+  pageDescription={pageDescription ?? breadcrumbsDescription}
 >
   <slot name="head-extra" slot="head-extra" />
   <header>

@@ -38,8 +38,8 @@ export const publishedContentShape = {
           "Redirect path must start with '/' and must not end with '/'",
         ),
     )
-    .optional()
-}
+    .optional(),
+};
 
 /**
  * Return true if `entry` is published.  An entry is considered
