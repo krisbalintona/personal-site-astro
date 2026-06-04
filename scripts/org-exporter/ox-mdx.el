@@ -643,7 +643,14 @@ INFO is a plist holding contextual information.  See
           (format "<a href=\"#%s\">%s</a>"
                   (org-export-get-reference destination info)
                   desc))))
-     (t (if (not desc) (format "<%s>" path)
+     (t (if (not desc)
+            ;; Angle brackets are JSX syntax, meaning they cannot be
+            ;; inserted to denote bare links.  Instead, for bare
+            ;; links, we simply set the description to the path.  This
+            ;; way, bare links are proper links (as intended).
+            (el-patch-swap
+              (format "<%s>" path)
+              (format "[%s](%s)" path path))
           (format "[%s](%s)" desc path))))))
 
 (defun org-mdx-item (item contents info)
