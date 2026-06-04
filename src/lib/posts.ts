@@ -31,7 +31,9 @@ function dateToLegacyStableId(date: Date): string {
   );
 }
 
-export function getPostLegacyId(post: PostEntry): string | undefined {
+export function getPostLegacyId(
+  post: PostEntry,
+): string | undefined {
   const pubDate = post.data.pubDate;
   if (!pubDate || pubDate >= ASTRO_MIGRATION_DATE) return undefined;
   return titleToUrlSlug(dateToLegacyStableId(pubDate));
@@ -85,7 +87,7 @@ export const postSchema = rssSchema.extend(baseContentShape).extend({
     .optional(),
 });
 
-export const PostCollectionNames = ["articles", "notes", "documents"] as const;
+export const PostCollectionNames = ["articles", "notes"] as const;
 export type PostCollection = (typeof PostCollectionNames)[number];
 export type PostEntry = CollectionEntry<PostCollection>;
 
@@ -94,7 +96,9 @@ export async function allPosts(
 ): Promise<PostEntry[]> {
   return (
     await Promise.all(
-      PostCollectionNames.map((name) => getContentCollection(name, filter)),
+      PostCollectionNames.map((name) =>
+        getContentCollection(name, filter),
+      ),
     )
   ).flat();
 }

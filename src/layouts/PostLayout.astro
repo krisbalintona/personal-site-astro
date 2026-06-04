@@ -2,14 +2,11 @@
 import Breadcrumb, {
   type BreadcrumbComponent,
 } from "@components/Breadcrumb.astro";
-import NotByAIBadge from "@components/NotByAIBadge.astro";
-import OpenHeartReactions from "@components/OpenHeartReactions.astro";
 import PostTaxonomyRow from "@components/PostTaxonomyRow.astro";
-import BaseLayout from "@layouts/BaseLayout.astro";
+import ContentLayout from "@layouts/ContentLayout.astro";
 import {
   getContentEntries,
   getEntryUrl,
-  renderContent,
   toDateTimeAttribute,
 } from "@lib/entries";
 import { getPostPermalink, getPostStableId, type PostEntry } from "@lib/posts";
@@ -22,9 +19,9 @@ interface Props {
 
 const { post } = Astro.props;
 
+const title = post.data.title;
 const pubDate = post.data.pubDate;
 const lastMod = post.data.lastMod;
-const title = post.data.title;
 
 const breadcrumbs: BreadcrumbComponent[] = [
   {
@@ -51,231 +48,158 @@ if (lastMod) {
 
 const tags = post.data.tags;
 const threads = post.data.threads;
-const { Content } = await renderContent(post);
 ---
 
-<BaseLayout
-  pageTitle={title}
-  displayTitle={false}
-  pageDescription={post.data.description}
+{/* Use permalink as path to be robust against path changes */}
+<ContentLayout
+  entry={post}
+  reactionsPath={getPostPermalink(post)}
+  notAIBadge={true}
 >
   {
     /* Use `data-goatcounter-settings` to set the path counted by
     GoatCounter. See https://krisbalintona.goatcounter.com/help/path
     for more information */
   }
-  <Fragment slot="script-goat-counter"
-    ><script
-      is:inline
-      data-goatcounter="https://krisbalintona.goatcounter.com/count"
-      data-goatcounter-settings={JSON.stringify({
-        path: $path({
-          to: "/posts/[stableId]",
-          params: { stableId: getPostStableId(post) },
-        }),
-      })}
-      async
-      src="//gc.zgo.at/count.js"></script></Fragment
-  >
-  <article>
-    <header class="post-header">
-      <Breadcrumb breadcrumbs={breadcrumbs} />
+  <script
+    slot="script-goat-counter"
+    is:inline
+    data-goatcounter="https://krisbalintona.goatcounter.com/count"
+    data-goatcounter-settings={JSON.stringify({
+      path: $path({
+        to: "/posts/[stableId]",
+        params: { stableId: getPostStableId(post) },
+      }),
+    })}
+    async
+    src="//gc.zgo.at/count.js"></script>
 
-      <div class="post-info-container">
-        <div class="post-info-meta">
-          {
-            lastMod ? (
-              <>
-                <time datetime={formattedPubDate}>{visiblePubDate}</time>
-                <span class="sr-only">,</span>
-                <span class="last-mod">
-                  last updated{" "}
-                  <time datetime={formattedLastMod}>{visibleLastMod}</time>
-                </span>
-              </>
-            ) : (
-              <time datetime={formattedPubDate}>{visiblePubDate}</time>
-            )
-          }
-          <button
-            id="copy-permalink"
-            aria-label="Copy permalink"
-            data-permalink={getPostPermalink(post)}
-          >
-            <Icon name="ph:link" aria-hidden="true" focusable="false" />
-            <span class="copy-tooltip">Copied!</span>
-          </button>
-        </div>
-        {
-          post.data.subtitle ? (
-            <hgroup class="post-title">
-              <h1>{title}</h1>
-              <p>{post.data.subtitle}</p>
-            </hgroup>
-          ) : (
-            <h1 class="post-title">{title}</h1>
-          )
-        }
-      </div>
-    </header>
-
+  <Breadcrumb slot="header" breadcrumbs={breadcrumbs} />
+  <div slot="header" class="post-info-meta">
     {
-      Content && (
-        <div class="post-content">
-          <Content />
-        </div>
+      lastMod ? (
+        <>
+          <time datetime={formattedPubDate}>{visiblePubDate}</time>
+          <span class="sr-only">,</span>
+          <span class="last-mod">
+            last updated{" "}
+            <time datetime={formattedLastMod}>{visibleLastMod}</time>
+          </span>
+        </>
+      ) : (
+        <time datetime={formattedPubDate}>{visiblePubDate}</time>
       )
     }
+    <button
+      id="copy-permalink"
+      aria-label="Copy permalink"
+      data-permalink={getPostPermalink(post)}
+    >
+      <Icon name="ph:link" aria-hidden="true" focusable="false" />
+      <span class="copy-tooltip">Copied!</span>
+    </button>
+  </div>
+  <Fragment slot="header">
+    {
+      post.data.subtitle ? (
+        <hgroup class="post-title">
+          <h1>{title}</h1>
+          <p>{post.data.subtitle}</p>
+        </hgroup>
+      ) : (
+        <h1 class="post-title">{title}</h1>
+      )
+    }
+  </Fragment>
 
-    <footer class="post-footer">
-      <dl class="post-taxonomy">
-        {
-          tags && (
-            <PostTaxonomyRow
-              label="tagged"
-              items={(await getContentEntries(tags)).map((tag) => ({
-                href: getEntryUrl(tag),
-                title: tag.data.title,
-              }))}
-            />
-          )
-        }
-        {
-          threads && (
-            <PostTaxonomyRow
-              label="in threads"
-              items={(await getContentEntries(threads)).map((thread) => ({
-                href: getEntryUrl(thread),
-                title: thread.data.title,
-              }))}
-            />
-          )
-        }
-      </dl>
-
-      <OpenHeartReactions post={post} />
-
-      <div class="not-ai-badge">
-        <NotByAIBadge />
-      </div>
-    </footer>
-  </article>
-</BaseLayout>
+  <dl slot="footer" class="post-taxonomy">
+    {
+      tags && (
+        <PostTaxonomyRow
+          label="tagged"
+          items={(await getContentEntries(tags)).map((tag) => ({
+            href: getEntryUrl(tag),
+            title: tag.data.title,
+          }))}
+        />
+      )
+    }
+    {
+      threads && (
+        <PostTaxonomyRow
+          label="in threads"
+          items={(await getContentEntries(threads)).map((thread) => ({
+            href: getEntryUrl(thread),
+            title: thread.data.title,
+          }))}
+        />
+      )
+    }
+  </dl>
+</ContentLayout>
 
 <style>
-  .post-header {
-    margin-bottom: var(--space-xl);
-    border-bottom: 2px solid var(--color-border);
+  .post-info-meta {
+    font-size: var(--font-step--1);
+    margin: var(--space-3xs) 0;
 
-    .post-info-container {
-      font-family: var(--font-ui);
-
-      .post-info-meta {
-        font-size: var(--font-step--1);
-        margin: var(--space-3xs) 0;
-
-        .last-mod {
-          font-size: small;
-          color: var(--color-text-muted);
-        }
-
-        button#copy-permalink {
-          display: inline-flex;
-          align-items: center;
-          padding: 0;
-          cursor: pointer;
-          background: none;
-          border: none;
-          font-size: 0.9em;
-          position: relative;
-
-          &:hover [data-icon] {
-            color: var(--color-accent);
-          }
-
-          .copy-tooltip {
-            position: absolute;
-            bottom: calc(100% + 6px);
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: var(--font-step--2);
-            white-space: nowrap;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.15s ease;
-          }
-
-          &.copied .copy-tooltip {
-            opacity: 1;
-          }
-        }
-      }
-
-      .post-title {
-        /* With and without subtitle */
-        margin: 0 0 var(--space-s) 0;
-
-        /* Only: with subtitle */
-        h1 {
-          margin-top: 0;
-          margin-bottom: var(--space-3xs);
-        }
-
-        p {
-          margin-top: 0;
-          margin-bottom: var(--space-s);
-        }
-      }
+    .last-mod {
+      font-size: small;
+      color: var(--color-text-muted);
     }
-  }
 
-  .post-content {
-    margin-top: var(--space-l);
-  }
-
-  .post-footer {
-    margin-top: var(--space-xs-s);
-    border-top: 2px solid var(--color-border);
-
-    .post-taxonomy {
-      margin: 0.5rem 0 var(--space-m) 0;
+    button#copy-permalink {
+      display: inline-flex;
+      align-items: center;
       padding: 0;
-    }
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 0.9em;
+      position: relative;
+      margin-left: var(--space-3xs);
 
-    .open-heart-reactions {
-      display: flex;
-      justify-content: center;
-      margin-bottom: var(--space-l);
-      font-size: var(--font-step--2);
-    }
+      &:hover [data-icon] {
+        color: var(--color-accent);
+      }
 
-    .not-ai-badge {
-      display: flex;
-      justify-content: center;
-      font-size: var(--font-step-4);
+      .copy-tooltip {
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: var(--font-step--2);
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.15s ease;
+      }
+
+      &.copied .copy-tooltip {
+        opacity: 1;
+      }
     }
   }
-</style>
 
-<style is:global lang="scss">
-  @use "mixins";
+  .post-title {
+    /* With and without subtitle */
+    margin: 0 0 var(--space-s) 0;
 
-  /* "Breakout" effect for code blocks, standalone images, and figures */
-  @layer defaults {
-    :where(.post-content) {
-      .expressive-code {
-        @include mixins.breakout(var(--space-xs-s));
-      }
-
-      figure,
-      img {
-        @include mixins.breakout(var(--space-s-m));
-      }
-
-      figure img {
-        margin: auto;
-      }
+    /* Only: with subtitle */
+    h1 {
+      margin-top: 0;
+      margin-bottom: var(--space-3xs);
     }
+
+    p {
+      margin-top: 0;
+      margin-bottom: var(--space-s);
+    }
+  }
+
+  .post-taxonomy {
+    margin: 0.5rem 0 var(--space-m) 0;
+    padding: 0;
   }
 </style>
 
@@ -300,15 +224,4 @@ const { Content } = await renderContent(post);
       }, 2000);
     }
   });
-</script>
-
-{/* Zoomable images */}
-<script>
-  const selector = ".post-content img";
-  if (document.querySelector(selector)) {
-    const { default: mediumZoom } = await import("medium-zoom");
-    mediumZoom(selector, {
-      background: "color-mix(in srgb, var(--color-bg) 80%, transparent)",
-    });
-  }
 </script>

@@ -15,12 +15,12 @@ const breadcrumbs: BreadcrumbComponent[] = [
   ],
 ];
 
-const exploreEntry = await getContentEntry("standalone", "explore");
+const exploreEntry = await getContentEntry("other", "explore");
 const { Content: TagsContent } = await renderContent(
-  await getContentEntry("standalone", "taxonomyTags"),
+  await getContentEntry("other", "taxonomyTags"),
 );
 const { Content: ThreadsContent } = await renderContent(
-  await getContentEntry("standalone", "taxonomyThreads"),
+  await getContentEntry("other", "taxonomyThreads"),
 );
 ---
 
@@ -35,21 +35,11 @@ const { Content: ThreadsContent } = await renderContent(
     <p>For other listings of my content, see</p>
     <dt><Link to="/articles">Articles</Link></dt>
     <dd>
-      {
-        (await getContentEntry("standalone", "taxonomyArticles"))?.data
-          .description
-      }
+      {(await getContentEntry("other", "taxonomyArticles"))?.data.description}
     </dd>
     <dt><Link to="/notes">Notes</Link></dt>
     <dd>
-      {(await getContentEntry("standalone", "taxonomyNotes"))?.data.description}
-    </dd>
-    <dt><Link to="/documents">Documents</Link></dt>
-    <dd>
-      {
-        (await getContentEntry("standalone", "taxonomyDocuments"))?.data
-          .description
-      }
+      {(await getContentEntry("other", "taxonomyNotes"))?.data.description}
     </dd>
   </dl>
   <section aria-labelledby="tags-heading">

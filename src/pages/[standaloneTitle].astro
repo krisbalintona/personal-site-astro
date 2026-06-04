@@ -1,0 +1,25 @@
+---
+import ContentLayout from "@layouts/ContentLayout.astro";
+import { getContentCollection, titleToUrlSlug } from "@lib/entries";
+import { type CollectionEntry } from "astro:content";
+import { createRoute } from "astro-typesafe-routes/create-route";
+
+export const Route = createRoute({
+  routeId: "/[standaloneTitle]",
+});
+
+export const getStaticPaths = Route.createGetStaticPaths(async () =>
+  (await getContentCollection("standalone")).map((entry) => ({
+    params: { standaloneTitle: titleToUrlSlug(entry.data.title) },
+    props: { standaloneEntry: entry },
+  })),
+);
+
+interface Props {
+  standaloneEntry: CollectionEntry<"standalone">;
+}
+
+const { standaloneEntry } = Astro.props;
+---
+
+<ContentLayout entry={standaloneEntry} reactionsPath={Astro.url.pathname} />

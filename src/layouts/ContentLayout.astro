@@ -1,0 +1,169 @@
+---
+import NotByAIBadge from "@components/NotByAIBadge.astro";
+import OpenHeartReactions from "@components/OpenHeartReactions.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { renderContent, toDateTimeAttribute } from "@lib/entries";
+import type { AnyCollectionEntry } from "@src/content.config";
+
+interface Props {
+  entry: AnyCollectionEntry;
+  reactionsPath?: string;
+  notAIBadge?: boolean;
+}
+
+const { entry, reactionsPath, notAIBadge = true } = Astro.props;
+
+const title = entry.data.title;
+const pubDate = "pubDate" in entry.data ? entry.data.pubDate : null;
+const lastMod = "lastMod" in entry.data ? entry.data.lastMod : null;
+
+const dateStringFormat: Intl.DateTimeFormatOptions = {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+};
+// Publication date
+const formattedPubDate = pubDate && toDateTimeAttribute(pubDate);
+const visiblePubDate = pubDate?.toLocaleDateString("en-US", dateStringFormat);
+// Last modification
+let formattedLastMod;
+let visibleLastMod;
+if (lastMod) {
+  formattedLastMod = toDateTimeAttribute(lastMod);
+  visibleLastMod = lastMod.toLocaleDateString("en-US", dateStringFormat);
+}
+
+const { Content } = await renderContent(entry);
+---
+
+<BaseLayout
+  pageTitle={title}
+  displayTitle={false}
+  pageDescription={entry.data.description}
+>
+  <slot name="script-goat-counter" slot="script-goat-counter" />
+
+  <article>
+    <header class="content-header">
+      <slot name="header">
+        <div class="content-info-container">
+          <div class="content-info-meta">
+            {
+              lastMod ? (
+                <>
+                  <time datetime={formattedPubDate}>{visiblePubDate}</time>
+                  <span class="sr-only">,</span>
+                  <span class="last-mod">
+                    last updated{" "}
+                    <time datetime={formattedLastMod}>{visibleLastMod}</time>
+                  </span>
+                </>
+              ) : (
+                <time datetime={formattedPubDate}>{visiblePubDate}</time>
+              )
+            }
+          </div>
+
+          <h1 class="content-title">{title}</h1>
+        </div>
+      </slot>
+    </header>
+
+    {
+      Content && (
+        <div class="content-body">
+          <Content />
+        </div>
+      )
+    }
+
+    <footer class="content-footer">
+      <slot name="footer" />
+
+      {reactionsPath && <OpenHeartReactions path={reactionsPath} />}
+      {
+        notAIBadge && (
+          <div>
+            <NotByAIBadge />
+          </div>
+        )
+      }
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .content-header {
+    margin-bottom: var(--space-xl);
+    border-bottom: 2px solid var(--color-border);
+
+    .content-info-container {
+      font-family: var(--font-ui);
+
+      .content-info-meta {
+        font-size: var(--font-step--1);
+        margin: var(--space-3xs) 0;
+
+        .last-mod {
+          font-size: small;
+          color: var(--color-text-muted);
+        }
+      }
+
+      .content-title {
+        margin: 0 0 var(--space-s) 0;
+      }
+    }
+  }
+
+  .content-footer {
+    margin-top: var(--space-xs);
+    border-top: 2px solid var(--color-border);
+
+    .open-heart-reactions {
+      justify-content: center;
+      margin: var(--space-m) 0 var(--space-l) 0;
+      font-size: var(--font-step--2);
+    }
+
+    .not-ai-badge {
+      display: flex;
+      justify-content: center;
+      margin-top: var(--space-l);
+      font-size: var(--font-step-4);
+    }
+  }
+</style>
+
+<style is:global lang="scss">
+  @use "mixins";
+
+  /* "Breakout" effect for code blocks, standalone images, and figures */
+  @layer defaults {
+    :where(.content-body) {
+      .expressive-code {
+        @include mixins.breakout(var(--space-xs-s));
+      }
+
+      figure,
+      img {
+        @include mixins.breakout(var(--space-s-m));
+      }
+
+      figure img {
+        margin: auto;
+      }
+    }
+  }
+</style>
+
+{/* Zoomable images */}
+<script>
+  const selector = ".content-body img";
+  if (document.querySelector(selector)) {
+    const { default: mediumZoom } = await import("medium-zoom");
+    mediumZoom(selector, {
+      background: "color-mix(in srgb, var(--color-bg) 80%, transparent)",
+    });
+  }
+</script>

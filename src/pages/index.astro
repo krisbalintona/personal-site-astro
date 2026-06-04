@@ -5,7 +5,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import { getContentEntry, renderContent } from "@lib/entries";
 import Link from "astro-typesafe-routes/link";
 
-const home = await getContentEntry("standalone", "home");
+const home = await getContentEntry("other", "home");
 const { Content } = await renderContent(home);
 ---
 
@@ -22,27 +22,17 @@ const { Content } = await renderContent(home);
         <dt><Link to="/articles">Articles</Link></dt>
         <dd>
           {
-            (await getContentEntry("standalone", "taxonomyArticles"))?.data
+            (await getContentEntry("other", "taxonomyArticles"))?.data
               .description
           }
         </dd>
         <dt><Link to="/notes">Notes</Link></dt>
         <dd>
-          {
-            (await getContentEntry("standalone", "taxonomyNotes"))?.data
-              .description
-          }
-        </dd>
-        <dt><Link to="/documents">Documents</Link></dt>
-        <dd>
-          {
-            (await getContentEntry("standalone", "taxonomyDocuments"))?.data
-              .description
-          }
+          {(await getContentEntry("other", "taxonomyNotes"))?.data.description}
         </dd>
         <dt><Link to="/explore">Explore</Link></dt>
         <dd>
-          {(await getContentEntry("standalone", "explore"))?.data.description}
+          {(await getContentEntry("other", "explore"))?.data.description}
         </dd>
       </dl>
       <p>

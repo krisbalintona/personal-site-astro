@@ -206,15 +206,15 @@ export async function topLevelRSSFeeds(): Promise<Record<string, RSSFeed>> {
     Articles: {
       title: `${SITE_TITLE} — Articles`,
       description:
-        (await getContentEntry("standalone", "taxonomyArticles"))?.data
+        (await getContentEntry("other", "taxonomyArticles"))?.data
           .description ?? "All articles",
       items: articleItems,
     },
     Notes: {
       title: `${SITE_TITLE} — Notes`,
       description:
-        (await getContentEntry("standalone", "taxonomyNotes"))?.data
-          .description ?? "All notes",
+        (await getContentEntry("other", "taxonomyNotes"))?.data.description ??
+        "All notes",
       items: noteItems,
     },
   };

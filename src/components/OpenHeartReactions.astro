@@ -1,17 +1,14 @@
 ---
 import { isDev } from "@lib/consts";
-import { getPostPermalink, type PostEntry } from "@lib/posts";
 
 interface Props {
-  post: PostEntry;
+  path: string;
 }
 
-const { post } = Astro.props;
+const { path } = Astro.props;
 
 if (!Astro.site)
   throw new Error("Site URL must be set for Open Heart reactions to work");
-// Use permalink as path to be robust against path changes
-const path = getPostPermalink(post);
 const pageUrl = new URL(path, Astro.site.origin).href;
 const endpoint = "https://openheart.kristofferbalintona.me"; // Endpoint for HeartHeartStore backend
 ---

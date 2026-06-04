@@ -5,7 +5,8 @@ import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import { type CollectionEntry, defineCollection } from "astro:content";
 
-// * Posts
+// * Content
+// ** Posts (time-bound)
 
 const postSources = [
   {
@@ -15,10 +16,6 @@ const postSources = [
   {
     pattern: "*/index.mdx",
     base: "src/content/notes/",
-  },
-  {
-    pattern: "*/index.mdx",
-    base: "src/content/documents/",
   },
 ];
 
@@ -38,10 +35,12 @@ const notes = defineCollection({
   schema: postSchema,
 });
 
-const documents = defineCollection({
+// ** Non-time-bound
+
+const standalone = defineCollection({
   loader: glob({
     pattern: "*/index.mdx",
-    base: "./src/content/documents",
+    base: "./src/content/standalone",
   }),
   schema: postSchema,
 });
@@ -70,10 +69,10 @@ const threads = defineCollection({
 
 // * Other
 
-const standalone = defineCollection({
+const other = defineCollection({
   loader: glob({
     pattern: "*/index.mdx",
-    base: "./src/content/standalone",
+    base: "./src/content/other",
   }),
   schema: z.object(baseContentShape),
 });
@@ -85,8 +84,8 @@ export type AnyCollectionEntry = CollectionEntry<AnyCollectionName>;
 export const collections = {
   articles,
   notes,
-  documents,
+  standalone,
   tags,
   threads,
-  standalone,
+  other,
 };

@@ -900,6 +900,8 @@ communication channel for the export process."
            (pcase entry-type
              ((or "articles" "notes")
               (append frontmatter-base (list pub-date last-mod tags threads redirects)))
+             ("standalone"
+              (append frontmatter-base (list pub-date last-mod)))
              (_ frontmatter-base)))
      "\n")))
 
@@ -1207,11 +1209,7 @@ This function is used as the :publishing-function in
                        :base-extension "org"
                        :publishing-function org-mdx-publish-to-site)))
   (setopt org-publish-project-alist
-          `(("standalone"
-             :base-directory ,(expand-file-name "standalone" krisb-manuscript-blog-directory)
-             :publishing-directory ,(expand-file-name "standalone/" org-mdx-content-dir)
-             :recursive t
-             ,@base-options)
+          `(;; Posts
             ("articles"
              :base-directory ,(expand-file-name "articles" krisb-manuscript-blog-directory)
              :publishing-directory ,(expand-file-name "articles/" org-mdx-content-dir)
@@ -1224,12 +1222,13 @@ This function is used as the :publishing-function in
              :recursive t
              :mdx-entry-type "notes"
              ,@base-options)
-            ("documents"
-             :base-directory ,(expand-file-name "documents" krisb-manuscript-blog-directory)
-             :publishing-directory ,(expand-file-name "documents/" org-mdx-content-dir)
+            ("standalone"
+             :base-directory ,(expand-file-name "standalone" krisb-manuscript-blog-directory)
+             :publishing-directory ,(expand-file-name "standalone/" org-mdx-content-dir)
              :recursive t
-             :mdx-entry-type "notes"
+             :mdx-entry-type "standalone"
              ,@base-options)
+            ;; Taxonomy
             ("tags"
              :base-directory ,(expand-file-name "tags" krisb-manuscript-blog-directory)
              :publishing-directory ,(expand-file-name "tags/" org-mdx-content-dir)
@@ -1241,6 +1240,13 @@ This function is used as the :publishing-function in
              :publishing-directory ,(expand-file-name "threads/" org-mdx-content-dir)
              :recursive t
              :mdx-entry-type "threads"
+             ,@base-options)
+            ;; Remaining
+            ("other"
+             :base-directory ,(expand-file-name "other" krisb-manuscript-blog-directory)
+             :publishing-directory ,(expand-file-name "other/" org-mdx-content-dir)
+             :recursive t
+             :mdx-entry-type "other"
              ,@base-options))))
 
 ;;; Provide

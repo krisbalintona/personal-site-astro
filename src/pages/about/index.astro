@@ -2,7 +2,7 @@
 import { getContentEntry, renderContent } from "@lib/entries";
 import BaseLayout from "@src/layouts/BaseLayout.astro";
 
-const about = await getContentEntry("standalone", "about");
+const about = await getContentEntry("other", "about");
 const { Content } = await renderContent(about);
 ---
 
