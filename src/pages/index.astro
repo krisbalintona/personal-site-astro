@@ -19,7 +19,7 @@ const { Content } = await renderContent(home);
       {Content && <Content />}
       <p>You may use these pages as entrypoints to my content:</p>
       <dl>
-        <dt><Link to="/index">Index</Link></dt>
+        <dt><Link to="/site-index">Index</Link></dt>
         <dd>
           {(await getContentEntry("other", "index"))?.data.description}
         </dd>

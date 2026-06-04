@@ -6,7 +6,7 @@ import { getContentEntry } from "@lib/entries";
 import { $path } from "astro-typesafe-routes/path";
 
 const breadcrumbs: BreadcrumbComponent[] = [
-  { label: "index", href: $path({ to: "/index" }) },
+  { label: "index", href: $path({ to: "/site-index" }) },
   [
     { label: "articles", href: $path({ to: "/articles" }) },
     { label: "Notes", styleNormal: true },

@@ -24,7 +24,7 @@ const pubDate = post.data.pubDate;
 const lastMod = post.data.lastMod;
 
 const breadcrumbs: BreadcrumbComponent[] = [
-  { label: "index", href: $path({ to: "/index" }) },
+  { label: "index", href: $path({ to: "/site-index" }) },
   {
     label: post.collection,
     href: $path({ to: `/${post.collection}` }),
