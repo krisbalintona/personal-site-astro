@@ -47,9 +47,20 @@ const hasItems = expressionsSorted.length > 0;
           <li class="listing-item no-visited">
             <a href={getEntryUrl(entry)}>{entry.data.title}</a>
             <div class="expression-metadata">
-              <time datetime={toDateTimeAttribute(entry.data.pubDate)}>
-                {formatDate(entry.data.pubDate)}
-              </time>
+              <div class="dates">
+                <time datetime={toDateTimeAttribute(entry.data.pubDate)}>
+                  {formatDate(entry.data.pubDate)}
+                </time>
+                {entry.data.lastMod && (
+                  <span class="last-mod">
+                    (Last updated:
+                    <time datetime={toDateTimeAttribute(entry.data.lastMod)}>
+                      {formatDate(entry.data.lastMod)}
+                    </time>
+                    )
+                  </span>
+                )}
+              </div>
               {showType && (
                 <Link class="item-type" to={`/${entry.collection}`}>
                   {entry.collection}
@@ -86,6 +97,11 @@ const hasItems = expressionsSorted.length > 0;
 
         time {
           color: var(--color-text-muted);
+        }
+
+        .last-mod {
+          color: var(--color-text-muted);
+          font-size: 0.87em;
         }
 
         .item-type {
