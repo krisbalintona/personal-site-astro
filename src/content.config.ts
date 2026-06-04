@@ -1,4 +1,4 @@
-import { baseContentShape } from "@lib/entries";
+import { baseContentShape, publishedContentShape } from "@lib/entries";
 import mdFrontmatterLoader from "@lib/mdFrontmatterGlob.ts";
 import { postSchema } from "@lib/posts.ts";
 import { glob } from "astro/loaders";
@@ -74,7 +74,7 @@ const other = defineCollection({
     pattern: "*/index.mdx",
     base: "./src/content/other",
   }),
-  schema: z.object(baseContentShape),
+  schema: z.object(publishedContentShape),
 });
 
 // * Export variables

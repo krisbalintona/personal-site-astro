@@ -1,7 +1,7 @@
 import { rssSchema } from "@astrojs/rss";
 import {
-  baseContentShape,
   getContentCollection,
+  publishedContentShape,
   titleToUrlSlug,
 } from "@lib/entries";
 import { z } from "astro/zod";
@@ -69,22 +69,10 @@ export function getPostPermalink(post: PostEntry): string {
 // for all properties of `rssSchema`.  Although all the properties in
 // `rssSchema` are typed as optional, RSS feeds themselves to have
 // required XML fields.
-export const postSchema = rssSchema.extend(baseContentShape).extend({
-  pubDate: z.coerce.date().default(new Date("1970-01-01")),
-  lastMod: z.coerce.date().optional(),
+export const postSchema = rssSchema.extend(publishedContentShape).extend({
   subtitle: z.string().optional(),
   tags: z.array(reference("tags")).optional(),
   threads: z.array(reference("threads")).optional(),
-  redirects: z
-    .array(
-      z
-        .string()
-        .refine(
-          (path) => /^\/.*[^/]$/.test(path),
-          "Redirect path must start with '/' and must not end with '/'",
-        ),
-    )
-    .optional(),
 });
 
 export const PostCollectionNames = ["articles", "notes"] as const;

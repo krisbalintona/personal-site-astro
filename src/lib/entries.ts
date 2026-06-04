@@ -25,6 +25,22 @@ export const baseContentShape = {
   description: z.string().optional(),
 };
 
+export const publishedContentShape = {
+  ...baseContentShape,
+  pubDate: z.coerce.date().default(new Date("1970-01-01")),
+  lastMod: z.coerce.date().optional(),
+  redirects: z
+    .array(
+      z
+        .string()
+        .refine(
+          (path) => /^\/.*[^/]$/.test(path),
+          "Redirect path must start with '/' and must not end with '/'",
+        ),
+    )
+    .optional()
+}
+
 /**
  * Return true if `entry` is published.  An entry is considered
  * published when we are in a dev environment, when `entry` has no
@@ -142,6 +158,12 @@ export function getEntryUrl(
       return $path({
         to: "/notes/[title]",
         params: { title: titleToUrlSlug(entry.data.title) },
+        hash: anchor,
+      });
+    case "standalone":
+      return $path({
+        to: "/[standaloneTitle]",
+        params: { standaloneTitle: titleToUrlSlug(entry.data.title) },
         hash: anchor,
       });
     case "tags":

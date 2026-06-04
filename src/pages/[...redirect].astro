@@ -1,5 +1,5 @@
 ---
-import { getEntryUrl } from "@lib/entries";
+import { getContentCollection, getEntryUrl } from "@lib/entries";
 import { allPosts } from "@lib/posts";
 import { createRoute } from "astro-typesafe-routes/create-route";
 
@@ -8,14 +8,18 @@ export const Route = createRoute({
 });
 
 export const getStaticPaths = Route.createGetStaticPaths(async () => {
-  return (await allPosts()).flatMap((post) => {
-    if (!post.data.redirects?.length) return [];
-    return post.data.redirects.map((redirectPath) => ({
+  const entries = (
+    await Promise.all([allPosts(), await getContentCollection("standalone")])
+  ).flat();
+
+  return entries.flatMap((entry) => {
+    if (!entry.data.redirects?.length) return [];
+    return entry.data.redirects.map((redirectPath) => ({
       params: {
         redirect: redirectPath.slice(1), // Strip leading slash
       },
       props: {
-        targetUrl: getEntryUrl(post),
+        targetUrl: getEntryUrl(entry),
       },
     }));
   });
