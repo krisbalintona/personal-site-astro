@@ -51,30 +51,21 @@ const tags = post.data.tags;
 const threads = post.data.threads;
 ---
 
-{/* Use permalink as path to be robust against path changes */}
+{
+  /* Use permalink as path (for GoatCounter and OpenHeart reactions)
+  to be robust against path changes. */
+}
 <ContentLayout
   entry={post}
   reactionsPath={getPostPermalink(post)}
   notAIBadge={true}
+  goatCounterSettings={{
+    path: $path({
+      to: "/posts/[stableId]",
+      params: { stableId: getPostStableId(post) },
+    }),
+  }}
 >
-  {
-    /* Use `data-goatcounter-settings` to set the path counted by
-    GoatCounter. See https://krisbalintona.goatcounter.com/help/path
-    for more information */
-  }
-  <script
-    slot="script-goat-counter"
-    is:inline
-    data-goatcounter="https://krisbalintona.goatcounter.com/count"
-    data-goatcounter-settings={JSON.stringify({
-      path: $path({
-        to: "/posts/[stableId]",
-        params: { stableId: getPostStableId(post) },
-      }),
-    })}
-    async
-    src="//gc.zgo.at/count.js"></script>
-
   <Breadcrumb slot="header" breadcrumbs={breadcrumbs} />
   <div slot="header" class="post-info-meta">
     {

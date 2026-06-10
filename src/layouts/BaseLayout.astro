@@ -14,9 +14,11 @@ interface Props {
   pageTitle: string;
   displayTitle?: string | false;
   pageDescription?: string;
+  goatCounterSettings?: Record<string, string>;
 }
 
-const { pageTitle, pageDescription, displayTitle } = Astro.props;
+const { pageTitle, pageDescription, displayTitle, goatCounterSettings } =
+  Astro.props;
 ---
 
 <html lang="en">
@@ -65,14 +67,17 @@ const { pageTitle, pageDescription, displayTitle } = Astro.props;
     {
       isProd && (
         /* Make this a named slot so that specific paths can override */
-        <slot name="script-goat-counter">
-          <script
-            is:inline
-            data-goatcounter="https://krisbalintona.goatcounter.com/count"
-            async
-            src="//gc.zgo.at/count.js"
-          />
-        </slot>
+        <script
+          is:inline
+          data-goatcounter="https://krisbalintona.goatcounter.com/count"
+          data-goatcounter-settings={
+            goatCounterSettings
+              ? JSON.stringify(goatCounterSettings)
+              : undefined
+          }
+          async
+          src="//gc.zgo.at/count.js"
+        />
       )
     }
 

@@ -9,9 +9,15 @@ interface Props {
   entry: AnyCollectionEntry;
   reactionsPath?: string;
   notAIBadge?: boolean;
+  goatCounterSettings?: Record<string, string>;
 }
 
-const { entry, reactionsPath, notAIBadge = true } = Astro.props;
+const {
+  entry,
+  reactionsPath,
+  notAIBadge = true,
+  goatCounterSettings,
+} = Astro.props;
 
 const title = entry.data.title;
 const pubDate = "pubDate" in entry.data ? entry.data.pubDate : null;
@@ -40,9 +46,8 @@ const { Content } = await renderContent(entry);
   pageTitle={title}
   displayTitle={false}
   pageDescription={entry.data.description}
+  goatCounterSettings={goatCounterSettings}
 >
-  <slot name="script-goat-counter" slot="script-goat-counter" />
-
   <article>
     <header class="content-header">
       <slot name="header">
