@@ -669,7 +669,7 @@ is a plist used as a communication channel."
         ;; Markdown has no definition list syntax, so in such cases we
         ;; emit HTML
         (let* ((tag (org-element-property :tag item))
-               (tag-str (if tag (org-export-data tag info) "(no term)"))
+               (tag-str (if tag (org-export-data tag info) ""))
                (checkbox (org-element-property :checkbox item))
                (checkbox-str
                 (concat (pcase checkbox
@@ -682,7 +682,13 @@ is a plist used as a communication channel."
                          (org-trim contents)
                        "")))
           (concat (format "<dt>%s</dt>\n" checkbox-str)
-                  (format "<dd>%s</dd>" body)))
+                  ;; Render as new paragraph to handle the case
+                  ;; wherein description list items aren't inline HTML
+                  ;; elements (e.g., an item that is another list).
+                  ;; Otherwise, invalid MDX is exported (closing tag
+                  ;; would not appear on the same line as opening
+                  ;; tag).  Use CSS to tweak the spacing if needed
+                  (format "<dd>\n%s\n</dd>" body)))
       ;; Ordered and unordered lists: delegate to the MD transcoder
       (org-md-item item contents info))))
 

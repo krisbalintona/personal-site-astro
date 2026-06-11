@@ -39,11 +39,17 @@ First, let's make sure our expectations are tempered: Emacs on Android won't be 
 
 <dl>
 <dt>Tooling</dt>
-<dd>To have non-Emacs programs available, you have to install Emacs in a particular way with Termux to expose Termux’s binaries to Emacs. (See [the recommended way to install Emacs](#recommended-installation).) The initial set up is longer, but it's worth it.</dd>
+<dd>
+To have non-Emacs programs available, you have to install Emacs in a particular way with Termux to expose Termux’s binaries to Emacs. (See [the recommended way to install Emacs](#recommended-installation).) The initial set up is longer, but it's worth it.
+</dd>
 <dt>File paths</dt>
-<dd>Android "sandboxes" each app. You can think of each app having their own "section" of the file system that they can read or write to (unless they are given explicit access to that outside directory; see `info "(emacs) Android Document Providers"`). As such, one finds themselves fiddling with the obnoxiously long Android file paths if they want to, for instance, access their notes directory that is outside the Emacs app sandbox.<FootnoteRef num="2" /> This is a minor inconvenience though.</dd>
+<dd>
+Android "sandboxes" each app. You can think of each app having their own "section" of the file system that they can read or write to (unless they are given explicit access to that outside directory; see `info "(emacs) Android Document Providers"`). As such, one finds themselves fiddling with the obnoxiously long Android file paths if they want to, for instance, access their notes directory that is outside the Emacs app sandbox.<FootnoteRef num="2" /> This is a minor inconvenience though.
+</dd>
 <dt>Writing to the file system</dt>
-<dd>Relatively speaking, writing to the file system can be long sometimes. Not too long, but long nonetheless, As far as I've experienced, this has only been the case when saving files that are outside the Emacs sandbox.</dd>
+<dd>
+Relatively speaking, writing to the file system can be long sometimes. Not too long, but long nonetheless, As far as I've experienced, this has only been the case when saving files that are outside the Emacs sandbox.
+</dd>
 </dl>
 
 So, really, the situation is pretty good!
@@ -176,11 +182,17 @@ And finally: YMMV on other Android devices. My current phone is the OnePlus 7 Pr
 
 <dl>
 <dt>Touchscreen gestures</dt>
-<dd>There is the built-in strokes.el, but strokes.el, as far as I can tell, does not work for touchscreens. Additionally, significant changes would be required to its code base to make it compatible for touchscreens. So, for now, we have to settle with virtual keyboards&hellip;</dd>
+<dd>
+There is the built-in strokes.el, but strokes.el, as far as I can tell, does not work for touchscreens. Additionally, significant changes would be required to its code base to make it compatible for touchscreens. So, for now, we have to settle with virtual keyboards&hellip;
+</dd>
 <dt>Automatic keyboard/IME switching</dt>
-<dd>Ideally, I’d have my special virtual keyboard be automatically selected using Emacs and deselected when not using Emacs. Right now, I have to manually switch to it. As far as I know, there is no easy way to accomplish this.</dd>
+<dd>
+Ideally, I’d have my special virtual keyboard be automatically selected using Emacs and deselected when not using Emacs. Right now, I have to manually switch to it. As far as I know, there is no easy way to accomplish this.
+</dd>
 <dt>Larger tool bar and menu bar</dt>
-<dd>The tool bar and menu bar are useful, but they’re also small. I wish they were larger and easier to tap.</dd>
+<dd>
+The tool bar and menu bar are useful, but they’re also small. I wish they were larger and easier to tap.
+</dd>
 </dl>
 
 <FootnoteSection>
