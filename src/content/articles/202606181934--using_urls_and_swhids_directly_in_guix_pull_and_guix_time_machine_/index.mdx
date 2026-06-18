@@ -1,0 +1,81 @@
+---
+title: "Using URLs and SWHIDs directly in “guix pull” and “guix time-machine”"
+draft: false
+pubDate: 2026-06-18T19:34:00-05:00
+tags:
+  - "Guix"
+  - "Tips and Tricks"
+---
+import Footnote from "@components/markup/Footnote.astro";
+import FootnoteSection from "@components/markup/FootnoteSection.astro";
+import FootnoteRef from "@components/markup/FootnoteRef.astro";
+
+
+Today I stumbled upon a recently published (one month ago) blog post by the Guix team: [Time travel without borders](https://guix.gnu.org/blog/2026/time-travel-without-borders/). It was a worthwhile read.
+
+`guix time-machine` is used to go back or forward in time (relative to the current Guix profile) and call other Guix subcommands. For instance, to run the `yt-dlp` binary from the latest Guix commit:
+
+```bash
+guix time-machine -q -- shell yt-dlp -- yt-dlp …
+```
+
+Another example comes from my personal [Guix config](https://codeberg.org/krisbalintona/guix-config): to test if my home environment configuration would build properly if I did a `guix pull`, I do something like:
+
+```bash
+guix home reconfigure -L src --expression='(@ (krisb config machines MACHINE home) MACHINE-home-environment)'
+```
+
+Both of the above are examples of going "forward" in time (i.e., forward in the Guix repository commit history), but one can just as easily go back to earlier commits.
+
+[The article](https://guix.gnu.org/blog/2026/time-travel-without-borders/) goes over a recently added feature to `guix pull` and `guix time-machine`. I believe it comes from this PR:
+
+<div class="org-center">
+<p>
+<a href="https://codeberg.org/guix/guix/pulls/6745">#6745 - Allow `pull` and `time-machine` to download channel files - guix/guix - Codeberg.org</a>
+</p>
+</div>
+
+This new feature basically lets one provide a URL or SWHID (Software Hash Identifiers)<FootnoteRef num="1" /> to `guix pull` or `guix time-machine` directly. (The latter is more secure, since it involves a content hash.)
+
+So, instead of having to do something like the following, where one fetches a file via e.g. `wget` then calls `guix time-machine`:
+
+```bash
+wget -O channels.scm \
+  https://ci.guix.gnu.org/eval/latest/channels.scm?spec=master
+guix time-machine -C channels.scm -- shell …
+```
+
+or the one-line Bash equivalent:
+
+```bash
+guix time-machine \
+-C <(wget -O https://ci.guix.gnu.org/eval/latest/channels.scm?spec=master) \
+-- shell …
+```
+
+We can do the following instead, using a URL directly:
+
+```bash
+guix time-machine \
+-C https://ci.guix.gnu.org/eval/latest/channels.scm?spec=master \
+-- …
+```
+
+or with a SWHID
+
+```bash
+guix time-machine \
+-C swh:1:cnt:003e1e0c1b9b358082201332c926ae54e9549002  \
+-- …
+```
+
+Really cool!
+
+<FootnoteSection>
+Footnotes
+<Footnote num="1" slot="footnotes">
+You can learn more about SWHIDs (Software Hash Identifiers) [here](https://www.swhid.org/). They are basically unique IDs for software artifacts. This includes repositories, commits, source code/files, and more. The benefit of SWHIDs is that it ensures that the e.g. content of a URL is not changed under your feet&mdash;hence, they have a security benefit.
+
+I learned about these only until recently by another Guix resource, and as of April 23, 2025 SWHIDs are *an ISO International Standard*!
+</Footnote>
+</FootnoteSection>
