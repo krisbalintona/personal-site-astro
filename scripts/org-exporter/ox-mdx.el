@@ -55,7 +55,8 @@ This variable can be `let'-bound to change the default string.")
     ("FootnoteSection" . "import FootnoteSection from \"@components/markup/FootnoteSection.astro\";")
     ("Footnote" . "import Footnote from \"@components/markup/Footnote.astro\";")
     ("FootnoteRef" . "import FootnoteRef from \"@components/markup/FootnoteRef.astro\";")
-    ("Heading" . "import Heading from \"@components/markup/Heading.astro\";"))
+    ("Heading" . "import Heading from \"@components/markup/Heading.astro\";")
+    ("Center" . "import Center from \"@components/markup/Center.astro\";"))
   "Alist from component name to import statement.
 There are several components specific to this project.  This is an alist
 from component name to the import statement corresponding to that
@@ -692,6 +693,13 @@ is a plist used as a communication channel."
       ;; Ordered and unordered lists: delegate to the MD transcoder
       (org-md-item item contents info))))
 
+(defun org-mdx-center-block (_center-block contents info)
+  "Transcode a CENTER-BLOCK element from Org to HTML.
+CONTENTS holds the contents of the block.  INFO is a plist holding
+contextual information."
+  (org-mdx--register-import info "Center")
+  (format "<Center>\n%s</Center>" contents))
+
 (defun org-mdx-plain-list (plain-list contents _info)
   "Transcode PLAIN-LIST for MDX export.
 Descriptive lists are wrapped in `<dl>'; ordered and unordered lists
@@ -1169,6 +1177,7 @@ Return the output directory's name."
     (inner-template . org-mdx-inner-template)
     (plain-text . org-mdx-plain-text)
     (example-block . org-mdx-example-block)
+    (center-block . org-mdx-center-block)
     (src-block . org-mdx-src-block)
     (special-block . org-mdx-special-block)
     (link . org-mdx-link)

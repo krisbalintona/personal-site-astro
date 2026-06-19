@@ -9,6 +9,7 @@ threads:
 ---
 import Footnote from "@components/markup/Footnote.astro";
 import FootnoteSection from "@components/markup/FootnoteSection.astro";
+import Center from "@components/markup/Center.astro";
 import ContentLink from "@components/markup/ContentLink.astro";
 import Details from "@components/markup/Details.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
@@ -279,11 +280,9 @@ Notably, for LaTeX exports, **we can specify the style (citation style and bibli
 
 This means that, for instance,
 
-<div class="org-center">
-<p>
-<code>#+cite_export: biblatex mla-new/authoryear</code>
-</p>
-</div>
+<Center>
+`#+cite_export: biblatex mla-new/authoryear`
+</Center>
 
 results in `"bibstyle=mla-new,citestyle=authoryear"` being passed as an option to biblatex. Or we can set this in `org-cite-export-processors`:
 
@@ -306,11 +305,9 @@ Though the above works, since I'm already using a .sty file to set all the optio
 
 In this way, I avoid adding a line in my org files to specify the citation style:
 
-<div class="org-center">
-<p>
-<code>#+cite_export: biblatex mla-new</code>
-</p>
-</div>
+<Center>
+`#+cite_export: biblatex mla-new`
+</Center>
 
 <Heading level="2" id="final-result-and-screenshots"selfLink={true}>Final result and screenshots</Heading>
 

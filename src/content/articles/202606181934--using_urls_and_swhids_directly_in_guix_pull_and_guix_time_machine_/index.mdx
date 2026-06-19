@@ -9,6 +9,7 @@ tags:
 import Footnote from "@components/markup/Footnote.astro";
 import FootnoteSection from "@components/markup/FootnoteSection.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
+import Center from "@components/markup/Center.astro";
 
 
 Today I stumbled upon a recently published (one month ago) blog post by the Guix team: [Time travel without borders](https://guix.gnu.org/blog/2026/time-travel-without-borders/). It was a worthwhile read.
@@ -29,11 +30,9 @@ Both of the above are examples of going "forward" in time (i.e., forward in the 
 
 [The article](https://guix.gnu.org/blog/2026/time-travel-without-borders/) goes over a recently added feature to `guix pull` and `guix time-machine`. I believe it comes from this PR:
 
-<div class="org-center">
-<p>
-<a href="https://codeberg.org/guix/guix/pulls/6745">#6745 - Allow `pull` and `time-machine` to download channel files - guix/guix - Codeberg.org</a>
-</p>
-</div>
+<Center>
+[#6745 - Allow \`pull\` and \`time-machine\` to download channel files - guix/guix - Codeberg.org](https://codeberg.org/guix/guix/pulls/6745)
+</Center>
 
 This new feature basically lets one provide a URL or SWHID (Software Hash Identifiers)<FootnoteRef num="1" /> to `guix pull` or `guix time-machine` directly. (The latter is more secure, since it involves a content hash.)
 
