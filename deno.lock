@@ -33,7 +33,7 @@
         "npm:astro-icon@^1.1.5",
         "npm:astro-robots-txt@1",
         "npm:astro-seo@^1.1.0",
-        "npm:astro-static-headers@^1.0.3",
+        "npm:astro-static-headers@^1.0.4",
         "npm:astro-typesafe-routes@^5.1.0",
         "npm:astro@^6.3.7",
         "npm:cheerio@^1.2.0",
