@@ -145,12 +145,11 @@ when CAPTION is nil or an empty sting, then return FIG.
 The reason for this is that FIG should only be wrapped in a `figure'
 element when CAPTION accompanies it, for the sake of accessibility
 concerns (e.g., screen readers)."
-  (if (org-string-nw-p caption)
-      (let* ((figcaption
-              (format "<figcaption>%s</figcaption>\n" caption))
-             (content (concat (string-trim fig) "\n" figcaption)))
-        (format "<figure>\n%s</figure>" content))
-    fig))
+  (format "<figure>\n%s\n</figure>"
+          (if (org-string-nw-p caption)
+              (format "%s\n<figcaption>%s</figcaption>"
+                      (string-trim fig) caption)
+            fig)))
 
 (defun org-mdx-src-block (src-block _contents info)
   "Transcode a SRC-BLOCK element from Org to a markdown fenced code block.
