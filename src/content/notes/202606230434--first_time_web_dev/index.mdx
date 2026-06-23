@@ -1,0 +1,136 @@
+---
+title: "First time web dev"
+draft: false
+pubDate: 2026-06-23T04:34:00-05:00
+tags:
+  - "Astro"
+  - "Web development"
+  - "Site design"
+---
+import Heading from "@components/markup/Heading.astro";
+
+
+My first touch with *actual* web development has been the development of this site using Astro. Previously, I used Hugo to generate the predecessor to the current site's design&mdash;but I don't consider that "real" web development since much of the logic and hard work has already been done for me (by the static site generator).
+
+Overall, it has been quite pleasant, relative to how large of a meal Astro + Node + HTML + CSS + routing + deployment + more is.
+
+<Heading level="2" id="html-tag-semantics"selfLink={true}>HTML tag semantics</Heading>
+
+-   HTML tag semantics matter. Don't be confused by the fact that, by default, tags have styling. How a page looks should be controlled by CSS.
+    -   Don't confuse the default look of elements for their role in the document
+    -   It is intuitive to use `<i>`, `<b>`, `<br>`, `<em>`, and so on for basic styling. However, HTML tags should convey *the meaning of text*, not what it looks like.
+    -   In practice, this means these tags should be used pretty much only in prose, not in UI elements like the footer, navbar, site header, and so on.
+-   HTML semantics also matter for contexts in which your HTML is presented outside of your pages. For example, reader modes (e.g., Firefox's [Reader View](https://support.mozilla.org/en-US/kb/firefox-reader-view-clutter-free-web-pages)), or RSS feeds: these are contexts in which the styling of your text is inferred from your HTML tags and attributes, not your stylesheets.
+-   Semantics for a few key or rare (but useful) tags:
+    <dl>
+    <dt>`<body>`</dt>
+    <dd>
+    The "actual" (displayed, rendered) content of the page.
+    </dd>
+    <dt>`<main>`</dt>
+    <dd>
+    Dominant content of the page. Typically includes everything but the site footer and header. Only one per page.
+    </dd>
+    <dt>`<article>`</dt>
+    <dd>
+    Represents a self-contained piece of composition. Can be used multiple times a page. For example, a blog post or each card in an article listing.
+    </dd>
+    <dt>`<header>`</dt>
+    <dd>
+    Introductory content (to site, to article, etc.). Can be used multiple times a page.
+    </dd>
+    <dt>`<nav>`</dt>
+    <dd>
+    Provides navigational links.
+    </dd>
+    <dt>`<footer>`</dt>
+    <dd>
+    Closing and supplementary information (e.g., author email address, copyright license, related links) about a given section (e.g., article). Can be used multiple times on a page.
+    </dd>
+    <dt>`<section>`</dt>
+    <dd>
+    Delimit thematic grouping of elements in a page. Most of the time, these involves a heading element.
+    </dd>
+    <dt>`<time>`</dt>
+    <dd>
+    Represent a period or point in time. Useful to search engines and other site features that use machine-readable time formats.
+    </dd>
+    </dl>
+
+<Heading level="2" id="accessibility"selfLink={true}>Accessibility</Heading>
+
+-   Don't forget about it! Consider theme contrast, non-sighted users, and user preferences like preferences for high-contrast (`prefers-contrast`) or no motions (`prefers-reduced-motion`).
+-   Know [ARIA](https://www.w3.org/WAI/standards-guidelines/aria/) standards and attributes, like `aria-label`, `aria-labelledby`, `aria-pressed`, and [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/) recommendations.
+-   There are conventions for accessible use of heading tags. [How-to: Accessible heading structure - The A11Y Project](https://www.a11yproject.com/posts/how-to-accessible-heading-structure/) explains, alongside sharing a few browser add-ons to help.
+
+<Heading level="2" id="select-one-or-two-fonts"selfLink={true}>Select one or two fonts</Heading>
+
+-   Fewer is better; aim for simplicity and elegance. Almost all sites should only really need 2 fonts. Currently, this site has a main "for prose" font (serif) and a secondary font (sans serif) for various other places, e.g. UI elements and heading text.
+-   Real life examples: [Fonts In Use - Fonts In Use](https://fontsinuse.com/), phenomenal source to see what fonts people have used with each other
+-   Font providers
+    -   [Fontsource](https://fontsource.org/)
+    -   [Browse Fonts - Google Fonts](https://fonts.google.com/)
+
+<Heading level="2" id="fluidresponsive-typography-and-spacing"selfLink={true}>Fluid/responsive typography and spacing</Heading>
+
+-   See [Modern Fluid Typography Using CSS Clamp — Smashing Magazine](https://www.smashingmagazine.com/2022/01/modern-fluid-typography-css-clamp/) and [Generating \`font-size\` CSS Rules and Creating a Fluid Type Scale | Modern CSS Solutions](https://moderncss.dev/generating-font-size-css-rules-and-creating-a-fluid-type-scale/) for a deep dive on the matter.
+-   The generator I've used for this site: [Fluid Responsive Design | Utopia](https://utopia.fyi/).
+    -   I also use it to generate "fluid spacing": CSS variables for spacing that are responsive.
+-   The general rationale behind appropriate spacing in design and UI: [The Secret Science of Perfect Spacing - YouTube](https://www.youtube.com/watch?v=9ElrcTtAxzA).
+
+<Heading level="2" id="theres-md-mdx-and-markdoc"selfLink={true}>There's MD, MDX, and Markdoc</Heading>
+
+-   I had to make a decision on what file format my content should be in.
+-   I chose MDX, since I think it is as expressive as possible. (I export from Org-mode to MDX and don't think there's any HTML I want to emit that I can't have my backend export into MDX.)
+    -   Exporting to MDX makes for an easier time than exporting directly to HTML since MDX takes advantage of Astro components as well as opens the possibility of inserting [Remark](https://github.com/remarkjs/remark) integrations to further customize the emitted HTML (although ideally that customization should be done by modifying my Ox-mdx exporter). I'd rather tidy up and standardize the final HTML output through Astro and its integrations, not Org-mode exporter stage.
+-   But Markdoc was an enticing, albeit less common and support (by third-party packages), option. See [Markdoc | Frequently asked questions](https://markdoc.dev/docs/faq) and [Markdoc | The Markdoc syntax](https://markdoc.dev/docs/syntax).
+
+<Heading level="2" id="generators-and-aggregators"selfLink={true}>Generators and aggregators</Heading>
+
+-   Fluid typography (font sizing that changes appropriately based on viewport)
+    -   [https://utopia.fyi/](https://utopia.fyi/)
+    -   [https://typescale.com/](https://typescale.com/)
+-   Content body width
+    -   [Baymard Institute](https://baymard.com/blog/line-length-readability)
+    -   [Butterick's Practical Typography](https://practicaltypography.com/line-length.html ), a well-regarded online typography book
+-   Color palettes
+    -   [Realtime Colors](https://www.realtimecolors.com/?colors=050315-fbfbfe-2f27ce-dedcff-433bff&fonts=Inter-Inter)
+    -   [Accessible Color Palette Generator | WCAG 2.2 UI Color Preview | Free Tool | Accessibility.build](https://www.accessibility.build/tools/color-palette-generator)
+    -   [ColorBox](https://colorbox.io/?c0=~p%24s%24%3D11~p%24h%24st%24%3D220~p%24h%24e%24%3D240~p%24h%24c%24%3Deqo~p%24sa%24st%24%3D0.08~p%24sa%24e%24%3D1~p%24sa%24r%24%3D1~p%24sa%24c%24%3Deqo~p%24b%24st%24%3D1~p%24b%24e%24%3D0.2~p%24b%24c%24%3Deqti~o%24n%24%3DBlue~o%24ms%24%3D0%2C1~o%24ro%24%3Dcw&ly=g&col=3&ns=df)
+    -   Pre-made
+        -   [Color Hunt - The Most Popular Color Palettes of 2026](https://colorhunt.co/palettes/popular)
+        -   [Blog Post Template - Realtime Colors](https://www.realtimecolors.com/blog-post?colors=0c100a-f6f3ee-4a7fa5-d3dfd3-c64a2f&fonts=Inter-Inter)
+        -   [Color Palettes and Gradients – Explore Themes &amp; Ideas | Adobe Express](https://color.adobe.com/explore?q=Primary%20colors)
+
+<Heading level="2" id="astro-components-are-awesome"selfLink={true}>Astro components are awesome</Heading>
+
+-   They're great. "Beginner friendly, simple, and powerful yet a thin abstraction" is my impression.
+-   CSS *selectors* get scoped (but not rules, which are rendered normally).
+-   Makes putting related things (e.g., CSS rules, HTML, JS) near one another.
+
+<Heading level="2" id="favicons"selfLink={true}>Favicons</Heading>
+
+-   Favicons and SVGs
+    -   [SVGOMG - SVGO's Missing GUI for minifying SVGs](https://jakearchibald.github.io/svgomg/), clean up SVG markup
+    -   [SVGcode—Convert raster images to SVG vector graphics](https://svgco.de/), convert images into a SVGs
+-   Don't forget to have a favicon for each of your site's color themes. You can have a different SVG for each theme, or have a `style` block in a single SVG which uses CSS media queries to change the colors of the SVG dynamically. For example, this site currently uses something like:
+    
+    ```xml
+    <!-- Adaptive-color favicon, depending on `prefers-color-scheme` -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="...">
+      <style>
+        .icon-fill {
+            fill: #1a1a1a;
+        }
+    
+        @media (prefers-color-scheme: dark) {
+            .icon-fill {
+                fill: #ffffff;
+            }
+        }
+      </style>
+      <path class="icon-fill" ... />
+      <path class="icon-fill" ... />
+      <path class="icon-fill" ... />
+    </svg>
+    ```
