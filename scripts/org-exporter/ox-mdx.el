@@ -35,7 +35,10 @@
 
 ;;;; Variables and options
 
-(defconst org-mdx-root-dir (project-root (project-current))
+(defconst org-mdx-root-dir
+  (expand-file-name
+   (project-root
+    (project-current nil (file-name-directory (or load-file-name (buffer-file-name))))))
   "Root directory of project.
 This option is used to define the value of other relevant paths.")
 
