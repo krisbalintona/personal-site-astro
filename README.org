@@ -1,6 +1,6 @@
 #+title: Personal site documentation
 
-#  LocalWords:  MDX NPM Astro
+#  LocalWords:  MDX NPM Astro Shiki configs Vercel Cloudflare
 
 This website is powered by [[https://astro.build/][Astro]]. Its content is written in [[https://orgmode.org/][Org-mode]] exported to MDX files (see [[file:src/lib/org-exporter/ox-mdx.el][ox-mdx.el]]).
 
@@ -73,6 +73,19 @@ Future collection names: likely =films=, =shows=, =comics= or similar, each with
 **** Tier 4: Standalone
 
 MDX content belonging to specific site pages---home page prose, preambles for section pages (e.g. the Selections page intro), tag descriptions. Not authored content in the public sense; site UI copy. Collection name: =standalone= (internal only; readers never see this term).
+
+* Astro integrations and other third-party packages
+
+This project also uses several packages (most from the Astro ecosystem) to enhance or modify the generated HTML or Astro experience. Notable ones include:
++ [[https://github.com/withastro/astro/tree/main/packages/astro-rss][astro-rss]] :: For generating RSS feeds
++ [[https://unpic.pics/img/astro/][@unpic/astro – Unpic]] :: As a drop-in improvement to Astro's built-in =Image= component
++ [[https://github.com/HiDeoo/astro-d2][HiDeoo/astro-d2]] :: Astro integration for D2 diagrams
++ [[https://www.npmjs.com/package/astro-expressive-code][astro-expressive-code]] :: For quality code blocks powered by [[https://shiki.style/][Shiki]] syntax highlighting, with a good ecosystem
++ [[https://astro-typesafe-routes-docs.vercel.app/][Astro Typesafe Routes]] :: To make links within the site type-safe with Typescript
++ [[https://github.com/imazen/astro-broken-link-checker][imazen/astro-broken-link-checker]] :: To check the final generated HTML for broken links during build
++ [[https://medium-zoom.francoischalifour.com/][Medium Zoom]] :: A framework-agnostic JavaScript library for zooming images
++ [[https://www.astroicon.dev/][Astro Icon]] :: For a great =Icon= component
++ [[https://github.com/abemedia/astro-static-headers][abemedia/astro-static-headers]] :: For network-level (as opposed to client side) redirects, by generating platform-specific (Cloudflare, Netlify and Vercel) configs/files
 
 * Development
 
