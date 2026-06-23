@@ -128,10 +128,10 @@ process."
                       (org-export-format-code-default example-block info)))))
     (format "```\n%s\n```" block-text)))
 
-(defun org-mdx--create-figure (fig caption)
+(defun org-mdx--create-figure (fig caption &optional class)
   "Return an HTML figure if necessary.
-FIG and CAPTION are both strings.  CAPTION is a figure caption and FIG
-is the figure itself (e.g., image).
+FIG, CAPTION, and CLASS are strings.  CAPTION is a figure caption and
+FIG is the figure itself (e.g., image).
 
 When CAPTION is a non-empty string, return a string of this form:
 
@@ -142,10 +142,10 @@ When CAPTION is a non-empty string, return a string of this form:
 
 when CAPTION is nil or an empty sting, then return FIG.
 
-The reason for this is that FIG should only be wrapped in a `figure'
-element when CAPTION accompanies it, for the sake of accessibility
-concerns (e.g., screen readers)."
-  (format "<figure>\n%s\n</figure>"
+When CLASS is non-nil, it is the string passed to the figure tag's
+\"class\" attribute."
+  (format "<figure%s>\n%s\n</figure>"
+          (when class (format " class=\"%s\"" class))
           (if (org-string-nw-p caption)
               (format "%s\n<figcaption>%s</figcaption>"
                       (string-trim fig) caption)
@@ -635,8 +635,10 @@ INFO is a plist holding contextual information.  See
                     (format "%s \"%s\"" path caption))))
         (el-patch-add
           (org-mdx--register-import info "Image")
-          (org-mdx--create-figure (format "<Image src={import(\"%s\")} alt=\"%s\" />" path alt-text)
-                                  caption))))
+          (org-mdx--create-figure
+           (format "<Image src={import(\"%s\")} alt=\"%s\" />" path alt-text)
+           caption
+           (org-export-read-attribute :attr_mdx (org-element-parent-element link) :class)))))
      ((string= type "coderef")
       (format (org-export-get-coderef-format path desc)
               (org-export-resolve-coderef path info)))

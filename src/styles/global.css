@@ -122,6 +122,18 @@ blockquote:not(.special-blockquote) {
   }
 }
 
+.figure-medium {
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.figure-small {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* * Utility classes */
 
 .sr-only {
