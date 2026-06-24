@@ -1,0 +1,298 @@
+---
+title: "Dead simple page reactions: The Open Heart Protocol"
+draft: false
+pubDate: 2026-06-24T12:00:00-05:00
+tags:
+  - "Web development"
+  - "Astro"
+---
+import Footnote from "@components/markup/Footnote.astro";
+import FootnoteSection from "@components/markup/FootnoteSection.astro";
+import FootnoteRef from "@components/markup/FootnoteRef.astro";
+import Heading from "@components/markup/Heading.astro";
+
+
+Recently added to this site are per-page emoji reactions. You can see them at the bottom of each post as well as some of my other pages. Per-page emoji reactions have been something I've somewhat wanted on my site ever since noticing them in the fantastic articles published at [emacsredux.com](https://emacsredux.com/). The reason emoji reactions are so appealing to me is this: *I've wanted a low-effort means for readers to express their opinions*. Comments are great when one wants to put thought to word, but most of the time I think readers would appreciate a one-click way to communicate "Nice article!"&mdash;I know I do when reading Emacs Redux articles. Emoji reactions are exactly that.
+
+With the site's recent overhaul from [Hugo](https://gohugo.io/) to a hand-rolled [Astro](https://astro.build/) project, I decided now would be a good time to invest in figuring out how to get it done. There are a ton of free and open source comment systems, so surely something even simpler should have at least one or two good options.
+
+<Heading level="2" id="my-research"selfLink={true}>My research</Heading>
+
+Surprising, finding free open-source software for this was *tough*. Emacs Redux uses [Hyvor Talk](https://talk.hyvor.com/), which provides not only reactions but an accompanying comment system (and more)&hellip; but it's not free. And unfortunately, for this personal, toy site, my budget is a whopping *0 USD* (give or take a few dollars annually for the domain name and the dozens of hours to actually develop the site, heh).
+
+Even with research, I couldn't find anything (i) pre-built that I can just slap onto my site as a script and (ii) looked visually attractive to me. Additionally, almost all the options I considered were tied to a comment system, something I didn't want to commit to yet. (And the comment systems whose features and visuals I did like didn't have page reactions.) I wanted something standalone that looked elegant and versatile.
+
+<Heading level="2" id="my-solution"selfLink={true}>My solution</Heading>
+
+It was only by luck that I stumbled upon the solution I have now: the **Open Heart Protocol** ([site](https://openheart.fyi/#heart), [GitHub repo](https://github.com/dddddddddzzzz/OpenHeart?tab=readme-ov-file#server-code)). The Open Heart Protocol isn't just a script I could put onto my pages, which unfortunately meant I had to do some hand-rolling of my own&mdash;but the end result is something I'm quite happy with.
+
+As the name suggests, all the Open Heart Protocol is is a protocol. I had to either find an implementation for it or make one myself. Lucky, I found this server implementation: [axiixc/HeartHeartStore](https://codeberg.org/axiixc/HeartHeartStore).<FootnoteRef num="1" /> I spun it up on a free VPS, pointed a subdomain to the appropriate port, and bam! My Open Heart endpoint was set up.
+
+According to the Open Heart Protocol, one retrieves and commits reactions simply from `GET` and `POST` HTTP requests. Responses are in the form of JSON objects that map emoji to their count. Any set of emojis can be used (though the HeartHeartStore server implementation I use has settings that may limit the emojis that are accepted). Reactions are keyed by URL. One can query individual pages (a domain with a path) as well as entire sites<FootnoteRef num="2" /> (just a domain). For instance, to see all reaction counts across this entire site, I can go to [https://openheart.kristofferbalintona.me/?url=https://kristofferbalintona.me](https://openheart.kristofferbalintona.me/?url=https://kristofferbalintona.me). If I want the reactions for a particular page, then I just append the path to the URL.<FootnoteRef num="3" />
+
+Dead simple tech!
+
+With the endpoint set up, all that I needed to do was present the emoji counts on my site with buttons that would send `POST` requests to my endpoint. For this, I *did* have to write my own Astro component. (If you aren't familiar with Astro, all you need to know here is that Astro files contain template HTML, CSS (scoped to that component), and JavaScript.) You can find what I settled on [here](https://codeberg.org/krisbalintona/personal-site-astro/src/branch/main/src/components/OpenHeartReactions.astro). As of writing, the component responsible for the emoji reactions you see at the bottom of my posts is this:
+
+```astro
+---
+import { isDev } from "@lib/consts";
+
+interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+
+if (!Astro.site)
+  throw new Error("Site URL must be set for Open Heart reactions to work");
+const pageUrl = new URL(path, Astro.site.origin).href;
+const endpoint = "https://openheart.kristofferbalintona.me"; // Endpoint for HeartHeartStore backend
+---
+
+<div
+  role="group"
+  aria-label="Post reactions"
+  class="open-heart-reactions"
+  data-endpoint={endpoint}
+  data-page-url={pageUrl}
+  title={isDev ? "Reactions disabled in dev mode" : undefined}
+>
+  <button
+    aria-label="Thumbs up reaction"
+    class="reaction"
+    data-emoji="👍"
+    aria-pressed="false">👍<span class="count"></span></button
+  >
+  <button
+    aria-label="Heart reaction"
+    class="reaction"
+    data-emoji="❤️"
+    aria-pressed="false">❤️<span class="count"></span></button
+  >
+  <button
+    aria-label="Celebration reaction"
+    class="reaction"
+    data-emoji="🎉"
+    aria-pressed="false">🎉<span class="count"></span></button
+  >
+  <button
+    aria-label="Thinking reaction"
+    class="reaction"
+    data-emoji="🤔"
+    aria-pressed="false">🤔<span class="count"></span></button
+  >
+</div>
+
+<style>
+  .open-heart-reactions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m-l);
+    font-family: var(--font-ui);
+
+    .reaction {
+      font-size: inherit;
+    }
+
+    &[data-error="true"] .reaction {
+      filter: grayscale(0.5) opacity(0.7);
+      cursor: not-allowed;
+    }
+  }
+
+  .reaction {
+    cursor: pointer;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    padding: 0.4em 1.1em;
+    gap: var(--space-3xs);
+    background: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      border-color 150ms ease,
+      background 150ms ease,
+      opacity 150ms ease,
+      transform 100ms ease;
+
+    &:active {
+      transform: scale(0.97);
+    }
+
+    &[aria-pressed="true"] {
+      border-color: var(--color-bg-surface-accent);
+      background: var(--color-bg-surface);
+      animation: reaction-pop 200ms ease;
+    }
+
+    &[aria-busy="true"] {
+      opacity: 0.6;
+      cursor: wait;
+    }
+  }
+
+  @keyframes reaction-pop {
+    0% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.05);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .count:empty {
+    display: none;
+  }
+</style>
+
+<script>
+  import { isDev } from "@lib/consts";
+
+  const containers = document.querySelectorAll<HTMLElement>(
+    ".open-heart-reactions[data-endpoint]",
+  );
+
+  for (const container of containers) {
+    const btns = container.querySelectorAll<HTMLButtonElement>(".reaction");
+    const endpoint = container.dataset.endpoint!;
+    const pageUrl = container.dataset.pageUrl!;
+    const storageKey = `open-heart-reactions:${pageUrl}`;
+
+    // Emojis the user has already reacted with on this page,
+    // persisted across sessions
+    const sent: Set<string> = new Set(
+      JSON.parse(localStorage.getItem(storageKey) ?? "[]"),
+    );
+
+    /* Debounce to avoid server spam */
+    function debounce<T extends (...args: unknown[]) => void>(
+      fn: T,
+      ms: number,
+    ): T {
+      let timer: ReturnType<typeof setTimeout>;
+      return ((...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), ms);
+      }) as T;
+    }
+
+    async function fetchCounts() {
+      try {
+        const result = await fetch(
+          `${endpoint}/?url=${encodeURIComponent(pageUrl)}`,
+        );
+        if (!result.ok)
+          throw new Error(
+            `Failed to fetch reaction counts for ${pageUrl}: ${result.status} ${result.statusText}`,
+          );
+        const counts: Record<string, number> = await result.json();
+        for (const btn of btns) {
+          const emoji = btn.dataset.emoji!;
+          const count = counts[emoji] ?? 0;
+          btn.querySelector(".count")!.textContent = String(count);
+        }
+      } catch (e) {
+        console.error(e);
+        container.dataset.error = "true";
+        for (const btn of btns) {
+          btn.disabled = true;
+          btn.setAttribute("aria-disabled", "true");
+        }
+      }
+    }
+
+    const debouncedFetchCounts = debounce(fetchCounts, 400);
+
+    /* Restore clicked state of buttons after page refresh (via
+       localStorage) */
+    function restoreState() {
+      for (const btn of btns) {
+        if (sent.has(btn.dataset.emoji!)) {
+          btn.setAttribute("aria-pressed", "true");
+        }
+      }
+    }
+
+    async function handleClick(btn: HTMLButtonElement) {
+      const emoji = btn.dataset.emoji!;
+      const isUndo = sent.has(emoji);
+
+      // When in a dev environment, make the clicks no-ops
+      if (isDev) return;
+
+      /* Before making any network requests, disable and make the
+         button busy, so that users are aware that some background
+         work is in progress */
+      btn.setAttribute("aria-busy", "true");
+      btn.disabled = true;
+      btn.setAttribute("aria-disabled", "true");
+
+      try {
+        const result = await fetch(
+          `${endpoint}/?url=${encodeURIComponent(pageUrl)}`,
+          {
+            method: isUndo ? "DELETE" : "POST",
+            body: emoji,
+          },
+        );
+        if (!result.ok) {
+          throw new Error(
+            `Failed to send reaction for ${pageUrl}: ${result.status} ${result.statusText}`,
+          );
+        }
+
+        if (!isUndo) {
+          /* POST */
+          sent.add(emoji);
+          btn.setAttribute("aria-pressed", "true");
+        } else {
+          /* DELETE */
+          sent.delete(emoji);
+          btn.setAttribute("aria-pressed", "false");
+        }
+
+        localStorage.setItem(storageKey, JSON.stringify([...sent]));
+        await debouncedFetchCounts();
+      } finally {
+        /* Clean up */
+        btn.removeAttribute("aria-busy");
+        btn.disabled = false;
+        btn.removeAttribute("aria-disabled");
+      }
+    }
+
+    container.addEventListener("click", (e) => {
+      // When anything inside the container is clicked, take the
+      // element that was actually clicked (`e.target`), then walk up
+      // from it until an ancestor matching ".reaction" is found
+      const btn = (e.target as Element).closest<HTMLButtonElement>(".reaction");
+      if (btn) handleClick(btn);
+    });
+
+    restoreState();
+    fetchCounts();
+  }
+</script>
+```
+
+This has been live for a few weeks now and I've encountered no problems nor made any tweaks to the component or the server. In this way, I now have per-page reactions styled in the way I like with the emojis I want. Awesome!
+
+<FootnoteSection>
+Footnotes
+<Footnote num="1" slot="footnotes">
+Actually, I made a few local modifications to the server in order to let users "undo" their reactions, just in case they wanted to switch to another one. I [created an issue on the main repository](https://codeberg.org/axiixc/HeartHeartStore/issues/11) in hopes of getting this functionality upstreamed.
+</Footnote>
+<Footnote num="2" slot="footnotes">
+That's right! There's nothing stopping me from having multiple sites and using the same Open Heart server and endpoint to store all the emoji reactions. Reaction counts are merely keyed by domain + path.
+</Footnote>
+<Footnote num="3" slot="footnotes">
+More precisely, one needs to append the *appropriate path*. When making `POST` requests to the server, one can provide an arbitrary path to server; the actual URL and path need not be used. This is great for me since I prefer the reaction counts keyed by the permalink URL associated with a given page (when it exists) instead of the actual page's path.
+</Footnote>
+</FootnoteSection>
