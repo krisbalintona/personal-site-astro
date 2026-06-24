@@ -9,5 +9,5 @@
  (js-ts-mode . ((eval . (eglot-ensure))
                 (apheleia-formatter . prettier)))
  (tsx-ts-mode . ((apheleia-formatter . prettier)))
- (nil . ((compile-command . "npm run fix && netlify build")
+ (nil . ((compile-command . "npm run fix && netlify build --offline")
          (tab-width . 2))))
