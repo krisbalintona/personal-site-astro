@@ -145,7 +145,7 @@ when CAPTION is nil or an empty sting, then return FIG.
 When CLASS is non-nil, it is the string passed to the figure tag's
 \"class\" attribute."
   (format "<figure%s>\n%s\n</figure>"
-          (when class (format " class=\"%s\"" class))
+          (if class (format " class=\"%s\"" class) "")
           (if (org-string-nw-p caption)
               (format "%s\n<figcaption>%s</figcaption>"
                       (string-trim fig) caption)
