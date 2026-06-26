@@ -12,7 +12,7 @@ import FootnoteRef from "@components/markup/FootnoteRef.astro";
 import Heading from "@components/markup/Heading.astro";
 
 
-Recently added to this site are per-page emoji reactions. You can see them at the bottom of each post as well as some of my other pages. Per-page emoji reactions have been something I've somewhat wanted on my site ever since noticing them in the fantastic articles published at [emacsredux.com](https://emacsredux.com/). The reason emoji reactions are so appealing to me is this: *I've wanted a low-effort means for readers to express their opinions*. Comments are great when one wants to put thought to word, but most of the time I think readers would appreciate a one-click way to communicate "Nice article!"&mdash;I know I do when reading Emacs Redux articles. Emoji reactions are exactly that.
+Recently added to this site are per-page emoji reactions. You can see them at the bottom of each post as well as some of my other pages. Per-page emoji reactions have been something I've somewhat wanted on my site ever since noticing them in the fantastic articles published at [emacsredux.com](https://emacsredux.com/). The reason emoji reactions are so appealing to me is this: **I've wanted a low-effort means for readers to express their opinions**. Comments are great when one wants to put thought to word, but most of the time I think readers would appreciate a one-click way to communicate "Nice article!"&mdash;I know I do when reading Emacs Redux articles. Emoji reactions are exactly that.
 
 With the site's recent overhaul from [Hugo](https://gohugo.io/) to a hand-rolled [Astro](https://astro.build/) project, I decided now would be a good time to invest in figuring out how to get it done. There are a ton of free and open source comment systems, so surely something even simpler should have at least one or two good options.
 
@@ -28,7 +28,7 @@ It was only by luck that I stumbled upon the solution I have now: the **Open Hea
 
 As the name suggests, all the Open Heart Protocol is is a protocol. I had to either find an implementation for it or make one myself. Lucky, I found this server implementation: [axiixc/HeartHeartStore](https://codeberg.org/axiixc/HeartHeartStore).<FootnoteRef num="1" /> I spun it up on a free VPS, pointed a subdomain to the appropriate port, and bam! My Open Heart endpoint was set up.
 
-According to the Open Heart Protocol, one retrieves and commits reactions simply from `GET` and `POST` HTTP requests. Responses are in the form of JSON objects that map emoji to their count. Any set of emojis can be used (though the HeartHeartStore server implementation I use has settings that may limit the emojis that are accepted). Reactions are keyed by URL. One can query individual pages (a domain with a path) as well as entire sites<FootnoteRef num="2" /> (just a domain). For instance, to see all reaction counts across this entire site, I can go to [https://openheart.kristofferbalintona.me/?url=https://kristofferbalintona.me](https://openheart.kristofferbalintona.me/?url=https://kristofferbalintona.me). If I want the reactions for a particular page, then I just append the path to the URL.<FootnoteRef num="3" />
+According to the Open Heart Protocol, one retrieves and commits reactions simply from `GET` and `POST` HTTP requests. Responses are in the form of JSON objects that map emoji reactions to their count. Any set of emojis can be used (though the HeartHeartStore server implementation I use has settings that may limit the emojis that are accepted). Reactions are keyed by URL. One can query individual pages (a domain with a path) as well as entire sites<FootnoteRef num="2" /> (just a domain). For instance, to see all reaction counts across this entire site, I can go to [https://openheart.kristofferbalintona.me/?url=https://kristofferbalintona.me](https://openheart.kristofferbalintona.me/?url=https://kristofferbalintona.me). If I want the reactions for a particular page, then I just append the path to the URL.<FootnoteRef num="3" />
 
 Dead simple tech!
 
@@ -293,6 +293,6 @@ Actually, I made a few local modifications to the server in order to let users "
 That's right! There's nothing stopping me from having multiple sites and using the same Open Heart server and endpoint to store all the emoji reactions. Reaction counts are merely keyed by domain + path.
 </Footnote>
 <Footnote num="3" slot="footnotes">
-More precisely, one needs to append the *appropriate path*. When making `POST` requests to the server, one can provide an arbitrary path to server; the actual URL and path need not be used. This is great for me since I prefer the reaction counts keyed by the permalink URL associated with a given page (when it exists) instead of the actual page's path.
+More precisely, one needs to append the *appropriate path*. When making `POST` requests to the server, one can provide an arbitrary path to server; the actual URL and path of the current page need not be used. This is great for me since I prefer the reaction counts keyed by the permalink URL associated with a given page (when it exists) instead of the actual page's path.
 </Footnote>
 </FootnoteSection>
