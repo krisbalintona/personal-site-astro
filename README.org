@@ -87,6 +87,10 @@ This project also uses several packages (most from the Astro ecosystem) to enhan
 + [[https://www.astroicon.dev/][Astro Icon]] :: For a great =Icon= component
 + [[https://github.com/abemedia/astro-static-headers][abemedia/astro-static-headers]] :: For network-level (as opposed to client side) redirects, by generating platform-specific (Cloudflare, Netlify and Vercel) configs/files
 
+* Deployment
+
+This project is deployed live to https://kristofferbalintona.me/ for free via [[https://www.netlify.com/][Netlify]]. Netlify watches this repository (or, more specifically, a GitHub mirror of this repository) for new commits, rebuilding and deploying the site for every such event.
+
 * Development
 
 Dependencies and environment variables are set up using [[https://direnv.net/][Direnv]], in combination with [[https://guix.gnu.org/][Guix]] (see the =.envrc= and =manifest.scm= files). Install the =direnv= executable from your system and set up Guix. Once done, [[https://direnv.net/docs/hook.html][add the relevant Direnv hooks into your favorite shell]].
@@ -108,3 +112,4 @@ You can preview the production build with ~npm run preview~.
 Additional NPM sub commands include:
 + ~npm run check~ to report on any formatting or stylistic errors
 + ~npm run fix~ to fix any formatting or stylistic errors
+
