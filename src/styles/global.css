@@ -245,6 +245,10 @@ code {
   border-radius: 0.15em;
 }
 
+h1:has(code) {
+  line-height: 1.3;
+}
+
 a {
   /* Inline code embedded in links */
   & :not(pre) > code {
