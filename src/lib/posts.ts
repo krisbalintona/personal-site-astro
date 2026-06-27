@@ -1,8 +1,10 @@
 import { rssSchema } from "@astrojs/rss";
 import {
   getContentCollection,
+  type PlainTitle,
   publishedContentShape,
   titleToUrlSlug,
+  toPlainTitle,
 } from "@lib/entries";
 import { z } from "astro/zod";
 import { type CollectionEntry, reference } from "astro:content";
@@ -34,7 +36,7 @@ function dateToLegacyStableId(date: Date): string {
 export function getPostLegacyId(post: PostEntry): string | undefined {
   const pubDate = post.data.pubDate;
   if (!pubDate || pubDate >= ASTRO_MIGRATION_DATE) return undefined;
-  return titleToUrlSlug(dateToLegacyStableId(pubDate));
+  return titleToUrlSlug(dateToLegacyStableId(pubDate) as PlainTitle);
 }
 
 function dateToStableId(date: Date): string {
@@ -51,8 +53,8 @@ function dateToStableId(date: Date): string {
 export function getPostStableId(post: PostEntry): string {
   return titleToUrlSlug(
     post.data.pubDate && post.data.draft === false
-      ? dateToStableId(post.data.pubDate)
-      : post.data.title,
+      ? (dateToStableId(post.data.pubDate) as PlainTitle)
+      : toPlainTitle(post.data.title),
   );
 }
 

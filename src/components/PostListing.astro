@@ -41,7 +41,7 @@ const hasItems = postsSorted.length > 0;
       {hasItems &&
         postsSorted.map((entry) => (
           <li class="listing-item no-visited">
-            <a href={getEntryUrl(entry)}>{entry.data.title}</a>
+            <a href={getEntryUrl(entry)} set:html={entry.data.title} />
             <div class="post-metadata">
               <div class="dates">
                 <time datetime={toDateTimeAttribute(entry.data.pubDate)}>

@@ -13,13 +13,17 @@ import {
   render,
 } from "astro:content";
 import { $path } from "astro-typesafe-routes/path";
+import sanitize from "sanitize-html";
 import slugify from "slugify";
 
 // * Content
 // An API layer for my site's content content.
 
 export const baseContentShape = {
-  title: z.string().default("Untitled"),
+  title: z
+    .string()
+    .default("Untitled")
+    .transform((s) => s as HTMLTitle),
   slug: z.string().optional(),
   draft: z.boolean().default(true),
   description: z.string().optional(),
@@ -139,8 +143,11 @@ export function formatDate(date: Date): string {
 
 // * URLs
 
-export function titleToUrlSlug(title: string): string {
-  return slugify(title, { lower: true, strict: true });
+export function titleToUrlSlug(title: HTMLTitle | PlainTitle): string {
+  // Some titles may be HTML strings.  Strip their tags and replace
+  // the entities with their rendered, UTF-8 equivalents
+  const plainTextTitle = toPlainTitle(title);
+  return slugify(plainTextTitle, { lower: true, strict: true });
 }
 
 export function getEntryUrl(
@@ -181,4 +188,16 @@ export function getEntryUrl(
     default:
       throw new Error(`No URL mapping for collection "${entry.collection}"`);
   }
+}
+
+// * HTML titles
+
+export type HTMLTitle = string & { readonly __brand: "HTMLTitle" };
+export type PlainTitle = string & { readonly __brand: "PlainTitle" };
+
+export function toPlainTitle(title: HTMLTitle | PlainTitle): PlainTitle {
+  return sanitize(title, {
+    allowedTags: [],
+    allowedAttributes: {},
+  }) as PlainTitle;
 }

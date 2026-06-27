@@ -2,7 +2,11 @@
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import PostListing from "@components/PostListing.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
-import { getContentCollection, titleToUrlSlug } from "@lib/entries";
+import {
+  getContentCollection,
+  titleToUrlSlug,
+  toPlainTitle,
+} from "@lib/entries";
 import type { PostEntry } from "@lib/posts";
 import { type CollectionEntry } from "astro:content";
 import { createRoute } from "astro-typesafe-routes/create-route";
@@ -24,7 +28,7 @@ interface Props {
 }
 
 const { thread: threadEntry } = Astro.props;
-const threadTitle: string = threadEntry.data.title;
+const threadTitle = toPlainTitle(threadEntry.data.title);
 
 function hasThisThread(post: PostEntry): boolean {
   return post.data.threads?.some((t) => t.id === threadEntry.id) ?? false;

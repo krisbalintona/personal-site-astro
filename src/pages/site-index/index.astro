@@ -44,9 +44,8 @@ const indexEntry = await getContentEntry("other", "index");
             <Link
               to="/[standaloneTitle]"
               params={{ standaloneTitle: titleToUrlSlug(entry.data.title) }}
-            >
-              {entry.data.title}
-            </Link>
+              set:html={entry.data.title}
+            />
           );
           return (
             <li>

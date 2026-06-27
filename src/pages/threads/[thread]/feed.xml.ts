@@ -1,5 +1,9 @@
 import { SITE_TITLE } from "@lib/consts";
-import { getContentCollection, titleToUrlSlug } from "@lib/entries";
+import {
+  getContentCollection,
+  titleToUrlSlug,
+  toPlainTitle,
+} from "@lib/entries";
 import { buildRSSItems, makeRSSFeed } from "@lib/rss.ts";
 import { allPosts } from "@src/lib/posts";
 import type { APIContext } from "astro";
@@ -19,9 +23,10 @@ export async function GET(
   context: APIContext<{ thread: CollectionEntry<"threads"> }>,
 ) {
   const { thread } = context.props;
-  const title = `${SITE_TITLE} — ${thread.data.title}`;
+  const title = `${SITE_TITLE} — ${toPlainTitle(thread.data.title)}`;
   const description =
-    thread.data.description ?? `Entries in the "${thread.data.title}" thread`;
+    thread.data.description ??
+    `Entries in the "${toPlainTitle(thread.data.title)}" thread`;
   const items = await buildRSSItems(
     await allPosts(
       (e) => e.data.threads?.some((t) => t.id === thread.id) ?? false,

@@ -851,10 +851,12 @@ communication channel for the export process."
          ;; Title
          (title (org-mdx--frontmatter-field
                  "title"
-                 ;; We want a plain-text (UTF-8, since our HTML is
-                 ;; encoded in UTF-8 anyway) version of the title,
-                 ;; since that's what we want rendered on the page
-                 (org-mdx--title-to-utf8 info)))
+                 ;; Export title as HTML to support inline markup
+                 ;; (e.g., italics).  The plain text version can be
+                 ;; derived by using packages like sanitize-html,
+                 ;; stripping tags and replacing entities with their
+                 ;; UTF-8 versions.
+                 (org-mdx--title-to-html info)))
 
          ;; Slug
          (slug (org-mdx--frontmatter-field "slug" (plist-get info :mdx-slug)))
@@ -994,16 +996,15 @@ INFO is a plist holding export information."
     (when (plist-get info :with-title) (plist-get info :title)))
    'ascii))
 
-(defun org-mdx--title-to-utf8 (info)
-  "Return the document title as a UTF-8 string.
-Convert the document title to a ASCII string via the ASCII exporter.
+(defun org-mdx--title-to-html (info)
+  "Return the document title as an HTML string.
+Convert the document title to an HTML string via the HTML exporter.
 Returns nil if :with-title is not set in INFO
 
 INFO is a plist holding export information."
-  (org-mdx--interpret-as-ascii
-   (org-element-interpret-data
-    (when (plist-get info :with-title) (plist-get info :title)))
-   'utf-8))
+  (org-export-data-with-backend
+   (when (plist-get info :with-title) (plist-get info :title))
+   'html info))
 
 (defun org-mdx--title-to-subdirectory-name (title)
   "Transform TITLE into a slug.

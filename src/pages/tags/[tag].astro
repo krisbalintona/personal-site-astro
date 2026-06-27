@@ -2,7 +2,11 @@
 import type { BreadcrumbComponent } from "@components/Breadcrumb.astro";
 import PostListing from "@components/PostListing.astro";
 import TaxonomyListingLayout from "@layouts/TaxonomyListingLayout.astro";
-import { getContentCollection, titleToUrlSlug } from "@lib/entries";
+import {
+  getContentCollection,
+  titleToUrlSlug,
+  toPlainTitle,
+} from "@lib/entries";
 import type { PostEntry } from "@lib/posts";
 import { type CollectionEntry } from "astro:content";
 import { createRoute } from "astro-typesafe-routes/create-route";
@@ -24,7 +28,7 @@ interface Props {
 }
 
 const { tag: tagEntry } = Astro.props;
-const tagTitle = tagEntry.data.title;
+const tagTitle = toPlainTitle(tagEntry.data.title);
 
 function hasThisTag(post: PostEntry): boolean {
   return post.data.tags?.some((t) => t.id === tagEntry.id) ?? false;

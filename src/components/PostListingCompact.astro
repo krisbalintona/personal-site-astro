@@ -56,7 +56,7 @@ const itemCount = postsSorted.length;
         {displayItems.map((entry) => (
           <li class="listing-item no-visited">
             <div class="post-entry">
-              <a href={getEntryUrl(entry)}>{entry.data.title}</a>
+              <a href={getEntryUrl(entry)} set:html={entry.data.title} />
               {showType && (
                 <>
                   {" "}

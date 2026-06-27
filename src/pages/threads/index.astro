@@ -45,7 +45,7 @@ const threadsEntry = await getContentEntry("other", "taxonomyThreads");
       return (
         <section aria-labelledby={headingId}>
           <Heading id={headingId} level="2">
-            <a href={getEntryUrl(thread)}>{thread.data.title}</a>
+            <a href={getEntryUrl(thread)} set:html={thread.data.title} />
           </Heading>
           {Content && (
             <div class="content-fade">

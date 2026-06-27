@@ -6,6 +6,7 @@ import {
   getContentEntries,
   getContentEntry,
   renderContent,
+  toPlainTitle,
 } from "@lib/entries";
 import { getPostPermalink, type PostEntry } from "@lib/posts.ts";
 import type { APIContext } from "astro";
@@ -148,10 +149,10 @@ export async function buildRSSItems(
       const content = hasDescription ? renderedHTML : undefined;
 
       return {
-        title: postEntry.data.title,
+        title: toPlainTitle(postEntry.data.title),
         pubDate: postEntry.data.pubDate,
         categories: (await getContentEntries(postEntry.data.tags ?? []))?.map(
-          (p) => p.data.title,
+          (p) => toPlainTitle(p.data.title),
         ),
         link: getPostPermalink(postEntry),
         description,

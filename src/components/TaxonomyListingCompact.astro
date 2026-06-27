@@ -1,6 +1,6 @@
 ---
 import { isProd } from "@lib/consts";
-import { getContentCollection, getEntryUrl } from "@lib/entries";
+import { getContentCollection, getEntryUrl, toPlainTitle } from "@lib/entries";
 import { allPosts } from "@lib/posts";
 import type { TaxonomyCollection, TaxonomyEntry } from "@lib/taxonomies";
 import pluralize from "pluralize";
@@ -38,7 +38,7 @@ const taxonomyEntries = (
 const posts = await allPosts();
 const taxonomyItems: TaxonomyListingItem[] = taxonomyEntries
   .map((taxonomy: TaxonomyEntry) => ({
-    title: taxonomy.data.title,
+    title: toPlainTitle(taxonomy.data.title),
     href: getEntryUrl(taxonomy),
     count: posts.filter((post) =>
       collections.some((c) =>

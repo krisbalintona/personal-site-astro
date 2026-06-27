@@ -2,7 +2,7 @@
 import NotByAIBadge from "@components/NotByAIBadge.astro";
 import OpenHeartReactions from "@components/OpenHeartReactions.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { renderContent, toDateTimeAttribute } from "@lib/entries";
+import { renderContent, toDateTimeAttribute, toPlainTitle } from "@lib/entries";
 import type { AnyCollectionEntry } from "@src/content.config";
 
 interface Props {
@@ -19,7 +19,8 @@ const {
   goatCounterSettings,
 } = Astro.props;
 
-const title = entry.data.title;
+const HTMLTitle = entry.data.title;
+const plainTitle = toPlainTitle(HTMLTitle);
 const pubDate = "pubDate" in entry.data ? entry.data.pubDate : null;
 const lastMod = "lastMod" in entry.data ? entry.data.lastMod : null;
 
@@ -43,7 +44,7 @@ const { Content } = await renderContent(entry);
 ---
 
 <BaseLayout
-  pageTitle={title}
+  pageTitle={plainTitle}
   displayTitle={false}
   pageDescription={entry.data.description}
   goatCounterSettings={goatCounterSettings}
@@ -69,7 +70,7 @@ const { Content } = await renderContent(entry);
             }
           </div>
 
-          <h1 class="content-title">{title}</h1>
+          <h1 class="content-title" set:html={HTMLTitle} />
         </div>
       </slot>
     </header>
