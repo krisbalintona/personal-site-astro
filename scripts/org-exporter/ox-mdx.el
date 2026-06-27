@@ -1008,11 +1008,17 @@ INFO is a plist holding export information."
 
 (defun org-mdx--title-to-subdirectory-name (title)
   "Transform TITLE into a slug.
-This slug is used as the directory name associated with an entry."
+This slug is used as the directory name associated with an entry.
+
+Does several things:
+- Downcase all characters.
+- Replace non-alphanumeric characters with an underscore.
+- Replace consecutive hyphens with a single hyphen.
+- Strips trailing non-alphanumeric characters."
   (thread-last (downcase title)
                (replace-regexp-in-string "[^a-z0-9]+" "_")
-               (replace-regexp-in-string
-                "-+" "-")))
+               (replace-regexp-in-string "-+" "-")
+               (replace-regexp-in-string "[^a-z0-9]+$" "")))
 
 (defun org-mdx--output-directory (output-dir &optional subtreep)
   "Return the output directory path of the current entry.
