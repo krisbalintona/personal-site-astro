@@ -89,7 +89,7 @@ This project also uses several packages (most from the Astro ecosystem) to enhan
 
 * Deployment
 
-This project is deployed live to https://kristofferbalintona.me/ for free via [[https://www.netlify.com/][Netlify]]. Netlify watches this repository (or, more specifically, a GitHub mirror of this repository) for new commits, rebuilding and deploying the site for every such event.
+This project is deployed live to https://kristofferbalintona.me/ for free via [[https://www.netlify.com/][Netlify]]. Netlify watches the =deploy= branch of this repository (or, more specifically, a GitHub mirror of this repository) for new commits, rebuilding and deploying the site on every such event.
 
 * Development
 
