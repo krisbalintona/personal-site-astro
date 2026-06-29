@@ -28,6 +28,7 @@
 ;; to this site's needs and features.
 
 ;;; Code:
+(require 'ol)
 (require 'ox)
 (require 'ox-md)
 (require 'ox-publish)
@@ -60,7 +61,8 @@ This variable can be `let'-bound to change the default string.")
     ("FootnoteRef" . "import FootnoteRef from \"@components/markup/FootnoteRef.astro\";")
     ("Heading" . "import Heading from \"@components/markup/Heading.astro\";")
     ("Center" . "import Center from \"@components/markup/Center.astro\";")
-    ("TableOfContents" . "import TableOfContents from \"@components/TableOfContents.astro\";"))
+    ("TableOfContents" . "import TableOfContents from \"@components/TableOfContents.astro\";")
+    ("Link" . "import Link from \"astro-typesafe-routes/link\";"))
   "Alist from component name to import statement.
 There are several components specific to this project.  This is an alist
 from component name to the import statement corresponding to that
@@ -1304,6 +1306,20 @@ Return the output directory's name."
     (headline . org-mdx-headline)
     (item . org-mdx-item)
     (plain-list . org-mdx-plain-list)))
+
+;;;; Custom link types
+
+(org-link-set-parameters
+ "site"                                 ; Intra-site links
+ :export (lambda (path desc backend info)
+           (org-mdx--register-import info "Link")
+           ;; The benefit of this is that we let astro-typesafe-routes
+           ;; generate the proper link paths (e.g., conforming to the
+           ;; Astro project settings).  (astro-broken-links-checker
+           ;; will later verify that each link's destination exists.)
+           (format "<Link to=\"%s\">%s</Link>"
+                   path
+                   (or desc (format "{import.meta.env.SITE}/%s" (string-remove-prefix "/" path))))))
 
 ;;;; Org-publish
 ;; I use org-publish to make it easier to export all my blog entries
