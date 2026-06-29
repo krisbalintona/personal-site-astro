@@ -1324,7 +1324,10 @@ This function is used as the :publishing-function in
   ;; define a modified version of `org-publish-org-to' instead
   (let ((org-inhibit-startup t))
     (org-with-file-buffer filename
-      (let* ((output-dir (org-mdx--output-directory pub-dir)))
+      (when-let* ((output-dir (org-mdx--output-directory pub-dir))
+                  ((prog1
+                       (not (org-collect-keywords '("MDX_NO_PUBLISH")))
+                     (message "[ox-mdx] Skipping %s with non-nil \"MDX_NO_PUBLISH\" keyword" filename))))
         (org-mdx--prepare-output-directory output-dir)
 
         (org-mdx-export-to-mdx
