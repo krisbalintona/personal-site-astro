@@ -21,14 +21,30 @@ import Heading from "@components/markup/Heading.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 import ContentLink from "@components/markup/ContentLink.astro";
 
-<TableOfContents>
--   [What is `cape`?](#what-is-cape)
--   [Basic usage: keybinds](#basic-usage-keybinds)
--   [Adding backends to `completion-at-point-functions`](#adding-backends-to-completion-at-point-functions)
--   [`Cape-company-to-capf` and `cape-super-capf`](#cape-company-to-capf-and-cape-super-capf)
--   [`pcomplete` nicety](#pcomplete-nicety)
--   [My `completion-at-point-functions`](#my-completion-at-point-functions)
--   [Changelog](#changelog)
+<TableOfContents isTopLevel={true} headingText="Table of Contents">
+<ul>
+<li>
+<a href="#what-is-cape">What is <code>cape</code>?</a>
+</li>
+<li>
+<a href="#basic-usage-keybinds">Basic usage: keybinds</a>
+</li>
+<li>
+<a href="#adding-backends-to-completion-at-point-functions">Adding backends to <code>completion-at-point-functions</code></a>
+</li>
+<li>
+<a href="#cape-company-to-capf-and-cape-super-capf"><code>Cape-company-to-capf</code> and <code>cape-super-capf</code></a>
+</li>
+<li>
+<a href="#pcomplete-nicety"><code>pcomplete</code> nicety</a>
+</li>
+<li>
+<a href="#my-completion-at-point-functions">My <code>completion-at-point-functions</code></a>
+</li>
+<li>
+<a href="#changelog">Changelog</a>
+</li>
+</ul>
 </TableOfContents>
 
 <Heading level="2" id="what-is-cape"selfLink={true}>What is `cape`?</Heading>

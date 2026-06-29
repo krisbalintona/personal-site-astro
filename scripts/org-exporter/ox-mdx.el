@@ -719,47 +719,103 @@ communication channel."
     ;; Ordered and unordered lists: delegate to the MD transcoder
     (org-md-plain-list plain-list contents _info)))
 
-(defun org-mdx--build-toc (info &optional n _keyword scope)
-  "Return table of contents.
-Like `org-md--build-toc' but using my custom table of contents
-component.
+(el-patch-defun (el-patch-swap org-md-keyword org-mdx-keyword) (keyword contents info)
+  (el-patch-swap
+    "Transcode a KEYWORD element into Markdown format.
+CONTENTS is nil.  INFO is a plist used as a communication
+channel."
+    "Transcode a KEYWORD element from Org to MDX.
+Like `org-md-keyword' but accepts both Markdown and HTML keywords as
+well as uses `org-mdx-toc' for the table of content keyword (\"TOC\").
 
-INFO is a plist used as a communication channel.
+CONTENTS is nil.  INFO is a plist holding contextual information.")
+  (pcase (org-element-property :key keyword)
+    ((el-patch-swap
+       (or "MARKDOWN" "MD")
+       (or "MARKDOWN" "MD" "MDX" "HTML"))
+     (org-element-property :value keyword))
+    ("TOC"
+     (let ((case-fold-search t)
+           (value (org-element-property :value keyword)))
+       (cond
+        ((string-match-p "\\<headlines\\>" value)
+         (let ((depth (and (string-match "\\<[0-9]+\\>" value)
+                           (string-to-number (match-string 0 value))))
+               (scope
+                (cond
+                 ((string-match ":target +\\(\".+?\"\\|\\S-+\\)" value) ; Link
+                  (org-export-resolve-link
+                   (org-strip-quotes (match-string 1 value)) info))
+                 ((string-match-p "\\<local\\>" value) keyword)))) ; Local
+           (org-remove-indentation
+            (el-patch-swap
+              (org-md--build-toc info depth keyword scope)
+              (or (org-mdx-toc depth info scope) ""))))))))
+    (_ (org-export-with-backend 'html keyword contents info))))
 
-Optional argument N, when non-nil, is an integer specifying the depth of
-the table.
+(defun org-mdx--toc-text (toc-entries &optional scope)
+  "Return innards of a table of contents, as a string.
+Like `org-html--toc-text', but with minor amendments to adhere to valid
+MDX.
 
-When optional argument SCOPE is non-nil, build a table of contents
-according to the specified element."
+TOC-ENTRIES is an alist where key is an entry title, as a string, and
+value is its relative level, as an integer.  Optional SCOPE, when
+non-nil, indicates a TOC for a subtree, which affects the initial
+nesting level."
+  (let* ((prev-level (if scope (1- (cdar toc-entries)) 0))
+         (start-level prev-level))
+    (replace-regexp-in-string
+     "\n\n+" "\n"                       ; Remove empty lines
+     (concat
+      (mapconcat
+       (lambda (entry)
+         (let ((headline (car entry))
+               (level (cdr entry)))
+           (concat
+            (let* ((cnt (- level prev-level))
+                   (times (if (> cnt 0) (1- cnt) (- cnt))))
+              (setq prev-level level)
+              ;; KrisB: Ensure generated list items have inner HTML
+              ;; that begin in a new line (with the closing "li" tag
+              ;; on a new line as well).  This is because block-level
+              ;; elements must begin in a new line in MDX; therefore,
+              ;; without this, only inline content is guaranteed to
+              ;; work (nested lists will errors).
+              (concat
+               (org-html--make-string
+                times (cond ((> cnt 0)
+                             "\n<ul>\n<li>\n")
+                            ((< cnt 0)
+                             "\n</li>\n</ul>\n")))
+               (if (> cnt 0)
+                   "\n<ul>\n<li>\n"
+                 "\n</li>\n<li>\n")))
+            headline)))
+       toc-entries "")
+      (org-html--make-string (- prev-level start-level) "\n</li>\n</ul>\n")))))
+
+(defun org-mdx-toc (depth info &optional scope)
+  "Build a table of contents.
+Like `org-html-toc' but uses my table of contents component.
+
+Return the table of contents as a string, or nil if it is empty.
+
+DEPTH is an integer specifying the depth of the table.  INFO is a plist
+used as a communication channel.  Optional argument SCOPE is an element
+defining the scope of the table."
   (org-mdx--register-import info "TableOfContents")
-  (format "<TableOfContents>\n%s\n</TableOfContents>"
-          (mapconcat
-           (lambda (headline)
-             (let* ((indentation
-                     (make-string
-                      (* 4 (1- (org-export-get-relative-level headline info)))
-                      ?\s))
-                    (bullet
-                     (if (not (org-export-numbered-headline-p headline info)) "-   "
-                       (let ((prefix
-                              (format "%d." (org-last (org-export-get-headline-number
-                                                       headline info)))))
-                         (concat prefix (make-string (max 1 (- 4 (length prefix)))
-                                                     ?\s)))))
-                    (title
-                     (format "[%s](#%s)"
-                             (org-export-data-with-backend
-                              (org-export-get-alt-title headline info)
-                              (org-export-toc-entry-backend 'md)
-                              info)
-                             (or (org-element-property :CUSTOM_ID headline)
-                                 (org-export-get-reference headline info))))
-                    (tags (and (plist-get info :with-tags)
-                               (not (eq 'not-in-toc (plist-get info :with-tags)))
-                               (org-make-tag-string
-                                (org-export-get-tags headline info)))))
-               (concat indentation bullet title tags)))
-           (org-export-collect-headlines info n scope) "\n")))
+  (when-let* ((toc-entries
+               (mapcar (lambda (headline)
+                         (cons (org-html--format-toc-headline headline info)
+                               (org-export-get-relative-level headline info)))
+                       (org-export-collect-headlines info depth scope))))
+    (let ((toc-text (org-mdx--toc-text toc-entries scope)))
+      (if scope
+          (format "<TableOfContents isTopLevel={false}>%s</TableOfContents>"
+                  toc-text)
+        (format "<TableOfContents isTopLevel={true} headingText=\"%s\">%s</TableOfContents>"
+                (org-html--translate "Table of Contents" info)
+                toc-text)))))
 
 (defun org-mdx-footnote-reference (footnote-reference _contents info)
   "Transcode a FOOTNOTE-REFERENCE element from Org to MDX.
@@ -820,7 +876,7 @@ export options."
   (let ((toc
          (let ((depth (plist-get info :with-toc)))
            (when depth
-             (org-mdx--build-toc info (and (wholenump depth) depth)))))
+             (org-mdx-toc (and (wholenump depth) depth) info))))
         (footnotes (org-mdx--footnote-section info)))
     (concat
      (when toc (concat toc "\n"))
@@ -1228,6 +1284,7 @@ Return the output directory's name."
   '((template . org-mdx-template)
     (inner-template . org-mdx-inner-template)
     (plain-text . org-mdx-plain-text)
+    (keyword . org-mdx-keyword)
     (example-block . org-mdx-example-block)
     (center-block . org-mdx-center-block)
     (src-block . org-mdx-src-block)

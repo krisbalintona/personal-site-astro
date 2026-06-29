@@ -20,17 +20,41 @@ import Heading from "@components/markup/Heading.astro";
 import Alert from "@components/markup/Alert.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
 
-<TableOfContents>
--   [Synopsis](#synopsis)
--   [Corfu](#corfu)
-    -   [What is `corfu`? How does it differ from `company`?](#what-is-corfu-how-does-it-differ-from-company)
-    -   [Basic](#basic)
-    -   [Working with the recent changes to `corfu`](#working-with-the-recent-changes-to-corfu)
-    -   [Further configuration in minibuffers and with `lsp`](#further-configuration-in-minibuffers-and-with-lsp)
-    -   [End product](#end-product)
--   [Kind-icon](#kind-icon)
--   [Corfu-doc](#corfu-doc)
--   [Changelog](#changelog)
+<TableOfContents isTopLevel={true} headingText="Table of Contents">
+<ul>
+<li>
+<a href="#synopsis">Synopsis</a>
+</li>
+<li>
+<a href="#corfu">Corfu</a>
+<ul>
+<li>
+<a href="#what-is-corfu-how-does-it-differ-from-company">What is <code>corfu</code>? How does it differ from <code>company</code>?</a>
+</li>
+<li>
+<a href="#basic">Basic</a>
+</li>
+<li>
+<a href="#working-with-the-recent-changes-to-corfu">Working with the recent changes to <code>corfu</code></a>
+</li>
+<li>
+<a href="#further-configuration-in-minibuffers-and-with-lsp">Further configuration in minibuffers and with <code>lsp</code></a>
+</li>
+<li>
+<a href="#end-product">End product</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#kind-icon">Kind-icon</a>
+</li>
+<li>
+<a href="#corfu-doc">Corfu-doc</a>
+</li>
+<li>
+<a href="#changelog">Changelog</a>
+</li>
+</ul>
 </TableOfContents>
 <Alert>
 <Timestamp date="2022-11-28" /> As is noted in the [`corfu-doc` repository](https://github.com/galeo/corfu-doc/issues/25), `corfu-doc` has been deprecated by the built-in `corfu-popupinfo` `corfu` extension. `corfu-popupinfo`'s functionality is roughly identical to `corfu-doc`'s, though its interface and code is naturally more idiomatic to `corfu`.

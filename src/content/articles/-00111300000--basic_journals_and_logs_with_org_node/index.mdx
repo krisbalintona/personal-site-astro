@@ -5,10 +5,18 @@ draft: true
 import TableOfContents from "@components/TableOfContents.astro";
 import Heading from "@components/markup/Heading.astro";
 
-<TableOfContents>
--   [The dilemma](#the-dilemma)
--   [Final result](#final-result)
--   [Final words](#final-words)
+<TableOfContents isTopLevel={true} headingText="Table of Contents">
+<ul>
+<li>
+<a href="#the-dilemma">The dilemma</a>
+</li>
+<li>
+<a href="#final-result">Final result</a>
+</li>
+<li>
+<a href="#final-words">Final words</a>
+</li>
+</ul>
 </TableOfContents>
 
 <Heading level="2" id="the-dilemma"selfLink={true}>The dilemma</Heading>

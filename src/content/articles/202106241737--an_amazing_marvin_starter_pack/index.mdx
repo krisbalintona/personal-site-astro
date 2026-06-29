@@ -13,15 +13,35 @@ import TableOfContents from "@components/TableOfContents.astro";
 import { Image } from "astro:assets";
 import Heading from "@components/markup/Heading.astro";
 
-<TableOfContents>
--   [TL;DR](#tldr)
--   [Core concepts](#core-concepts)
-    -   [The Master List](#the-master-list)
-    -   [The Main View](#the-main-view)
--   [What good is Amazing Marvin&rsquo;s system?](#what-good-is-amazing-marvins-system)
--   [The beauty of **Strategies**](#the-beauty-of-strategies)
--   [A list of must-look-at Strategies](#a-list-of-must-look-at-strategies)
--   [Author&rsquo;s Note](#authors-note)
+<TableOfContents isTopLevel={true} headingText="Table of Contents">
+<ul>
+<li>
+<a href="#tldr">TL;DR</a>
+</li>
+<li>
+<a href="#core-concepts">Core concepts</a>
+<ul>
+<li>
+<a href="#the-master-list">The Master List</a>
+</li>
+<li>
+<a href="#the-main-view">The Main View</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#what-good-is-amazing-marvins-system">What good is Amazing Marvin&rsquo;s system?</a>
+</li>
+<li>
+<a href="#the-beauty-of-strategies">The beauty of <b>Strategies</b></a>
+</li>
+<li>
+<a href="#a-list-of-must-look-at-strategies">A list of must-look-at Strategies</a>
+</li>
+<li>
+<a href="#authors-note">Author&rsquo;s Note</a>
+</li>
+</ul>
 </TableOfContents>
 
 <Heading level="2" id="tldr"selfLink={true}>TL;DR</Heading>

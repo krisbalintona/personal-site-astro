@@ -13,26 +13,70 @@ import TableOfContents from "@components/TableOfContents.astro";
 import Heading from "@components/markup/Heading.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
-<TableOfContents>
--   [The ideal: Separating &ldquo;now&rdquo; and &ldquo;very soon&rdquo; from everything else](#the-ideal-separating-now-and-very-soon-from-everything-else)
--   [&ldquo;Later&rdquo;](#later)
--   [&ldquo;Unsure when&rdquo;](#unsure-when)
--   [&ldquo;Never&rdquo;](#never)
--   [1: Occlusion](#1-occlusion)
--   [2: Prioritization](#2-prioritization)
--   [3: Reviewing](#3-reviewing)
-    -   [Two org-agenda views](#two-org-agenda-views)
-    -   [Org-review: Immediately identify which tasks need addressing](#org-review-immediately-identify-which-tasks-need-addressing)
--   [The ideal: Separating &ldquo;now&rdquo; and &ldquo;very soon&rdquo; from everything else](#the-ideal-separating-now-and-very-soon-from-everything-else-1)
--   [&ldquo;Later&rdquo;](#later-1)
--   [&ldquo;Unsure when&rdquo;](#unsure-when-1)
--   [&ldquo;Never&rdquo;](#never-1)
--   [1: Occlusion](#1-occlusion-1)
--   [2: Prioritization](#2-prioritization-1)
--   [3: Reviewing](#3-reviewing-1)
-    -   [Two org-agenda views](#two-org-agenda-views-1)
-    -   [Org-review: Immediately identify which tasks need addressing](#org-review-immediately-identify-which-tasks-need-addressing-1)
--   [Bonus: bespoke org-agenda scatter function](#bonus-bespoke-org-agenda-scatter-function)
+<TableOfContents isTopLevel={true} headingText="Table of Contents">
+<ul>
+<li>
+<a href="#the-ideal-separating-now-and-very-soon-from-everything-else">The ideal: Separating &ldquo;now&rdquo; and &ldquo;very soon&rdquo; from everything else</a>
+</li>
+<li>
+<a href="#later">&ldquo;Later&rdquo;</a>
+</li>
+<li>
+<a href="#unsure-when">&ldquo;Unsure when&rdquo;</a>
+</li>
+<li>
+<a href="#never">&ldquo;Never&rdquo;</a>
+</li>
+<li>
+<a href="#1-occlusion">1: Occlusion</a>
+</li>
+<li>
+<a href="#2-prioritization">2: Prioritization</a>
+</li>
+<li>
+<a href="#3-reviewing">3: Reviewing</a>
+<ul>
+<li>
+<a href="#two-org-agenda-views">Two org-agenda views</a>
+</li>
+<li>
+<a href="#org-review-immediately-identify-which-tasks-need-addressing">Org-review: Immediately identify which tasks need addressing</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#the-ideal-separating-now-and-very-soon-from-everything-else-1">The ideal: Separating &ldquo;now&rdquo; and &ldquo;very soon&rdquo; from everything else</a>
+</li>
+<li>
+<a href="#later-1">&ldquo;Later&rdquo;</a>
+</li>
+<li>
+<a href="#unsure-when-1">&ldquo;Unsure when&rdquo;</a>
+</li>
+<li>
+<a href="#never-1">&ldquo;Never&rdquo;</a>
+</li>
+<li>
+<a href="#1-occlusion-1">1: Occlusion</a>
+</li>
+<li>
+<a href="#2-prioritization-1">2: Prioritization</a>
+</li>
+<li>
+<a href="#3-reviewing-1">3: Reviewing</a>
+<ul>
+<li>
+<a href="#two-org-agenda-views-1">Two org-agenda views</a>
+</li>
+<li>
+<a href="#org-review-immediately-identify-which-tasks-need-addressing-1">Org-review: Immediately identify which tasks need addressing</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#bonus-bespoke-org-agenda-scatter-function">Bonus: bespoke org-agenda scatter function</a>
+</li>
+</ul>
 </TableOfContents>
 
 In the last few months I've revamped my org-agenda workflow to a state I've never been more satisfied with. I'll share here how [org-review](https://github.com/brabalan/org-review)<FootnoteRef num="1" /> made it possible.

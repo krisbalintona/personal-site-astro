@@ -13,21 +13,57 @@ import TableOfContents from "@components/TableOfContents.astro";
 import Heading from "@components/markup/Heading.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
-<TableOfContents>
--   [The good and bad: what to expect on Android](#the-good-and-bad-what-to-expect-on-android)
--   [Installation](#installation)
-    -   [Option 1](#option-1)
-    -   [Option 2 (recommended)](#recommended-installation)
--   [Configuring an Android-specific Emacs](#configuring-an-android-specific-emacs)
-    -   [Necessary reading: the manual](#necessary-reading-the-manual)
-    -   [How to configure your `init.el` on a mobile device?](#how-to-configure-your-initel-on-a-mobile-device)
-    -   [First step: A Better UI for touchscreens](#first-step-a-better-ui-for-touchscreens)
-    -   [Android-specific Commands and Options](#android-specific-commands)
-    -   [Use a Special virtual keyboard](#virtual-keyboards)
-    -   [Fonts](#fonts)
-    -   [Tip: You can remap the volume buttons](#tip-you-can-remap-the-volume-buttons)
--   [Conclusion](#conclusion)
-    -   [Bonus: My wish list](#bonus-my-wish-list)
+<TableOfContents isTopLevel={true} headingText="Table of Contents">
+<ul>
+<li>
+<a href="#the-good-and-bad-what-to-expect-on-android">The good and bad: what to expect on Android</a>
+</li>
+<li>
+<a href="#installation">Installation</a>
+<ul>
+<li>
+<a href="#option-1">Option 1</a>
+</li>
+<li>
+<a href="#recommended-installation">Option 2 (recommended)</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#configuring-an-android-specific-emacs">Configuring an Android-specific Emacs</a>
+<ul>
+<li>
+<a href="#necessary-reading-the-manual">Necessary reading: the manual</a>
+</li>
+<li>
+<a href="#how-to-configure-your-initel-on-a-mobile-device">How to configure your <code>init.el</code> on a mobile device?</a>
+</li>
+<li>
+<a href="#first-step-a-better-ui-for-touchscreens">First step: A Better UI for touchscreens</a>
+</li>
+<li>
+<a href="#android-specific-commands">Android-specific Commands and Options</a>
+</li>
+<li>
+<a href="#virtual-keyboards">Use a Special virtual keyboard</a>
+</li>
+<li>
+<a href="#fonts">Fonts</a>
+</li>
+<li>
+<a href="#tip-you-can-remap-the-volume-buttons">Tip: You can remap the volume buttons</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#conclusion">Conclusion</a>
+<ul>
+<li>
+<a href="#bonus-my-wish-list">Bonus: My wish list</a>
+</li>
+</ul>
+</li>
+</ul>
 </TableOfContents>
 
 Recently I got around to making steps toward a better mobile-PC workflow. Until now, I've pretty much exclusively been using the community-developed [orgzly-revived](https://github.com/orgzly-revived/orgzly-android-revived) app on Android. My intention was to use orgzly-revived for simple todo management and another app for more note-taking purposes&mdash;but I could never find another app I was happy with on Android. But I happened to remember reading good things about the *native* Emacs app on Android a few months ago. So I tried it out&hellip; and was immediately sold!

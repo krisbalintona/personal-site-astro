@@ -1,9 +1,18 @@
 ---
+type Props =
+  | { isTopLevel: true; headingText: string }
+  | { isTopLevel?: false; headingText?: never };
 
+const { isTopLevel = true, headingText } = Astro.props;
 ---
 
-<nav aria-labelledby='\"table-of-contents\"'>
-  <h2 id="table-of-contents">Table of Contents</h2>
+<nav
+  aria-label={isTopLevel ? undefined : "Section contents"}
+  aria-labelledby={isTopLevel ? "top-level-toc" : undefined}
+  class={isTopLevel ? undefined : "subtree-toc"}
+>
+  {isTopLevel && <h2 id="top-level-toc">{headingText}</h2>}
+  {/* The default slot should contain the list items for the TOC */}
   <slot />
 </nav>
 
@@ -12,7 +21,18 @@
     background-color: var(--color-bg-elevated);
     border: 1px solid var(--color-border-soft);
     border-radius: 0.15em;
-    padding: var(--space-m) var(--space-s) var(--space-xs) var(--space-m);
+
+    &:has(h2#top-level-toc) {
+      padding: var(--space-m) var(--space-s) var(--space-xs) var(--space-m);
+    }
+
+    &.subtree-toc {
+      padding: var(--space-s) var(--space-xs);
+
+      ul {
+        margin-top: 0;
+      }
+    }
 
     h2 {
       margin-top: 0;
