@@ -1238,6 +1238,8 @@ This function is used as the :publishing-function in
                        :with-tags nil
                        :with-todo-keywords nil
                        :with-broken-links mark
+                       :with-cite-processors t
+                       :cite-export ((t csl "chicago-author-date.csl"))
                        :time-stamp-file nil
                        :base-extension "org"
                        :publishing-function org-mdx-publish-to-site)))
