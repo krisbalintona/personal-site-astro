@@ -21,8 +21,7 @@ import Heading from "@components/markup/Heading.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 import ContentLink from "@components/markup/ContentLink.astro";
 
-<TableOfContents isTopLevel={true} headingText="Table of Contents">
-<ul>
+<TableOfContents isTopLevel={true} headingText="Table of Contents" footnotesLinkText="Footnotes">
 <li>
 <a href="#what-is-cape">What is <code>cape</code>?</a>
 </li>
@@ -44,7 +43,6 @@ import ContentLink from "@components/markup/ContentLink.astro";
 <li>
 <a href="#changelog">Changelog</a>
 </li>
-</ul>
 </TableOfContents>
 
 <Heading level="2" id="what-is-cape"selfLink={true}>What is `cape`?</Heading>
@@ -323,8 +321,7 @@ Additionally, add `cape-file' as early as possible to the list."
 -   <Timestamp date="2022-03-13" />
     -   Fixed typo. Added link to [u/JDRiverRun's informative Reddit comment](https://www.reddit.com/r/emacs/comments/td0nth/comment/i0hz6re/?utm_source=share&utm_medium=web2x&context=3).
 
-<FootnoteSection>
-Footnotes
+<FootnoteSection headingText="Footnotes">
 <Footnote num="1" slot="footnotes">
 See <ContentLink collectionName="articles" id="202202270056--corfu_kind_icon_and_corfu_doc">Corfu, Kind-icon, and Corfu-doc</ContentLink> to see the basic usage of `corfu` and several accessory packages.
 </Footnote>

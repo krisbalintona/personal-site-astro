@@ -15,8 +15,7 @@ import TableOfContents from "@components/TableOfContents.astro";
 import Heading from "@components/markup/Heading.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
-<TableOfContents isTopLevel={true} headingText="Table of Contents">
-<ul>
+<TableOfContents isTopLevel={true} headingText="Table of Contents" footnotesLinkText="Footnotes">
 <li>
 <a href="#the-perceptual-faith-and-its-obscurity">The Perceptual Faith and Its Obscurity</a>
 </li>
@@ -26,7 +25,6 @@ import FootnoteRef from "@components/markup/FootnoteRef.astro";
 <li>
 <a href="#perceptual-faith-and-reflection">Perceptual Faith and Reflection</a>
 </li>
-</ul>
 </TableOfContents>
 This post contains my writing on *The Visible and the Invisible* chapter one, "Reflection and Interrogation." The headings here correspond to the subdivisions of chapter one. This writing was written without the intention for sharing. It was meant for me to express the ideas I had after directly reading the chapter. As such, the understanding shown below is merely a draft, so to speak.
 
@@ -66,8 +64,7 @@ As the title of the section suggests, MP explains how science portrays itself as
   <div class="csl-entry"><a id="citeproc_bib_item_2"></a>Merleau-Ponty, Maurice. 1968. <i>The Visible and the Invisible</i>. Edited and translated by Claude Lefort. Edited by Claude Lefort. Translated by Alphonso Lingis. Studies in Phenomenology and Existental Philosophy. Northwestern Univ. Press.</div>
 </div>
 
-<FootnoteSection>
-Footnotes
+<FootnoteSection headingText="Footnotes">
 <Footnote num="1" slot="footnotes">
 There is a footnote by the translator explaining that MP means by "faith" in section title not in the sense of decision but in the sense of presupposition, or that which precedes.
 </Footnote>

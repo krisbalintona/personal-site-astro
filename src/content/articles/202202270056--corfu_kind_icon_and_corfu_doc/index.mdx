@@ -20,8 +20,7 @@ import Heading from "@components/markup/Heading.astro";
 import Alert from "@components/markup/Alert.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
 
-<TableOfContents isTopLevel={true} headingText="Table of Contents">
-<ul>
+<TableOfContents isTopLevel={true} headingText="Table of Contents" footnotesLinkText="Footnotes">
 <li>
 <a href="#synopsis">Synopsis</a>
 </li>
@@ -54,7 +53,6 @@ import Timestamp from "@components/markup/Timestamp.astro";
 <li>
 <a href="#changelog">Changelog</a>
 </li>
-</ul>
 </TableOfContents>
 <Alert>
 <Timestamp date="2022-11-28" /> As is noted in the [`corfu-doc` repository](https://github.com/galeo/corfu-doc/issues/25), `corfu-doc` has been deprecated by the built-in `corfu-popupinfo` `corfu` extension. `corfu-popupinfo`'s functionality is roughly identical to `corfu-doc`'s, though its interface and code is naturally more idiomatic to `corfu`.
@@ -395,8 +393,7 @@ From my experience, `corfu-doc` is perfect for most. However, it should be noted
 -   <Timestamp date="2022-03-11" />
     -   Update to include new compatibility with `corfu-insert-separator` and `corfu-quit-at-boundary` functionality.
 
-<FootnoteSection>
-Footnotes
+<FootnoteSection headingText="Footnotes">
 <Footnote num="1" slot="footnotes">
 Kudos to u/JDRiverRun, the current maintainer of `kind-icon` for [providing a few benefits](https://www.reddit.com/r/emacs/comments/t38kkh/comment/hyturrd/?utm_source=share&utm_medium=web2x&context=3) I didn't originally list.
 </Footnote>

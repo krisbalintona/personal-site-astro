@@ -755,44 +755,50 @@ CONTENTS is nil.  INFO is a plist holding contextual information.")
 
 (defun org-mdx--toc-text (toc-entries &optional scope)
   "Return innards of a table of contents, as a string.
-Like `org-html--toc-text', but with minor amendments to adhere to valid
-MDX.
+Like `org-html--toc-text', but with several tweaks specific to my Astro
+components and MDX.
 
 TOC-ENTRIES is an alist where key is an entry title, as a string, and
 value is its relative level, as an integer.  Optional SCOPE, when
 non-nil, indicates a TOC for a subtree, which affects the initial
 nesting level."
-  (let* ((prev-level (if scope (1- (cdar toc-entries)) 0))
-         (start-level prev-level))
-    (replace-regexp-in-string
-     "\n\n+" "\n"                       ; Remove empty lines
-     (concat
-      (mapconcat
-       (lambda (entry)
-         (let ((headline (car entry))
-               (level (cdr entry)))
-           (concat
-            (let* ((cnt (- level prev-level))
-                   (times (if (> cnt 0) (1- cnt) (- cnt))))
-              (setq prev-level level)
-              ;; KrisB: Ensure generated list items have inner HTML
-              ;; that begin in a new line (with the closing "li" tag
-              ;; on a new line as well).  This is because block-level
-              ;; elements must begin in a new line in MDX; therefore,
-              ;; without this, only inline content is guaranteed to
-              ;; work (nested lists will errors).
-              (concat
-               (org-html--make-string
-                times (cond ((> cnt 0)
-                             "\n<ul>\n<li>\n")
-                            ((< cnt 0)
-                             "\n</li>\n</ul>\n")))
-               (if (> cnt 0)
-                   "\n<ul>\n<li>\n"
-                 "\n</li>\n<li>\n")))
-            headline)))
-       toc-entries "")
-      (org-html--make-string (- prev-level start-level) "\n</li>\n</ul>\n")))))
+  (thread-last
+    (let* ((prev-level (if scope (1- (cdar toc-entries)) 0))
+           (start-level prev-level))
+      (concat
+       (mapconcat
+        (lambda (entry)
+          (let ((headline (car entry))
+                (level (cdr entry)))
+            (concat
+             (let* ((cnt (- level prev-level))
+                    (times (if (> cnt 0) (1- cnt) (- cnt))))
+               (setq prev-level level)
+               ;; KrisB: Ensure generated list items have inner HTML
+               ;; that begin in a new line (with the closing "li" tag
+               ;; on a new line as well).  This is because block-level
+               ;; elements must begin in a new line in MDX; therefore,
+               ;; without this, only inline content is guaranteed to
+               ;; work (nested lists will errors).
+               (concat
+                (org-html--make-string
+                 times (cond ((> cnt 0)
+                              "\n<ul>\n<li>\n")
+                             ((< cnt 0)
+                              "\n</li>\n</ul>\n")))
+                (if (> cnt 0)
+                    "\n<ul>\n<li>\n"
+                  "\n</li>\n<li>\n")))
+             headline)))
+        toc-entries "")
+       (org-html--make-string (- prev-level start-level) "\n</li>\n</ul>\n")))
+    ;; Remove empty lines
+    (replace-regexp-in-string "\n\n+" "\n")
+    ;; KrisB: Remove the opening and closing "ul" tags (but not for
+    ;; nested lists), so the table of contents component may insert
+    ;; its own list items.
+    (string-remove-prefix "\n<ul>")
+    (string-remove-suffix "</ul>\n")))
 
 (defun org-mdx-toc (depth info &optional scope)
   "Build a table of contents.
@@ -813,8 +819,11 @@ defining the scope of the table."
       (if scope
           (format "<TableOfContents isTopLevel={false}>%s</TableOfContents>"
                   toc-text)
-        (format "<TableOfContents isTopLevel={true} headingText=\"%s\">%s</TableOfContents>"
+        (format "<TableOfContents isTopLevel={true} headingText=\"%s\"%s>%s</TableOfContents>"
                 (org-html--translate "Table of Contents" info)
+                (if (org-element-map (plist-get info :parse-tree) 'footnote-reference #'identity nil t)
+                    (format " footnotesLinkText=\"%s\"" (org-html--translate "Footnotes" info))
+                  "")
                 toc-text)))))
 
 (defun org-mdx-footnote-reference (footnote-reference _contents info)
@@ -864,7 +873,7 @@ INFO is a plist used as a communication channel."
                    (list n (org-trim (org-export-data raw info))))))
     (when footnote-alist
       (org-mdx--register-import info "FootnoteSection")
-      (format "<FootnoteSection>\n%s\n%s\n</FootnoteSection>"
+      (format "<FootnoteSection headingText=\"%s\">\n%s\n</FootnoteSection>"
               (org-html--translate "Footnotes" info)
               (mapconcat (lambda (fn) (org-mdx--footnote-formatted fn info))
                          footnote-alist "\n")))))

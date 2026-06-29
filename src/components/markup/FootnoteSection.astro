@@ -1,20 +1,21 @@
 ---
-import type { HTMLTag } from "astro/types";
+import Heading from "@components/markup/Heading.astro";
+import type { HeadingTag } from "@components/markup/Heading.astro";
 
 interface Props {
-  headingLevel?: number | string;
+  headingLevel?: HeadingTag;
+  headingText?: string;
 }
 
-const { headingLevel } = Astro.props;
-const FootnoteHeading = (
-  headingLevel ? headingLevel.toString() : "h2"
-) as HTMLTag;
-const footnoteSectionHeadingId = "footnotes-heading";
+const { headingLevel, headingText = "Footnotes" } = Astro.props;
+export const footnoteSectionHeadingId = "footnotes-heading";
 ---
 
 <footer aria-labelledby={footnoteSectionHeadingId}>
-  <FootnoteHeading id={footnoteSectionHeadingId}
-    ><slot>Footnotes</slot></FootnoteHeading
+  <Heading
+    level={headingLevel ?? "2"}
+    id={footnoteSectionHeadingId}
+    selfLink={true}>{headingText}</Heading
   >
 
   {

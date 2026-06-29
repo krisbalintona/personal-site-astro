@@ -13,8 +13,7 @@ import TableOfContents from "@components/TableOfContents.astro";
 import Heading from "@components/markup/Heading.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
-<TableOfContents isTopLevel={true} headingText="Table of Contents">
-<ul>
+<TableOfContents isTopLevel={true} headingText="Table of Contents" footnotesLinkText="Footnotes">
 <li>
 <a href="#the-ideal-separating-now-and-very-soon-from-everything-else">The ideal: Separating &ldquo;now&rdquo; and &ldquo;very soon&rdquo; from everything else</a>
 </li>
@@ -76,7 +75,6 @@ import FootnoteRef from "@components/markup/FootnoteRef.astro";
 <li>
 <a href="#bonus-bespoke-org-agenda-scatter-function">Bonus: bespoke org-agenda scatter function</a>
 </li>
-</ul>
 </TableOfContents>
 
 In the last few months I've revamped my org-agenda workflow to a state I've never been more satisfied with. I'll share here how [org-review](https://github.com/brabalan/org-review)<FootnoteRef num="1" /> made it possible.
@@ -209,8 +207,7 @@ go over my `krisb-org-review-randomize`
 
 for when a lot of todos happen; I mark ones I know I want to put off sometime in the far-ish future (e.g. 1&ndash;2 months), but don't want them appearing on the same day (manually adding offsets is a mental burden and unreliable at solving the "too much on one day" problem anyway). Around that time, or sometime before or after that is undetermined.
 
-<FootnoteSection>
-Footnotes
+<FootnoteSection headingText="Footnotes">
 <Footnote num="1" slot="footnotes">
 I first dismissed org-review over a year ago when I first discovered it, but revisited the package after reading this article from Sacha Chua, where John Weigley briefly mentions his recent experiments with the package: [Excerpts from a conversation with John Wiegley (johnw) and Adam Porter (alphapapa) about p!ersonal information management](https://sachachua.com/blog/2024/11/excerpts-from-a-conversation-with-john-wiegley-johnw-and-adam-porter-alphapapa-about-personal-information-management/).
 </Footnote>

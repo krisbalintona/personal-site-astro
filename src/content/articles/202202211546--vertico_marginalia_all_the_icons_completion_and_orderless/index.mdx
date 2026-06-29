@@ -21,8 +21,7 @@ import Heading from "@components/markup/Heading.astro";
 import Alert from "@components/markup/Alert.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
 
-<TableOfContents isTopLevel={true} headingText="Table of Contents">
-<ul>
+<TableOfContents isTopLevel={true} headingText="Table of Contents" footnotesLinkText="Footnotes">
 <li>
 <a href="#synopsis">Synopsis</a>
 </li>
@@ -71,7 +70,6 @@ import Timestamp from "@components/markup/Timestamp.astro";
 <li>
 <a href="#changelog">Changelog</a>
 </li>
-</ul>
 </TableOfContents>
 
 <Heading level="2" id="synopsis"selfLink={true}>Synopsis</Heading>
@@ -690,8 +688,7 @@ parses its input."
     -   Minor updates to code formatting.
 -   <Timestamp date="2022-02-22" /> Added demonstrative images and a GIF. Added section on `all-the-icons-completion`.
 
-<FootnoteSection>
-Footnotes
+<FootnoteSection headingText="Footnotes">
 <Footnote num="1" slot="footnotes">
 This does add width to the left side of the minibuffer, which may interfere with your aesthetic-related configurations of other packages.
 </Footnote>

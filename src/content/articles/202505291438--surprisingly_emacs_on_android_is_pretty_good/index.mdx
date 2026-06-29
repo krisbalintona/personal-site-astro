@@ -13,8 +13,7 @@ import TableOfContents from "@components/TableOfContents.astro";
 import Heading from "@components/markup/Heading.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
-<TableOfContents isTopLevel={true} headingText="Table of Contents">
-<ul>
+<TableOfContents isTopLevel={true} headingText="Table of Contents" footnotesLinkText="Footnotes">
 <li>
 <a href="#the-good-and-bad-what-to-expect-on-android">The good and bad: what to expect on Android</a>
 </li>
@@ -63,7 +62,6 @@ import FootnoteRef from "@components/markup/FootnoteRef.astro";
 </li>
 </ul>
 </li>
-</ul>
 </TableOfContents>
 
 Recently I got around to making steps toward a better mobile-PC workflow. Until now, I've pretty much exclusively been using the community-developed [orgzly-revived](https://github.com/orgzly-revived/orgzly-android-revived) app on Android. My intention was to use orgzly-revived for simple todo management and another app for more note-taking purposes&mdash;but I could never find another app I was happy with on Android. But I happened to remember reading good things about the *native* Emacs app on Android a few months ago. So I tried it out&hellip; and was immediately sold!
@@ -230,8 +228,7 @@ The tool bar and menu bar are useful, but they’re also small. I wish they were
 </dd>
 </dl>
 
-<FootnoteSection>
-Footnotes
+<FootnoteSection headingText="Footnotes">
 <Footnote num="1" slot="footnotes">
 Although, some users might find benefits from “typing” via voice input&hellip;
 </Footnote>

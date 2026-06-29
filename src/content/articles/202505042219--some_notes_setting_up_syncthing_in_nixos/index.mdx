@@ -14,8 +14,7 @@ import Timestamp from "@components/markup/Timestamp.astro";
 import Heading from "@components/markup/Heading.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
-<TableOfContents isTopLevel={true} headingText="Table of Contents">
-<ul>
+<TableOfContents isTopLevel={true} headingText="Table of Contents" footnotesLinkText="Footnotes">
 <li>
 <a href="#the-configuration">The configuration</a>
 </li>
@@ -34,7 +33,6 @@ import FootnoteRef from "@components/markup/FootnoteRef.astro";
 <li>
 <a href="#changelog">Changelog</a>
 </li>
-</ul>
 </TableOfContents>
 
 So I recently got around to trying out NixOS. Part of that experience was setting up Syncthing, which I've used on the past on my machines and mobile phone to sync files related to note-taking.<FootnoteRef num="1" /> It was a bit confusing since I had to fill-in-the-blanks for a few steps. Here, I write about a bit of the blanks I had to fill in myself, stuff that was not clear from the existing docs and forum posts I discovered.
@@ -199,8 +197,7 @@ A fantastic visual resource of making full use of Nix and NixOS. Has some beginn
 -   <Timestamp date="2025-05-17" />
     -   Add link to the [Syncthing configuration file documentation](https://docs.syncthing.net/users/config.html).
 
-<FootnoteSection>
-Footnotes
+<FootnoteSection headingText="Footnotes">
 <Footnote num="1" slot="footnotes">
 I use Emacs's org-agenda to manage todos, and I've set up [Orgzly Revived](https://github.com/orgzly-revived/orgzly-android-revived) for basic creation and editing of org todos on my phone.
 </Footnote>

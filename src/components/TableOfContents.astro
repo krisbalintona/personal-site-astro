@@ -1,9 +1,11 @@
 ---
-type Props =
-  | { isTopLevel: true; headingText: string }
-  | { isTopLevel?: false; headingText?: never };
+import { footnoteSectionHeadingId } from "@components/markup/FootnoteSection.astro";
 
-const { isTopLevel = true, headingText } = Astro.props;
+type Props =
+  | { isTopLevel: true; headingText: string; footnotesLinkText: string }
+  | { isTopLevel?: false; headingText?: never; footnotesLinkText: never };
+
+const { isTopLevel = true, headingText, footnotesLinkText } = Astro.props;
 ---
 
 <nav
@@ -12,8 +14,15 @@ const { isTopLevel = true, headingText } = Astro.props;
   class={isTopLevel ? undefined : "subtree-toc"}
 >
   {isTopLevel && <h2 id="top-level-toc">{headingText}</h2>}
-  {/* The default slot should contain the list items for the TOC */}
-  <slot />
+  <ul>
+    {/* The default slot should contain the list items for the TOC */}
+    <slot />
+    {
+      footnotesLinkText && (
+        <li><a href=`#${footnoteSectionHeadingId}`>{footnotesLinkText}</a></li>
+      )
+    }
+  </ul>
 </nav>
 
 <style>
