@@ -113,3 +113,9 @@ Additional NPM sub commands include:
 + ~npm run check~ to report on any formatting or stylistic errors
 + ~npm run fix~ to fix any formatting or stylistic errors
 
+* Licenses
+
+This website, kristofferbalintona.me, is the work of Kristoffer Balintona. Everything found herein, including text, images, video, or any other content, is available under free/libre and copyleft terms.
+
++ The repository's source code is licensed under the [[file:LICENSE-GPL][GNU GPL v3]].
++ Original written content and images are licensed under [[file:LICENSE-CC][CC BY-SA 4.0]].

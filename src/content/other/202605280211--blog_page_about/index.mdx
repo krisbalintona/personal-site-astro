@@ -4,6 +4,7 @@ slug: "about"
 draft: false
 ---
 import Heading from "@components/markup/Heading.astro";
+import Link from "astro-typesafe-routes/link";
 
 **Hello reader,**
 
@@ -37,12 +38,11 @@ You may find or contact me freely at:
 
 <Heading level="2" id="colophon-about-this-site"selfLink={true}>Colophon (about this site)</Heading>
 
-This site is handmade with [Astro](https://astro.build/) and hosted for free on [Netlify](https://www.netlify.com/). All of its source code may be found [on Codeberg](https://codeberg.org/krisbalintona/personal-site-astro.git). Thanks to Astro, it is statically built and ships with nearly no JavaScript. Your privacy is respected: this site uses no cookies and collects no personal data. [GoatCounter](https://www.goatcounter.com/) provides basic, anonymized analytics.
+This site is handmade with [Astro](https://astro.build/) and hosted for free on [Netlify](https://www.netlify.com/). Thanks to Astro, it is statically built and ships with nearly no JavaScript. Your privacy is respected: this site uses no cookies and collects no personal data. [GoatCounter](https://www.goatcounter.com/) provides basic, anonymized analytics.
 
-Aside from rearranging the pages, redoing styling, and writing my own components, the move from Hugo to Astro came with various additions and improvements to the site. This includes:
+This site's source code may be found [on Codeberg](https://codeberg.org/krisbalintona/personal-site-astro.git). Licensing information may be found on the license page: <Link to="/license">{import.meta.env.SITE}/license</Link>. All content is written in [Org-mode](https://orgmode.org/), exported to MDX files using a custom [`ox-mdx.el` org-mode export backend](https://codeberg.org/krisbalintona/personal-site-astro/src/branch/deploy/scripts/org-exporter/ox-mdx.el) developed specifically for this site.
 
--   Tag-specific RSS feeds
+This site was originally built on [Hugo](https://gohugo.io/). Aside from rearranging the pages, redoing styling, and designing my own layouts and components, the move from Hugo to Astro came with other additions and improvements to the site. This includes:
+
 -   Per-page emoji reactions
--   Publishing "live" documents
-
-Content is written in [Org-mode](https://orgmode.org/), exported to MDX files using a custom [`ox-mdx.el` org-mode export backend](https://codeberg.org/krisbalintona/personal-site-astro/src/branch/main/scripts/org-exporter/ox-mdx.el) developed specifically for this site.
+-   Content-type-, tag-, and thread-specific RSS feeds
