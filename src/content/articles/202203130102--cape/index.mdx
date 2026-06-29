@@ -13,6 +13,7 @@ redirects:
 ---
 import Footnote from "@components/markup/Footnote.astro";
 import FootnoteSection from "@components/markup/FootnoteSection.astro";
+import TableOfContents from "@components/TableOfContents.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
 import Details from "@components/markup/Details.astro";
 import Alert from "@components/markup/Alert.astro";
@@ -20,9 +21,7 @@ import Heading from "@components/markup/Heading.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 import ContentLink from "@components/markup/ContentLink.astro";
 
-
-## Table of Contents
-
+<TableOfContents>
 -   [What is `cape`?](#what-is-cape)
 -   [Basic usage: keybinds](#basic-usage-keybinds)
 -   [Adding backends to `completion-at-point-functions`](#adding-backends-to-completion-at-point-functions)
@@ -30,7 +29,7 @@ import ContentLink from "@components/markup/ContentLink.astro";
 -   [`pcomplete` nicety](#pcomplete-nicety)
 -   [My `completion-at-point-functions`](#my-completion-at-point-functions)
 -   [Changelog](#changelog)
-
+</TableOfContents>
 
 <Heading level="2" id="what-is-cape"selfLink={true}>What is `cape`?</Heading>
 

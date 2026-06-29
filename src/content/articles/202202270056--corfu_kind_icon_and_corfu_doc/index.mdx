@@ -13,15 +13,14 @@ redirects:
 ---
 import Footnote from "@components/markup/Footnote.astro";
 import FootnoteSection from "@components/markup/FootnoteSection.astro";
+import TableOfContents from "@components/TableOfContents.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 import { Image } from "astro:assets";
 import Heading from "@components/markup/Heading.astro";
 import Alert from "@components/markup/Alert.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
 
-
-## Table of Contents
-
+<TableOfContents>
 -   [Synopsis](#synopsis)
 -   [Corfu](#corfu)
     -   [What is `corfu`? How does it differ from `company`?](#what-is-corfu-how-does-it-differ-from-company)
@@ -32,7 +31,7 @@ import Timestamp from "@components/markup/Timestamp.astro";
 -   [Kind-icon](#kind-icon)
 -   [Corfu-doc](#corfu-doc)
 -   [Changelog](#changelog)
-
+</TableOfContents>
 <Alert>
 <Timestamp date="2022-11-28" /> As is noted in the [`corfu-doc` repository](https://github.com/galeo/corfu-doc/issues/25), `corfu-doc` has been deprecated by the built-in `corfu-popupinfo` `corfu` extension. `corfu-popupinfo`'s functionality is roughly identical to `corfu-doc`'s, though its interface and code is naturally more idiomatic to `corfu`.
 </Alert>

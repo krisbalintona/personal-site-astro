@@ -12,15 +12,14 @@ threads:
 import Footnote from "@components/markup/Footnote.astro";
 import FootnoteSection from "@components/markup/FootnoteSection.astro";
 import ContentLink from "@components/markup/ContentLink.astro";
+import TableOfContents from "@components/TableOfContents.astro";
 import { Image } from "astro:assets";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 import Heading from "@components/markup/Heading.astro";
 import Alert from "@components/markup/Alert.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
 
-
-## Table of Contents
-
+<TableOfContents>
 -   [Summary](#summary)
 -   [Helpful sources](#helpful-sources)
 -   [What are citation systems?](#what-are-citation-systems)
@@ -40,7 +39,7 @@ import Timestamp from "@components/markup/Timestamp.astro";
     -   [Citar-capf](#citar-capf)
     -   [Org-ref](#org-ref)
 -   [Changelog](#changelog)
-
+</TableOfContents>
 
 <Heading level="2" id="summary"selfLink={true}>Summary</Heading>
 

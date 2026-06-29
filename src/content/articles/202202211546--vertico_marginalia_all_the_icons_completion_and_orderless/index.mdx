@@ -14,15 +14,14 @@ redirects:
 ---
 import Footnote from "@components/markup/Footnote.astro";
 import FootnoteSection from "@components/markup/FootnoteSection.astro";
+import TableOfContents from "@components/TableOfContents.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 import { Image } from "astro:assets";
 import Heading from "@components/markup/Heading.astro";
 import Alert from "@components/markup/Alert.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
 
-
-## Table of Contents
-
+<TableOfContents>
 -   [Synopsis](#synopsis)
 -   [Marginalia](#marginalia)
 -   [All-the-icons-completion](#all-the-icons-completion)
@@ -37,7 +36,7 @@ import Timestamp from "@components/markup/Timestamp.astro";
     -   [Style dispatchers](#style-dispatchers)
     -   [End product](#end-product-1)
 -   [Changelog](#changelog)
-
+</TableOfContents>
 
 <Heading level="2" id="synopsis"selfLink={true}>Synopsis</Heading>
 

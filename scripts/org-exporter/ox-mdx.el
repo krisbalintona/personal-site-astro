@@ -59,7 +59,8 @@ This variable can be `let'-bound to change the default string.")
     ("Footnote" . "import Footnote from \"@components/markup/Footnote.astro\";")
     ("FootnoteRef" . "import FootnoteRef from \"@components/markup/FootnoteRef.astro\";")
     ("Heading" . "import Heading from \"@components/markup/Heading.astro\";")
-    ("Center" . "import Center from \"@components/markup/Center.astro\";"))
+    ("Center" . "import Center from \"@components/markup/Center.astro\";")
+    ("TableOfContents" . "import TableOfContents from \"@components/TableOfContents.astro\";"))
   "Alist from component name to import statement.
 There are several components specific to this project.  This is an alist
 from component name to the import statement corresponding to that
@@ -718,6 +719,48 @@ communication channel."
     ;; Ordered and unordered lists: delegate to the MD transcoder
     (org-md-plain-list plain-list contents _info)))
 
+(defun org-mdx--build-toc (info &optional n _keyword scope)
+  "Return table of contents.
+Like `org-md--build-toc' but using my custom table of contents
+component.
+
+INFO is a plist used as a communication channel.
+
+Optional argument N, when non-nil, is an integer specifying the depth of
+the table.
+
+When optional argument SCOPE is non-nil, build a table of contents
+according to the specified element."
+  (org-mdx--register-import info "TableOfContents")
+  (format "<TableOfContents>\n%s\n</TableOfContents>"
+          (mapconcat
+           (lambda (headline)
+             (let* ((indentation
+                     (make-string
+                      (* 4 (1- (org-export-get-relative-level headline info)))
+                      ?\s))
+                    (bullet
+                     (if (not (org-export-numbered-headline-p headline info)) "-   "
+                       (let ((prefix
+                              (format "%d." (org-last (org-export-get-headline-number
+                                                       headline info)))))
+                         (concat prefix (make-string (max 1 (- 4 (length prefix)))
+                                                     ?\s)))))
+                    (title
+                     (format "[%s](#%s)"
+                             (org-export-data-with-backend
+                              (org-export-get-alt-title headline info)
+                              (org-export-toc-entry-backend 'md)
+                              info)
+                             (or (org-element-property :CUSTOM_ID headline)
+                                 (org-export-get-reference headline info))))
+                    (tags (and (plist-get info :with-tags)
+                               (not (eq 'not-in-toc (plist-get info :with-tags)))
+                               (org-make-tag-string
+                                (org-export-get-tags headline info)))))
+               (concat indentation bullet title tags)))
+           (org-export-collect-headlines info n scope) "\n")))
+
 (defun org-mdx-footnote-reference (footnote-reference _contents info)
   "Transcode a FOOTNOTE-REFERENCE element from Org to MDX.
 CONTENTS is nil.  INFO is a plist holding contextual information."
@@ -777,10 +820,8 @@ export options."
   (let ((toc
          (let ((depth (plist-get info :with-toc)))
            (when depth
-             (org-md--build-toc info (and (wholenump depth) depth)))))
+             (org-mdx--build-toc info (and (wholenump depth) depth)))))
         (footnotes (org-mdx--footnote-section info)))
-    ;; Make sure CONTENTS is separated from table of contents and
-    ;; footnotes with at least a blank line.
     (concat
      (when toc (concat toc "\n"))
      contents

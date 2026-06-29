@@ -9,20 +9,19 @@ tags:
 ---
 import Footnote from "@components/markup/Footnote.astro";
 import FootnoteSection from "@components/markup/FootnoteSection.astro";
+import TableOfContents from "@components/TableOfContents.astro";
 import Timestamp from "@components/markup/Timestamp.astro";
 import Heading from "@components/markup/Heading.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
-
-## Table of Contents
-
+<TableOfContents>
 -   [The configuration](#the-configuration)
 -   [Devices](#devices)
 -   [Folders](#folders)
 -   [Closing remarks](#closing-remarks)
 -   [Other resources](#other-resources)
 -   [Changelog](#changelog)
-
+</TableOfContents>
 
 So I recently got around to trying out NixOS. Part of that experience was setting up Syncthing, which I've used on the past on my machines and mobile phone to sync files related to note-taking.<FootnoteRef num="1" /> It was a bit confusing since I had to fill-in-the-blanks for a few steps. Here, I write about a bit of the blanks I had to fill in myself, stuff that was not clear from the existing docs and forum posts I discovered.
 

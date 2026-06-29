@@ -9,12 +9,11 @@ tags:
 ---
 import Footnote from "@components/markup/Footnote.astro";
 import FootnoteSection from "@components/markup/FootnoteSection.astro";
+import TableOfContents from "@components/TableOfContents.astro";
 import Heading from "@components/markup/Heading.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
-
-## Table of Contents
-
+<TableOfContents>
 -   [The ideal: Separating &ldquo;now&rdquo; and &ldquo;very soon&rdquo; from everything else](#the-ideal-separating-now-and-very-soon-from-everything-else)
 -   [&ldquo;Later&rdquo;](#later)
 -   [&ldquo;Unsure when&rdquo;](#unsure-when)
@@ -34,7 +33,7 @@ import FootnoteRef from "@components/markup/FootnoteRef.astro";
     -   [Two org-agenda views](#two-org-agenda-views-1)
     -   [Org-review: Immediately identify which tasks need addressing](#org-review-immediately-identify-which-tasks-need-addressing-1)
 -   [Bonus: bespoke org-agenda scatter function](#bonus-bespoke-org-agenda-scatter-function)
-
+</TableOfContents>
 
 In the last few months I've revamped my org-agenda workflow to a state I've never been more satisfied with. I'll share here how [org-review](https://github.com/brabalan/org-review)<FootnoteRef num="1" /> made it possible.
 
