@@ -19,7 +19,9 @@ const { isTopLevel = true, headingText, footnotesLinkText } = Astro.props;
     <slot />
     {
       footnotesLinkText && (
-        <li><a href=`#${footnoteSectionHeadingId}`>{footnotesLinkText}</a></li>
+        <li>
+          <a href={`#${footnoteSectionHeadingId}`}>{footnotesLinkText}</a>
+        </li>
       )
     }
   </ul>
