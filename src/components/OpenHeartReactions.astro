@@ -2,10 +2,10 @@
 import { isDev } from "@lib/consts";
 
 interface Props {
-  path: string;
+  path?: string;
 }
 
-const { path } = Astro.props;
+const { path = "/" } = Astro.props;
 
 if (!Astro.site)
   throw new Error("Site URL must be set for Open Heart reactions to work");
