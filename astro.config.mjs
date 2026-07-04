@@ -41,7 +41,19 @@ export default defineConfig({
     // Run before file format integrations (e.g., MDX)
     expressiveCode({
       themes: ["material-theme-lighter", "material-theme-darker"],
-      useDarkModeMediaQuery: true,
+      useDarkModeMediaQuery: false,
+      themeCssSelector: (theme, _context) => {
+        switch (theme.name) {
+          // NOTE: If I change the `themes` above I should also update
+          // this switch statement
+          case "dark":
+            return "[data-theme='material-theme-darker']";
+          case "light":
+            return "[data-theme='material-theme-lighter']";
+          default:
+            return false;
+        }
+      },
       plugins: [pluginFullscreen()],
       styleOverrides: {
         codeFontFamily: "var(--font-code)",
