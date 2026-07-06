@@ -1,4 +1,5 @@
 ---
+import DiscussComments from "@components/DiscussComments.astro";
 import NotByAIBadge from "@components/NotByAIBadge.astro";
 import OpenHeartReactions from "@components/OpenHeartReactions.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
@@ -7,14 +8,14 @@ import type { AnyCollectionEntry } from "@src/content.config";
 
 interface Props {
   entry: AnyCollectionEntry;
-  reactionsPath?: string;
+  uniquePath?: string;
   notAIBadge?: boolean;
   goatCounterSettings?: Record<string, string>;
 }
 
 const {
   entry,
-  reactionsPath,
+  uniquePath,
   notAIBadge = true,
   goatCounterSettings,
 } = Astro.props;
@@ -86,7 +87,7 @@ const { Content } = await renderContent(entry);
     <footer class="content-footer">
       <slot name="footer" />
 
-      {reactionsPath && <OpenHeartReactions path={reactionsPath} />}
+      {uniquePath && <OpenHeartReactions path={uniquePath} />}
       {
         notAIBadge && (
           <div>
@@ -94,6 +95,8 @@ const { Content } = await renderContent(entry);
           </div>
         )
       }
+
+      <DiscussComments path={uniquePath} />
     </footer>
   </article>
 </BaseLayout>
@@ -137,6 +140,10 @@ const { Content } = await renderContent(entry);
       justify-content: center;
       margin-top: var(--space-l);
       font-size: var(--font-step-4);
+    }
+
+    #discuss-comments {
+      margin-top: var(--space-l);
     }
   }
 </style>

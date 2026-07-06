@@ -85,17 +85,25 @@
   );
 
   /* Text: ordered by hierarchy, least to most prominent */
-  --color-text: var(--neutral-1000);
+  --color-text-faded: light-dark(
+    oklch(from var(--color-text) calc(l * 180%) calc(c * 20%) h),
+    oklch(from var(--color-text) calc(l * 60%) calc(c * 60%) h)
+  );
   --color-text-muted: light-dark(
     oklch(from var(--color-text) 45% 0.05 h),
     oklch(from var(--color-text) 77.57% 0.0216 h)
   );
+  --color-text: var(--neutral-1000);
 
   /* Backgrounds: ordered by elevation, lowest to highest */
   --color-bg: var(--neutral-0);
   --color-bg-elevated: light-dark(
     oklch(from var(--color-bg) 99% 0 h),
     oklch(from var(--color-bg) 5% 0 h)
+  );
+  --color-bg-elevated-2: light-dark(
+    oklch(from var(--color-bg-elevated) calc(l - 0.035) c h),
+    oklch(from var(--color-bg-elevated) calc(l + 0.12) c h)
   );
   --color-bg-surface: var(--brand-primary);
   --color-bg-surface-accent: light-dark(

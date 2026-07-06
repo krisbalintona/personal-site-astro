@@ -1,0 +1,55 @@
+---
+interface Props {
+  path?: string;
+}
+
+const { path } = Astro.props;
+---
+
+<link
+  rel="stylesheet"
+  href="https://discuss.kristofferbalintona.me/client.css"
+/>
+<div id="discuss-comments" data-url={path ?? undefined}></div>
+<script is:inline src="https://discuss.kristofferbalintona.me/client.js"
+></script>
+<script is:inline>
+  new DiscussWidget({
+    container: document.getElementById("discuss-comments"),
+    serverUrl: "https://discuss.kristofferbalintona.me",
+    title: "",
+    placeholder: "What do you think? (markdown supported)...",
+    primaryColor: "var(--brand-primary)",
+    darkSelector: '[data-theme="dark"]',
+  });
+</script>
+
+<style>
+  #discuss-comments {
+    --discuss-font-family: var(--font-ui);
+
+    /* See
+    https://github.com/karthikeyankc/discuss#css-custom-properties for
+    all customizable CSS variables */
+    --text-primary: var(--color-text) !important;
+    --text-secondary: var(--color-text) !important;
+    --text-tertiary: var(--color-accent) !important;
+    --text-muted: var(--color-text-muted) !important;
+    --text-subtle: var(--color-text-faded) !important;
+    --surface-base: var(--color-bg-elevated) !important;
+    --surface-inset: var(--color-bg-elevated-2) !important;
+    --surface-overlay: var(--color-bg-surface) !important;
+    --border-default: var(--color-border) !important;
+    --border-subtle: var(--color-border-soft) !important;
+    --border-strong: var(--color-bg-elevated) !important;
+
+    /* Make border radii smaller */
+    .discuss-form-container {
+      border-radius: 5px;
+    }
+
+    .discuss-action-btn {
+      border-radius: 0.2rem;
+    }
+  }
+</style>

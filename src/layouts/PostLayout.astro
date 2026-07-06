@@ -58,7 +58,7 @@ const threads = post.data.threads;
 }
 <ContentLayout
   entry={post}
-  reactionsPath={getPostPermalink(post)}
+  uniquePath={getPostPermalink(post)}
   notAIBadge={true}
   goatCounterSettings={{
     path: $path({
