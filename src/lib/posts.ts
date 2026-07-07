@@ -70,7 +70,6 @@ export function getPostPermalink(post: PostEntry): string {
 // `rssSchema` are typed as optional, RSS feeds themselves to have
 // required XML fields.
 export const postSchema = rssSchema.extend(publishedContentShape).extend({
-  subtitle: z.string().optional(),
   tags: z.array(reference("tags")).optional(),
   threads: z.array(reference("threads")).optional(),
 });

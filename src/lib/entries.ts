@@ -31,6 +31,7 @@ export const baseContentShape = {
 
 export const publishedContentShape = {
   ...baseContentShape,
+  subtitle: z.string().optional(),
   pubDate: z.coerce.date().default(new Date("1970-01-01")),
   lastMod: z.coerce.date().optional(),
   redirects: z
