@@ -966,6 +966,11 @@ communication channel for the export process."
                  ;; UTF-8 versions.
                  (org-mdx--title-to-html info)))
 
+         ;; Subtitle
+         (subtitle (org-mdx--frontmatter-field
+                    "subtitle"
+                    (string-join (plist-get info :subtitle) " ")))
+
          ;; Slug
          (slug (org-mdx--frontmatter-field "slug" (plist-get info :mdx-slug)))
 
@@ -1025,7 +1030,7 @@ communication channel for the export process."
            "redirects"
            (org-mdx--frontmatter-parse-keyword-list (plist-get info :mdx-redirects))))
 
-         (frontmatter-base (list title slug draft description)))
+         (frontmatter-base (list title subtitle slug draft description)))
 
     (string-join
      (delq nil
