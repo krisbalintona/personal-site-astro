@@ -943,7 +943,7 @@ values (e.g. #+filetags, #+mdx_tags)."
                (funcall (or (and (functionp post-process) post-process) #'identity) s)))
             (split-string-and-unquote (string-trim raw-string)))))
 
-(defun org-mdx--frontmatter (contents info)
+(defun org-mdx-frontmatter (contents info)
   "Return document's formatted YAML frontmatter.
 CONTENTS is the transcoded contents string.  INFO is a plist used as a
 communication channel for the export process."
@@ -1045,7 +1045,7 @@ communication channel for the export process."
 CONTENTS is the transcoded contents string (returned by the
 inner-template backend transcoder).  INFO is a plist used as a
 communication channel for the export process."
-  (let ((frontmatter (org-mdx--frontmatter contents info))
+  (let ((frontmatter (org-mdx-frontmatter contents info))
         (imports (org-string-nw-p
                   (mapconcat #'cdr (plist-get info :mdx-imports) "\n"))))
     (concat
