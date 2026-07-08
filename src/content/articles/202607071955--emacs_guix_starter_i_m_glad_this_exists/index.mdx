@@ -1,0 +1,39 @@
+---
+title: "emacs-guix-starter: I&rsquo;m glad this exists"
+subtitle: "A modern Emacs configuration for and in Guix"
+draft: false
+pubDate: 2026-07-07T19:55:00-05:00
+tags:
+  - "Emacs"
+  - "Guix"
+  - "Configuration"
+---
+import Footnote from "@components/markup/Footnote.astro";
+import FootnoteSection from "@components/markup/FootnoteSection.astro";
+import FootnoteRef from "@components/markup/FootnoteRef.astro";
+
+
+Recently Hilton Chain<FootnoteRef num="1" /> put together [emacs-guix-starter](https://codeberg.org/hako/emacs-guix-starter), a starter Emacs configuration that uses Guix and is set up to Guix. **What it is:** a regular Emacs `init.el` (with basic configuration) alongside a companion Guix packages manifest (`packages.scm`) to install those Emacs packages and all their system dependencies. The `init.el` even provides configuration to edit Guile!
+
+**Beginner-oriented configurations are sorely lacking in Guix**. In the Emacs world, there are many personal configurations, configuration frameworks ([Doom](https://github.com/doomemacs/core), [Spacemacs](https://www.spacemacs.org/), [Prelude](https://prelude.emacsredux.com/en/latest/)), and starter configs ([minimal-emacs.d](https://github.com/jamescherti/minimal-emacs.d), [emacs-bedrock](https://codeberg.org/ashton314/emacs-bedrock)). These are just great references, if not just to peruse. This is especially the case for newcomers, who haven't yet developed a second-nature for how to organize files, idiomatic coding patterns, nor familiarized themselves with the standard library.
+
+On the other hand, in the Guix world, aside from emacs-guix-starter, there's [guix-studio](https://github.com/PikachuHy/guile-studio)<FootnoteRef num="2" />, whose last commit was 5+ years ago.
+
+With Emacs, learning feels "bootstrapped" because once one learns about Help buffers and navigating Info manuals, it becomes much easier to both discover questions and their answers. On the other hand, it's been my experience that Guix become naturally easier to pick up once you start&mdash;though, granted, I've spent much less time trying to figure out Guile and Guix than I have Elisp and Emacs.
+
+emacs-guix-starter shows what it should look like
+
+-   to use Guix as one's Emacs package manager,
+-   what an Emacs configuration to develop in Guile looks like,
+-   *as well as* how to compose several Guix CLI commands
+
+Other users can use it as a model or base for their own configuration. Just seeing these types of projects around **goes a long way to demystifying confusions and spreading knowledge throughout the community**.
+
+<FootnoteSection headingText="Footnotes">
+<Footnote num="1" slot="footnotes">
+This user goes by various usernames. This is their [GitHub](https://github.com/rakino), [Codeberg](https://codeberg.org/hako), and [blog](https://ultrarare.space/en/). This user has contributed quite a bit for the Guix community in the form of third-party projects ([https://search.guix.moe/](https://search.guix.moe/), an alternative to [toys.whereis.social](https://toys.whereis.social/); [Rosenthal](https://codeberg.org/hako/Rosenthal), a channel), direct contributions upstream, and infrastructure (e.g., the [Guix Moe](https://codeberg.org/hako/guix.moe) substitute server). Please consider donating to their [Liberapay](https://liberapay.com/hakourspace/).
+</Footnote>
+<Footnote num="2" slot="footnotes">
+The [Guix manual](https://guix.gnu.org/manual/1.5.0/en/html_node/Guile-Studio.html) also mentions Guile Studio as an "alternative setup" to the recommended one that uses Geiser.
+</Footnote>
+</FootnoteSection>
