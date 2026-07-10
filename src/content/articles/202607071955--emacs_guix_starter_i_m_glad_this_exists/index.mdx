@@ -1,6 +1,6 @@
 ---
 title: "emacs-guix-starter: I&rsquo;m glad this exists"
-subtitle: "A modern Emacs configuration for and in Guix"
+subtitle: "A modern Emacs configuration using Guix and for Guix"
 draft: false
 pubDate: 2026-07-07T19:55:00-05:00
 tags:
@@ -13,19 +13,19 @@ import FootnoteSection from "@components/markup/FootnoteSection.astro";
 import FootnoteRef from "@components/markup/FootnoteRef.astro";
 
 
-Recently Hilton Chain<FootnoteRef num="1" /> put together [emacs-guix-starter](https://codeberg.org/hako/emacs-guix-starter), a starter Emacs configuration that uses Guix and is set up to Guix. **What it is:** a regular Emacs `init.el` (with basic configuration) alongside a companion Guix packages manifest (`packages.scm`) to install those Emacs packages and all their system dependencies. The `init.el` even provides configuration to edit Guile!
+Recently Hilton Chain<FootnoteRef num="1" /> put together [**emacs-guix-starter**](https://codeberg.org/hako/emacs-guix-starter), a starter Emacs configuration that uses Guix and is set up to Guix. **What it is:** a regular Emacs `init.el` (with basic configuration) alongside a companion Guix packages manifest (`packages.scm`) to install those Emacs packages and all their system dependencies. The `init.el` even provides configuration to edit Guile!
 
-**Beginner-oriented configurations are sorely lacking in Guix**. In the Emacs world, there are many personal configurations, configuration frameworks ([Doom](https://github.com/doomemacs/core), [Spacemacs](https://www.spacemacs.org/), [Prelude](https://prelude.emacsredux.com/en/latest/)), and starter configs ([minimal-emacs.d](https://github.com/jamescherti/minimal-emacs.d), [emacs-bedrock](https://codeberg.org/ashton314/emacs-bedrock)). These are just great references, if not just to peruse. This is especially the case for newcomers, who haven't yet developed a second-nature for how to organize files, idiomatic coding patterns, nor familiarized themselves with the standard library.
+**Beginner-oriented configurations are sorely lacking in Guix**. In the Emacs world, there are many personal configurations, configuration frameworks ([Doom](https://github.com/doomemacs/core), [Spacemacs](https://www.spacemacs.org/), [Prelude](https://prelude.emacsredux.com/en/latest/)), and starter configs ([minimal-emacs.d](https://github.com/jamescherti/minimal-emacs.d), [emacs-bedrock](https://codeberg.org/ashton314/emacs-bedrock)). These are great references, if not just to peruse. This is especially true for newcomers, users who haven't yet developed a second-nature for how to organize files, idiomatic coding patterns, nor familiarized themselves with the standard library.
 
 On the other hand, in the Guix world, aside from emacs-guix-starter, there's [guix-studio](https://github.com/PikachuHy/guile-studio)<FootnoteRef num="2" />, whose last commit was 5+ years ago.
 
-With Emacs, learning feels "bootstrapped" because once one learns about Help buffers and navigating Info manuals, it becomes much easier to both discover questions and their answers. On the other hand, it's been my experience that Guix become naturally easier to pick up once you start&mdash;though, granted, I've spent much less time trying to figure out Guile and Guix than I have Elisp and Emacs.
+With Emacs, learning feels "bootstrapped" because once one learns about Help buffers and navigating Info manuals, it becomes much easier to both discover questions and their answers (by navigating manuals, jumping through source code, and reading docstrings). On the other hand, it's been my experience that Guix doesn't become that much easier to pick up once you start&mdash;though, granted, I've spent much less time trying to figure out Guile and Guix than I have Elisp and Emacs.
 
-emacs-guix-starter shows what it should look like
+emacs-guix-starter shows what it should look like&hellip;
 
 -   to use Guix as one's Emacs package manager,
 -   what an Emacs configuration to develop in Guile looks like,
--   *as well as* how to compose several Guix CLI commands
+-   *as well as* how to compose several Guix CLI commands.
 
 Other users can use it as a model or base for their own configuration. Just seeing these types of projects around **goes a long way to demystifying confusions and spreading knowledge throughout the community**.
 
