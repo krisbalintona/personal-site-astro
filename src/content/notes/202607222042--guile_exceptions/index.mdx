@@ -1,0 +1,35 @@
+---
+title: "Guile Exceptions"
+draft: false
+pubDate: 2026-07-22T20:42:00-05:00
+tags:
+  - "Guile"
+  - "Error handling"
+---
+import Footnote from "@components/markup/Footnote.astro";
+import FootnoteSection from "@components/markup/FootnoteSection.astro";
+import FootnoteRef from "@components/markup/FootnoteRef.astro";
+
+
+Learning Guile has been on my wishlist for a while because of the power it affords users of Guix: you get to control its service manager, Shepherd<FootnoteRef num="1" />, configure other programs, manage containers<FootnoteRef num="2" />, all in the same powerful language in a consistent syntax. But Guile is also a power language all on its own, too. You can write standalone program with it happily (and integrate it with your Guix config seamlessly).
+
+I recently found my first excuse to dive into the language itself (not just for Guix). My idea was to have a small, personal web server with a [RESTful API](https://en.wikipedia.org/wiki/REST#Applied_to_web_services)<FootnoteRef num="3" /> that lets me run, stop, and see the status and output of pre-defined tasks. I read the [relevant pages in Guile's manual](https://doc.guix.gnu.org/guile/latest/en/html_node/Web.html) many times and within a few days got something that was acceptable (though I'll no doubt refine, refactor, and add to it as time passes).
+
+One of the cool things I encountered with Guile were its exceptions. I'm not a programmer by trade and haven't used many languages before, so I was mostly only familiar with "error = program implodes." I found out Guile obviously has `error`, but it also has [quite rich exceptions](https://doc.guix.gnu.org/guile/latest/en/html_node/Exceptions.html). The older system was just `try` + `catch`, but the more modern 2019+ set of features is based on records (I think), has hierarchies, and more powerful "catching."
+
+It was quite hard to wrap my mind around it enough to even just get off the ground, but I found these two articles very helpful, alongside the Guile manual pages on exceptions:
+
+-   [Error handling in GNU Guile | Vijay Marupudi](https://vijaymarupudi.com/blog/2022-02-13-error-handling-in-guile.html)
+-   [Guile exceptions | Andreas Hohmann](https://andreashohmann.com/guile-exceptions/)
+
+<FootnoteSection headingText="Footnotes">
+<Footnote num="1" slot="footnotes">
+Actually, I've also just recently learned (or realized) that Shepherd itself is quite decoupled from Guix. It wasn't a natural thought to have because I've only ever indirectly run a service manager, through launching my system with it, whether Shepherd through Guix or Systemd through most Linux distros. But the way Shepherd is configured in Guix is, really, *just Shepherd configured in Guile*. So I think you could technically do all sorts of cool things with Shepherd, either alone or alongside an existing running Shepherd or Systemd instance. I even learned that you can [load new services live into a running Shepherd process](https://doc.guix.gnu.org/shepherd/latest/en/shepherd.html#Jump-Start-1) and that there's a Shepherd service for [having a REPL to interact with Shepherd live](https://doc.guix.gnu.org/shepherd/latest/en/shepherd.html#REPL-Service)!
+</Footnote>
+<Footnote num="2" slot="footnotes">
+I've been using it for months to manage my self-hosted services at home. I have dozens of podman containers run through Shepherd.
+</Footnote>
+<Footnote num="3" slot="footnotes">
+It was my first time implementing a REST API myself, too. (Actually: I hadn't ever worked to directly implement an HTTP server before at all.) The best resources I found on the right approach to designing a REST API came from [https://restfulapi.net/](https://restfulapi.net/).
+</Footnote>
+</FootnoteSection>
